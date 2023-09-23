@@ -1,6 +1,4 @@
-﻿using System.Reflection;
-using System.Text.Json.Serialization;
-using FluentValidation.AspNetCore;
+﻿using System.Text.Json.Serialization;
 
 namespace EUniversity.Extensions
 {
