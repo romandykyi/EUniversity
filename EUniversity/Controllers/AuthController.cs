@@ -25,12 +25,14 @@ namespace EUniversity.Controllers
 		/// Logs in a user.
 		/// </summary>
 		/// <response code="204">Success</response>
-		/// <response code="400">Malformed input or invalid login attempt</response>
+		/// <response code="400">Malformed input</response>
+		/// <response code="401">Invalid login attempt</response>
 		[HttpPost]
 		[AllowAnonymous]
 		[Route("login")]
 		[ProducesResponseType(StatusCodes.Status204NoContent)]
 		[ProducesResponseType(StatusCodes.Status400BadRequest)]
+		[ProducesResponseType(StatusCodes.Status401Unauthorized)]
 		public async Task<IActionResult> LogIn([FromBody] LogInDto login)
 		{
 			if (await _authService.LogInAsync(login))
@@ -38,8 +40,7 @@ namespace EUniversity.Controllers
 				return NoContent();
 			}
 
-			ModelState.AddModelError(string.Empty, "Invalid login attempt");
-			return BadRequest(ModelState);
+			return Unauthorized();
 		}
 
 		/// <summary>

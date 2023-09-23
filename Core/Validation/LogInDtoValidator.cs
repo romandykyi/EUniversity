@@ -7,8 +7,8 @@ namespace EUniversity.Core.Validation
 	{
 		public LogInDtoValidator()
 		{
-			RuleFor(l => l.UserName).NotEmpty();
-			RuleFor(l => l.Password).NotEmpty();
+			RuleFor(l => l.UserName).NotEmpty().WithMessage("Username is required");
+			RuleFor(l => l.Password).NotEmpty().WithMessage("Password is required");
 		}
 	}
 }
