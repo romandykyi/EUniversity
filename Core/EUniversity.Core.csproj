@@ -18,9 +18,4 @@
 		<Using Include="Microsoft.EntityFrameworkCore" />
 	</ItemGroup>
 
-	<ItemGroup>
-	  <Folder Include="Dtos\" />
-	  <Folder Include="Services\" />
-	</ItemGroup>
-
 </Project>

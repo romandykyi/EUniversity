@@ -1,5 +1,7 @@
 ﻿using EUniversity.Core.Models;
+using EUniversity.Core.Services;
 using EUniversity.Infrastructure.Data;
+using EUniversity.Infrastructure.Services;
 using Microsoft.AspNetCore.Identity;
 using System.Net;
 using System.Reflection;
@@ -73,6 +75,12 @@ namespace EUniversity.Extensions
 			});
 
 			return services;
+		}
+
+		public static IServiceCollection ConfigureAppServices(this IServiceCollection services)
+		{
+			return services
+				.AddScoped<IAuthService, AuthService>();
 		}
 	}
 }

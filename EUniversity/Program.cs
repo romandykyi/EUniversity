@@ -13,6 +13,8 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddAntiforgery(options => options.HeaderName = "X-XSRF-Token");
 
+builder.Services.ConfigureAppServices();
+
 builder.Services.AddCustomizedIdentity();
 builder.Services.AddAuthorization();
 
