@@ -1,6 +1,7 @@
 using EUniversity.Infrastructure.Data;
 using EUniversity.Extensions;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,7 +14,13 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddAntiforgery(options => options.HeaderName = "X-XSRF-Token");
 builder.Services.AddCustomizedIdentity();
 
-builder.Services.AddControllersWithViews();
+builder.Services
+	.AddControllers()
+	.AddJsonOptions(options =>
+	{
+		options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+	})
+	.ConfigureApiBehaviorOptions(x => { x.SuppressMapClientErrors = true; });
 builder.Services.AddRazorPages();
 
 builder.Services.AddSwagger();
