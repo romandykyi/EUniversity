@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.ApiAuthorization.IdentityServer" Version="7.0.11" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="7.0.11" />
+  </ItemGroup>
+
+	<ItemGroup>
+		<Using Include="AutoMapper" />
+		<Using Include="AutoMapper.QueryableExtensions" />
+		<Using Include="System.ComponentModel.DataAnnotations" />
+		<Using Include="Microsoft.EntityFrameworkCore" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Dtos\" />
+	  <Folder Include="Repositories\" />
+	  <Folder Include="Services\" />
+	</ItemGroup>
+
+</Project>
