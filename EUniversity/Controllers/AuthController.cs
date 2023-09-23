@@ -40,7 +40,7 @@ namespace EUniversity.Controllers
 				return NoContent();
 			}
 
-			return Unauthorized();
+			return Problem(statusCode: StatusCodes.Status401Unauthorized, title: "Invalid login attempt");
 		}
 
 		/// <summary>
