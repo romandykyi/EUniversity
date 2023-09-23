@@ -2,6 +2,7 @@
 using EUniversity.Core.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using SharpGrip.FluentValidation.AutoValidation.Mvc.Attributes;
 
 namespace EUniversity.Controllers
 {
@@ -10,6 +11,7 @@ namespace EUniversity.Controllers
 	/// </summary>
 	[ApiController]
 	[Route("api/auth")]
+	[FluentValidationAutoValidation]
 	public class AuthController : ControllerBase
 	{
 		private readonly IAuthService _authService;
@@ -31,18 +33,12 @@ namespace EUniversity.Controllers
 		[ProducesResponseType(StatusCodes.Status400BadRequest)]
 		public async Task<IActionResult> LogIn([FromBody] LogInDto login)
 		{
-			if (ModelState.IsValid)
+			if (await _authService.LogInAsync(login))
 			{
-				if (await _authService.LogInAsync(login))
-				{
-					return NoContent();
-				}
-				else
-				{
-					ModelState.AddModelError(string.Empty, "Invalid login attempt");
-				}
+				return NoContent();
 			}
 
+			ModelState.AddModelError(string.Empty, "Invalid login attempt");
 			return BadRequest(ModelState);
 		}
 

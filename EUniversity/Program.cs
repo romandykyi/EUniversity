@@ -18,6 +18,7 @@ builder.Services.AddCustomizedIdentity();
 builder.Services.AddAuthorization();
 
 builder.Services.AddControllers();
+builder.Services.AddFluentValidation();
 builder.Services.AddRazorPages();
 
 builder.Services.AddSwagger();

@@ -1,10 +1,14 @@
 ﻿using EUniversity.Core.Models;
 using EUniversity.Core.Services;
+using EUniversity.Core.Validation;
 using EUniversity.Infrastructure.Data;
 using EUniversity.Infrastructure.Services;
 using Microsoft.AspNetCore.Identity;
 using System.Net;
 using System.Reflection;
+using FluentValidation;
+using SharpGrip.FluentValidation.AutoValidation.Mvc.Enums;
+using SharpGrip.FluentValidation.AutoValidation.Mvc.Extensions;
 
 namespace EUniversity.Extensions
 {
@@ -12,7 +16,7 @@ namespace EUniversity.Extensions
 	{
 		public static IServiceCollection AddSwagger(this IServiceCollection services)
 		{
-			services.AddSwaggerGen(options =>
+			return services.AddSwaggerGen(options =>
 			{
 				options.SwaggerDoc("v1", new()
 				{
@@ -23,8 +27,6 @@ namespace EUniversity.Extensions
 				var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
 				options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
 			});
-
-			return services;
 		}
 
 		public static IServiceCollection AddCustomizedIdentity(this IServiceCollection services)
@@ -58,7 +60,7 @@ namespace EUniversity.Extensions
 			services.AddAuthentication()
 				.AddJwtBearer();
 
-			services.ConfigureApplicationCookie(options =>
+			return services.ConfigureApplicationCookie(options =>
 			{
 				// Return 401 when user is not authrorized
 				options.Events.OnRedirectToLogin = context =>
@@ -73,8 +75,25 @@ namespace EUniversity.Extensions
 					return Task.CompletedTask;
 				};
 			});
+		}
 
-			return services;
+		public static IServiceCollection AddFluentValidation(this IServiceCollection services)
+		{
+			services.AddValidatorsFromAssemblyContaining<LogInDtoValidator>();
+			return services.AddFluentValidationAutoValidation(configuration =>
+			{
+				// Disable the built-in .NET model (data annotations) validation.
+				configuration.DisableBuiltInModelValidation = true;
+
+				// Only validate controllers decorated with the `FluentValidationAutoValidation` attribute.
+				configuration.ValidationStrategy = ValidationStrategy.Annotations;
+
+				// Enable validation for parameters bound from the `BindingSource.Body` binding source.
+				configuration.EnableBodyBindingSourceAutomaticValidation = true;
+
+				// Enable validation for parameters bound from the `BindingSource.Query` binding source.
+				configuration.EnableQueryBindingSourceAutomaticValidation = true;
+			});
 		}
 
 		public static IServiceCollection ConfigureAppServices(this IServiceCollection services)
