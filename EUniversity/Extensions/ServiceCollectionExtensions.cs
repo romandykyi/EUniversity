@@ -1,6 +1,5 @@
 ﻿using EUniversity.Core.Models;
 using EUniversity.Infrastructure.Data;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using System.Net;
 using System.Reflection;
@@ -28,7 +27,8 @@ namespace EUniversity.Extensions
 
 		public static IServiceCollection AddCustomizedIdentity(this IServiceCollection services)
 		{
-			services.AddDefaultIdentity<ApplicationUser>(
+			services
+				.AddIdentity<ApplicationUser, IdentityRole>(
 				options =>
 				{
 					options.Password.RequireDigit = true;
@@ -41,6 +41,14 @@ namespace EUniversity.Extensions
 					options.User.RequireUniqueEmail = true;
 				})
 				.AddEntityFrameworkStores<ApplicationDbContext>();
+
+			services
+				.AddIdentityCore<ApplicationUser>(o =>
+			{
+				o.Stores.MaxLengthForKeys = 128;
+			})
+				.AddDefaultUI()
+				.AddDefaultTokenProviders();
 
 			services.AddIdentityServer()
 				.AddApiAuthorization<ApplicationUser, ApplicationDbContext>();

@@ -12,7 +12,9 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddAntiforgery(options => options.HeaderName = "X-XSRF-Token");
+
 builder.Services.AddCustomizedIdentity();
+builder.Services.AddAuthorization();
 
 builder.Services
 	.AddControllers()
@@ -58,5 +60,8 @@ app.MapControllerRoute(
 app.MapRazorPages();
 
 app.MapFallbackToFile("index.html");
+
+app.CreateRoles();
+app.CreateAdministrator();
 
 app.Run();
