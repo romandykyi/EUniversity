@@ -28,10 +28,6 @@ namespace EUniversity.Controllers
 		/// <response code="204">Success</response>
 		/// <response code="400">Malformed input</response>
 		/// <response code="401">Invalid login attempt</response>
-		/// <returns>
-		/// <para>204 - Success</para>
-		/// <para>201 - Invalid login attempt</para>
-		/// </returns>
 		[HttpPost]
 		[AllowAnonymous]
 		[Route("login")]
@@ -53,10 +49,6 @@ namespace EUniversity.Controllers
 		/// </summary>
 		/// <response code="204">Success</response>
 		/// <response code="401">Unauthorized user call</response>
-		/// <returns>
-		/// <para>204 - Success</para>
-		/// <para>401 - Unauthorized user call</para>
-		/// </returns>
 		[HttpPost]
 		[Authorize]
 		[Route("logout")]
