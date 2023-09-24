@@ -44,6 +44,8 @@ namespace EUniversity.Extensions
 					options.Password.RequiredUniqueChars = 3;
 
 					options.User.RequireUniqueEmail = true;
+					// Alphanumeric characters with dashes, underscores and periods
+					options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._";
 				})
 				.AddEntityFrameworkStores<ApplicationDbContext>();
 
