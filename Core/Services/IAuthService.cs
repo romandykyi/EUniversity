@@ -30,6 +30,6 @@ namespace EUniversity.Core.Services
 		/// <summary>
 		/// Logs out current user.
 		/// </summary>
-		Task LogOut();
+		Task LogOutAsync();
 	}
 }

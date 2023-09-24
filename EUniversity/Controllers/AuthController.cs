@@ -2,6 +2,7 @@
 using EUniversity.Core.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Attributes;
 
 namespace EUniversity.Controllers
@@ -27,19 +28,23 @@ namespace EUniversity.Controllers
 		/// <response code="204">Success</response>
 		/// <response code="400">Malformed input</response>
 		/// <response code="401">Invalid login attempt</response>
+		/// <returns>
+		/// <para>204 - Success</para>
+		/// <para>201 - Invalid login attempt</para>
+		/// </returns>
 		[HttpPost]
 		[AllowAnonymous]
 		[Route("login")]
 		[ProducesResponseType(StatusCodes.Status204NoContent)]
 		[ProducesResponseType(StatusCodes.Status400BadRequest)]
 		[ProducesResponseType(StatusCodes.Status401Unauthorized)]
-		public async Task<IActionResult> LogIn([FromBody] LogInDto login)
+		public async Task<IStatusCodeActionResult> LogIn([FromBody] LogInDto login)
 		{
 			if (await _authService.LogInAsync(login))
 			{
 				return NoContent();
 			}
-
+			
 			return Problem(statusCode: StatusCodes.Status401Unauthorized, title: "Invalid login attempt");
 		}
 
@@ -48,14 +53,18 @@ namespace EUniversity.Controllers
 		/// </summary>
 		/// <response code="204">Success</response>
 		/// <response code="401">Unauthorized user call</response>
+		/// <returns>
+		/// <para>204 - Success</para>
+		/// <para>401 - Unauthorized user call</para>
+		/// </returns>
 		[HttpPost]
 		[Authorize]
 		[Route("logout")]
 		[ProducesResponseType(StatusCodes.Status204NoContent)]
 		[ProducesResponseType(StatusCodes.Status401Unauthorized)]
-		public async Task<IActionResult> LogOut()
+		public async Task<IStatusCodeActionResult> LogOut()
 		{
-			await _authService.LogOut();
+			await _authService.LogOutAsync();
 			return NoContent();
 		}
 	}
