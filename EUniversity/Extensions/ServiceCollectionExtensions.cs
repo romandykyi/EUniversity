@@ -83,8 +83,9 @@ namespace EUniversity.Extensions
 			services.AddValidatorsFromAssemblyContaining<LogInDtoValidator>();
 			return services.AddFluentValidationAutoValidation(configuration =>
 			{
-				// Disable the built-in .NET model (data annotations) validation.
-				configuration.DisableBuiltInModelValidation = true;
+				// Don't disable built in validation because without it some auth logic
+				// doesn't work
+				configuration.DisableBuiltInModelValidation = false;
 
 				// Only validate controllers decorated with the `FluentValidationAutoValidation` attribute.
 				configuration.ValidationStrategy = ValidationStrategy.Annotations;
