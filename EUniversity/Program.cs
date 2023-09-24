@@ -59,3 +59,5 @@ app.CreateRoles();
 app.CreateAdministrator();
 
 app.Run();
+
+public partial class Program { }
