@@ -10,6 +10,7 @@ using FluentValidation;
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Enums;
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Extensions;
 using System.Text.Json.Serialization;
+using Microsoft.EntityFrameworkCore;
 
 namespace EUniversity.Extensions
 {
