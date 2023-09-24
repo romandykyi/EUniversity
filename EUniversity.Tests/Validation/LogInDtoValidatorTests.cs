@@ -1,7 +1,8 @@
 ﻿using EUniversity.Core.Dtos.Auth;
 using EUniversity.Core.Validation;
+using FluentValidation.TestHelper;
 
-namespace EUniversity.Tests.Validator
+namespace EUniversity.Tests.Validation
 {
 	public class LogInDtoValidatorTests
 	{
@@ -24,10 +25,10 @@ namespace EUniversity.Tests.Validator
 			};
 
 			// Act
-			var result = _validator.Validate(logInDto);
+			var result = _validator.TestValidate(logInDto);
 
 			// Assert
-			Assert.That(result.IsValid);
+			result.ShouldNotHaveAnyValidationErrors();
 		}
 
 		[Test]
@@ -41,14 +42,12 @@ namespace EUniversity.Tests.Validator
 			};
 
 			// Act
-			var result = _validator.Validate(logInDto);
+			var result = _validator.TestValidate(logInDto);
 
 			// Assert
-			Assert.Multiple(() =>
-			{
-				Assert.That(result.IsValid, Is.Not.True);
-				Assert.That(result.Errors[0].ErrorMessage, Is.EqualTo("Username is required"));
-			});
+			result.ShouldHaveValidationErrorFor(x => x.UserName)
+				.WithErrorMessage("Username is required")
+				.Only();
 		}
 
 		[Test]
@@ -62,14 +61,12 @@ namespace EUniversity.Tests.Validator
 			};
 
 			// Act
-			var result = _validator.Validate(logInDto);
+			var result = _validator.TestValidate(logInDto);
 
 			// Assert
-			Assert.Multiple(() =>
-			{
-				Assert.That(result.IsValid, Is.Not.True);
-				Assert.That(result.Errors[0].ErrorMessage, Is.EqualTo("Password is required"));
-			});
+			result.ShouldHaveValidationErrorFor(x => x.Password)
+				.WithErrorMessage("Password is required")
+				.Only();
 		}
 	}
 }
