@@ -3,18 +3,20 @@ using System.Net;
 
 namespace EUniversity.IntegrationTests.Controllers
 {
-	public sealed class AuthControllerTests : IDisposable
+	public class AuthControllerTests
 	{
-		private readonly ProgramWebApplicationFactory _factory;
-		private readonly HttpClient _client;
+		private ProgramWebApplicationFactory _factory;
+		private HttpClient _client;
 
-		public AuthControllerTests()
+		[SetUp]
+		public void SetUp()
 		{
 			_factory = new ProgramWebApplicationFactory();
 			_client = _factory.CreateClient();
 		}
 
-		public void Dispose()
+		[TearDown]
+		public void TearDown()
 		{
 			_client.Dispose();
 			_factory.Dispose();
