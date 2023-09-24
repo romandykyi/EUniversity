@@ -52,7 +52,6 @@ namespace EUniversity.Extensions
 			{
 				o.Stores.MaxLengthForKeys = 128;
 			})
-				.AddDefaultUI()
 				.AddDefaultTokenProviders();
 
 			services.AddIdentityServer()

@@ -19,7 +19,6 @@ builder.Services.AddAuthorization();
 
 builder.Services.ConfigureControllers();
 builder.Services.AddFluentValidation();
-builder.Services.AddRazorPages();
 
 builder.Services.AddSwagger();
 builder.Services.AddAutoMapper(typeof(Program));
@@ -53,7 +52,6 @@ app.UseAuthorization();
 app.MapControllerRoute(
 	name: "default",
 	pattern: "{controller}/{action=Index}/{id?}");
-app.MapRazorPages();
 
 app.MapFallbackToFile("index.html");
 
