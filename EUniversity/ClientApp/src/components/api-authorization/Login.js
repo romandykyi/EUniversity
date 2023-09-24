@@ -1,4 +1,4 @@
-import React from 'react'
+    import React from 'react'
 import { Component } from 'react';
 import authService from './AuthorizeService';
 import { AuthenticationResultStatus } from './AuthorizeService';
