@@ -62,7 +62,7 @@ namespace EUniversity.Extensions
 
 			return services.ConfigureApplicationCookie(options =>
 			{
-				// Return 401 when user is not authrorized
+				// Return 401 when user is not authorized
 				options.Events.OnRedirectToLogin = context =>
 				{
 					context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
