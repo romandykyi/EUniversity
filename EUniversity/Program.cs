@@ -17,7 +17,7 @@ builder.Services.ConfigureAppServices();
 builder.Services.AddCustomizedIdentity();
 builder.Services.AddAuthorization();
 
-builder.Services.AddControllers();
+builder.Services.ConfigureControllers();
 builder.Services.AddFluentValidation();
 builder.Services.AddRazorPages();
 

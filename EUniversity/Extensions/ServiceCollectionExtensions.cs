@@ -9,6 +9,7 @@ using System.Reflection;
 using FluentValidation;
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Enums;
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Extensions;
+using System.Text.Json.Serialization;
 
 namespace EUniversity.Extensions
 {
@@ -100,6 +101,17 @@ namespace EUniversity.Extensions
 		{
 			return services
 				.AddScoped<IAuthService, AuthService>();
+		}
+
+		public static IMvcBuilder ConfigureControllers(this IServiceCollection builder)
+		{
+			return builder
+				.AddControllers()
+				.AddJsonOptions(options =>
+				{
+					options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+				})
+				.ConfigureApiBehaviorOptions(x => { x.SuppressMapClientErrors = true; });
 		}
 	}
 }
