@@ -49,7 +49,7 @@ namespace EUniversity.Infrastructure.Services
 		}
 
 		/// <inheritdoc />
-		public async Task LogOut()
+		public async Task LogOutAsync()
 		{
 			await _signInManager.SignOutAsync();
 		}
