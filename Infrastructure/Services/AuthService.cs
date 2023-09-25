@@ -27,6 +27,7 @@ namespace EUniversity.Infrastructure.Services
 		/// <inheritdoc />
 		public async Task<IdentityResult> RegisterAsync(RegisterDto register)
 		{
+			throw new NotImplementedException();
 			var newUser = Activator.CreateInstance<ApplicationUser>();
 
 			await _userStore.SetUserNameAsync(newUser, register.UserName, CancellationToken.None);
@@ -52,6 +53,12 @@ namespace EUniversity.Infrastructure.Services
 		public async Task LogOutAsync()
 		{
 			await _signInManager.SignOutAsync();
+		}
+
+		/// <inheritdoc />
+		public async Task<IdentityResult> ChangePasswordAsync(ApplicationUser user, ChangePasswordDto password)
+		{
+			return await _userManager.ChangePasswordAsync(user, password.Old, password.New);
 		}
 	}
 }

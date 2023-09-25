@@ -1,4 +1,5 @@
-﻿using EUniversity.Core.Dtos.Auth;
+﻿using EUniversity.Core.Models;
+using EUniversity.Core.Dtos.Auth;
 using Microsoft.AspNetCore.Identity;
 
 namespace EUniversity.Core.Services
@@ -31,5 +32,19 @@ namespace EUniversity.Core.Services
 		/// Logs out current user.
 		/// </summary>
 		Task LogOutAsync();
+
+		/// <summary>
+		/// Changes a password for the user.
+		/// </summary>
+		/// <param name="user">
+		/// User which password will be changed.
+		/// </param>
+		/// <param name="password">
+		/// Old and new passwords.
+		/// </param>
+		/// <returns>
+		/// Result of the operation.
+		/// </returns>
+		Task<IdentityResult> ChangePasswordAsync(ApplicationUser user, ChangePasswordDto password);
 	}
 }
