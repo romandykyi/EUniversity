@@ -7,42 +7,46 @@ namespace EUniversity.Tests.Validation
 	public class LogInDtoValidatorTests
 	{
 		private LogInDtoValidator _validator;
+		private LogInDto _login;
+
+		[SetUp]
+		public void SetUp()
+		{
+			// Valid login for all properties
+			_login = new()
+			{
+				UserName = "user",
+				Password = "Passw0rd123"
+			};
+		}
 
 		[OneTimeSetUp]
-		public void SetUp()
+		public void OneTimeSetUp()
 		{
 			_validator = new LogInDtoValidator();
 		}
 
 		[Test]
-		public void ValidInput_IsValid()
+		public void Input_Valid_IsValid()
 		{
 			// Arrange
-			var logInDto = new LogInDto
-			{
-				UserName = "testuser",
-				Password = "password123"
-			};
+			var login = _login;
 
 			// Act
-			var result = _validator.TestValidate(logInDto);
+			var result = _validator.TestValidate(login);
 
 			// Assert
 			result.ShouldNotHaveAnyValidationErrors();
 		}
 
 		[Test]
-		public void EmptyUserName_IsInvalid()
+		public void UserName_Empty_IsInvalid()
 		{
 			// Arrange
-			var logInDto = new LogInDto
-			{
-				UserName = "",
-				Password = "password123"
-			};
+			_login.UserName = string.Empty;
 
 			// Act
-			var result = _validator.TestValidate(logInDto);
+			var result = _validator.TestValidate(_login);
 
 			// Assert
 			result.ShouldHaveValidationErrorFor(x => x.UserName)
@@ -51,17 +55,13 @@ namespace EUniversity.Tests.Validation
 		}
 
 		[Test]
-		public void EmptyPassword_IsInvalid()
+		public void Password_Empty_IsInvalid()
 		{
 			// Arrange
-			var logInDto = new LogInDto
-			{
-				UserName = "testuser",
-				Password = ""
-			};
+			_login.Password = string.Empty;
 
 			// Act
-			var result = _validator.TestValidate(logInDto);
+			var result = _validator.TestValidate(_login);
 
 			// Assert
 			result.ShouldHaveValidationErrorFor(x => x.Password)
