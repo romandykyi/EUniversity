@@ -46,7 +46,9 @@ namespace EUniversity.Extensions
 				ApplicationUser user = new()
 				{
 					UserName = userName,
-					Email = email
+					Email = email,
+					FirstName = "Admino",
+					LastName = "Guru"
 				};
 
 				userManager.CreateAsync(user, password).Wait();
