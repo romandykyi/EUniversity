@@ -2,7 +2,7 @@
 {
 	public class ChangePasswordDto
 	{
-		public string Old { get; set; } = null!;
+		public string Current { get; set; } = null!;
 		public string New { get; set; } = null!;
 	}
 }

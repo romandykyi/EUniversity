@@ -58,7 +58,7 @@ namespace EUniversity.Infrastructure.Services
 		/// <inheritdoc />
 		public async Task<IdentityResult> ChangePasswordAsync(ApplicationUser user, ChangePasswordDto password)
 		{
-			return await _userManager.ChangePasswordAsync(user, password.Old, password.New);
+			return await _userManager.ChangePasswordAsync(user, password.Current, password.New);
 		}
 	}
 }
