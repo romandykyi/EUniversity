@@ -2,6 +2,12 @@ import { useState } from "react"
 import Button from "../UI/Button/Button";
 import authorizeService from "../api-authorization/AuthorizeService";
 
+import {useNavigate} from "react-router-dom";
+
+// TT DO:
+// do a show password button
+// redirection to login
+
 const Login = () => {
 
     const [formData, setFormData] = useState({
@@ -11,6 +17,7 @@ const Login = () => {
     });
     const [error,setError] = useState(false);
 
+    const navigate = useNavigate();
 
     const handleInputChange = e => {
         const { name, value } = e.target;
@@ -32,6 +39,7 @@ const Login = () => {
 
         const { username, password, rememberMe } = formData;
 
+
         const requestBody = {
             username: username,
             password: password,
@@ -50,6 +58,7 @@ const Login = () => {
 
                 if (response.ok) {
                     await authorizeService.signIn();
+                    navigate('/');
                 } else {
                     console.error("Error:", response.status, response.statusText);
                 }

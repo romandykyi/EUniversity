@@ -5,11 +5,13 @@ import AuthorizeRoute from './components/api-authorization/AuthorizeRoute';
 import Layout from "./components/Layout";
 import './custom.css';
 import './styles/style.css';
+import Login from "./components/Pages/Login";
 
 const App = () => {
     return (
         <Layout>
             <Routes>
+                <Route path="/login" element={<Login/>} />
                 {AppRoutes.map((route, index) => {
                     const { element, requireAuth, ...rest } = route;
                     return (
