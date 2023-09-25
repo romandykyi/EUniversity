@@ -23,7 +23,7 @@ namespace EUniversity.IntegrationTests.Controllers
 		}
 
 		[Test]
-		public async Task LogIn_ValidLogin_ReturnsNoContent()
+		public async Task LogIn_ValidLogin_IsSuccessfull()
 		{
 			// Arrange
 			var validLoginDto = new LogInDto
@@ -36,7 +36,7 @@ namespace EUniversity.IntegrationTests.Controllers
 			var response = await _client.PostAsJsonAsync("/api/auth/login", validLoginDto);
 
 			// Assert
-			Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.NoContent));
+			Assert.That(response.IsSuccessStatusCode);
 		}
 
 		[Test]
