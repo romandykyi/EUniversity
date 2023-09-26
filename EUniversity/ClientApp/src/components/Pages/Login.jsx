@@ -15,8 +15,8 @@ const Login = () => {
         password: '',
         rememberMe: false,
     });
-    const [error,setError] = useState(false);
-
+    const [error,setError] = useState('');
+    const [isPasswordShowed, setIsPasswordShowed] = useState(false);
     const navigate = useNavigate();
 
     const handleInputChange = e => {
@@ -28,10 +28,15 @@ const Login = () => {
     };
     const handleCheckboxChanges = e => {
         const {name, checked} = e.target;
-        setFormData({
-            ...formData,
-            [name]: checked,
-        });
+        if (name === "showPassword") {
+            setIsPasswordShowed(prevState => !prevState);
+        }
+        else {
+            setFormData({
+                ...formData,
+                [name]: checked,
+            });
+        }
     };
 
     const handleSubmit = async (e) => {
@@ -46,7 +51,7 @@ const Login = () => {
             rememberMe: rememberMe,
         };
         if (username && password) {
-            setError(false);
+            setError('');
             try {
                 const response = await fetch("/api/auth/login", {
                     method: "POST",
@@ -61,13 +66,16 @@ const Login = () => {
                     navigate('/');
                 } else {
                     console.error("Error:", response.status, response.statusText);
+                    if (response.status === 401) {
+                        setError('incorrect login or password');
+                    }
                 }
             } catch (error) {
                 console.error("An error occurred:", error);
             }
         }
         else {
-            setError(true);
+            setError('fill all the blanks!');
         }
     };
 
@@ -87,20 +95,30 @@ const Login = () => {
                         name="username"
                     />
                     <input
-                        type="password"
+                        type={isPasswordShowed ? "text" : "password"}
                         value={formData.password}
                         className="login__input form-control"
                         placeholder="your password"
                         onChange={handleInputChange}
                         name="password"
+                        style={{
+                            marginBottom: 4
+                        }}
                     />
-                    {
-                        error
-                            ? <div className="login__error">
-                                fill all the blanks
-                              </div>
-                            : ''
-                    }
+                    <div className="login__checkboxDiv" style={{ marginBottom: 16 }}>
+                        <input
+                            type="checkbox"
+                            checked={isPasswordShowed}
+                            className="login__checkbox form-check-input"
+                            onChange={handleCheckboxChanges}
+                            name="showPassword"
+                            id="showPassword"
+                        />
+                        <label className="form-check-label" htmlFor="showPassword">show password</label>
+                    </div>
+                    <div className="login__error">
+                        {error}
+                    </div>
                     <div className="login__checkboxDiv">
                         <input
                             type="checkbox"

@@ -3,6 +3,7 @@ import { Counter } from "./components/Counter";
 import { FetchData } from "./components/FetchData";
 import Home from "./components/Home";
 import Login from "./components/Pages/Login";
+import ChangePassword from "./components/Pages/ChangePassword";
 
 const AppRoutes = [
   {
@@ -17,6 +18,11 @@ const AppRoutes = [
     path: '/fetch-data',
     requireAuth: true,
     element: <FetchData />
+  },
+  {
+    path: '/change-password',
+    requireAuth: true,
+    element: <ChangePassword />
   },
   {
     path: '/login',

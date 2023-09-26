@@ -4,7 +4,7 @@
     padding: 0;
 }
 
-.login {
+.login, .changePassword {
     &__title {
         font-size: 40px;
     }
@@ -30,5 +30,14 @@
     &__error {
         font-size: 14px;
         color: #ff4c4c;
+    }
+}
+
+.changePassword {
+    &__checkboxDiv {
+        margin-bottom: 20px;
+    }
+    &__input {
+        margin-bottom: 4px;
     }
 }

@@ -10,14 +10,19 @@ const NavMenu = () => {
   const [collapsed, setCollapsed] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  useEffect(() => {
-    const checkAuthentication = async () => {
-      const isAuthenticated = await authService.isAuthenticated();
-      setIsAuthenticated(isAuthenticated);
-    };
+    useEffect(() => {
+        const checkAuthentication = async () => {
+            const isAuthenticated = await authService.isAuthenticated();
+            setIsAuthenticated(isAuthenticated);
+        };
+        checkAuthentication();
 
-    checkAuthentication();
-  }, []);
+        const subscriptionId = authService.subscribe(checkAuthentication);
+
+        return () => {
+            authService.unsubscribe(subscriptionId);
+        };
+    }, []);
 
   const toggleNavbar = () => {
     setCollapsed(!collapsed);
@@ -30,15 +35,24 @@ const NavMenu = () => {
           <NavbarToggler onClick={toggleNavbar} className="mr-2" />
           <Collapse className="d-sm-inline-flex flex-sm-row-reverse" isOpen={!collapsed} navbar>
             <ul className="navbar-nav flex-grow">
-                    <NavItem>
-                      <NavLink tag={Link} className="text-dark" to="/">Home</NavLink>
-                    </NavItem>
-                    <NavItem>
-                      <NavLink tag={Link} className="text-dark" to="/counter">Counter</NavLink>
-                    </NavItem>
-                    <NavItem>
-                      <NavLink tag={Link} className="text-dark" to="/fetch-data">Fetch data</NavLink>
-                    </NavItem>
+                {
+                    isAuthenticated
+                    ? <div className="navbar-nav flex-grow">
+                            <NavItem>
+                                <NavLink tag={Link} className="text-dark" to="/">Home</NavLink>
+                            </NavItem>
+                            <NavItem>
+                                <NavLink tag={Link} className="text-dark" to="/counter">Counter</NavLink>
+                            </NavItem>
+                            <NavItem>
+                                <NavLink tag={Link} className="text-dark" to="/fetch-data">Fetch data</NavLink>
+                            </NavItem>
+                            <NavItem>
+                                <NavLink tag={Link} className="text-dark" to="/change-password">Change password</NavLink>
+                            </NavItem>
+                      </div>
+                    : ""
+                }
               <LoginMenu />
             </ul>
           </Collapse>
