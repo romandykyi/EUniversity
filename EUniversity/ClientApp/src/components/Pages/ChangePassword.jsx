@@ -83,7 +83,7 @@ const ChangePassword = () => {
                 <div className="changePassword__inputs">
                     <input
                         type={checkBoxes.checkbox1 ? "text" : "password"}
-                        value={formData.username}
+                        value={formData.currentPassword}
                         className="changePassword__input form-control"
                         placeholder="current password"
                         onChange={handleInputChange}
@@ -102,7 +102,7 @@ const ChangePassword = () => {
                     </div>
                     <input
                         type={checkBoxes.checkbox2 ? "text" : "password"}
-                        value={formData.password}
+                        value={formData.newPassword}
                         className="changePassword__input form-control"
                         placeholder="new password"
                         onChange={handleInputChange}
@@ -129,6 +129,7 @@ const ChangePassword = () => {
 
                 </div>
                 <Button type="submit">Change password</Button>
+
             </form>
         </div>
     )

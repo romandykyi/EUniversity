@@ -6,7 +6,9 @@ import Layout from "./components/Layout";
 import './custom.css';
 import './styles/style.css';
 import Login from "./components/Pages/Login";
-
+//To do
+    // end a PasswordChangeBlock when password changes successfully
+    // add Redux to a project to realize some features with global states
 const App = () => {
     return (
         <Layout>

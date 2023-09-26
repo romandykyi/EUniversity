@@ -4,10 +4,6 @@ import authorizeService from "../api-authorization/AuthorizeService";
 
 import {useNavigate} from "react-router-dom";
 
-// TT DO:
-// do a show password button
-// redirection to login
-
 const Login = () => {
 
     const [formData, setFormData] = useState({
@@ -20,6 +16,7 @@ const Login = () => {
     const navigate = useNavigate();
 
     const handleInputChange = e => {
+        setError('');
         const { name, value } = e.target;
         setFormData({
             ...formData,
