@@ -13,8 +13,6 @@
   </ItemGroup>
 
 	<ItemGroup>
-		<Using Include="AutoMapper" />
-		<Using Include="AutoMapper.QueryableExtensions" />
 		<Using Include="System.ComponentModel.DataAnnotations" />
 		<Using Include="Microsoft.EntityFrameworkCore" />
 	</ItemGroup>

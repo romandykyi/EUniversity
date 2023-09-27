@@ -19,8 +19,6 @@
   </ItemGroup>
 
 	<ItemGroup>
-		<Using Include="AutoMapper" />
-		<Using Include="AutoMapper.QueryableExtensions" />
 		<Using Include="Microsoft.EntityFrameworkCore" />
 	</ItemGroup>
 

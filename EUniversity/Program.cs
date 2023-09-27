@@ -21,7 +21,6 @@ builder.Services.ConfigureControllers();
 builder.Services.AddFluentValidation();
 
 builder.Services.AddSwagger();
-builder.Services.AddAutoMapper(typeof(Program));
 
 var app = builder.Build();
 
