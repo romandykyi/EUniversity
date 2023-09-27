@@ -2,6 +2,7 @@
 using EUniversity.Core.Models;
 using EUniversity.Core.Services;
 using Microsoft.AspNetCore.Identity;
+using System.Security.Cryptography;
 
 namespace EUniversity.Infrastructure.Services
 {
@@ -10,25 +11,45 @@ namespace EUniversity.Infrastructure.Services
 	{
 		private readonly SignInManager<ApplicationUser> _signInManager;
 		private readonly UserManager<ApplicationUser> _userManager;
-		private readonly IUserStore<ApplicationUser> _userStore;
-		private readonly IUserEmailStore<ApplicationUser> _emailStore;
+		private readonly IAuthHelper _authHelper;
 
 		public AuthService(
 			UserManager<ApplicationUser> userManager,
-			IUserStore<ApplicationUser> userStore,
-			SignInManager<ApplicationUser> signInManager)
+			SignInManager<ApplicationUser> signInManager,
+			IAuthHelper authHelper)
 		{
 			_userManager = userManager;
-			_userStore = userStore;
-			_emailStore = (IUserEmailStore<ApplicationUser>)_userStore;
 			_signInManager = signInManager;
+			_authHelper = authHelper;
 		}
 
 		/// <inheritdoc />
 		public async Task<IdentityResult> RegisterAsync(RegisterDto register,
-			string? username = null, string? password = null, params string[] roles)
+			string? userName = null, string? password = null, params string[] roles)
 		{
-			throw new NotImplementedException();
+			// Generate username and password if needed
+			using (RandomNumberGenerator rng = RandomNumberGenerator.Create())
+			{
+				userName ??= await _authHelper.GenerateUserNameAsync(rng, register.FirstName, register.LastName);
+				password ??= _authHelper.GeneratePassword(rng);
+			}
+
+			var user = new ApplicationUser()
+			{
+				FirstName = register.FirstName,
+				LastName = register.LastName,
+				MiddleName = string.IsNullOrWhiteSpace(register.MiddleName) ? null : register.MiddleName,
+				Email = register.Email,
+				UserName = userName
+			};
+
+			var result = await _userManager.CreateAsync(user, password);
+			if (!result.Succeeded)
+			{
+				return result;
+			}
+
+			return await _userManager.AddToRolesAsync(user, roles);
 		}
 
 		/// <inheritdoc />
