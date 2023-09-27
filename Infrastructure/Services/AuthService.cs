@@ -28,11 +28,6 @@ namespace EUniversity.Infrastructure.Services
 		public async Task<IdentityResult> RegisterAsync(RegisterDto register)
 		{
 			throw new NotImplementedException();
-			var newUser = Activator.CreateInstance<ApplicationUser>();
-
-			await _userStore.SetUserNameAsync(newUser, register.UserName, CancellationToken.None);
-			await _emailStore.SetEmailAsync(newUser, register.Email, CancellationToken.None);
-			return await _userManager.CreateAsync(newUser, register.Password);
 		}
 
 		/// <inheritdoc />
@@ -45,7 +40,6 @@ namespace EUniversity.Infrastructure.Services
 			{
 				return true;
 			}
-
 			return false;
 		}
 

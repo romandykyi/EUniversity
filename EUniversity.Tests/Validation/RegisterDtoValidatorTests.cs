@@ -8,18 +8,18 @@ namespace EUniversity.Tests.Validation
 	public class RegisterDtoValidatorTests
 	{
 		private RegisterDtoValidator _validator;
-
-		private RegisterDto register;
+		private RegisterDto _register;
 
 		[SetUp]
 		public void SetUp()
 		{
 			// Valid register for all properties
-			register = new()
+			_register = new()
 			{
-				UserName = "user",
-				Email = "email@email.com",
-				Password = "Passw0rd123",
+				Email = "heisenberg@blue-crystals.com",
+				FirstName = "Walter",
+				MiddleName = "Hartwell",
+				LastName = "White"
 			};
 		}
 
@@ -37,10 +37,10 @@ namespace EUniversity.Tests.Validation
 		public void Email_Valid_IsValid(string email)
 		{
 			// Arrange
-			register.Email = email;
+			_register.Email = email;
 
 			// Act
-			var result = _validator.TestValidate(register);
+			var result = _validator.TestValidate(_register);
 
 			// Assert
 			result.ShouldNotHaveAnyValidationErrors();
@@ -51,10 +51,10 @@ namespace EUniversity.Tests.Validation
 		{
 			// Arrange
 			string bigString = new('a', ApplicationUser.MaxEmailLength);
-			register.Email = $"{bigString}@email.com";
+			_register.Email = $"{bigString}@email.com";
 
 			// Act
-			var result = _validator.TestValidate(register);
+			var result = _validator.TestValidate(_register);
 
 			// Assert
 			result.ShouldHaveValidationErrorFor(x => x.Email)
@@ -68,10 +68,10 @@ namespace EUniversity.Tests.Validation
 		public void Email_Invalid_IsInvalid(string email)
 		{
 			// Arrange
-			register.Email = email;
+			_register.Email = email;
 
 			// Act
-			var result = _validator.TestValidate(register);
+			var result = _validator.TestValidate(_register);
 
 			// Assert
 			result.ShouldHaveValidationErrorFor(x => x.Email)
@@ -80,120 +80,145 @@ namespace EUniversity.Tests.Validation
 		}
 
 		[Test]
-		[TestCase("username")]
-		[TestCase("User_Name")]
-		[TestCase("user-name")]
-		[TestCase("user.name")]
-		[TestCase("userName123")]
-		public void UserName_Valid_IsValid(string userName)
+		[TestCase("Jane")]
+		[TestCase("Максим")]
+		[TestCase("Włodzimierz")]
+		[TestCase("大麓")]
+		[TestCase("حكيم")]
+		public void FirstName_Valid_IsValid(string firstName)
 		{
 			// Arrange
-			register.UserName = userName;
+			_register.FirstName = firstName;
 
 			// Act
-			var result = _validator.TestValidate(register);
+			var result = _validator.TestValidate(_register);
 
 			// Assert
 			result.ShouldNotHaveAnyValidationErrors();
 		}
 
 		[Test]
-		public void UserName_Empty_IsInvalid()
+		public void FirstName_Empty_IsInvalid()
 		{
 			// Arrange
-			register.UserName = string.Empty;
+			_register.FirstName = string.Empty;
 
 			// Act
-			var result = _validator.TestValidate(register);
+			var result = _validator.TestValidate(_register);
 
 			// Assert
-			result.ShouldHaveValidationErrorFor(x => x.UserName)
-				.WithErrorMessage("Username is required")
+			result.ShouldHaveValidationErrorFor(x => x.FirstName)
+				.WithErrorMessage($"First name is required")
 				.Only();
 		}
 
 		[Test]
-		public void UserName_TooLarge_IsInvalid()
+		public void FirstName_TooLarge_IsInvalid()
 		{
 			// Arrange
-			register.UserName = new('a', ApplicationUser.MaxUserNameLength + 1);
+			_register.FirstName = new('a', ApplicationUser.MaxNameLength + 1);
 
 			// Act
-			var result = _validator.TestValidate(register);
+			var result = _validator.TestValidate(_register);
 
 			// Assert
-			result.ShouldHaveValidationErrorFor(x => x.UserName)
-				.WithErrorMessage($"Username cannot have more than {ApplicationUser.MaxUserNameLength} characters")
+			result.ShouldHaveValidationErrorFor(x => x.FirstName)
+				.WithErrorMessage($"First name cannot have more than {ApplicationUser.MaxNameLength} characters")
 				.Only();
 		}
 
 		[Test]
-		[TestCase("user name")]
-		[TestCase("/!, -")]
-		[TestCase("user1?")]
-		[TestCase("user300$")]
-		public void UserName_Invalid_IsInvalid(string userName)
+		[TestCase("O'Neill")]
+		[TestCase("Скляр")]
+		[TestCase("Brzęczyszczykiewicz")]
+		[TestCase("鈴木")]
+		[TestCase("أَحْمَدَ")]
+		public void LastName_Valid_IsValid(string lastName)
 		{
 			// Arrange
-			register.UserName = userName;
+			_register.LastName = lastName;
 
 			// Act
-			var result = _validator.TestValidate(register);
-
-			// Assert
-			result.ShouldHaveValidationErrorFor(x => x.UserName)
-				.WithErrorMessage("Username contains invalid characters")
-				.Only();
-		}
-
-		[Test]
-		[TestCase("Password1")]
-		[TestCase("pAss300$")]
-		[TestCase("wp8rXW9U5u9x")]
-		public void Password_Valid_IsValid(string password)
-		{
-			// Arrange
-			register.Password = password;
-
-			// Act
-			var result = _validator.TestValidate(register);
+			var result = _validator.TestValidate(_register);
 
 			// Assert
 			result.ShouldNotHaveAnyValidationErrors();
 		}
 
 		[Test]
-		public void Password_TooLarge_IsInvalid()
+		public void LastName_Empty_IsInvalid()
 		{
 			// Arrange
-			string bigString = new('*', ApplicationUser.MaxPasswordLength);
-			register.Password = $"Ab1{bigString}";
+			_register.LastName = string.Empty;
 
 			// Act
-			var result = _validator.TestValidate(register);
+			var result = _validator.TestValidate(_register);
 
 			// Assert
-			result.ShouldHaveValidationErrorFor(x => x.Password)
-				.WithErrorMessage($"Password cannot have more than {ApplicationUser.MaxPasswordLength} characters")
+			result.ShouldHaveValidationErrorFor(x => x.LastName)
+				.WithErrorMessage($"Last name is required")
 				.Only();
 		}
 
 		[Test]
+		public void LastName_TooLarge_IsInvalid()
+		{
+			// Arrange
+			_register.LastName = new('a', ApplicationUser.MaxNameLength + 1);
+
+			// Act
+			var result = _validator.TestValidate(_register);
+
+			// Assert
+			result.ShouldHaveValidationErrorFor(x => x.LastName)
+				.WithErrorMessage($"Last name cannot have more than {ApplicationUser.MaxNameLength} characters")
+				.Only();
+		}
+
+		[Test]
+		[TestCase("Orion")]
+		[TestCase("Зиновій")]
+		[TestCase("Michał")]
+		public void MiddleName_Valid_IsValid(string middleName)
+		{
+			// Arrange
+			_register.MiddleName = middleName;
+
+			// Act
+			var result = _validator.TestValidate(_register);
+
+			// Assert
+			result.ShouldNotHaveAnyValidationErrors();
+		}
+
+		[Test]
+		[TestCase(null)]
 		[TestCase("")]
-		[TestCase("12345")]
-		[TestCase("password")]
-		[TestCase("aCb12j")]
-		public void Password_Weak_IsInvalid(string password)
+		[TestCase("   ")]
+		public void MiddleName_Empty_IsValid(string middleName)
 		{
 			// Arrange
-			register.Password = password;
+			_register.MiddleName = middleName;
 
 			// Act
-			var result = _validator.TestValidate(register);
+			var result = _validator.TestValidate(_register);
 
 			// Assert
-			result.ShouldHaveValidationErrorFor(x => x.Password)
-				.WithErrorMessage("Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, and one number")
+			result.ShouldNotHaveAnyValidationErrors();
+		}
+
+		[Test]
+		public void MiddleName_TooLarge_IsInvalid()
+		{
+			// Arrange
+			_register.MiddleName = new('a', ApplicationUser.MaxNameLength + 1);
+
+			// Act
+			var result = _validator.TestValidate(_register);
+
+			// Assert
+			result.ShouldHaveValidationErrorFor(x => x.MiddleName)
+				.WithErrorMessage($"Middle name cannot have more than {ApplicationUser.MaxNameLength} characters")
 				.Only();
 		}
 	}
