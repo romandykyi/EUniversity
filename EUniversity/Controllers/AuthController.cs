@@ -69,8 +69,8 @@ namespace EUniversity.Controllers
 		/// Changes a password of current user.
 		/// </summary>
 		/// <response code="204">Success</response>
-		/// <response code="400">Malformed input/Incorrect password</response>
-		/// <response code="401">Unauthorized user call</response>
+		/// <response code="400">Malformed input</response>
+		/// <response code="401">Unauthorized user call/Incorrect current password</response>
 		[HttpPost]
 		[Authorize]
 		[Route("password/change")]
@@ -82,17 +82,15 @@ namespace EUniversity.Controllers
 			var result = await _authService.ChangePasswordAsync(User.GetSubjectId()!, password);
 			if (!result.Succeeded)
 			{
+				// If current password is incorrect
+				if (result.Errors.Any(e => e.Code == "PasswordMismatch"))
+				{
+					return Problem(statusCode: StatusCodes.Status401Unauthorized, title: "Incorrect password");
+				}
+				// Password validation errors
 				foreach (var error in result.Errors)
 				{
-					string errorKey;
-					if (error.Code.Contains("UserName"))
-						errorKey = "UserName";
-					else if (error.Code.Contains("Password"))
-						errorKey = "Password";
-					else
-						errorKey = string.Empty;
-
-					ModelState.AddModelError(errorKey, error.Description);
+					ModelState.AddModelError("New", error.Description);
 				}
 				return BadRequest(new ValidationProblemDetails(ModelState));
 			}
