@@ -11,7 +11,6 @@ namespace EUniversity.Core.Models
 
 		public const int MaxUserNameLength = 256;
 		public const int MaxEmailLength = 256;
-		public const int MaxPasswordLength = 100;
 
 		// Attributes here are used for restricting length of names in the database,
 		// not for validation:
