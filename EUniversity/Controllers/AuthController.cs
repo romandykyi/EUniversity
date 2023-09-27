@@ -65,9 +65,18 @@ namespace EUniversity.Controllers
 			return NoContent();
 		}
 
+		/// <summary>
+		/// Changes a password of current user.
+		/// </summary>
+		/// <response code="204">Success</response>
+		/// <response code="400">Malformed input/Incorrect password</response>
+		/// <response code="401">Unauthorized user call</response>
 		[HttpPost]
 		[Authorize]
 		[Route("password/change")]
+		[ProducesResponseType(StatusCodes.Status204NoContent)]
+		[ProducesResponseType(StatusCodes.Status400BadRequest)]
+		[ProducesResponseType(StatusCodes.Status401Unauthorized)]
 		public async Task<IStatusCodeActionResult> ChangePassword([FromBody] ChangePasswordDto password)
 		{
 			var result = await _authService.ChangePasswordAsync(User.GetSubjectId()!, password);
