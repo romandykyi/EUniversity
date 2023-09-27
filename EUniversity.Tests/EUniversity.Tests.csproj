@@ -22,8 +22,4 @@
     <ProjectReference Include="..\EUniversity\EUniversity.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Services\" />
-  </ItemGroup>
-
 </Project>
