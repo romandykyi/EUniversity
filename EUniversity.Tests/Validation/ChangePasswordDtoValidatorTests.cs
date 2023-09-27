@@ -70,6 +70,20 @@ namespace EUniversity.Tests.Validation
 		}
 
 		[Test]
+		public void Passwords_Empty_NoPasswordsAreEqualMessage()
+		{
+			// Arrange
+			_password.Current = _password.New = string.Empty;
+
+			// Act
+			var result = _validator.TestValidate(_password);
+
+			// Assert
+			result.ShouldHaveValidationErrorFor(x => x.New)
+				.WithoutErrorMessage("New password cannot be the same as old password");
+		}
+
+		[Test]
 		public void Passwords_Equal_IsInvalid()
 		{
 			// Arrange
