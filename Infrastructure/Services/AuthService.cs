@@ -25,7 +25,8 @@ namespace EUniversity.Infrastructure.Services
 		}
 
 		/// <inheritdoc />
-		public async Task<IdentityResult> RegisterAsync(RegisterDto register)
+		public async Task<IdentityResult> RegisterAsync(RegisterDto register,
+			string? username = null, string? password = null, params string[] roles)
 		{
 			throw new NotImplementedException();
 		}
@@ -50,9 +51,10 @@ namespace EUniversity.Infrastructure.Services
 		}
 
 		/// <inheritdoc />
-		public async Task<IdentityResult> ChangePasswordAsync(ApplicationUser user, ChangePasswordDto password)
+		public async Task<IdentityResult> ChangePasswordAsync(string userId, ChangePasswordDto password)
 		{
-			return await _userManager.ChangePasswordAsync(user, password.Current, password.New);
+			var appUser = await _userManager.FindByIdAsync(userId);
+			return await _userManager.ChangePasswordAsync(appUser!, password.Current, password.New);
 		}
 	}
 }
