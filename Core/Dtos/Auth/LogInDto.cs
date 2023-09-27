@@ -2,7 +2,7 @@
 
 namespace EUniversity.Core.Dtos.Auth
 {
-	[ValidateNever]
+	[ValidateNever] // Remove data annotations validation
 	public class LogInDto
 	{
 		public string UserName { get; set; } = null!;
