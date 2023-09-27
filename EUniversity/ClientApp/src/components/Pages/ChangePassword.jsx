@@ -43,8 +43,8 @@ const ChangePassword = () => {
 
 
         const requestBody = {
-            currentPassword: currentPassword,
-            newPassword: newPassword,
+            current: currentPassword,
+            new: newPassword,
         };
 
         if (newPassword && currentPassword) {
