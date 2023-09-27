@@ -103,7 +103,8 @@ namespace EUniversity.Extensions
 		public static IServiceCollection ConfigureAppServices(this IServiceCollection services)
 		{
 			return services
-				.AddScoped<IAuthService, AuthService>();
+				.AddScoped<IAuthService, AuthService>()
+				.AddScoped<IAuthHelper, AuthHelper>();
 		}
 
 		public static IMvcBuilder ConfigureControllers(this IServiceCollection builder)
