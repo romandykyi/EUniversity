@@ -25,14 +25,10 @@ namespace EUniversity.Infrastructure.Services
 		}
 
 		/// <inheritdoc />
-		public async Task<IdentityResult> RegisterAsync(RegisterDto register)
+		public async Task<IdentityResult> RegisterAsync(RegisterDto register,
+			string? username = null, string? password = null, params string[] roles)
 		{
 			throw new NotImplementedException();
-			var newUser = Activator.CreateInstance<ApplicationUser>();
-
-			await _userStore.SetUserNameAsync(newUser, register.UserName, CancellationToken.None);
-			await _emailStore.SetEmailAsync(newUser, register.Email, CancellationToken.None);
-			return await _userManager.CreateAsync(newUser, register.Password);
 		}
 
 		/// <inheritdoc />
@@ -45,7 +41,6 @@ namespace EUniversity.Infrastructure.Services
 			{
 				return true;
 			}
-
 			return false;
 		}
 
@@ -56,9 +51,10 @@ namespace EUniversity.Infrastructure.Services
 		}
 
 		/// <inheritdoc />
-		public async Task<IdentityResult> ChangePasswordAsync(ApplicationUser user, ChangePasswordDto password)
+		public async Task<IdentityResult> ChangePasswordAsync(string userId, ChangePasswordDto password)
 		{
-			return await _userManager.ChangePasswordAsync(user, password.Current, password.New);
+			var appUser = await _userManager.FindByIdAsync(userId);
+			return await _userManager.ChangePasswordAsync(appUser!, password.Current, password.New);
 		}
 	}
 }
