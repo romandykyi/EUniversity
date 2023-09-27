@@ -1,6 +1,9 @@
-﻿using EUniversity.Core.Dtos.Auth;
+﻿using Duende.IdentityServer.Extensions;
+using EUniversity.Core.Dtos.Auth;
+using EUniversity.Core.Models;
 using EUniversity.Core.Services;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Attributes;
@@ -16,10 +19,12 @@ namespace EUniversity.Controllers
 	public class AuthController : ControllerBase
 	{
 		private readonly IAuthService _authService;
+		private readonly UserManager<ApplicationUser> _userManager;
 
-		public AuthController(IAuthService authService)
+		public AuthController(IAuthService authService, UserManager<ApplicationUser> userManager)
 		{
 			_authService = authService;
+			_userManager = userManager;
 		}
 
 		/// <summary>
@@ -40,7 +45,7 @@ namespace EUniversity.Controllers
 			{
 				return NoContent();
 			}
-			
+
 			return Problem(statusCode: StatusCodes.Status401Unauthorized, title: "Invalid login attempt");
 		}
 
@@ -57,6 +62,32 @@ namespace EUniversity.Controllers
 		public async Task<IStatusCodeActionResult> LogOut()
 		{
 			await _authService.LogOutAsync();
+			return NoContent();
+		}
+
+		[HttpPost]
+		[Authorize]
+		[Route("password/change")]
+		public async Task<IStatusCodeActionResult> ChangePassword([FromBody] ChangePasswordDto password)
+		{
+			var result = await _authService.ChangePasswordAsync(User.GetSubjectId()!, password);
+			if (!result.Succeeded)
+			{
+				foreach (var error in result.Errors)
+				{
+					string errorKey;
+					if (error.Code.Contains("UserName"))
+						errorKey = "UserName";
+					else if (error.Code.Contains("Password"))
+						errorKey = "Password";
+					else
+						errorKey = string.Empty;
+
+					ModelState.AddModelError(errorKey, error.Description);
+				}
+				return BadRequest(new ValidationProblemDetails(ModelState));
+			}
+
 			return NoContent();
 		}
 	}
