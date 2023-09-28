@@ -18,7 +18,7 @@ namespace EUniversity.Core.Services
 		/// <returns>
 		/// Result of the operation.
 		/// </returns>
-		Task<IdentityResult> RegisterAsync(RegisterDto register, string? userName = null,
+		Task<RegisterResult> RegisterAsync(RegisterDto register, string? userName = null,
 			string? password = null, params string[] roles);
 
 		/// <summary>
