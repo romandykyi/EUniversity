@@ -69,7 +69,7 @@ namespace EUniversity.Infrastructure.Services
 			for (int i = 0; i < ranges.Length; i++)
 			{
 				// Random character from the range
-				int rndChar = charactersBytes[i] % allowedCharacters.Length;
+				int rndChar = charactersBytes[i] % ranges[i].Length;
 				char c = ranges[i][rndChar];
 				// Random index to insert
 				int rndIndex = indexesBytes[i] % passwordBuilder.Length;
