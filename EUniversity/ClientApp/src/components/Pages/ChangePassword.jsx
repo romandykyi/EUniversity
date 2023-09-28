@@ -12,8 +12,7 @@ const ChangePassword = () => {
         currentPassword: '',
         newPassword: '',
     });
-
-    const [error,setError] = useState(false);
+    const [error,setError] = useState('');
     const [isPasswordCahnged, setIsPasswordCahnged] = useState(false);
     const [checkBoxes, setCheckBoxes] = useState({
        checkbox1: false,
@@ -31,7 +30,7 @@ const ChangePassword = () => {
     const handleCheckboxChanges = e => {
         const {name, checked} = e.target;
         setCheckBoxes({
-            ...formData,
+            ...checkBoxes,
             [name]: checked,
         });
     };
@@ -41,14 +40,19 @@ const ChangePassword = () => {
 
         const { currentPassword, newPassword } = formData;
 
+        const hasUpperCase = /[A-Z]/.test(newPassword);
+        const hasNumber = /\d/.test(newPassword);
+        const hasDistinctSymbols = new Set(newPassword).size >= 3;
+        const isLengthValid = newPassword.length >= 8;
 
-        const requestBody = {
-            current: currentPassword,
-            new: newPassword,
-        };
-
-        if (newPassword && currentPassword) {
+        if (isLengthValid && hasUpperCase && hasNumber && hasDistinctSymbols) {
             setError(false);
+
+            const requestBody = {
+                current: currentPassword,
+                new: newPassword,
+            };
+
             try {
                 const response = await fetch("/api/auth/password/change", {
                     method: "POST",
@@ -63,28 +67,41 @@ const ChangePassword = () => {
                     navigate('/');
                     setIsPasswordCahnged(false);
                 } else {
-                    console.error("Error:", response.status, response.statusText);
+                    switch (response.status) {
+                        case 401:
+                            setError('Current password is not correct');
+                            break;
+                        default:
+                            setError('An error occurred while changing the password.');
+                    }
                 }
             } catch (error) {
                 console.error("An error occurred:", error);
+                setError('An error occurred while changing the password.');
             }
-        }
-        else {
-            setError(true);
+        } else {
+            let errorMessage = 'New password must meet the following conditions:';
+            if (!isLengthValid) errorMessage += 'Be at least 8 characters long,\n';
+            if (!hasUpperCase) errorMessage += 'Contain at least one uppercase letter,\n';
+            if (!hasNumber) errorMessage += 'Contain at least one digit,\n';
+            if (!hasDistinctSymbols) errorMessage += 'Contain at least 3 distinct symbols\n';
+
+            setError(errorMessage.trim());
         }
     };
 
+
     return (
-        <div className="changePassword">
-            <div className="changePassword__title">
+        <div className="changePassword form">
+            <div className="changePassword__title form__title">
                 Change your password
             </div>
-            <form onSubmit={handleSubmit} className="changePassword__form">
-                <div className="changePassword__inputs">
+            <form onSubmit={handleSubmit} className="changePassword form__form">
+                <div className="changePassword__inputs form__inputs">
                     <input
                         type={checkBoxes.checkbox1 ? "text" : "password"}
                         value={formData.currentPassword}
-                        className="changePassword__input form-control"
+                        className="changePassword__input form__input form-control"
                         placeholder="current password"
                         onChange={handleInputChange}
                         name="currentPassword"
@@ -93,7 +110,7 @@ const ChangePassword = () => {
                         <input
                             type="checkbox"
                             checked={checkBoxes.checkbox1}
-                            className="changePassword__checkbox form-check-input"
+                            className="changePassword__checkbox form__checkbox form-check-input"
                             onChange={handleCheckboxChanges}
                             name="checkbox1"
                             id="showPassword1"
@@ -103,7 +120,7 @@ const ChangePassword = () => {
                     <input
                         type={checkBoxes.checkbox2 ? "text" : "password"}
                         value={formData.newPassword}
-                        className="changePassword__input form-control"
+                        className="changePassword__input form__input form-control"
                         placeholder="new password"
                         onChange={handleInputChange}
                         name="newPassword"
@@ -112,20 +129,16 @@ const ChangePassword = () => {
                         <input
                             type="checkbox"
                             checked={checkBoxes.checkbox2}
-                            className="changePassword__checkbox form-check-input"
+                            className="changePassword__checkbox form__checkbox form-check-input"
                             onChange={handleCheckboxChanges}
                             name="checkbox2"
                             id="showPassword2"
                         />
                         <label className="form-check-label" htmlFor="showPassword2">show password</label>
                     </div>
-                    {
-                        error
-                            ? <div className="changePassword__error">
-                                fill all the blanks
-                            </div>
-                            : ''
-                    }
+                    <div className="changePassword__error form__error">
+                        {error}
+                    </div>
 
                 </div>
                 <Button type="submit">Change password</Button>
