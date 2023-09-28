@@ -19,7 +19,6 @@ namespace EUniversity.Controllers
 	public class AuthController : ControllerBase
 	{
 		private readonly IAuthService _authService;
-		private readonly UserManager<ApplicationUser> _userManager;
 
 		public AuthController(IAuthService authService, UserManager<ApplicationUser> userManager)
 		{
