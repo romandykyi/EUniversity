@@ -20,10 +20,9 @@ namespace EUniversity.Controllers
 	{
 		private readonly IAuthService _authService;
 
-		public AuthController(IAuthService authService, UserManager<ApplicationUser> userManager)
+		public AuthController(IAuthService authService)
 		{
 			_authService = authService;
-			_userManager = userManager;
 		}
 
 		/// <summary>
