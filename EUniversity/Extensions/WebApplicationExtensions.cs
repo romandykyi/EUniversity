@@ -1,7 +1,7 @@
 ﻿using EUniversity.Core.Models;
 using EUniversity.Core.Policy;
-using System.Reflection;
 using Microsoft.AspNetCore.Identity;
+using System.Reflection;
 
 namespace EUniversity.Extensions
 {

@@ -1,5 +1,6 @@
-using EUniversity.Infrastructure.Data;
+using EUniversity.Core.Mapping;
 using EUniversity.Extensions;
+using EUniversity.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -19,6 +20,7 @@ builder.Services.AddAuthorization();
 
 builder.Services.ConfigureControllers();
 builder.Services.AddFluentValidation();
+MappingGlobalSettings.Apply();
 
 builder.Services.AddSwagger();
 

@@ -24,7 +24,7 @@ namespace EUniversity.Infrastructure.Services
 		}
 
 		/// <inheritdoc />
-		public async Task<IdentityResult> RegisterAsync(RegisterDto register,
+		public async Task<RegisterResult> RegisterAsync(RegisterDto register,
 			string? userName = null, string? password = null, params string[] roles)
 		{
 			// Generate username and password if needed
@@ -46,10 +46,11 @@ namespace EUniversity.Infrastructure.Services
 			var result = await _userManager.CreateAsync(user, password);
 			if (!result.Succeeded)
 			{
-				return result;
+				return new(result);
 			}
 
-			return await _userManager.AddToRolesAsync(user, roles);
+			var roleResult = await _userManager.AddToRolesAsync(user, roles);
+			return new(roleResult, userName, password);
 		}
 
 		/// <inheritdoc />
@@ -63,12 +64,6 @@ namespace EUniversity.Infrastructure.Services
 				return true;
 			}
 			return false;
-		}
-
-		/// <inheritdoc />
-		public async Task LogOutAsync()
-		{
-			await _signInManager.SignOutAsync();
 		}
 
 		/// <inheritdoc />

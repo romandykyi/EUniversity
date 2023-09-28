@@ -1,6 +1,5 @@
 ﻿using EUniversity.Core.Dtos.Auth;
 using Microsoft.AspNetCore.Identity;
-using System.Security.Claims;
 
 namespace EUniversity.Core.Services
 {
@@ -19,7 +18,7 @@ namespace EUniversity.Core.Services
 		/// <returns>
 		/// Result of the operation.
 		/// </returns>
-		Task<IdentityResult> RegisterAsync(RegisterDto register, string? userName = null,
+		Task<RegisterResult> RegisterAsync(RegisterDto register, string? userName = null,
 			string? password = null, params string[] roles);
 
 		/// <summary>
@@ -33,15 +32,10 @@ namespace EUniversity.Core.Services
 		Task<bool> LogInAsync(LogInDto login);
 
 		/// <summary>
-		/// Logs out current user.
-		/// </summary>
-		Task LogOutAsync();
-
-		/// <summary>
 		/// Changes a password for the user.
 		/// </summary>
 		/// <param name="userId">
-		/// Id of the user whose password will be changed.
+		/// ID of the user whose password will be changed.
 		/// </param>
 		/// <param name="password">
 		/// Old and new passwords.

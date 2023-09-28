@@ -1,9 +1,7 @@
 ﻿using Duende.IdentityServer.Extensions;
 using EUniversity.Core.Dtos.Auth;
-using EUniversity.Core.Models;
 using EUniversity.Core.Services;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Attributes;
@@ -19,12 +17,10 @@ namespace EUniversity.Controllers
 	public class AuthController : ControllerBase
 	{
 		private readonly IAuthService _authService;
-		private readonly UserManager<ApplicationUser> _userManager;
 
-		public AuthController(IAuthService authService, UserManager<ApplicationUser> userManager)
+		public AuthController(IAuthService authService)
 		{
 			_authService = authService;
-			_userManager = userManager;
 		}
 
 		/// <summary>
@@ -39,7 +35,7 @@ namespace EUniversity.Controllers
 		[ProducesResponseType(StatusCodes.Status204NoContent)]
 		[ProducesResponseType(StatusCodes.Status400BadRequest)]
 		[ProducesResponseType(StatusCodes.Status401Unauthorized)]
-		public async Task<IStatusCodeActionResult> LogIn([FromBody] LogInDto login)
+		public async Task<IStatusCodeActionResult> LogInAsync([FromBody] LogInDto login)
 		{
 			if (await _authService.LogInAsync(login))
 			{
@@ -47,22 +43,6 @@ namespace EUniversity.Controllers
 			}
 
 			return Problem(statusCode: StatusCodes.Status401Unauthorized, title: "Invalid login attempt");
-		}
-
-		/// <summary>
-		/// Logs out a user.
-		/// </summary>
-		/// <response code="204">Success</response>
-		/// <response code="401">Unauthorized user call</response>
-		[HttpPost]
-		[Authorize]
-		[Route("logout")]
-		[ProducesResponseType(StatusCodes.Status204NoContent)]
-		[ProducesResponseType(StatusCodes.Status401Unauthorized)]
-		public async Task<IStatusCodeActionResult> LogOut()
-		{
-			await _authService.LogOutAsync();
-			return NoContent();
 		}
 
 		/// <summary>
@@ -77,7 +57,7 @@ namespace EUniversity.Controllers
 		[ProducesResponseType(StatusCodes.Status204NoContent)]
 		[ProducesResponseType(StatusCodes.Status400BadRequest)]
 		[ProducesResponseType(StatusCodes.Status401Unauthorized)]
-		public async Task<IStatusCodeActionResult> ChangePassword([FromBody] ChangePasswordDto password)
+		public async Task<IStatusCodeActionResult> ChangePasswordAsync([FromBody] ChangePasswordDto password)
 		{
 			var result = await _authService.ChangePasswordAsync(User.GetSubjectId()!, password);
 			if (!result.Succeeded)
