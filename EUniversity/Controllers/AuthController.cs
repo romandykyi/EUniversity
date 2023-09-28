@@ -39,7 +39,7 @@ namespace EUniversity.Controllers
 		[ProducesResponseType(StatusCodes.Status204NoContent)]
 		[ProducesResponseType(StatusCodes.Status400BadRequest)]
 		[ProducesResponseType(StatusCodes.Status401Unauthorized)]
-		public async Task<IStatusCodeActionResult> LogIn([FromBody] LogInDto login)
+		public async Task<IStatusCodeActionResult> LogInAsync([FromBody] LogInDto login)
 		{
 			if (await _authService.LogInAsync(login))
 			{
@@ -61,7 +61,7 @@ namespace EUniversity.Controllers
 		[ProducesResponseType(StatusCodes.Status204NoContent)]
 		[ProducesResponseType(StatusCodes.Status400BadRequest)]
 		[ProducesResponseType(StatusCodes.Status401Unauthorized)]
-		public async Task<IStatusCodeActionResult> ChangePassword([FromBody] ChangePasswordDto password)
+		public async Task<IStatusCodeActionResult> ChangePasswordAsync([FromBody] ChangePasswordDto password)
 		{
 			var result = await _authService.ChangePasswordAsync(User.GetSubjectId()!, password);
 			if (!result.Succeeded)
