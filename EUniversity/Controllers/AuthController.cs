@@ -50,22 +50,6 @@ namespace EUniversity.Controllers
 		}
 
 		/// <summary>
-		/// Logs out a user.
-		/// </summary>
-		/// <response code="204">Success</response>
-		/// <response code="401">Unauthorized user call</response>
-		[HttpPost]
-		[Authorize]
-		[Route("logout")]
-		[ProducesResponseType(StatusCodes.Status204NoContent)]
-		[ProducesResponseType(StatusCodes.Status401Unauthorized)]
-		public async Task<IStatusCodeActionResult> LogOut()
-		{
-			await _authService.LogOutAsync();
-			return NoContent();
-		}
-
-		/// <summary>
 		/// Changes a password of current user.
 		/// </summary>
 		/// <response code="204">Success</response>

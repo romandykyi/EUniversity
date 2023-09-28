@@ -66,12 +66,6 @@ namespace EUniversity.Infrastructure.Services
 		}
 
 		/// <inheritdoc />
-		public async Task LogOutAsync()
-		{
-			await _signInManager.SignOutAsync();
-		}
-
-		/// <inheritdoc />
 		public async Task<IdentityResult> ChangePasswordAsync(string userId, ChangePasswordDto password)
 		{
 			var appUser = await _userManager.FindByIdAsync(userId);
