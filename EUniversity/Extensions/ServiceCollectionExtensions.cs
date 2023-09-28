@@ -3,14 +3,13 @@ using EUniversity.Core.Services;
 using EUniversity.Core.Validation;
 using EUniversity.Infrastructure.Data;
 using EUniversity.Infrastructure.Services;
-using Microsoft.AspNetCore.Identity;
-using System.Net;
-using System.Reflection;
 using FluentValidation;
+using Microsoft.AspNetCore.Identity;
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Enums;
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Extensions;
+using System.Net;
+using System.Reflection;
 using System.Text.Json.Serialization;
-using Microsoft.EntityFrameworkCore;
 
 namespace EUniversity.Extensions
 {

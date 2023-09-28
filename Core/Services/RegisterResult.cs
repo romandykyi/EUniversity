@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using System.Diagnostics.CodeAnalysis;
 
 namespace EUniversity.Core.Services
 {

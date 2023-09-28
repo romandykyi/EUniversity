@@ -1,8 +1,7 @@
-using EUniversity.Infrastructure.Data;
-using EUniversity.Extensions;
-using Microsoft.EntityFrameworkCore;
-using Mapster;
 using EUniversity.Core.Mapping;
+using EUniversity.Extensions;
+using EUniversity.Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 

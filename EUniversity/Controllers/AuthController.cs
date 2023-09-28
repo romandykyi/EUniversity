@@ -1,9 +1,7 @@
 ﻿using Duende.IdentityServer.Extensions;
 using EUniversity.Core.Dtos.Auth;
-using EUniversity.Core.Models;
 using EUniversity.Core.Services;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Attributes;

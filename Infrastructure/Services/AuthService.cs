@@ -49,7 +49,7 @@ namespace EUniversity.Infrastructure.Services
 				return new(result);
 			}
 
-			var roleResult =  await _userManager.AddToRolesAsync(user, roles);
+			var roleResult = await _userManager.AddToRolesAsync(user, roles);
 			return new(roleResult, userName, password);
 		}
 

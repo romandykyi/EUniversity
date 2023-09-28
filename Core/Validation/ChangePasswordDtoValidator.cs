@@ -1,11 +1,11 @@
-﻿using FluentValidation;
-using EUniversity.Core.Dtos.Auth;
+﻿using EUniversity.Core.Dtos.Auth;
+using FluentValidation;
 
 namespace EUniversity.Core.Validation
 {
 	public class ChangePasswordDtoValidator : AbstractValidator<ChangePasswordDto>
 	{
-		public ChangePasswordDtoValidator() 
+		public ChangePasswordDtoValidator()
 		{
 			RuleFor(x => x.Current).NotEmpty().WithMessage("Current password is required");
 			RuleFor(x => x.New).NotEmpty().WithMessage("New password is required")
