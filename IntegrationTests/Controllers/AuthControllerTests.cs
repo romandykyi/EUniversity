@@ -20,7 +20,7 @@ namespace EUniversity.IntegrationTests.Controllers
 			var response = await Client.PostAsJsonAsync("/api/auth/login", validLoginDto);
 
 			// Assert
-			Assert.That(response.IsSuccessStatusCode);
+			response.EnsureSuccessStatusCode();
 		}
 
 		[Test]
