@@ -1,5 +1,6 @@
 ﻿using EUniversity.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace EUniversity.Extensions
 {
@@ -24,7 +25,8 @@ namespace EUniversity.Extensions
 			else if (useInMemoryDb == "true")
 			{
 				// Use in-memory database
-				dbContextOptions = o => o.UseInMemoryDatabase("EUniversityTestDb");
+				dbContextOptions = o => o.UseInMemoryDatabase("EUniversityTestDb")
+					.ConfigureWarnings(x => x.Ignore(InMemoryEventId.TransactionIgnoredWarning));
 
 				logger.LogWarning("In-memory database is used");
 			}
