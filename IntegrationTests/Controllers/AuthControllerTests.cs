@@ -9,10 +9,11 @@ namespace EUniversity.IntegrationTests.Controllers
 		public async Task LogIn_ValidLogin_IsSuccessfull()
 		{
 			// Arrange
+			await RegisterDefaultStudentAsync();
 			var validLoginDto = new LogInDto
 			{
-				UserName = "admin",
-				Password = "Chang3M3InProduct10nPlz!"
+				UserName = DefaultStudentUserName,
+				Password = DefaultUsersPassword
 			};
 
 			// Act
@@ -26,10 +27,11 @@ namespace EUniversity.IntegrationTests.Controllers
 		public async Task LogIn_InvalidLogin_ReturnsUnauthorized()
 		{
 			// Arrange
+			await RegisterDefaultStudentAsync();
 			var invalidLoginDto = new LogInDto
 			{
-				UserName = "user",
-				Password = "1"
+				UserName = DefaultStudentUserName,
+				Password = "*******"
 			};
 
 			// Act
