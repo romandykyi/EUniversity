@@ -141,7 +141,7 @@ namespace EUniversity.IntegrationTests
 		/// <summary>
 		/// Logs in.
 		/// </summary>
-		protected async Task LogIn(string userName, string password)
+		protected async Task LogInAsync(string userName, string password = DefaultUsersPassword)
 		{
 			var result = await AuthService.LogInAsync(
 				new() { UserName = userName, Password = password }
