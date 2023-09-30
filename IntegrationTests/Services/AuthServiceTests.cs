@@ -1,5 +1,6 @@
 ﻿using EUniversity.Core.Dtos.Auth;
 using EUniversity.Core.Models;
+using EUniversity.Core.Policy;
 using EUniversity.Core.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
@@ -127,6 +128,28 @@ namespace EUniversity.IntegrationTests.Services
 			Assert.That(user, Is.Not.Null);
 			var signInResult = await _signInManager.CheckPasswordSignInAsync(user, result.Password, false);
 			Assert.That(signInResult.Succeeded);
+		}
+
+		[Test]
+		public async Task Register_WithRoles_Succeeds()
+		{
+			// Arrange
+			string[] roles = { Roles.Administrator, Roles.Teacher };
+			await ClearUserNameAsync(DefaultUserName);
+			var registerDto = await GetDefaultRegisterDtoAsync();
+
+			// Act
+			var result = await _authService.RegisterAsync(
+				registerDto, DefaultUserName, DefaultPassword, roles);
+
+			// Assert
+			Assert.That(result.Succeeded);
+			var user = await _userManager.FindByNameAsync(DefaultUserName);
+			Assert.That(user, Is.Not.Null);
+			foreach (var role in roles)
+			{
+				Assert.That(await _userManager.IsInRoleAsync(user, role));
+			}
 		}
 
 		// Testing LogIn is not possible here, because it requires HttpContext
