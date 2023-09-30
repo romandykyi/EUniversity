@@ -8,6 +8,9 @@ namespace EUniversity.IntegrationTests.Services
 {
 	public class AuthServiceTests : ServicesTest
 	{
+		private const string DefaultUserName = "user";
+		private const string DefaultPassword = "Password1!@Gs";
+
 		private SignInManager<ApplicationUser> _signInManager;
 		private UserManager<ApplicationUser> _userManager;
 		private IAuthService _authService;
@@ -53,22 +56,20 @@ namespace EUniversity.IntegrationTests.Services
 		}
 
 		[Test]
-		public async Task Register_CustomUserNameAndPassword_RegistersUser()
+		public async Task Register_CustomUserNameAndPassword_Succeeds()
 		{
 			// Arrange
-			const string userName = "user";
-			const string password = "Password1!";
-			await ClearUserNameAsync(userName);
+			await ClearUserNameAsync(DefaultUserName);
 			var registerDto = await GetDefaultRegisterDtoAsync();
 
 			// Act
-			var result = await _authService.RegisterAsync(registerDto, userName, password);
+			var result = await _authService.RegisterAsync(registerDto, DefaultUserName, DefaultPassword);
 
 			// Assert
 			Assert.Multiple(() =>
 			{
 				Assert.That(result.Succeeded);
-				Assert.That(_userManager.FindByNameAsync(userName), Is.Not.Null);
+				Assert.That(_userManager.FindByNameAsync(DefaultUserName), Is.Not.Null);
 			});
 		}
 
@@ -76,11 +77,10 @@ namespace EUniversity.IntegrationTests.Services
 		public async Task Register_NoUserName_ReturnsValidUsername()
 		{
 			// Arrange
-			const string password = "Password1!";
 			var registerDto = await GetDefaultRegisterDtoAsync();
 
 			// Act
-			var result = await _authService.RegisterAsync(registerDto, password: password);
+			var result = await _authService.RegisterAsync(registerDto, password: DefaultPassword);
 
 			// Assert
 			Assert.Multiple(async () =>
@@ -94,19 +94,21 @@ namespace EUniversity.IntegrationTests.Services
 		public async Task Register_NoPassword_ReturnsValidPassword()
 		{
 			// Arrange
-			const string userName = "user";
 			await ClearUserNameAsync(userName);
 			var registerDto = await GetDefaultRegisterDtoAsync();
 
 			// Act
-			var result = await _authService.RegisterAsync(registerDto, userName: userName);
+			var result = await _authService.RegisterAsync(registerDto, userName: DefaultUserName);
 
 			// Assert
 			Assert.That(result.Succeeded);
-			var user = await _userManager.FindByNameAsync(userName);
+			var user = await _userManager.FindByNameAsync(DefaultUserName);
 			Assert.That(user, Is.Not.Null);
 			var signInResult = await _signInManager.CheckPasswordSignInAsync(user, result.Password, false);
 			Assert.That(signInResult.Succeeded);
 		}
+
+		// Testing LogIn is not possible here, because it requires HttpContext
+		// so this method is unit tested instead
 	}
 }
