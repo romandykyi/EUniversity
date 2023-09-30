@@ -1,6 +1,5 @@
-﻿using EUniversity.IntegrationTests.Mocks;
-using EUniversity.Core.Policy;
-using static EUniversity.IntegrationTests.Mocks.TestClaimsProvider;
+﻿using EUniversity.Core.Policy;
+using EUniversity.IntegrationTests.Mocks;
 
 namespace EUniversity.IntegrationTests.Controllers
 {
@@ -11,11 +10,18 @@ namespace EUniversity.IntegrationTests.Controllers
 	{
 		public HttpClient CreateUnauthorizedClient() =>
 			WebApplicationFactory.CreateUnauthorizedClient();
-		public HttpClient CreateAdministratorClient() =>
-			WebApplicationFactory.CreateAuthorizedClient(Create("Student", Roles.Administrator));
-		public HttpClient CreateStudentClient() =>
-			WebApplicationFactory.CreateAuthorizedClient(Create("Student", Roles.Student));
-		public HttpClient CreateTeacherClient() =>
-			WebApplicationFactory.CreateAuthorizedClient(Create("Student", Roles.Teacher));
+
+		private HttpClient CreateAuthorizedClient(string? id = null)
+		{
+			WebApplicationFactory.ClaimsProvider.Init(id, "Admin", Roles.Administrator);
+			return WebApplicationFactory.CreateAuthorizedClient();
+		}
+
+		public HttpClient CreateAdministratorClient(string? id = null) =>
+			CreateAuthorizedClient(id);
+		public HttpClient CreateStudentClient(string? id = null) =>
+			CreateAuthorizedClient(id);
+		public HttpClient CreateTeacherClient(string? id = null) =>
+			CreateAuthorizedClient(id);
 	}
 }

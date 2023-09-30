@@ -11,17 +11,17 @@ namespace EUniversity.IntegrationTests.Mocks
 			Claims = new List<Claim>();
 		}
 
-		public static TestClaimsProvider Create(string name, params string[] roles)
+		public void Init(string? id, string name, params string[] roles)
 		{
-			var provider = new TestClaimsProvider();
-			provider.Claims.Add(new(ClaimTypes.NameIdentifier, Guid.NewGuid().ToString()));
-			provider.Claims.Add(new(ClaimTypes.Name, name));
+			Claims.Clear();
+			id ??= Guid.NewGuid().ToString();
+			Claims.Add(new("sub", id));
+			Claims.Add(new(ClaimTypes.NameIdentifier, id));
+			Claims.Add(new(ClaimTypes.Name, name));
 			foreach (var role in roles)
 			{
-				provider.Claims.Add(new(ClaimTypes.Role, role));
+				Claims.Add(new(ClaimTypes.Role, role));
 			}
-
-			return provider;
 		}
 	}
 }

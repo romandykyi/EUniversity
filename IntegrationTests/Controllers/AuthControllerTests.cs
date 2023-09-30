@@ -71,5 +71,46 @@ namespace EUniversity.IntegrationTests.Controllers
 			// Assert
 			Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
 		}
+
+		[Test]
+		public async Task ChangePassword_ValidAttempt_Succeeds()
+		{
+			// Arrange
+			string userId = Guid.NewGuid().ToString();
+			using var client = CreateStudentClient(userId);
+			var password = new ChangePasswordDto()
+			{
+				Current = DefaultPassword,
+				New = NewPassword
+			};
+			WebApplicationFactory.AuthServiceMock
+				.ChangePasswordAsync(userId, Arg.Any<ChangePasswordDto>())
+				.Returns(IdentityResult.Success);
+
+			// Act
+			var response = await client.PostAsJsonAsync("/api/auth/password/change", password);
+
+			// Assert
+			response.EnsureSuccessStatusCode();
+		}
+
+		[Test]
+		public async Task ChangePassword_InvalidInput_Returns400BadRequest()
+		{
+			// Arrange
+			using var client = CreateStudentClient();
+			var password = new ChangePasswordDto()
+			{
+				// Equal passwords shouldn't be allowed
+				Current = DefaultPassword,
+				New = DefaultPassword
+			};
+
+			// Act
+			var response = await client.PostAsJsonAsync("/api/auth/password/change", password);
+
+			// Assert
+			Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
+		}
 	}
 }

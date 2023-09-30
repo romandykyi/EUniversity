@@ -8,16 +8,19 @@ namespace EUniversity.IntegrationTests.Mocks
 {
 	public class TestAuthHandler : AuthenticationHandler<AuthenticationSchemeOptions>
 	{
+		private readonly TestClaimsProvider _claimsProvider;
+
 		public TestAuthHandler(IOptionsMonitor<AuthenticationSchemeOptions> options,
-			ILoggerFactory logger, UrlEncoder encoder, ISystemClock clock)
+			ILoggerFactory logger, UrlEncoder encoder, ISystemClock clock,
+			TestClaimsProvider claimsProvider)
 			: base(options, logger, encoder, clock)
 		{
+			_claimsProvider = claimsProvider;
 		}
 
 		protected override Task<AuthenticateResult> HandleAuthenticateAsync()
 		{
-			var claims = new[] { new Claim(ClaimTypes.Name, "Test user") };
-			var identity = new ClaimsIdentity(claims, "Test");
+			var identity = new ClaimsIdentity(_claimsProvider.Claims, "Test");
 			var principal = new ClaimsPrincipal(identity);
 			var ticket = new AuthenticationTicket(principal, "TestScheme");
 

@@ -14,29 +14,32 @@ namespace EUniversity.IntegrationTests.Mocks
 	/// </summary>
 	public class MockedProgramWebApplicationFactory : WebApplicationFactory<Program>
 	{
+		public TestClaimsProvider ClaimsProvider { get; private set; } = null!;
 		public IAuthService AuthServiceMock { get; private set; } = null!;
 
 		protected override void ConfigureWebHost(IWebHostBuilder builder)
 		{
+			ClaimsProvider = new();
 			AuthServiceMock = Substitute.For<IAuthService>();
 
 			builder.ConfigureTestServices(services =>
 			{
-				services.AddScoped(_ => AuthServiceMock);
-			});
-		}
-
-		public WebApplicationFactory<Program> WithAuthentication(TestClaimsProvider claimsProvider)
-		{
-			return WithWebHostBuilder(builder =>
-			{
-				builder.ConfigureTestServices(services =>
+				services.AddScoped(_ => ClaimsProvider);
+				
+				services.AddAuthentication(defaultScheme: "TestScheme")
+					.AddScheme<AuthenticationSchemeOptions, TestAuthHandler>(
+						"TestScheme", options => { });
+				services.AddAuthorization(options =>
 				{
-					services.AddAuthentication("Test")
-							.AddScheme<AuthenticationSchemeOptions, TestAuthHandler>("Test", op => { });
-
-					services.AddScoped(_ => claimsProvider);
+					options.AddPolicy("TestPolicy", builder =>
+					{
+						builder.AuthenticationSchemes.Add("TestScheme");
+						builder.RequireAuthenticatedUser();
+					});
+					options.DefaultPolicy = options.GetPolicy("TestPolicy")!;
 				});
+
+				services.AddScoped(_ => AuthServiceMock);
 			});
 		}
 
@@ -48,14 +51,14 @@ namespace EUniversity.IntegrationTests.Mocks
 			});
 		}
 
-		public HttpClient CreateAuthorizedClient(TestClaimsProvider claimsProvider)
+		public HttpClient CreateAuthorizedClient()
 		{
-			var client = WithAuthentication(claimsProvider).CreateClient(new()
+			var client = CreateClient(new()
 			{
 				AllowAutoRedirect = false
 			});
 
-			client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Test");
+			client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("TestScheme");
 
 			return client;
 		}
