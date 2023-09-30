@@ -25,7 +25,7 @@ namespace EUniversity.IntegrationTests.Mocks
 			builder.ConfigureTestServices(services =>
 			{
 				services.AddScoped(_ => ClaimsProvider);
-				
+
 				services.AddAuthentication(defaultScheme: "TestScheme")
 					.AddScheme<AuthenticationSchemeOptions, TestAuthHandler>(
 						"TestScheme", options => { });

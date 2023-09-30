@@ -1,10 +1,7 @@
 ﻿using EUniversity.Core.Dtos.Auth;
-using EUniversity.Infrastructure.Services;
-using EUniversity.IntegrationTests.Services;
 using Microsoft.AspNetCore.Identity;
 using NSubstitute;
 using System.Net;
-using System.Net.Http.Headers;
 
 namespace EUniversity.IntegrationTests.Controllers
 {

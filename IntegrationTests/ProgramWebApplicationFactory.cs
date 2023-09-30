@@ -6,6 +6,6 @@ namespace EUniversity.IntegrationTests
 	/// <see cref="WebApplicationFactory{}" /> for testing without mocking.
 	/// </summary>
 	public class ProgramWebApplicationFactory : WebApplicationFactory<Program>
-    {
-    }
+	{
+	}
 }
