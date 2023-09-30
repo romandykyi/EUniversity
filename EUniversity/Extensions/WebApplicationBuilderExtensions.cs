@@ -14,7 +14,6 @@ namespace EUniversity.Extensions
 			var logger = loggerFactory.CreateLogger<Program>();
 
 			var useInMemoryDb = Environment.GetEnvironmentVariable("USE_IN_MEMORY_DATABASE");
-			Console.WriteLine(useInMemoryDb);
 			Action<DbContextOptionsBuilder> dbContextOptions;
 			if (useInMemoryDb == null || useInMemoryDb == "false")
 			{
