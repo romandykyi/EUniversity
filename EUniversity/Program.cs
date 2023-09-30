@@ -1,14 +1,11 @@
 using EUniversity.Core.Mapping;
 using EUniversity.Extensions;
-using EUniversity.Infrastructure.Data;
-using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-	options.UseSqlServer(connectionString, b => b.MigrationsAssembly("EUniversity.Infrastructure")));
+builder.ConnectDatabase();
+
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddAntiforgery(options => options.HeaderName = "X-XSRF-Token");

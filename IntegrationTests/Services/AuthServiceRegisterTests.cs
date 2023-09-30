@@ -11,7 +11,6 @@ namespace EUniversity.IntegrationTests.Services
 	public class AuthServiceRegisterTests : IntegrationTest
 	{
 		private RegisterDto _registerDto;
-		private IAuthService _authService;
 		private SignInManager<ApplicationUser> _signInManager;
 
 		[SetUp]
@@ -23,7 +22,6 @@ namespace EUniversity.IntegrationTests.Services
 				FirstName = "Joe",
 				LastName = "Doe"
 			};
-			_authService = ServiceScope.ServiceProvider.GetService<IAuthService>()!;
 			_signInManager = ServiceScope.ServiceProvider.GetService<SignInManager<ApplicationUser>>()!;
 
 			await ClearEmailAsync(_registerDto.Email);
@@ -38,7 +36,7 @@ namespace EUniversity.IntegrationTests.Services
 			await ClearUserNameAsync(userName);
 
 			// Act
-			var result = await _authService.RegisterAsync(_registerDto, userName, password);
+			var result = await AuthService.RegisterAsync(_registerDto, userName, password);
 
 			// Assert
 			Assert.Multiple(() =>
@@ -55,7 +53,7 @@ namespace EUniversity.IntegrationTests.Services
 			const string password = "Password1!";
 
 			// Act
-			var result = await _authService.RegisterAsync(_registerDto, password: password);
+			var result = await AuthService.RegisterAsync(_registerDto, password: password);
 			Assert.That(result.Succeeded);
 			var user = await UserManager.FindByNameAsync(result.UserName);
 
@@ -71,7 +69,7 @@ namespace EUniversity.IntegrationTests.Services
 			await ClearUserNameAsync(userName);
 
 			// Act
-			var result = await _authService.RegisterAsync(_registerDto, userName: userName);
+			var result = await AuthService.RegisterAsync(_registerDto, userName: userName);
 			Assert.That(result.Succeeded);
 			var user = await UserManager.FindByNameAsync(userName);
 			Assert.That(user, Is.Not.Null);
