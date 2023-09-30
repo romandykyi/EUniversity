@@ -10,6 +10,8 @@ namespace EUniversity.IntegrationTests.Services
 	{
 		private const string DefaultUserName = "user";
 		private const string DefaultPassword = "Password1!@Gs";
+		private const string NewPassword = DefaultPassword + "2";
+		private const string DefaultEmail = "test-email@e-university.com";
 
 		private SignInManager<ApplicationUser> _signInManager;
 		private UserManager<ApplicationUser> _userManager;
@@ -45,6 +47,25 @@ namespace EUniversity.IntegrationTests.Services
 			};
 			await ClearEmailAsync(result.Email);
 			return result;
+		}
+
+		// Registers default user and returns it
+		private async Task<ApplicationUser> RegisterDefaultUserAsync()
+		{
+			ApplicationUser user = new()
+			{
+				UserName = DefaultUserName,
+				FirstName = "First",
+				LastName = "Last",
+				Email = DefaultEmail
+			};
+			await ClearEmailAsync(user.Email);
+			await ClearUserNameAsync(user.UserName);
+
+			var result = await _userManager.CreateAsync(user, DefaultPassword);
+			Assert.That(result.Succeeded, "Failed to register default user");
+
+			return user;
 		}
 
 		[SetUp]
@@ -94,7 +115,7 @@ namespace EUniversity.IntegrationTests.Services
 		public async Task Register_NoPassword_ReturnsValidPassword()
 		{
 			// Arrange
-			await ClearUserNameAsync(userName);
+			await ClearUserNameAsync(DefaultUserName);
 			var registerDto = await GetDefaultRegisterDtoAsync();
 
 			// Act
@@ -109,6 +130,44 @@ namespace EUniversity.IntegrationTests.Services
 		}
 
 		// Testing LogIn is not possible here, because it requires HttpContext
-		// so this method is unit tested instead
+
+		[Test]
+		public async Task ChangePassword_ValidPassword_Succeeds()
+		{
+			// Arrange
+			var user = await RegisterDefaultUserAsync();
+			ChangePasswordDto password = new()
+			{
+				Current = DefaultPassword,
+				New = NewPassword
+			};
+
+			// Act
+			var result = await _authService.ChangePasswordAsync(user.Id, password);
+
+			// Assert
+			Assert.That(result.Succeeded);
+			var passwordCheckResult =
+				await _signInManager.CheckPasswordSignInAsync(user, password.New, false);
+			Assert.That(passwordCheckResult.Succeeded);
+		}
+
+		[Test]
+		public async Task ChangePassword_InvalidPassword_Fails()
+		{
+			// Arrange
+			var user = await RegisterDefaultUserAsync();
+			ChangePasswordDto password = new()
+			{
+				Current = "invalid",
+				New = NewPassword
+			};
+
+			// Act
+			var result = await _authService.ChangePasswordAsync(user.Id, password);
+
+			// Assert
+			Assert.That(result.Succeeded, Is.False);
+		}
 	}
 }
