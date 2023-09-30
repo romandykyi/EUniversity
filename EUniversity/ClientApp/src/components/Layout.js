@@ -10,7 +10,7 @@ const Layout = (props) => {
             <Container tag="main">
                 {props.children}
             </Container>
-            <PasswordChangedBlock/>
+
         </div>
     );
 }
