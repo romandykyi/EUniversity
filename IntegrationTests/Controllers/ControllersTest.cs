@@ -11,17 +11,17 @@ namespace EUniversity.IntegrationTests.Controllers
 		public HttpClient CreateUnauthorizedClient() =>
 			WebApplicationFactory.CreateUnauthorizedClient();
 
-		private HttpClient CreateAuthorizedClient(string? id = null)
+		public HttpClient CreateAuthorizedClient(string? id, string userName, params string[] roles)
 		{
-			WebApplicationFactory.ClaimsProvider.Init(id, "Admin", Roles.Administrator);
+			WebApplicationFactory.ClaimsProvider.Init(id, userName, roles);
 			return WebApplicationFactory.CreateAuthorizedClient();
 		}
 
 		public HttpClient CreateAdministratorClient(string? id = null) =>
-			CreateAuthorizedClient(id);
+			CreateAuthorizedClient(id, "admin", Roles.Administrator);
 		public HttpClient CreateStudentClient(string? id = null) =>
-			CreateAuthorizedClient(id);
+			CreateAuthorizedClient(id, "student", Roles.Student);
 		public HttpClient CreateTeacherClient(string? id = null) =>
-			CreateAuthorizedClient(id);
+			CreateAuthorizedClient(id, "teacher", Roles.Teacher);
 	}
 }
