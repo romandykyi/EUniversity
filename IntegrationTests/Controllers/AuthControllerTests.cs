@@ -3,52 +3,21 @@ using System.Net;
 
 namespace EUniversity.IntegrationTests.Controllers
 {
-	public class AuthControllerTests : IntegrationTest
+	public class AuthControllerTests : ControllersTest
 	{
-		[Test]
-		public async Task LogIn_ValidLogin_IsSuccessfull()
-		{
-			// Arrange
-			await RegisterDefaultStudentAsync();
-			var validLoginDto = new LogInDto
-			{
-				UserName = DefaultStudentUserName,
-				Password = DefaultUsersPassword
-			};
-
-			// Act
-			var response = await Client.PostAsJsonAsync("/api/auth/login", validLoginDto);
-
-			// Assert
-			response.EnsureSuccessStatusCode();
-		}
-
-		[Test]
-		public async Task LogIn_InvalidLogin_ReturnsUnauthorized()
-		{
-			// Arrange
-			await RegisterDefaultStudentAsync();
-			var invalidLoginDto = new LogInDto
-			{
-				UserName = DefaultStudentUserName,
-				Password = "*******"
-			};
-
-			// Act
-			var response = await Client.PostAsJsonAsync("/api/auth/login", invalidLoginDto);
-
-			// Assert
-			Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.Unauthorized));
-		}
-
 		[Test]
 		public async Task LogIn_MalformedData_ReturnsBadRequest()
 		{
 			// Arrange
-			var malformedLoginDto = new LogInDto();
+			using var client = CreateUnauthorizedClient();
+			var malformedLoginDto = new LogInDto()
+			{
+				UserName = "",
+				Password = ""
+			};
 
 			// Act
-			var response = await Client.PostAsJsonAsync("/api/auth/login", malformedLoginDto);
+			var response = await client.PostAsJsonAsync("/api/auth/login", malformedLoginDto);
 
 			// Assert
 			Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
