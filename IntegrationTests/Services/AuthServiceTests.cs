@@ -87,10 +87,10 @@ namespace EUniversity.IntegrationTests.Services
 			var result = await _authService.RegisterAsync(registerDto, DefaultUserName, DefaultPassword);
 
 			// Assert
-			Assert.Multiple(() =>
+			Assert.Multiple(async () =>
 			{
 				Assert.That(result.Succeeded);
-				Assert.That(_userManager.FindByNameAsync(DefaultUserName), Is.Not.Null);
+				Assert.That(await _userManager.FindByNameAsync(DefaultUserName), Is.Not.Null);
 			});
 		}
 
