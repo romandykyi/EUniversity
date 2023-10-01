@@ -20,6 +20,10 @@ namespace EUniversity.IntegrationTests.Mocks
 
 		protected override Task<AuthenticateResult> HandleAuthenticateAsync()
 		{
+			if (!_claimsProvider.Claims.Any())
+			{
+				return Task.FromResult(AuthenticateResult.Fail("Unauthorized"));
+			}
 			var identity = new ClaimsIdentity(_claimsProvider.Claims, "Test");
 			var principal = new ClaimsPrincipal(identity);
 			var ticket = new AuthenticationTicket(principal, "TestScheme");

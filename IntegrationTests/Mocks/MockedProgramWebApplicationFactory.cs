@@ -37,15 +37,7 @@ namespace EUniversity.IntegrationTests.Mocks
 			});
 		}
 
-		public HttpClient CreateUnauthorizedClient()
-		{
-			return CreateClient(new()
-			{
-				AllowAutoRedirect = false
-			});
-		}
-
-		public HttpClient CreateAuthorizedClient()
+		public HttpClient CreateCustomClient()
 		{
 			var client = CreateClient(new()
 			{

@@ -9,12 +9,12 @@ namespace EUniversity.IntegrationTests.Controllers
 	public class ControllersTest : IntegrationTest<MockedProgramWebApplicationFactory>
 	{
 		public HttpClient CreateUnauthorizedClient() =>
-			WebApplicationFactory.CreateUnauthorizedClient();
+			WebApplicationFactory.CreateCustomClient();
 
 		public HttpClient CreateAuthorizedClient(string? id, string userName, params string[] roles)
 		{
 			WebApplicationFactory.ClaimsProvider.Init(id, userName, roles);
-			return WebApplicationFactory.CreateAuthorizedClient();
+			return WebApplicationFactory.CreateCustomClient();
 		}
 
 		public HttpClient CreateAdministratorClient(string? id = null) =>
