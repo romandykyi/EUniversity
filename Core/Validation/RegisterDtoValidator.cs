@@ -12,9 +12,15 @@ namespace EUniversity.Core.Validation
 			RuleFor(r => r.Email).MaximumLength(ApplicationUser.MaxEmailLength)
 				.WithErrorCode(ValidationErrorCodes.PropertyTooLarge)
 				.WithMessage($"Email cannot have more than {ApplicationUser.MaxEmailLength} characters");
-			RuleFor(r => r.Email).EmailAddress()
-				.WithErrorCode(ValidationErrorCodes.InvalidEmail)
-				.WithMessage("Valid email is required");
+			RuleFor(r => r.Email).NotEmpty()
+				.WithErrorCode(ValidationErrorCodes.PropertyRequired)
+				.WithMessage("Email is required")
+				.DependentRules(() =>
+				{
+					RuleFor(r => r.Email).EmailAddress()
+						.WithErrorCode(ValidationErrorCodes.InvalidEmail)
+						.WithMessage("Email is invalid");
+				});
 
 			// First name
 			RuleFor(r => r.FirstName).NotEmpty()
@@ -23,8 +29,8 @@ namespace EUniversity.Core.Validation
 			RuleFor(r => r.FirstName).MaximumLength(ApplicationUser.MaxNameLength)
 				.WithErrorCode(ValidationErrorCodes.PropertyTooLarge)
 				.WithMessage($"First name cannot have more than {ApplicationUser.MaxNameLength} characters");
-			
-			 // Last name
+
+			// Last name
 			RuleFor(r => r.LastName).NotEmpty()
 				.WithErrorCode(ValidationErrorCodes.PropertyRequired)
 				.WithMessage("Last name is required");

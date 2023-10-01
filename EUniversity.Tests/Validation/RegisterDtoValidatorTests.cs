@@ -63,12 +63,25 @@ namespace EUniversity.Tests.Validation
 		}
 
 		[Test]
-		[TestCase("")]
-		[TestCase("invalid")]
-		public void Email_Invalid_Fails(string email)
+		public void Email_Empty_Fails()
 		{
 			// Arrange
-			_register.Email = email;
+			_register.Email = string.Empty;
+
+			// Act
+			var result = _validator.TestValidate(_register);
+
+			// Assert
+			result.ShouldHaveValidationErrorFor(x => x.Email)
+				.WithErrorCode(ValidationErrorCodes.PropertyRequired)
+				.Only();
+		}
+
+		[Test]
+		public void Email_Invalid_Fails()
+		{
+			// Arrange
+			_register.Email = "invalid";
 
 			// Act
 			var result = _validator.TestValidate(_register);
