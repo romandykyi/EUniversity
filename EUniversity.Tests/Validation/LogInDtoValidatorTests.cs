@@ -50,7 +50,7 @@ namespace EUniversity.Tests.Validation
 
 			// Assert
 			result.ShouldHaveValidationErrorFor(x => x.UserName)
-				.WithErrorMessage("Username is required")
+				.WithErrorCode(ValidationErrorCodes.PropertyRequired)
 				.Only();
 		}
 
@@ -65,7 +65,7 @@ namespace EUniversity.Tests.Validation
 
 			// Assert
 			result.ShouldHaveValidationErrorFor(x => x.Password)
-				.WithErrorMessage("Password is required")
+				.WithErrorCode(ValidationErrorCodes.PropertyRequired)
 				.Only();
 		}
 	}

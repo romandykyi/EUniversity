@@ -34,7 +34,7 @@ namespace EUniversity.Tests.Validation
 		[TestCase("12345@e-mail.com")]
 		[TestCase("mail@example.co.uk")]
 		[TestCase("user.name+tag@mail.com")]
-		public void Email_Valid_IsValid(string email)
+		public void Email_Valid_Succeeds(string email)
 		{
 			// Arrange
 			_register.Email = email;
@@ -47,7 +47,7 @@ namespace EUniversity.Tests.Validation
 		}
 
 		[Test]
-		public void Email_TooLarge_IsInvalid()
+		public void Email_TooLarge_Fails()
 		{
 			// Arrange
 			string bigString = new('a', ApplicationUser.MaxEmailLength);
@@ -58,14 +58,14 @@ namespace EUniversity.Tests.Validation
 
 			// Assert
 			result.ShouldHaveValidationErrorFor(x => x.Email)
-				.WithErrorMessage($"Email cannot have more than {ApplicationUser.MaxEmailLength} characters")
+				.WithErrorCode(ValidationErrorCodes.PropertyTooLarge)
 				.Only();
 		}
 
 		[Test]
 		[TestCase("")]
 		[TestCase("invalid")]
-		public void Email_Invalid_IsInvalid(string email)
+		public void Email_Invalid_Fails(string email)
 		{
 			// Arrange
 			_register.Email = email;
@@ -75,7 +75,7 @@ namespace EUniversity.Tests.Validation
 
 			// Assert
 			result.ShouldHaveValidationErrorFor(x => x.Email)
-				.WithErrorMessage("Valid email is required")
+				.WithErrorCode(ValidationErrorCodes.InvalidEmail)
 				.Only();
 		}
 
@@ -85,7 +85,7 @@ namespace EUniversity.Tests.Validation
 		[TestCase("Włodzimierz")]
 		[TestCase("大麓")]
 		[TestCase("حكيم")]
-		public void FirstName_Valid_IsValid(string firstName)
+		public void FirstName_Valid_Succeeds(string firstName)
 		{
 			// Arrange
 			_register.FirstName = firstName;
@@ -98,7 +98,7 @@ namespace EUniversity.Tests.Validation
 		}
 
 		[Test]
-		public void FirstName_Empty_IsInvalid()
+		public void FirstName_Empty_Fails()
 		{
 			// Arrange
 			_register.FirstName = string.Empty;
@@ -108,12 +108,12 @@ namespace EUniversity.Tests.Validation
 
 			// Assert
 			result.ShouldHaveValidationErrorFor(x => x.FirstName)
-				.WithErrorMessage($"First name is required")
+				.WithErrorCode(ValidationErrorCodes.PropertyRequired)
 				.Only();
 		}
 
 		[Test]
-		public void FirstName_TooLarge_IsInvalid()
+		public void FirstName_TooLarge_Fails()
 		{
 			// Arrange
 			_register.FirstName = new('a', ApplicationUser.MaxNameLength + 1);
@@ -123,7 +123,7 @@ namespace EUniversity.Tests.Validation
 
 			// Assert
 			result.ShouldHaveValidationErrorFor(x => x.FirstName)
-				.WithErrorMessage($"First name cannot have more than {ApplicationUser.MaxNameLength} characters")
+				.WithErrorCode(ValidationErrorCodes.PropertyTooLarge)
 				.Only();
 		}
 
@@ -133,7 +133,7 @@ namespace EUniversity.Tests.Validation
 		[TestCase("Brzęczyszczykiewicz")]
 		[TestCase("鈴木")]
 		[TestCase("أَحْمَدَ")]
-		public void LastName_Valid_IsValid(string lastName)
+		public void LastName_Valid_Succeeds(string lastName)
 		{
 			// Arrange
 			_register.LastName = lastName;
@@ -146,7 +146,7 @@ namespace EUniversity.Tests.Validation
 		}
 
 		[Test]
-		public void LastName_Empty_IsInvalid()
+		public void LastName_Empty_Fails()
 		{
 			// Arrange
 			_register.LastName = string.Empty;
@@ -156,12 +156,12 @@ namespace EUniversity.Tests.Validation
 
 			// Assert
 			result.ShouldHaveValidationErrorFor(x => x.LastName)
-				.WithErrorMessage($"Last name is required")
+				.WithErrorCode(ValidationErrorCodes.PropertyRequired)
 				.Only();
 		}
 
 		[Test]
-		public void LastName_TooLarge_IsInvalid()
+		public void LastName_TooLarge_Fails()
 		{
 			// Arrange
 			_register.LastName = new('a', ApplicationUser.MaxNameLength + 1);
@@ -171,7 +171,7 @@ namespace EUniversity.Tests.Validation
 
 			// Assert
 			result.ShouldHaveValidationErrorFor(x => x.LastName)
-				.WithErrorMessage($"Last name cannot have more than {ApplicationUser.MaxNameLength} characters")
+				.WithErrorCode(ValidationErrorCodes.PropertyTooLarge)
 				.Only();
 		}
 
@@ -179,7 +179,7 @@ namespace EUniversity.Tests.Validation
 		[TestCase("Orion")]
 		[TestCase("Зиновій")]
 		[TestCase("Michał")]
-		public void MiddleName_Valid_IsValid(string middleName)
+		public void MiddleName_Valid_Succeeds(string middleName)
 		{
 			// Arrange
 			_register.MiddleName = middleName;
@@ -195,7 +195,7 @@ namespace EUniversity.Tests.Validation
 		[TestCase(null)]
 		[TestCase("")]
 		[TestCase("   ")]
-		public void MiddleName_Empty_IsValid(string middleName)
+		public void MiddleName_Empty_Succeeds(string middleName)
 		{
 			// Arrange
 			_register.MiddleName = middleName;
@@ -208,7 +208,7 @@ namespace EUniversity.Tests.Validation
 		}
 
 		[Test]
-		public void MiddleName_TooLarge_IsInvalid()
+		public void MiddleName_TooLarge_Fails()
 		{
 			// Arrange
 			_register.MiddleName = new('a', ApplicationUser.MaxNameLength + 1);
@@ -218,7 +218,7 @@ namespace EUniversity.Tests.Validation
 
 			// Assert
 			result.ShouldHaveValidationErrorFor(x => x.MiddleName)
-				.WithErrorMessage($"Middle name cannot have more than {ApplicationUser.MaxNameLength} characters")
+				.WithErrorCode(ValidationErrorCodes.PropertyTooLarge)
 				.Only();
 		}
 	}

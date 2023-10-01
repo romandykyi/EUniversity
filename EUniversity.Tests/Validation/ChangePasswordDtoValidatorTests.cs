@@ -27,7 +27,7 @@ namespace EUniversity.Tests.Validation
 		}
 
 		[Test]
-		public void Input_Valid_IsValid()
+		public void Input_Valid_Succeeds()
 		{
 			// Arrange
 			var password = _password;
@@ -40,7 +40,7 @@ namespace EUniversity.Tests.Validation
 		}
 
 		[Test]
-		public void OldPassword_Empty_IsInvalid()
+		public void OldPassword_Empty_Fails()
 		{
 			// Arrange
 			_password.Current = string.Empty;
@@ -50,12 +50,12 @@ namespace EUniversity.Tests.Validation
 
 			// Assert
 			result.ShouldHaveValidationErrorFor(x => x.Current)
-				.WithErrorMessage("Current password is required")
+				.WithErrorCode(ValidationErrorCodes.PropertyRequired)
 				.Only();
 		}
 
 		[Test]
-		public void NewPassword_Empty_IsInvalid()
+		public void NewPassword_Empty_Succeeds()
 		{
 			// Arrange
 			_password.New = string.Empty;
@@ -65,12 +65,12 @@ namespace EUniversity.Tests.Validation
 
 			// Assert
 			result.ShouldHaveValidationErrorFor(x => x.New)
-				.WithErrorMessage("New password is required")
+				.WithErrorCode(ValidationErrorCodes.PropertyRequired)
 				.Only();
 		}
 
 		[Test]
-		public void Passwords_Empty_NoPasswordsAreEqualMessage()
+		public void Passwords_Empty_FailsWithoutEqualErrorCode()
 		{
 			// Arrange
 			_password.Current = _password.New = string.Empty;
@@ -80,11 +80,11 @@ namespace EUniversity.Tests.Validation
 
 			// Assert
 			result.ShouldHaveValidationErrorFor(x => x.New)
-				.WithoutErrorMessage("New password cannot be the same as old password");
+				.WithoutErrorCode(ValidationErrorCodes.Equal);
 		}
 
 		[Test]
-		public void Passwords_Equal_IsInvalid()
+		public void Passwords_Equal_Fails()
 		{
 			// Arrange
 			_password.Current = _password.New;
@@ -94,7 +94,7 @@ namespace EUniversity.Tests.Validation
 
 			// Assert
 			result.ShouldHaveValidationErrorFor(x => x.New)
-				.WithErrorMessage("New password cannot be the same as old password")
+				.WithErrorCode(ValidationErrorCodes.Equal)
 				.Only();
 		}
 	}
