@@ -3,8 +3,10 @@ using EUniversity.Core.Policy;
 using EUniversity.Core.Services;
 using EUniversity.Core.Validation;
 using EUniversity.Infrastructure.Data;
+using EUniversity.Infrastructure.Identity;
 using EUniversity.Infrastructure.Services;
 using FluentValidation;
+using IdentityModel;
 using Microsoft.AspNetCore.Identity;
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Enums;
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Extensions;
@@ -58,7 +60,8 @@ namespace EUniversity.Extensions
 				.AddDefaultTokenProviders();
 
 			services.AddIdentityServer()
-				.AddApiAuthorization<ApplicationUser, ApplicationDbContext>();
+				.AddApiAuthorization<ApplicationUser, ApplicationDbContext>()
+				.AddProfileService<CustomProfileService>();
 
 			services.AddAuthentication()
 				.AddJwtBearer();
