@@ -7,6 +7,7 @@ using EUniversity.Infrastructure.Identity;
 using EUniversity.Infrastructure.Services;
 using FluentValidation;
 using IdentityModel;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Enums;
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Extensions;
@@ -65,6 +66,8 @@ namespace EUniversity.Extensions
 
 			services.AddAuthentication()
 				.AddJwtBearer();
+
+			services.AddTransient<IClaimsTransformation, CustomClaimsTransform>();
 
 			return services.ConfigureApplicationCookie(options =>
 			{
