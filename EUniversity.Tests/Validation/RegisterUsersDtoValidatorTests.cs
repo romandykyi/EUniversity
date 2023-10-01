@@ -1,32 +1,33 @@
 ﻿using EUniversity.Core.Dtos.Auth;
+using EUniversity.Core.Dtos.Users;
 using EUniversity.Core.Validation;
 using FluentValidation.TestHelper;
 
 namespace EUniversity.Tests.Validation
 {
-	public class RegisterDtosValidatorTests
+	public class RegisterUsersDtoValidatorTests
 	{
-		private RegisterDtosValidator _validator;
-		private readonly RegisterDto _validRegisterDto = 
+		private RegisterUsersDtoValidator _validator;
+		private readonly RegisterDto _validRegisterDto =
 			new() { Email = "example@email.com", FirstName = "Joe", LastName = "Doe" };
 
 		[OneTimeSetUp]
 		public void OneTimeSetUp()
 		{
-			_validator = new RegisterDtosValidator();
+			_validator = new();
 		}
 
 		[Test]
 		public void Dtos_ValidChildren_IsValid()
 		{
 			// Arrange
-			IEnumerable<RegisterDto> dtos = new RegisterDto[1]
+			RegisterUsersDto dto = new()
 			{
-				_validRegisterDto
+				Users = new RegisterDto[1] { _validRegisterDto }
 			};
 
 			// Act
-			var result = _validator.TestValidate(dtos);
+			var result = _validator.TestValidate(dto);
 
 			// Assert
 			result.ShouldNotHaveAnyValidationErrors();
@@ -36,13 +37,16 @@ namespace EUniversity.Tests.Validation
 		public void Dtos_Empty_IsInvalid()
 		{
 			// Arrange
-			IEnumerable<RegisterDto> dtos = Array.Empty<RegisterDto>();
+			RegisterUsersDto dto = new()
+			{
+				Users = Enumerable.Empty<RegisterDto>()
+			};
 
 			// Act
-			var result = _validator.TestValidate(dtos);
+			var result = _validator.TestValidate(dto);
 
 			// Assert
-			result.ShouldHaveValidationErrorFor(x => x)
+			result.ShouldHaveValidationErrorFor(x => x.Users)
 				.WithErrorCode(ValidationErrorCodes.EmptyCollection)
 				.Only();
 		}
@@ -51,14 +55,17 @@ namespace EUniversity.Tests.Validation
 		public void Dtos_InvalidChildElement_IsInvalid()
 		{
 			// Arrange
-			IEnumerable<RegisterDto> dtos = new RegisterDto[2]
+			RegisterUsersDto dto = new()
 			{
-				_validRegisterDto,
-				new RegisterDto()
+				Users = new RegisterDto[2]
+				{
+					_validRegisterDto,
+					new RegisterDto()
+				}
 			};
 
 			// Act
-			var result = _validator.TestValidate(dtos);
+			var result = _validator.TestValidate(dto);
 
 			// Assert
 			result.ShouldHaveAnyValidationError();

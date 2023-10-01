@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Attributes;
-using System.IdentityModel.Tokens.Jwt;
 
 namespace EUniversity.Controllers
 {
@@ -87,7 +86,7 @@ namespace EUniversity.Controllers
 		[ProducesResponseType(typeof(IEnumerable<CreatedUserDto>), StatusCodes.Status201Created)]
 		[ProducesResponseType(StatusCodes.Status401Unauthorized)]
 		[ProducesResponseType(StatusCodes.Status403Forbidden)]
-		public async Task<IActionResult> RegisterStudentsAsync([FromBody] IEnumerable<RegisterDto> students)
+		public async Task<IActionResult> RegisterStudentsAsync([FromBody] RegisterUsersDto students)
 		{
 			return StatusCode(StatusCodes.Status503ServiceUnavailable);
 		}
@@ -103,7 +102,7 @@ namespace EUniversity.Controllers
 		[ProducesResponseType(typeof(IEnumerable<CreatedUserDto>), StatusCodes.Status201Created)]
 		[ProducesResponseType(StatusCodes.Status401Unauthorized)]
 		[ProducesResponseType(StatusCodes.Status403Forbidden)]
-		public async Task<IActionResult> RegisterTeachersAsync([FromBody] IEnumerable<RegisterDto> teachers)
+		public async Task<IActionResult> RegisterTeachersAsync([FromBody] RegisterUsersDto teachers)
 		{
 			return StatusCode(StatusCodes.Status503ServiceUnavailable);
 		}
