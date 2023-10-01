@@ -1,4 +1,5 @@
-﻿using System.Security.Claims;
+﻿using IdentityModel;
+using System.Security.Claims;
 
 namespace EUniversity.IntegrationTests.Mocks
 {
@@ -14,11 +15,11 @@ namespace EUniversity.IntegrationTests.Mocks
 		public void Init(string? id, string name, params string[] roles)
 		{
 			Claims.Clear();
-			Claims.Add(new("sub", id ?? Guid.NewGuid().ToString()));
-			Claims.Add(new("name", name));
+			Claims.Add(new(JwtClaimTypes.Subject, id ?? Guid.NewGuid().ToString()));
+			Claims.Add(new(JwtClaimTypes.Name, name));
 			foreach (var role in roles)
 			{
-				Claims.Add(new("role", role));
+				Claims.Add(new(JwtClaimTypes.Role, role));
 			}
 		}
 	}

@@ -93,19 +93,19 @@ namespace EUniversity.Extensions
 				{
 					policy.AddAuthenticationSchemes(authenticationSchemes);
 					policy.RequireAuthenticatedUser();
-					policy.RequireClaim("student", Roles.Student);
+					policy.RequireClaim(JwtClaimTypes.Role, Roles.Student);
 				});
 				options.AddPolicy(Policies.IsTeacher, policy =>
 				{
 					policy.AddAuthenticationSchemes(authenticationSchemes);
 					policy.RequireAuthenticatedUser();
-					policy.RequireClaim("teacher", Roles.Teacher);
+					policy.RequireClaim(JwtClaimTypes.Role, Roles.Teacher);
 				});
 				options.AddPolicy(Policies.HasAdministratorPermission, policy =>
 				{
 					policy.AddAuthenticationSchemes(authenticationSchemes);
 					policy.RequireAuthenticatedUser();
-					policy.RequireClaim("role", Roles.Administrator);
+					policy.RequireClaim(JwtClaimTypes.Role, Roles.Administrator);
 				});
 				options.DefaultPolicy = options.GetPolicy(Policies.Default)!;
 			});
