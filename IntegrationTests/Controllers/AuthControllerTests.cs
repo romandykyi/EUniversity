@@ -92,6 +92,24 @@ namespace EUniversity.IntegrationTests.Controllers
 		}
 
 		[Test]
+		public async Task ChangePassword_UnauthenticatedUser_Fails()
+		{
+			// Arrange
+			using var client = CreateUnauthorizedClient();
+			var password = new ChangePasswordDto()
+			{
+				Current = DefaultPassword,
+				New = NewPassword
+			};
+
+			// Act
+			var response = await client.PostAsJsonAsync("/api/auth/password/change", password);
+
+			// Assert
+			Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.Unauthorized));
+		}
+
+		[Test]
 		public async Task ChangePassword_InvalidInput_Returns400BadRequest()
 		{
 			// Arrange
