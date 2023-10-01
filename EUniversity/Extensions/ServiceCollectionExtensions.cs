@@ -3,8 +3,11 @@ using EUniversity.Core.Policy;
 using EUniversity.Core.Services;
 using EUniversity.Core.Validation;
 using EUniversity.Infrastructure.Data;
+using EUniversity.Infrastructure.Identity;
 using EUniversity.Infrastructure.Services;
 using FluentValidation;
+using IdentityModel;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Enums;
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Extensions;
@@ -58,10 +61,13 @@ namespace EUniversity.Extensions
 				.AddDefaultTokenProviders();
 
 			services.AddIdentityServer()
-				.AddApiAuthorization<ApplicationUser, ApplicationDbContext>();
+				.AddApiAuthorization<ApplicationUser, ApplicationDbContext>()
+				.AddProfileService<CustomProfileService>();
 
 			services.AddAuthentication()
 				.AddJwtBearer();
+
+			services.AddTransient<IClaimsTransformation, CustomClaimsTransform>();
 
 			return services.ConfigureApplicationCookie(options =>
 			{
@@ -93,19 +99,19 @@ namespace EUniversity.Extensions
 				{
 					policy.AddAuthenticationSchemes(authenticationSchemes);
 					policy.RequireAuthenticatedUser();
-					policy.RequireClaim("student", Roles.Student);
+					policy.RequireClaim(JwtClaimTypes.Role, Roles.Student);
 				});
 				options.AddPolicy(Policies.IsTeacher, policy =>
 				{
 					policy.AddAuthenticationSchemes(authenticationSchemes);
 					policy.RequireAuthenticatedUser();
-					policy.RequireClaim("teacher", Roles.Teacher);
+					policy.RequireClaim(JwtClaimTypes.Role, Roles.Teacher);
 				});
 				options.AddPolicy(Policies.HasAdministratorPermission, policy =>
 				{
 					policy.AddAuthenticationSchemes(authenticationSchemes);
 					policy.RequireAuthenticatedUser();
-					policy.RequireClaim("role", Roles.Administrator);
+					policy.RequireClaim(JwtClaimTypes.Role, Roles.Administrator);
 				});
 				options.DefaultPolicy = options.GetPolicy(Policies.Default)!;
 			});
