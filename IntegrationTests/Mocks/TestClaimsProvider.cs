@@ -14,13 +14,11 @@ namespace EUniversity.IntegrationTests.Mocks
 		public void Init(string? id, string name, params string[] roles)
 		{
 			Claims.Clear();
-			id ??= Guid.NewGuid().ToString();
-			Claims.Add(new("sub", id));
-			Claims.Add(new(ClaimTypes.NameIdentifier, id));
-			Claims.Add(new(ClaimTypes.Name, name));
+			Claims.Add(new("sub", id ?? Guid.NewGuid().ToString()));
+			Claims.Add(new("name", name));
 			foreach (var role in roles)
 			{
-				Claims.Add(new(ClaimTypes.Role, role));
+				Claims.Add(new("role", role));
 			}
 		}
 	}
