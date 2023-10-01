@@ -13,7 +13,7 @@ builder.Services.AddAntiforgery(options => options.HeaderName = "X-XSRF-Token");
 builder.Services.ConfigureAppServices();
 
 builder.Services.AddCustomizedIdentity();
-builder.Services.AddAuthorization();
+builder.Services.AddCustomizedAuthorization();
 
 builder.Services.ConfigureControllers();
 builder.Services.AddFluentValidation();
@@ -55,6 +55,10 @@ app.MapFallbackToFile("index.html");
 
 app.CreateRoles();
 app.CreateAdministrator();
+if (app.Environment.IsDevelopment())
+{
+	app.CreateTestUsers();
+}
 
 app.Run();
 

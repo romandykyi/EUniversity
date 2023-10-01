@@ -1,4 +1,5 @@
 ﻿using EUniversity.Core.Models;
+using EUniversity.Core.Policy;
 using EUniversity.Core.Services;
 using EUniversity.Core.Validation;
 using EUniversity.Infrastructure.Data;
@@ -76,6 +77,37 @@ namespace EUniversity.Extensions
 					context.Response.StatusCode = (int)HttpStatusCode.Forbidden;
 					return Task.CompletedTask;
 				};
+			});
+		}
+
+		public static IServiceCollection AddCustomizedAuthorization(this IServiceCollection services, params string[] authenticationSchemes)
+		{
+			return services.AddAuthorization(options =>
+			{
+				options.AddPolicy(Policies.Default, policy =>
+				{
+					policy.AddAuthenticationSchemes(authenticationSchemes);
+					policy.RequireAuthenticatedUser();
+				});
+				options.AddPolicy(Policies.IsStudent, policy =>
+				{
+					policy.AddAuthenticationSchemes(authenticationSchemes);
+					policy.RequireAuthenticatedUser();
+					policy.RequireClaim("student", Roles.Student);
+				});
+				options.AddPolicy(Policies.IsTeacher, policy =>
+				{
+					policy.AddAuthenticationSchemes(authenticationSchemes);
+					policy.RequireAuthenticatedUser();
+					policy.RequireClaim("teacher", Roles.Teacher);
+				});
+				options.AddPolicy(Policies.HasAdministratorPermission, policy =>
+				{
+					policy.AddAuthenticationSchemes(authenticationSchemes);
+					policy.RequireAuthenticatedUser();
+					policy.RequireClaim("role", Roles.Administrator);
+				});
+				options.DefaultPolicy = options.GetPolicy(Policies.Default)!;
 			});
 		}
 

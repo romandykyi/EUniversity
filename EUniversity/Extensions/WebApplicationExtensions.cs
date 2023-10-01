@@ -1,5 +1,7 @@
-﻿using EUniversity.Core.Models;
+﻿using EUniversity.Core.Dtos.Auth;
+using EUniversity.Core.Models;
 using EUniversity.Core.Policy;
+using EUniversity.Core.Services;
 using Microsoft.AspNetCore.Identity;
 using System.Reflection;
 
@@ -36,24 +38,61 @@ namespace EUniversity.Extensions
 
 			var userManager =
 				scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+			var authService =
+				scope.ServiceProvider.GetRequiredService<IAuthService>();
 
-			string userName = "admin";
-			string email = "admin@e-university.com";
-			string password = "Chang3M3InProduct10nPlz!";
-
-			if (userManager.FindByEmailAsync(email).Result == null)
+			const string adminUserName = "admin";
+			const string adminPassword = "Chang3M3InProduct10nPlz!";
+			RegisterDto registerDto = new()
 			{
-				ApplicationUser user = new()
-				{
-					UserName = userName,
-					Email = email,
-					FirstName = "Admino",
-					LastName = "Guru"
-				};
+				Email = "admin@e-university.com",
+				FirstName = "Admino",
+				LastName = "Guro"
+			};
 
-				userManager.CreateAsync(user, password).Wait();
+			if (userManager.FindByNameAsync(adminUserName).Result == null)
+			{
+				authService.RegisterAsync(registerDto, adminUserName, adminPassword, Roles.Administrator).Wait();
+			}
+			return app;
+		}
 
-				userManager.AddToRoleAsync(user, Roles.Administrator).Wait();
+		public static WebApplication CreateTestUsers(this WebApplication app)
+		{
+			using var scope = app.Services.CreateScope();
+
+			var userManager =
+				scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+			var authService =
+				scope.ServiceProvider.GetRequiredService<IAuthService>();
+
+			const string studentUserName = "student";
+			const string teacherUserName = "teacher";
+			const string defaultPassword = "Password1!";
+			RegisterDto studentRegisterDto = new()
+			{
+				Email = "test-student@e-university.com",
+				FirstName = "Jesse",
+				MiddleName = "Bruce",
+				LastName = "Pinkman"
+			};
+			RegisterDto teacherRegisterDto = new()
+			{
+				Email = "test-teacher@e-university.com",
+				FirstName = "Walter",
+				MiddleName = "Hartwell",
+				LastName = "White"
+			};
+
+			if (userManager.FindByNameAsync(studentUserName).Result == null)
+			{
+				authService.RegisterAsync(studentRegisterDto,
+					studentUserName, defaultPassword, Roles.Student).Wait();
+			}
+			if (userManager.FindByNameAsync(teacherUserName).Result == null)
+			{
+				authService.RegisterAsync(teacherRegisterDto,
+					teacherUserName, defaultPassword, Roles.Teacher).Wait();
 			}
 			return app;
 		}

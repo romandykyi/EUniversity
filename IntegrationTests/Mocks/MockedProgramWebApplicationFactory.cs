@@ -1,4 +1,6 @@
-﻿using EUniversity.Core.Services;
+﻿using EUniversity.Core.Policy;
+using EUniversity.Core.Services;
+using EUniversity.Extensions;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -29,15 +31,7 @@ namespace EUniversity.IntegrationTests.Mocks
 				services.AddAuthentication(defaultScheme: "TestScheme")
 					.AddScheme<AuthenticationSchemeOptions, TestAuthHandler>(
 						"TestScheme", options => { });
-				services.AddAuthorization(options =>
-				{
-					options.AddPolicy("TestPolicy", builder =>
-					{
-						builder.AuthenticationSchemes.Add("TestScheme");
-						builder.RequireAuthenticatedUser();
-					});
-					options.DefaultPolicy = options.GetPolicy("TestPolicy")!;
-				});
+				services.AddCustomizedAuthorization("TestScheme");
 
 				services.AddScoped(_ => AuthServiceMock);
 			});
