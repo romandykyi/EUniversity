@@ -29,7 +29,7 @@ namespace EUniversity.Core.Services
 		/// <returns>
 		/// Results of the operation.
 		/// </returns>
-		Task<IEnumerable<RegisterResult>> RegisterManyAsync(IEnumerable<RegisterDto> users, params string[] roles);
+		IAsyncEnumerable<RegisterResult> RegisterManyAsync(IEnumerable<RegisterDto> users, params string[] roles);
 
 		/// <summary>
 		/// Logs in a user.

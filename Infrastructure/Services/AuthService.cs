@@ -1,8 +1,10 @@
 ﻿using EUniversity.Core.Dtos.Auth;
+using EUniversity.Core.Dtos.Users;
 using EUniversity.Core.Models;
 using EUniversity.Core.Services;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Cryptography;
+using System.Transactions;
 
 namespace EUniversity.Infrastructure.Services
 {
@@ -54,7 +56,7 @@ namespace EUniversity.Infrastructure.Services
 		}
 
 		/// <inheritdoc />
-		public async Task<IEnumerable<RegisterResult>> RegisterManyAsync(
+		public async IAsyncEnumerable<RegisterResult> RegisterManyAsync(
 			IEnumerable<RegisterDto> users, params string[] roles)
 		{
 			throw new NotImplementedException();
