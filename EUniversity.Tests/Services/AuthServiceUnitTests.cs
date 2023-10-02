@@ -1,5 +1,6 @@
 ﻿using EUniversity.Core.Dtos.Auth;
 using EUniversity.Core.Models;
+using EUniversity.Core.Services;
 using EUniversity.Infrastructure.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -81,6 +82,36 @@ namespace EUniversity.Tests.Services
 				.Received(1)
 				.PasswordSignInAsync(login.UserName, login.Password, login.RememberMe, Arg.Any<bool>());
 			Assert.That(result, Is.False);
+		}
+
+		[Test]
+		public async Task RegisterMany_Always_CallsRegister()
+		{
+			// Arrange
+			var mockedAuthService = Substitute.For<IAuthService>();
+			Task<RegisterResult> registerResult = 
+				Task.FromResult(new RegisterResult(IdentityResult.Success));
+			mockedAuthService
+				.RegisterAsync(Arg.Any<RegisterDto>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string[]>())
+				.Returns(registerResult);
+
+			const int samples = 5;
+
+			RegisterDto sampleRegister = new()
+			{
+				FirstName = "Test",
+				LastName = "Test",
+				Email = "test@email.com",
+			};
+			IEnumerable<RegisterDto> a = Enumerable.Repeat(sampleRegister, samples);
+
+			// Act
+			await mockedAuthService.RegisterManyAsync(a).ToListAsync();
+
+			// Assert
+			await mockedAuthService
+				.Received(samples)
+				.RegisterAsync(Arg.Any<RegisterDto>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string[]>());
 		}
 	}
 }
