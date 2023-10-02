@@ -16,13 +16,9 @@ namespace EUniversity.IntegrationTests.Controllers
 		{
 			// Arrange
 			using var client = CreateUnauthorizedClient();
-			LogInDto loginDto = new()
-			{
-				UserName = DefaultUserName,
-				Password = DefaultPassword
-			};
+			LogInDto loginDto = new(DefaultUserName, DefaultPassword, false);
 			WebApplicationFactory.AuthServiceMock
-				.LogInAsync(Arg.Any<LogInDto>()).Returns(true);
+				.LogInAsync(loginDto).Returns(true);
 
 			// Act
 			var response = await client.PostAsJsonAsync("/api/auth/login", loginDto);
@@ -36,11 +32,7 @@ namespace EUniversity.IntegrationTests.Controllers
 		{
 			// Arrange
 			using var client = CreateUnauthorizedClient();
-			LogInDto loginDto = new()
-			{
-				UserName = DefaultUserName,
-				Password = DefaultPassword
-			};
+			LogInDto loginDto = new(DefaultUserName, DefaultPassword, false);
 			WebApplicationFactory.AuthServiceMock
 				.LogInAsync(loginDto).Returns(false);
 
@@ -56,11 +48,7 @@ namespace EUniversity.IntegrationTests.Controllers
 		{
 			// Arrange
 			using var client = CreateUnauthorizedClient();
-			var loginDto = new LogInDto()
-			{
-				UserName = "",
-				Password = ""
-			};
+			var loginDto = new LogInDto(string.Empty, string.Empty, false);
 
 			// Act
 			var response = await client.PostAsJsonAsync("/api/auth/login", loginDto);
