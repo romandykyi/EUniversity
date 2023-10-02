@@ -33,7 +33,7 @@ namespace EUniversity.Controllers
 		/// <response code="401">Unauthorized user call</response>
 		/// <response code="403">User lacks 'Administrator' role</response>
 		[HttpGet]
-		[ProducesResponseType(typeof(IEnumerable<UserViewDto>), StatusCodes.Status200OK)]
+		[ProducesResponseType(typeof(UsersViewDto), StatusCodes.Status200OK)]
 		[ProducesResponseType(StatusCodes.Status401Unauthorized)]
 		[ProducesResponseType(StatusCodes.Status403Forbidden)]
 		public async Task<IActionResult> GetAllUsersAsync()
@@ -49,7 +49,7 @@ namespace EUniversity.Controllers
 		/// <response code="403">User lacks 'Administrator' role</response>
 		[HttpGet]
 		[Route("students")]
-		[ProducesResponseType(typeof(IEnumerable<UserViewDto>), StatusCodes.Status200OK)]
+		[ProducesResponseType(typeof(UsersViewDto), StatusCodes.Status200OK)]
 		[ProducesResponseType(StatusCodes.Status401Unauthorized)]
 		[ProducesResponseType(StatusCodes.Status403Forbidden)]
 		public async Task<IActionResult> GetAllStudentsAsync()
@@ -65,7 +65,7 @@ namespace EUniversity.Controllers
 		/// <response code="403">User lacks 'Administrator' role</response>
 		[HttpGet]
 		[Route("teachers")]
-		[ProducesResponseType(typeof(IEnumerable<UserViewDto>), StatusCodes.Status200OK)]
+		[ProducesResponseType(typeof(UsersViewDto), StatusCodes.Status200OK)]
 		[ProducesResponseType(StatusCodes.Status401Unauthorized)]
 		[ProducesResponseType(StatusCodes.Status403Forbidden)]
 		public async Task<IActionResult> GetAllTeachersAsync()
