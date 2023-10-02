@@ -75,11 +75,7 @@ namespace EUniversity.IntegrationTests.Controllers
 			// Arrange
 			string userId = Guid.NewGuid().ToString();
 			using var client = CreateStudentClient(userId);
-			var password = new ChangePasswordDto()
-			{
-				Current = DefaultPassword,
-				New = NewPassword
-			};
+			ChangePasswordDto password = new(DefaultPassword, NewPassword);
 			WebApplicationFactory.AuthServiceMock
 				.ChangePasswordAsync(userId, Arg.Any<ChangePasswordDto>())
 				.Returns(IdentityResult.Success);
@@ -96,12 +92,8 @@ namespace EUniversity.IntegrationTests.Controllers
 		{
 			// Arrange
 			using var client = CreateStudentClient();
-			var password = new ChangePasswordDto()
-			{
-				// Equal passwords shouldn't be allowed
-				Current = DefaultPassword,
-				New = DefaultPassword
-			};
+			// Equal passwords shouldn't be allowed
+			var password = new ChangePasswordDto(DefaultPassword, DefaultPassword);
 
 			// Act
 			var response = await client.PostAsJsonAsync("/api/auth/password/change", password);

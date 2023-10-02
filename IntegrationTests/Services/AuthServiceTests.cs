@@ -159,11 +159,7 @@ namespace EUniversity.IntegrationTests.Services
 		{
 			// Arrange
 			var user = await RegisterDefaultUserAsync();
-			ChangePasswordDto password = new()
-			{
-				Current = DefaultPassword,
-				New = NewPassword
-			};
+			ChangePasswordDto password = new(DefaultPassword, NewPassword);
 
 			// Act
 			var result = await _authService.ChangePasswordAsync(user.Id, password);
@@ -180,11 +176,7 @@ namespace EUniversity.IntegrationTests.Services
 		{
 			// Arrange
 			var user = await RegisterDefaultUserAsync();
-			ChangePasswordDto password = new()
-			{
-				Current = "invalid",
-				New = NewPassword
-			};
+			ChangePasswordDto password = new("invalid", NewPassword);
 
 			// Act
 			var result = await _authService.ChangePasswordAsync(user.Id, password);
