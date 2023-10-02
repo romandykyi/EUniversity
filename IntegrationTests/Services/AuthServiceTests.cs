@@ -40,12 +40,7 @@ namespace EUniversity.IntegrationTests.Services
 
 		private async Task<RegisterDto> GetDefaultRegisterDtoAsync()
 		{
-			RegisterDto result = new()
-			{
-				Email = "example@email.com",
-				FirstName = "Joe",
-				LastName = "Doe"
-			};
+			RegisterDto result = new("example@email.com", "Joe", "Doe");
 			await ClearEmailAsync(result.Email);
 			return result;
 		}

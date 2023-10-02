@@ -43,12 +43,7 @@ namespace EUniversity.Extensions
 
 			const string adminUserName = "admin";
 			const string adminPassword = "Chang3M3InProduct10nPlz!";
-			RegisterDto registerDto = new()
-			{
-				Email = "admin@e-university.com",
-				FirstName = "Admino",
-				LastName = "Guro"
-			};
+			RegisterDto registerDto = new("admin@e-university.com", "Admino", "Guro");
 
 			if (userManager.FindByNameAsync(adminUserName).Result == null)
 			{
@@ -69,20 +64,8 @@ namespace EUniversity.Extensions
 			const string studentUserName = "student";
 			const string teacherUserName = "teacher";
 			const string defaultPassword = "Password1!";
-			RegisterDto studentRegisterDto = new()
-			{
-				Email = "test-student@e-university.com",
-				FirstName = "Jesse",
-				MiddleName = "Bruce",
-				LastName = "Pinkman"
-			};
-			RegisterDto teacherRegisterDto = new()
-			{
-				Email = "test-teacher@e-university.com",
-				FirstName = "Walter",
-				MiddleName = "Hartwell",
-				LastName = "White"
-			};
+			RegisterDto studentRegisterDto = new("test-student@e-university.com", "Jesse", "Pinkman", "Bruce");
+			RegisterDto teacherRegisterDto = new("test-teacher@e-university.com", "Walter", "White", "Hartwell");
 
 			if (userManager.FindByNameAsync(studentUserName).Result == null)
 			{

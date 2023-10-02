@@ -2,26 +2,18 @@
 using EUniversity.Core.Models;
 using EUniversity.Core.Validation;
 using FluentValidation.TestHelper;
+using static Duende.IdentityServer.Models.IdentityResources;
 
 namespace EUniversity.Tests.Validation
 {
 	public class RegisterDtoValidatorTests
 	{
 		private RegisterDtoValidator _validator;
-		private RegisterDto _register;
 
-		[SetUp]
-		public void SetUp()
-		{
-			// Valid register for all properties
-			_register = new()
-			{
-				Email = "heisenberg@blue-crystals.com",
-				FirstName = "Walter",
-				MiddleName = "Hartwell",
-				LastName = "White"
-			};
-		}
+		public const string DefaultEmail = "heisenberg@blue-crystals.com";
+		public const string DefaultFirstName = "Walter";
+		public const string DefaultLastName = "White";
+		public const string DefaultMiddleName = "Hartwell";
 
 		[OneTimeSetUp]
 		public void OneTimeSetUp()
@@ -37,10 +29,10 @@ namespace EUniversity.Tests.Validation
 		public void Email_Valid_Succeeds(string email)
 		{
 			// Arrange
-			_register.Email = email;
+			RegisterDto register = new(email, DefaultFirstName, DefaultLastName, DefaultMiddleName);
 
 			// Act
-			var result = _validator.TestValidate(_register);
+			var result = _validator.TestValidate(register);
 
 			// Assert
 			result.ShouldNotHaveAnyValidationErrors();
@@ -51,10 +43,11 @@ namespace EUniversity.Tests.Validation
 		{
 			// Arrange
 			string bigString = new('a', ApplicationUser.MaxEmailLength);
-			_register.Email = $"{bigString}@email.com";
+			string bigEmail = $"{bigString}@email.com";
+			RegisterDto register = new(bigEmail, DefaultFirstName, DefaultLastName, DefaultMiddleName);
 
 			// Act
-			var result = _validator.TestValidate(_register);
+			var result = _validator.TestValidate(register);
 
 			// Assert
 			result.ShouldHaveValidationErrorFor(x => x.Email)
@@ -66,10 +59,10 @@ namespace EUniversity.Tests.Validation
 		public void Email_Empty_Fails()
 		{
 			// Arrange
-			_register.Email = string.Empty;
+			RegisterDto register = new(string.Empty, DefaultFirstName, DefaultLastName, DefaultMiddleName);
 
 			// Act
-			var result = _validator.TestValidate(_register);
+			var result = _validator.TestValidate(register);
 
 			// Assert
 			result.ShouldHaveValidationErrorFor(x => x.Email)
@@ -81,10 +74,10 @@ namespace EUniversity.Tests.Validation
 		public void Email_Invalid_Fails()
 		{
 			// Arrange
-			_register.Email = "invalid";
+			RegisterDto register = new("invalid", DefaultFirstName, DefaultLastName, DefaultMiddleName);
 
 			// Act
-			var result = _validator.TestValidate(_register);
+			var result = _validator.TestValidate(register);
 
 			// Assert
 			result.ShouldHaveValidationErrorFor(x => x.Email)
@@ -101,10 +94,10 @@ namespace EUniversity.Tests.Validation
 		public void FirstName_Valid_Succeeds(string firstName)
 		{
 			// Arrange
-			_register.FirstName = firstName;
+			RegisterDto register = new(DefaultEmail, firstName, DefaultLastName, DefaultMiddleName);
 
 			// Act
-			var result = _validator.TestValidate(_register);
+			var result = _validator.TestValidate(register);
 
 			// Assert
 			result.ShouldNotHaveAnyValidationErrors();
@@ -114,10 +107,10 @@ namespace EUniversity.Tests.Validation
 		public void FirstName_Empty_Fails()
 		{
 			// Arrange
-			_register.FirstName = string.Empty;
+			RegisterDto register = new(DefaultEmail, string.Empty, DefaultLastName, DefaultMiddleName);
 
 			// Act
-			var result = _validator.TestValidate(_register);
+			var result = _validator.TestValidate(register);
 
 			// Assert
 			result.ShouldHaveValidationErrorFor(x => x.FirstName)
@@ -129,10 +122,11 @@ namespace EUniversity.Tests.Validation
 		public void FirstName_TooLarge_Fails()
 		{
 			// Arrange
-			_register.FirstName = new('a', ApplicationUser.MaxNameLength + 1);
+			string bigFirstName = new('a', ApplicationUser.MaxNameLength + 1);
+			RegisterDto register = new(DefaultEmail, bigFirstName, DefaultLastName, DefaultMiddleName);
 
 			// Act
-			var result = _validator.TestValidate(_register);
+			var result = _validator.TestValidate(register);
 
 			// Assert
 			result.ShouldHaveValidationErrorFor(x => x.FirstName)
@@ -149,10 +143,10 @@ namespace EUniversity.Tests.Validation
 		public void LastName_Valid_Succeeds(string lastName)
 		{
 			// Arrange
-			_register.LastName = lastName;
+			RegisterDto register = new(DefaultEmail, DefaultFirstName, lastName, DefaultMiddleName);
 
 			// Act
-			var result = _validator.TestValidate(_register);
+			var result = _validator.TestValidate(register);
 
 			// Assert
 			result.ShouldNotHaveAnyValidationErrors();
@@ -162,10 +156,10 @@ namespace EUniversity.Tests.Validation
 		public void LastName_Empty_Fails()
 		{
 			// Arrange
-			_register.LastName = string.Empty;
+			RegisterDto register = new(DefaultEmail, DefaultFirstName, string.Empty, DefaultMiddleName);
 
 			// Act
-			var result = _validator.TestValidate(_register);
+			var result = _validator.TestValidate(register);
 
 			// Assert
 			result.ShouldHaveValidationErrorFor(x => x.LastName)
@@ -177,10 +171,11 @@ namespace EUniversity.Tests.Validation
 		public void LastName_TooLarge_Fails()
 		{
 			// Arrange
-			_register.LastName = new('a', ApplicationUser.MaxNameLength + 1);
+			string bigLastName = new('a', ApplicationUser.MaxNameLength + 1);
+			RegisterDto register = new(DefaultEmail, DefaultFirstName, bigLastName, DefaultMiddleName);
 
 			// Act
-			var result = _validator.TestValidate(_register);
+			var result = _validator.TestValidate(register);
 
 			// Assert
 			result.ShouldHaveValidationErrorFor(x => x.LastName)
@@ -195,10 +190,10 @@ namespace EUniversity.Tests.Validation
 		public void MiddleName_Valid_Succeeds(string middleName)
 		{
 			// Arrange
-			_register.MiddleName = middleName;
+			RegisterDto register = new(DefaultEmail, DefaultFirstName, DefaultLastName, middleName);
 
 			// Act
-			var result = _validator.TestValidate(_register);
+			var result = _validator.TestValidate(register);
 
 			// Assert
 			result.ShouldNotHaveAnyValidationErrors();
@@ -211,10 +206,10 @@ namespace EUniversity.Tests.Validation
 		public void MiddleName_Empty_Succeeds(string middleName)
 		{
 			// Arrange
-			_register.MiddleName = middleName;
+			RegisterDto register = new(DefaultEmail, DefaultFirstName, DefaultLastName, middleName);
 
 			// Act
-			var result = _validator.TestValidate(_register);
+			var result = _validator.TestValidate(register);
 
 			// Assert
 			result.ShouldNotHaveAnyValidationErrors();
@@ -224,10 +219,11 @@ namespace EUniversity.Tests.Validation
 		public void MiddleName_TooLarge_Fails()
 		{
 			// Arrange
-			_register.MiddleName = new('a', ApplicationUser.MaxNameLength + 1);
+			string bigMiddleName = new('a', ApplicationUser.MaxNameLength + 1);
+			RegisterDto register = new(DefaultEmail, DefaultFirstName, DefaultLastName, bigMiddleName);
 
 			// Act
-			var result = _validator.TestValidate(_register);
+			var result = _validator.TestValidate(register);
 
 			// Assert
 			result.ShouldHaveValidationErrorFor(x => x.MiddleName)

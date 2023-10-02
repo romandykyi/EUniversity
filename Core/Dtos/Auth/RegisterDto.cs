@@ -3,11 +3,5 @@
 namespace EUniversity.Core.Dtos.Auth
 {
 	[ValidateNever] // Remove data annotations validation
-	public class RegisterDto
-	{
-		public string Email { get; set; } = null!;
-		public string FirstName { get; set; } = null!;
-		public string LastName { get; set; } = null!;
-		public string? MiddleName { get; set; }
-	}
+	public record RegisterDto(string Email, string FirstName, string LastName, string? MiddleName = null);
 }
