@@ -56,10 +56,14 @@ namespace EUniversity.Infrastructure.Services
 		}
 
 		/// <inheritdoc />
-		public IAsyncEnumerable<RegisterResult> RegisterManyAsync(
+		public async IAsyncEnumerable<RegisterResult> RegisterManyAsync(
 			IEnumerable<RegisterDto> users, params string[] roles)
 		{
-			throw new NotImplementedException();
+			foreach (var user in users)
+			{
+				var result = await RegisterAsync(user, roles: roles);
+				yield return result;
+			}
 		}
 
 		/// <inheritdoc />
