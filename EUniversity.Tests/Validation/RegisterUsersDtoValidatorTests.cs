@@ -9,7 +9,7 @@ namespace EUniversity.Tests.Validation
 	{
 		private RegisterUsersDtoValidator _validator;
 		private readonly RegisterDto _validRegisterDto =
-			new() { Email = "example@email.com", FirstName = "Joe", LastName = "Doe" };
+			new("example@email.com", "Joe", "Doe");
 
 		[OneTimeSetUp]
 		public void OneTimeSetUp()
@@ -55,17 +55,17 @@ namespace EUniversity.Tests.Validation
 		public void Dtos_InvalidChildElement_IsInvalid()
 		{
 			// Arrange
-			RegisterUsersDto dto = new()
+			RegisterUsersDto users = new()
 			{
 				Users = new RegisterDto[2]
 				{
 					_validRegisterDto,
-					new RegisterDto()
+					new RegisterDto("invalid-email", string.Empty, string.Empty)
 				}
 			};
 
 			// Act
-			var result = _validator.TestValidate(dto);
+			var result = _validator.TestValidate(users);
 
 			// Assert
 			result.ShouldHaveAnyValidationError();

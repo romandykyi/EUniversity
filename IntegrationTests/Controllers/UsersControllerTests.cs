@@ -13,18 +13,8 @@ namespace EUniversity.IntegrationTests.Controllers
 {
 	public class UsersControllerTests : ControllersTest
 	{
-		public readonly RegisterDto RegisterUser1 = new()
-		{
-			Email = "example-email1@email.com",
-			FirstName = "Test1",
-			LastName = "Test1"
-		};
-		public readonly RegisterDto RegisterUser2 = new()
-		{
-			Email = "example-email2@email.com",
-			FirstName = "Test2",
-			LastName = "Test2"
-		};
+		public readonly RegisterDto RegisterUser1 = new("example-email1@email.com", "Test1", "Test1");
+		public readonly RegisterDto RegisterUser2 = new("example-email2@email.com", "Test2", "Test2");
 		public const int SampleRegisterUsersCount = 2;
 		public RegisterUsersDto SampleRegisterUsers => new()
 		{

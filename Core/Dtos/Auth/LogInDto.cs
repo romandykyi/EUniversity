@@ -3,10 +3,5 @@
 namespace EUniversity.Core.Dtos.Auth
 {
 	[ValidateNever] // Remove data annotations validation
-	public class LogInDto
-	{
-		public string UserName { get; set; } = null!;
-		public string Password { get; set; } = null!;
-		public bool RememberMe { get; set; }
-	}
+	public record LogInDto(string UserName, string Password, bool RememberMe);
 }

@@ -56,7 +56,7 @@ namespace EUniversity.Infrastructure.Services
 		}
 
 		/// <inheritdoc />
-		public async IAsyncEnumerable<RegisterResult> RegisterManyAsync(
+		public IAsyncEnumerable<RegisterResult> RegisterManyAsync(
 			IEnumerable<RegisterDto> users, params string[] roles)
 		{
 			throw new NotImplementedException();

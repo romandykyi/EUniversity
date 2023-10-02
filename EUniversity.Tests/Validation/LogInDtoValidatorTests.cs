@@ -7,18 +7,8 @@ namespace EUniversity.Tests.Validation
 	public class LogInDtoValidatorTests
 	{
 		private LogInDtoValidator _validator;
-		private LogInDto _login;
-
-		[SetUp]
-		public void SetUp()
-		{
-			// Valid login for all properties
-			_login = new()
-			{
-				UserName = "user",
-				Password = "Passw0rd123"
-			};
-		}
+		public const string DefaultUserName = "user";
+		public const string DefaultPassword = "Passw0rd123";
 
 		[OneTimeSetUp]
 		public void OneTimeSetUp()
@@ -30,7 +20,7 @@ namespace EUniversity.Tests.Validation
 		public void Input_Valid_IsValid()
 		{
 			// Arrange
-			var login = _login;
+			LogInDto login = new(DefaultUserName, DefaultPassword, false);
 
 			// Act
 			var result = _validator.TestValidate(login);
@@ -43,10 +33,10 @@ namespace EUniversity.Tests.Validation
 		public void UserName_Empty_IsInvalid()
 		{
 			// Arrange
-			_login.UserName = string.Empty;
+			LogInDto login = new(string.Empty, DefaultPassword, false);
 
 			// Act
-			var result = _validator.TestValidate(_login);
+			var result = _validator.TestValidate(login);
 
 			// Assert
 			result.ShouldHaveValidationErrorFor(x => x.UserName)
@@ -58,10 +48,10 @@ namespace EUniversity.Tests.Validation
 		public void Password_Empty_IsInvalid()
 		{
 			// Arrange
-			_login.Password = string.Empty;
+			LogInDto login = new(DefaultUserName, string.Empty, false);
 
 			// Act
-			var result = _validator.TestValidate(_login);
+			var result = _validator.TestValidate(login);
 
 			// Assert
 			result.ShouldHaveValidationErrorFor(x => x.Password)
