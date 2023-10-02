@@ -16,12 +16,10 @@ namespace EUniversity.Controllers
 	[Authorize(Policies.HasAdministratorPermission)]
 	public class UsersController : ControllerBase
 	{
-		public UserManager<ApplicationUser> _userManager;
 		public IAuthService _authService;
 
-		public UsersController(UserManager<ApplicationUser> userManager, IAuthService authService)
+		public UsersController(IAuthService authService)
 		{
-			_userManager = userManager;
 			_authService = authService;
 		}
 

@@ -54,6 +54,13 @@ namespace EUniversity.Infrastructure.Services
 		}
 
 		/// <inheritdoc />
+		public async Task<IEnumerable<RegisterResult>> RegisterManyAsync(
+			IEnumerable<RegisterDto> users, params string[] roles)
+		{
+			throw new NotImplementedException();
+		}
+
+		/// <inheritdoc />
 		public async Task<bool> LogInAsync(LogInDto login)
 		{
 			// This doesn't count login failures towards account lockout and two factor authorization

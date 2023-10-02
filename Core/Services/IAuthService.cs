@@ -22,6 +22,16 @@ namespace EUniversity.Core.Services
 			string? password = null, params string[] roles);
 
 		/// <summary>
+		/// Registers many users with auto-generated usernames and passwords.
+		/// </summary>
+		/// <param name="users">Users to register.</param>
+		/// <param name="roles">Optional roles of all users.</param>
+		/// <returns>
+		/// Results of the operation.
+		/// </returns>
+		Task<IEnumerable<RegisterResult>> RegisterManyAsync(IEnumerable<RegisterDto> users, params string[] roles);
+
+		/// <summary>
 		/// Logs in a user.
 		/// </summary>
 		/// <param name="login">Data needed for login.</param>
