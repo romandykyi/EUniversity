@@ -16,14 +16,12 @@ namespace EUniversity.IntegrationTests.Controllers
 		public readonly RegisterDto RegisterUser1 = new("example-email1@email.com", "Test1", "Test1");
 		public readonly RegisterDto RegisterUser2 = new("example-email2@email.com", "Test2", "Test2");
 		public const int SampleRegisterUsersCount = 2;
-		public RegisterUsersDto SampleRegisterUsers => new()
-		{
-			Users = new RegisterDto[SampleRegisterUsersCount]
+		public RegisterUsersDto SampleRegisterUsers => new(
+			new RegisterDto[SampleRegisterUsersCount]
 			{
 				RegisterUser1,
 				RegisterUser2
-			}
-		};
+			});
 
 		public static readonly string[] GetMethods =
 		{
@@ -144,10 +142,7 @@ namespace EUniversity.IntegrationTests.Controllers
 		{
 			// Arrange
 			using var client = CreateAdministratorClient();
-			RegisterUsersDto users = new()
-			{
-				Users = Enumerable.Empty<RegisterDto>()
-			};
+			RegisterUsersDto users = new(Enumerable.Empty<RegisterDto>());
 
 			// Act
 			var result = await client.PostAsJsonAsync(method, users);
