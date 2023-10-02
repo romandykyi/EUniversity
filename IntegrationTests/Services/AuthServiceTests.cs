@@ -152,6 +152,9 @@ namespace EUniversity.IntegrationTests.Services
 			}
 		}
 
+		// Integration tests for RegisterManyAsync are redundant,
+		// because this method just calls RegisterAsync
+
 		// Testing LogIn is not possible here, because it requires HttpContext
 
 		[Test]
