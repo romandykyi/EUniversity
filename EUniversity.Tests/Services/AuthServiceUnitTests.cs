@@ -4,6 +4,7 @@ using EUniversity.Core.Services;
 using EUniversity.Infrastructure.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using NSubstitute.ReceivedExtensions;
 
 namespace EUniversity.Tests.Services
 {
@@ -88,12 +89,12 @@ namespace EUniversity.Tests.Services
 		public async Task RegisterMany_Always_CallsRegister()
 		{
 			// Arrange
-			var mockedAuthService = Substitute.For<IAuthService>();
-			Task<RegisterResult> registerResult = 
-				Task.FromResult(new RegisterResult(IdentityResult.Success));
-			mockedAuthService
-				.RegisterAsync(Arg.Any<RegisterDto>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string[]>())
-				.Returns(registerResult);
+			_userManagerMock
+				.CreateAsync(Arg.Any<ApplicationUser>(), Arg.Any<string>())
+				.Returns(IdentityResult.Success);
+			_userManagerMock
+				.AddToRolesAsync(Arg.Any<ApplicationUser>(), Arg.Any<IEnumerable<string>>())
+				.Returns(IdentityResult.Success);
 
 			const int samples = 5;
 
@@ -103,15 +104,15 @@ namespace EUniversity.Tests.Services
 				LastName = "Test",
 				Email = "test@email.com",
 			};
-			IEnumerable<RegisterDto> a = Enumerable.Repeat(sampleRegister, samples);
+			IEnumerable<RegisterDto> users = Enumerable.Repeat(sampleRegister, samples);
 
 			// Act
-			await mockedAuthService.RegisterManyAsync(a).ToListAsync();
+			await _authService.RegisterManyAsync(users).ToListAsync();
 
 			// Assert
-			await mockedAuthService
+			await _userManagerMock
 				.Received(samples)
-				.RegisterAsync(Arg.Any<RegisterDto>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string[]>());
+				.CreateAsync(Arg.Any<ApplicationUser>(), Arg.Any<string>());
 		}
 	}
 }
