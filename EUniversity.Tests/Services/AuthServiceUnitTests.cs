@@ -39,12 +39,7 @@ namespace EUniversity.Tests.Services
 		public async Task LogIn_ValidLogin_Succeeds()
 		{
 			// Arrange
-			LogInDto login = new()
-			{
-				UserName = DefaultUserName,
-				Password = DefaultPassword,
-				RememberMe = true
-			};
+			LogInDto login = new(DefaultUserName, DefaultPassword, true);
 			_signInManagerMock
 				.PasswordSignInAsync(login.UserName, login.Password, login.RememberMe, Arg.Any<bool>())
 				.Returns(SignInResult.Success);
@@ -63,12 +58,7 @@ namespace EUniversity.Tests.Services
 		public async Task LogIn_InvalidLogin_Fails()
 		{
 			// Arrange
-			LogInDto login = new()
-			{
-				UserName = DefaultUserName,
-				Password = DefaultPassword,
-				RememberMe = true
-			};
+			LogInDto login = new(DefaultUserName, DefaultPassword, true);
 			_signInManagerMock
 				.PasswordSignInAsync(login.UserName, login.Password, login.RememberMe, Arg.Any<bool>())
 				.Returns(SignInResult.Failed);

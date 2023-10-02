@@ -40,12 +40,7 @@ namespace EUniversity.IntegrationTests.Services
 
 		private async Task<RegisterDto> GetDefaultRegisterDtoAsync()
 		{
-			RegisterDto result = new()
-			{
-				Email = "example@email.com",
-				FirstName = "Joe",
-				LastName = "Doe"
-			};
+			RegisterDto result = new("example@email.com", "Joe", "Doe");
 			await ClearEmailAsync(result.Email);
 			return result;
 		}
@@ -159,11 +154,7 @@ namespace EUniversity.IntegrationTests.Services
 		{
 			// Arrange
 			var user = await RegisterDefaultUserAsync();
-			ChangePasswordDto password = new()
-			{
-				Current = DefaultPassword,
-				New = NewPassword
-			};
+			ChangePasswordDto password = new(DefaultPassword, NewPassword);
 
 			// Act
 			var result = await _authService.ChangePasswordAsync(user.Id, password);
@@ -180,11 +171,7 @@ namespace EUniversity.IntegrationTests.Services
 		{
 			// Arrange
 			var user = await RegisterDefaultUserAsync();
-			ChangePasswordDto password = new()
-			{
-				Current = "invalid",
-				New = NewPassword
-			};
+			ChangePasswordDto password = new("invalid", NewPassword);
 
 			// Act
 			var result = await _authService.ChangePasswordAsync(user.Id, password);

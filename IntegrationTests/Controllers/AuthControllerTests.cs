@@ -16,13 +16,9 @@ namespace EUniversity.IntegrationTests.Controllers
 		{
 			// Arrange
 			using var client = CreateUnauthorizedClient();
-			LogInDto loginDto = new()
-			{
-				UserName = DefaultUserName,
-				Password = DefaultPassword
-			};
+			LogInDto loginDto = new(DefaultUserName, DefaultPassword, false);
 			WebApplicationFactory.AuthServiceMock
-				.LogInAsync(Arg.Any<LogInDto>()).Returns(true);
+				.LogInAsync(loginDto).Returns(true);
 
 			// Act
 			var response = await client.PostAsJsonAsync("/api/auth/login", loginDto);
@@ -36,11 +32,7 @@ namespace EUniversity.IntegrationTests.Controllers
 		{
 			// Arrange
 			using var client = CreateUnauthorizedClient();
-			LogInDto loginDto = new()
-			{
-				UserName = DefaultUserName,
-				Password = DefaultPassword
-			};
+			LogInDto loginDto = new(DefaultUserName, DefaultPassword, false);
 			WebApplicationFactory.AuthServiceMock
 				.LogInAsync(loginDto).Returns(false);
 
@@ -56,11 +48,7 @@ namespace EUniversity.IntegrationTests.Controllers
 		{
 			// Arrange
 			using var client = CreateUnauthorizedClient();
-			var loginDto = new LogInDto()
-			{
-				UserName = "",
-				Password = ""
-			};
+			var loginDto = new LogInDto(string.Empty, string.Empty, false);
 
 			// Act
 			var response = await client.PostAsJsonAsync("/api/auth/login", loginDto);
@@ -75,11 +63,7 @@ namespace EUniversity.IntegrationTests.Controllers
 			// Arrange
 			string userId = Guid.NewGuid().ToString();
 			using var client = CreateStudentClient(userId);
-			var password = new ChangePasswordDto()
-			{
-				Current = DefaultPassword,
-				New = NewPassword
-			};
+			ChangePasswordDto password = new(DefaultPassword, NewPassword);
 			WebApplicationFactory.AuthServiceMock
 				.ChangePasswordAsync(userId, Arg.Any<ChangePasswordDto>())
 				.Returns(IdentityResult.Success);
@@ -96,12 +80,8 @@ namespace EUniversity.IntegrationTests.Controllers
 		{
 			// Arrange
 			using var client = CreateStudentClient();
-			var password = new ChangePasswordDto()
-			{
-				// Equal passwords shouldn't be allowed
-				Current = DefaultPassword,
-				New = DefaultPassword
-			};
+			// Equal passwords shouldn't be allowed
+			var password = new ChangePasswordDto(DefaultPassword, DefaultPassword);
 
 			// Act
 			var response = await client.PostAsJsonAsync("/api/auth/password/change", password);

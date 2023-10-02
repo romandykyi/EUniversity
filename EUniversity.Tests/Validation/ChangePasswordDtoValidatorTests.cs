@@ -7,18 +7,9 @@ namespace EUniversity.Tests.Validation
 	public class ChangePasswordDtoValidatorTests
 	{
 		private ChangePasswordDtoValidator _validator;
-		private ChangePasswordDto _password;
 
-		[SetUp]
-		public void SetUp()
-		{
-			// Valid input for all properties
-			_password = new()
-			{
-				Current = "password",
-				New = "Password1!",
-			};
-		}
+		public const string CurrentPassword = "password";
+		public const string ValidNewPassword = "Password1!";
 
 		[OneTimeSetUp]
 		public void OneTimeSetUp()
@@ -30,7 +21,7 @@ namespace EUniversity.Tests.Validation
 		public void Input_Valid_Succeeds()
 		{
 			// Arrange
-			var password = _password;
+			ChangePasswordDto password = new(CurrentPassword, ValidNewPassword);
 
 			// Act
 			var result = _validator.TestValidate(password);
@@ -43,10 +34,10 @@ namespace EUniversity.Tests.Validation
 		public void OldPassword_Empty_Fails()
 		{
 			// Arrange
-			_password.Current = string.Empty;
+			ChangePasswordDto password = new(string.Empty, ValidNewPassword);
 
 			// Act
-			var result = _validator.TestValidate(_password);
+			var result = _validator.TestValidate(password);
 
 			// Assert
 			result.ShouldHaveValidationErrorFor(x => x.Current)
@@ -58,10 +49,10 @@ namespace EUniversity.Tests.Validation
 		public void NewPassword_Empty_Succeeds()
 		{
 			// Arrange
-			_password.New = string.Empty;
+			ChangePasswordDto password = new(CurrentPassword, string.Empty);
 
 			// Act
-			var result = _validator.TestValidate(_password);
+			var result = _validator.TestValidate(password);
 
 			// Assert
 			result.ShouldHaveValidationErrorFor(x => x.New)
@@ -73,10 +64,10 @@ namespace EUniversity.Tests.Validation
 		public void Passwords_Empty_FailsWithoutEqualErrorCode()
 		{
 			// Arrange
-			_password.Current = _password.New = string.Empty;
+			ChangePasswordDto password = new(string.Empty, string.Empty);
 
 			// Act
-			var result = _validator.TestValidate(_password);
+			var result = _validator.TestValidate(password);
 
 			// Assert
 			result.ShouldHaveValidationErrorFor(x => x.New)
@@ -87,10 +78,10 @@ namespace EUniversity.Tests.Validation
 		public void Passwords_Equal_Fails()
 		{
 			// Arrange
-			_password.Current = _password.New;
+			ChangePasswordDto password = new(ValidNewPassword, ValidNewPassword);
 
 			// Act
-			var result = _validator.TestValidate(_password);
+			var result = _validator.TestValidate(password);
 
 			// Assert
 			result.ShouldHaveValidationErrorFor(x => x.New)
