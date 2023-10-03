@@ -21,7 +21,27 @@ const ChangePassword = () => {
     const navigate = useNavigate();
 
     const handleInputChange = e => {
+
         const { name, value } = e.target;
+
+        const hasUpperCase = /[A-Z]/.test(value);
+        const hasNumber = /\d/.test(value);
+        const hasDistinctSymbols = new Set(value).size >= 3;
+        const isLengthValid = value.length >= 8;
+
+        if (isLengthValid && hasUpperCase && hasNumber && hasDistinctSymbols) {
+            setError(false);
+        }
+        else {
+                let errorMessage = 'New password must meet the following conditions:';
+                if (!isLengthValid) errorMessage += 'Be at least 8 characters long,\n';
+                if (!hasUpperCase) errorMessage += 'Contain at least one uppercase letter,\n';
+                if (!hasNumber) errorMessage += 'Contain at least one digit,\n';
+                if (!hasDistinctSymbols) errorMessage += 'Contain at least 3 distinct symbols\n';
+
+                setError(errorMessage.trim());
+            }
+
         setFormData({
             ...formData,
             [name]: value,
@@ -39,15 +59,6 @@ const ChangePassword = () => {
         e.preventDefault();
 
         const { currentPassword, newPassword } = formData;
-
-        const hasUpperCase = /[A-Z]/.test(newPassword);
-        const hasNumber = /\d/.test(newPassword);
-        const hasDistinctSymbols = new Set(newPassword).size >= 3;
-        const isLengthValid = newPassword.length >= 8;
-
-        if (isLengthValid && hasUpperCase && hasNumber && hasDistinctSymbols) {
-            setError(false);
-
             const requestBody = {
                 current: currentPassword,
                 new: newPassword,
@@ -79,16 +90,7 @@ const ChangePassword = () => {
                 console.error("An error occurred:", error);
                 setError('An error occurred while changing the password.');
             }
-        } else {
-            let errorMessage = 'New password must meet the following conditions:';
-            if (!isLengthValid) errorMessage += 'Be at least 8 characters long,\n';
-            if (!hasUpperCase) errorMessage += 'Contain at least one uppercase letter,\n';
-            if (!hasNumber) errorMessage += 'Contain at least one digit,\n';
-            if (!hasDistinctSymbols) errorMessage += 'Contain at least 3 distinct symbols\n';
-
-            setError(errorMessage.trim());
-        }
-    };
+        };
 
 
     return (
