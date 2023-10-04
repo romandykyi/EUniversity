@@ -12,7 +12,7 @@ namespace EUniversity.Infrastructure.Services
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ApplicationDbContext _dbContext;
 
-        public UsersService(UserManager<ApplicationUser> userManager, 
+        public UsersService(UserManager<ApplicationUser> userManager,
             ApplicationDbContext dbContext)
         {
             _userManager = userManager;
