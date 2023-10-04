@@ -3,9 +3,12 @@ using EUniversity.Core.Dtos.Users;
 using EUniversity.Core.Models;
 using EUniversity.Core.Policy;
 using EUniversity.Core.Services;
+using EUniversity.Infrastructure.Data;
+using Mapster;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Attributes;
 
 namespace EUniversity.Controllers
@@ -16,11 +19,13 @@ namespace EUniversity.Controllers
 	[Authorize(Policies.HasAdministratorPermission)]
 	public class UsersController : ControllerBase
 	{
-		public IAuthService _authService;
+		private readonly IAuthService _authService;
+		private readonly IUsersService _usersService;
 
-		public UsersController(IAuthService authService)
+		public UsersController(IAuthService authService, IUsersService usersService)
 		{
 			_authService = authService;
+			_usersService = usersService;
 		}
 
 		#region Get
@@ -36,7 +41,7 @@ namespace EUniversity.Controllers
 		[ProducesResponseType(StatusCodes.Status403Forbidden)]
 		public async Task<IActionResult> GetAllUsersAsync()
 		{
-			return StatusCode(StatusCodes.Status503ServiceUnavailable);
+			return Ok(await _usersService.GetAllUsersAsync());
 		}
 
 		/// <summary>
@@ -52,7 +57,7 @@ namespace EUniversity.Controllers
 		[ProducesResponseType(StatusCodes.Status403Forbidden)]
 		public async Task<IActionResult> GetAllStudentsAsync()
 		{
-			return StatusCode(StatusCodes.Status503ServiceUnavailable);
+			return Ok(await _usersService.GetUsersInRoleAsync(Roles.Student));
 		}
 
 		/// <summary>
@@ -67,9 +72,9 @@ namespace EUniversity.Controllers
 		[ProducesResponseType(StatusCodes.Status401Unauthorized)]
 		[ProducesResponseType(StatusCodes.Status403Forbidden)]
 		public async Task<IActionResult> GetAllTeachersAsync()
-		{
-			return StatusCode(StatusCodes.Status503ServiceUnavailable);
-		}
+        {
+            return Ok(await _usersService.GetUsersInRoleAsync(Roles.Teacher));
+        }
 		#endregion
 
 		#region Post
