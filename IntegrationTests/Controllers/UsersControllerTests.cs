@@ -29,19 +29,39 @@ namespace EUniversity.IntegrationTests.Controllers
 			"/api/users/students",
 			"/api/users/teachers"
 		};
-		public static readonly string[] RegisterMethods =
+		public static readonly string[] RolesGetMethods =
+        {
+            "/api/users/students",
+            "/api/users/teachers"
+        };
+        public static readonly string[] RegisterMethods =
 		{
 			"/api/users/students",
 			"/api/users/teachers"
 		};
-		public static readonly string[][] RegisterMethodsRoles =
+		public static readonly (string, string)[] RegisterMethodsWithRoles =
 		{
-			new [] { Roles.Student },
-			new [] { Roles.Teacher }
+			(RolesGetMethods[0], Roles.Student),
+			(RolesGetMethods[1], Roles.Teacher)
 		};
 
-		[Test]
-		[TestCaseSource(nameof(GetMethods))]
+        [Test]
+        public async Task GetAllUsers_AdministratorRole_SucceedAndReturnsValidType()
+        {
+            // Arrange
+            using var client = CreateAdministratorClient();
+
+            // Act
+            var result = await client.GetAsync("/api/users");
+
+            // Assert
+            result.EnsureSuccessStatusCode();
+            var users = await result.Content.ReadFromJsonAsync<UsersViewDto>();
+            Assert.That(users, Is.Not.Null);
+        }
+
+        [Test]
+		[TestCaseSource(nameof(RolesGetMethods))]
 		public async Task GetMethods_AdministratorRole_SucceedAndReturnValidType(string method)
 		{
 			// Arrange
@@ -91,26 +111,6 @@ namespace EUniversity.IntegrationTests.Controllers
 
 			// Assert
 			Assert.That(result.StatusCode, Is.EqualTo(HttpStatusCode.Forbidden));
-		}
-
-		[Test]
-		[TestCaseSource(nameof(RegisterMethods))]
-		public async Task RegisterMethods_ValidInput_Succeed(string method)
-		{
-			// Arrange
-			using var client = CreateAdministratorClient();
-			WebApplicationFactory.AuthServiceMock
-				.RegisterAsync(Arg.Any<RegisterDto>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string[]>())
-				.Returns(Task.FromResult(new RegisterResult(IdentityResult.Success)));
-
-			// Act
-			var result = await client.PostAsJsonAsync(method, SampleRegisterUsers);
-
-			// Assert
-			result.EnsureSuccessStatusCode();
-			await WebApplicationFactory.AuthServiceMock
-				.Received(SampleRegisterUsersCount)
-				.RegisterAsync(Arg.Any<RegisterDto>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string[]>());
 		}
 
 		[Test]
@@ -200,9 +200,9 @@ namespace EUniversity.IntegrationTests.Controllers
 		}
 
 		[Test]
+		[TestCaseSource(nameof(RegisterMethodsWithRoles))]
 		public async Task RegisterMethods_ValidInput_RegisterValidRoles(
-			[ValueSource(nameof(RegisterMethods))] string method, 
-			[ValueSource(nameof(RegisterMethodsRoles))] string[] roles)
+			(string, string) method)
 		{
 			// Arrange
 			using var client = CreateAdministratorClient();
@@ -211,13 +211,32 @@ namespace EUniversity.IntegrationTests.Controllers
 				.Returns(Task.FromResult(new RegisterResult(IdentityResult.Success)));
 
 			// Act
-			var result = await client.PostAsJsonAsync(method, SampleRegisterUsers);
+			var result = await client.PostAsJsonAsync(method.Item1, SampleRegisterUsers);
 
 			// Assert
 			result.EnsureSuccessStatusCode();
 			await WebApplicationFactory.AuthServiceMock
 				.Received(SampleRegisterUsersCount)
-				.RegisterAsync(Arg.Any<RegisterDto>(), Arg.Any<string>(), Arg.Any<string>(), roles);
+				.RegisterAsync(Arg.Any<RegisterDto>(), Arg.Any<string>(), Arg.Any<string>(), method.Item2);
 		}
-	}
+
+		[Test]
+		[TestCaseSource(nameof(RegisterMethods))]
+        public async Task RegisterMethods_ValidInput_ReturnValidType(string method)
+        {
+			// Arrange
+            using var client = CreateAdministratorClient();
+            WebApplicationFactory.AuthServiceMock
+                .RegisterAsync(Arg.Any<RegisterDto>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string[]>())
+                .Returns(Task.FromResult(new RegisterResult(IdentityResult.Success)));
+
+            // Act
+            var result = await client.PostAsJsonAsync(method, SampleRegisterUsers);
+
+            // Assert
+            result.EnsureSuccessStatusCode();
+            var users = await result.Content.ReadFromJsonAsync<IEnumerable<CreatedUserDto>>();
+            Assert.That(users, Is.Not.Null);
+        }
+    }
 }
