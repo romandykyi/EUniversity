@@ -7,9 +7,17 @@
     outline: none;
     border: none;
     transition: 0.2s ease all;
+    cursor: pointer;
 }
 
 
 .button:active {
     transform: translateY(-7px);
+}
+.button:disabled {
+    background: #6666ff;
+    cursor: auto;
+}
+.button:disabled:active {
+    transform: none;
 }

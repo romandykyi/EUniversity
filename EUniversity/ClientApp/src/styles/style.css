@@ -45,4 +45,19 @@
   margin-bottom: 4px;
 }
 
+.newUser__success {
+  position: absolute;
+  left: 15px;
+  padding: 20px 30px;
+  background: #dcdcdc;
+  border-radius: 10px;
+  transition: 0.5s ease all;
+}
+.newUser__visible {
+  bottom: 15px;
+}
+.newUser__hidden {
+  bottom: -100%;
+}
+
 /*# sourceMappingURL=style.css.map */

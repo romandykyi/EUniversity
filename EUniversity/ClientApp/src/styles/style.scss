@@ -48,3 +48,19 @@
         margin-bottom: 4px;
     }
 }
+.newUser {
+    &__success {
+        position: absolute;
+        left: 15px;
+        padding: 20px 30px;
+        background: #dcdcdc;
+        border-radius: 10px;
+        transition: .5s ease all;
+    }
+    &__visible {
+        bottom: 15px;
+    }
+    &__hidden {
+        bottom:-100%;
+    }
+}
