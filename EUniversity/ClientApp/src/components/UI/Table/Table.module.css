@@ -1,0 +1,10 @@
+.table input {
+  border: none;
+  padding: 5px 10px;
+  width: 100%;
+}
+.table input::placeholder {
+  font-style: italic;
+}
+
+/*# sourceMappingURL=Table.module.css.map */
