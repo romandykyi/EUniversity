@@ -2,10 +2,10 @@
 
 namespace EUniversity.IntegrationTests
 {
-	/// <summary>
-	/// <see cref="WebApplicationFactory{}" /> for testing without mocking.
-	/// </summary>
-	public class ProgramWebApplicationFactory : WebApplicationFactory<Program>
-	{
-	}
+    /// <summary>
+    /// <see cref="WebApplicationFactory{}" /> for testing without mocking.
+    /// </summary>
+    public class ProgramWebApplicationFactory : WebApplicationFactory<Program>
+    {
+    }
 }
