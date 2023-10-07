@@ -6,7 +6,7 @@ namespace EUniversity.Core.Validation
     public class PaginationPropertiesValidator : AbstractValidator<PaginationProperties>
     {
         private readonly string RangeErrorMessage = 
-            $"Page size must be within the range from" +
+            $"Page size must be within the range from " +
             $"{PaginationProperties.MinPageSize} to {PaginationProperties.MaxPageSize}";
 
         public PaginationPropertiesValidator() 
