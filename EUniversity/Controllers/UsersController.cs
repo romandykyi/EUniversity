@@ -1,4 +1,5 @@
 ﻿using EUniversity.Core.Dtos.Users;
+using EUniversity.Core.Pagination;
 using EUniversity.Core.Policy;
 using EUniversity.Core.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -30,12 +31,12 @@ namespace EUniversity.Controllers
         /// <response code="401">Unauthorized user call</response>
         /// <response code="403">User lacks 'Administrator' role</response>
         [HttpGet]
-        [ProducesResponseType(typeof(UsersViewDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(IEnumerable<UserViewDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        public async Task<IActionResult> GetAllUsersAsync()
+        public async Task<IActionResult> GetAllUsersAsync([FromQuery] PaginationProperties paginationProperties)
         {
-            return Ok(await _usersService.GetAllUsersAsync());
+            return Ok(await _usersService.GetAllUsersAsync(paginationProperties));
         }
 
         /// <summary>
@@ -46,12 +47,12 @@ namespace EUniversity.Controllers
         /// <response code="403">User lacks 'Administrator' role</response>
         [HttpGet]
         [Route("students")]
-        [ProducesResponseType(typeof(UsersViewDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(IEnumerable<UserViewDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        public async Task<IActionResult> GetAllStudentsAsync()
+        public async Task<IActionResult> GetAllStudentsAsync([FromQuery] PaginationProperties paginationProperties)
         {
-            return Ok(await _usersService.GetUsersInRoleAsync(Roles.Student));
+            return Ok(await _usersService.GetUsersInRoleAsync(Roles.Student, paginationProperties));
         }
 
         /// <summary>
@@ -62,12 +63,12 @@ namespace EUniversity.Controllers
         /// <response code="403">User lacks 'Administrator' role</response>
         [HttpGet]
         [Route("teachers")]
-        [ProducesResponseType(typeof(UsersViewDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(IEnumerable<UserViewDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        public async Task<IActionResult> GetAllTeachersAsync()
+        public async Task<IActionResult> GetAllTeachersAsync([FromQuery] PaginationProperties paginationProperties)
         {
-            return Ok(await _usersService.GetUsersInRoleAsync(Roles.Teacher));
+            return Ok(await _usersService.GetUsersInRoleAsync(Roles.Teacher, paginationProperties));
         }
         #endregion
 

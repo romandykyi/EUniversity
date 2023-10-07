@@ -1,4 +1,5 @@
 ﻿using EUniversity.Core.Dtos.Users;
+using EUniversity.Core.Pagination;
 
 namespace EUniversity.Core.Services
 {
@@ -12,16 +13,16 @@ namespace EUniversity.Core.Services
         /// </summary>
         /// <param name="role">Name of the role.</param>
         /// <returns>
-        /// <see cref="UsersViewDto"/> representing all users with the role.
+        /// Page with all users with the role.
         /// </returns>
-        Task<UsersViewDto> GetUsersInRoleAsync(string role);
+        Task<IEnumerable<UserViewDto>> GetUsersInRoleAsync(string role, PaginationProperties? properties);
 
         /// <summary>
-        /// Gets all users.
+        /// Gets all users at the page.
         /// </summary>
         /// <returns>
-        /// <see cref="UsersViewDto"/> representing all users.
+        /// Page with all users.
         /// </returns>
-        Task<UsersViewDto> GetAllUsersAsync();
+        Task<IEnumerable<UserViewDto>> GetAllUsersAsync(PaginationProperties? properties);
     }
 }

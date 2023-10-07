@@ -1,9 +1,7 @@
 ﻿using EUniversity.Core.Dtos.Auth;
 using EUniversity.Core.Dtos.Users;
-using EUniversity.Core.Models;
 using EUniversity.Core.Policy;
 using EUniversity.Core.Services;
-using Mapster;
 using Microsoft.AspNetCore.Identity;
 using NSubstitute;
 using NSubstitute.ReceivedExtensions;
@@ -46,43 +44,19 @@ namespace EUniversity.IntegrationTests.Controllers
         };
 
         [Test]
-        public async Task GetAllUsers_AdministratorRole_SucceedAndReturnsValidType()
-        {
-            // Arrange
-            using var client = CreateAdministratorClient();
-
-            // Act
-            var result = await client.GetAsync("/api/users");
-
-            // Assert
-            result.EnsureSuccessStatusCode();
-            var users = await result.Content.ReadFromJsonAsync<UsersViewDto>();
-            Assert.That(users, Is.Not.Null);
-        }
-
-        [Test]
-        [TestCaseSource(nameof(RolesGetMethods))]
+        [TestCaseSource(nameof(GetMethods))]
         public async Task GetMethods_AdministratorRole_SucceedAndReturnValidType(string method)
         {
             // Arrange
             using var client = CreateAdministratorClient();
-            List<ApplicationUser> output = new()
-            {
-                new ApplicationUser() {Id = "1", FirstName = "Joe", LastName = "Doe", Email = "joe@doe.com", UserName = "jd"},
-                new ApplicationUser() {Id = "2", FirstName = "Jane", LastName = "Doe", Email = "jane@doe.com", UserName = "jnd"},
-            };
-            WebApplicationFactory.UserManagerMock
-                .GetUsersInRoleAsync(Arg.Any<string>())
-                .Returns(output);
 
             // Act
             var result = await client.GetAsync(method);
 
             // Assert
             result.EnsureSuccessStatusCode();
-            var users = await result.Content.ReadFromJsonAsync<UsersViewDto>();
+            var users = await result.Content.ReadFromJsonAsync<IEnumerable<UserViewDto>>();
             Assert.That(users, Is.Not.Null);
-            CollectionAssert.AreEqual(output.Adapt<List<UserViewDto>>(), users.Users);
         }
 
         [Test]
