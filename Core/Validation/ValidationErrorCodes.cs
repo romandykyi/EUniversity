@@ -4,6 +4,7 @@
     {
         public const string PropertyRequired = "PropertyRequiredError";
         public const string PropertyNull = "PropertyNullError";
+        public const string PropertyTooSmall = "PropertyTooSmallError";
         public const string PropertyTooLarge = "PropertyTooLargeError";
         public const string InvalidProperty = "InvalidPropertyError";
         public const string InvalidEmail = "InvalidEmailError";
