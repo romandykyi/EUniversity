@@ -5,6 +5,7 @@ using EUniversity.Core.Validation.Auth;
 using EUniversity.Infrastructure.Data;
 using EUniversity.Infrastructure.Identity;
 using EUniversity.Infrastructure.Services;
+using EUniversity.Infrastructure.Services.University;
 using FluentValidation;
 using IdentityModel;
 using Microsoft.AspNetCore.Authentication;
@@ -142,7 +143,8 @@ namespace EUniversity.Extensions
             return services
                 .AddScoped<IAuthService, AuthService>()
                 .AddScoped<IAuthHelper, AuthHelper>()
-                .AddScoped<IUsersService, UsersService>();
+                .AddScoped<IUsersService, UsersService>()
+                .AddScoped<IClassroomsService, ClassroomsService>();
         }
 
         public static IMvcBuilder ConfigureControllers(this IServiceCollection builder)
