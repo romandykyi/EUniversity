@@ -45,9 +45,13 @@ namespace EUniversity.Controllers.University
         /// </summary>
         /// <response code="201">Successfully created</response>
         /// <response code="400">Malformed/invalid input</response>
+        /// <response code="401">Unauthorized user call</response>
+        /// <response code="403">User lacks 'Administrator' role</response>
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> CreateAsync([FromBody] CreateClassromDto dto)
         {
             int id = await _classroomsService.CreateAsync(dto);
@@ -61,11 +65,15 @@ namespace EUniversity.Controllers.University
         /// </summary>
         /// <response code="204">Success</response>
         /// <response code="400">Malformed/invalid input</response>
+        /// <response code="401">Unauthorized user call</response>
+        /// <response code="403">User lacks 'Administrator' role</response>
         /// <response code="404">Classroom does not exist</response>
         [HttpPut]
         [Route("{id:int}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> UpdateAsync([FromRoute] int id,
             [FromBody] CreateClassromDto dto)
@@ -78,10 +86,14 @@ namespace EUniversity.Controllers.University
         /// Deletes a classroom.
         /// </summary>
         /// <response code="204">Success</response>
+        /// <response code="401">Unauthorized user call</response>
+        /// <response code="403">User lacks 'Administrator' role</response>
         /// <response code="404">Classroom does not exist</response>
         [HttpDelete]
         [Route("{id:int}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteAsync([FromRoute] int id)
         {
