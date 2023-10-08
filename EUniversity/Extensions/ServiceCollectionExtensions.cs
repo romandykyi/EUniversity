@@ -1,7 +1,7 @@
 ﻿using EUniversity.Core.Models;
 using EUniversity.Core.Policy;
 using EUniversity.Core.Services;
-using EUniversity.Core.Validation;
+using EUniversity.Core.Validation.Auth;
 using EUniversity.Infrastructure.Data;
 using EUniversity.Infrastructure.Identity;
 using EUniversity.Infrastructure.Services;

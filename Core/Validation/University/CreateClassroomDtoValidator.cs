@@ -2,11 +2,11 @@
 using EUniversity.Core.Models;
 using FluentValidation;
 
-namespace EUniversity.Core.Validation
+namespace EUniversity.Core.Validation.University
 {
     public class CreateClassroomDtoValidator : AbstractValidator<CreateClassromDto>
     {
-        public CreateClassroomDtoValidator() 
+        public CreateClassroomDtoValidator()
         {
             RuleFor(c => c.Name)
                 .NotEmpty()

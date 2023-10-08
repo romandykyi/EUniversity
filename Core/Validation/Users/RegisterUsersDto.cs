@@ -1,7 +1,7 @@
 ﻿using EUniversity.Core.Dtos.Users;
 using FluentValidation;
 
-namespace EUniversity.Core.Validation
+namespace EUniversity.Core.Validation.Users
 {
     public class RegisterUsersDtoValidator : AbstractValidator<RegisterUsersDto>
     {
