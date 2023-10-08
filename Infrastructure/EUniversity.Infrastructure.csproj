@@ -24,4 +24,8 @@
 		<Using Include="Microsoft.EntityFrameworkCore" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="Services\University\" />
+	</ItemGroup>
+
 </Project>

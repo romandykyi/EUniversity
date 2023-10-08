@@ -1,6 +1,6 @@
-﻿namespace EUniversity.Core.Models
+﻿namespace EUniversity.Core.Models.University
 {
-    public class Classroom
+    public class Classroom : IEntity<int>
     {
         public const int MaxNameLength = 50;
 
