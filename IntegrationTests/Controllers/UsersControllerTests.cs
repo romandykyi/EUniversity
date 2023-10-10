@@ -1,5 +1,6 @@
 ﻿using EUniversity.Core.Dtos.Auth;
 using EUniversity.Core.Dtos.Users;
+using EUniversity.Core.Pagination;
 using EUniversity.Core.Policy;
 using EUniversity.Core.Services;
 using Microsoft.AspNetCore.Identity;
@@ -55,7 +56,7 @@ namespace EUniversity.IntegrationTests.Controllers
 
             // Assert
             result.EnsureSuccessStatusCode();
-            var users = await result.Content.ReadFromJsonAsync<IEnumerable<UserViewDto>>();
+            var users = await result.Content.ReadFromJsonAsync<Page<UserViewDto>>();
             Assert.That(users, Is.Not.Null);
         }
 
