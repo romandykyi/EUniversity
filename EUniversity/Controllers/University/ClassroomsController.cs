@@ -30,7 +30,7 @@ namespace EUniversity.Controllers.University
         /// <response code="400">Bad request</response>
         /// <response code="404">Classroom does not exist</response>
         [HttpGet("{id:int}", Name = nameof(GetByIdAsync))]
-        [AllowAnonymous]
+        [Authorize]
         [ProducesResponseType(typeof(ViewClassroomDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
