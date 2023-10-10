@@ -16,24 +16,22 @@ namespace EUniversity.Infrastructure.Services
             _dbContext = dbContext;
         }
 
-        private static async Task<IEnumerable<UserViewDto>> SelectUsersAsync(
+        private static async Task<Page<UserViewDto>> SelectUsersAsync(
             IQueryable<ApplicationUser> query,
             PaginationProperties? properties)
         {
             return await query
-                .ApplyPagination(properties)
-                .ProjectToType<UserViewDto>()
-                .ToListAsync();
+                .ToPageAsync<ApplicationUser, UserViewDto>(properties);
         }
 
         /// <inheritdoc />
-        public async Task<IEnumerable<UserViewDto>> GetAllUsersAsync(PaginationProperties? properties)
+        public async Task<Page<UserViewDto>> GetAllUsersAsync(PaginationProperties? properties)
         {
             return await SelectUsersAsync(_dbContext.Users, properties);
         }
 
         /// <inheritdoc />
-        public async Task<IEnumerable<UserViewDto>> GetUsersInRoleAsync(string role, PaginationProperties? properties)
+        public async Task<Page<UserViewDto>> GetUsersInRoleAsync(string role, PaginationProperties? properties)
         {
             string? roleId = await _dbContext.Roles
                 .Where(r => r.Name == role)

@@ -25,13 +25,13 @@ namespace EUniversity.Controllers
 
         #region Get
         /// <summary>
-        /// Gets all users.
+        /// Gets a page with users.
         /// </summary>
-        /// <response code="200">Returns all users</response>
+        /// <response code="200">Returns a page with users</response>
         /// <response code="401">Unauthorized user call</response>
         /// <response code="403">User lacks 'Administrator' role</response>
         [HttpGet]
-        [ProducesResponseType(typeof(IEnumerable<UserViewDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Page<UserViewDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> GetAllUsersAsync([FromQuery] PaginationProperties paginationProperties)
@@ -40,14 +40,14 @@ namespace EUniversity.Controllers
         }
 
         /// <summary>
-        /// Gets all students.
+        /// Gets a page with students.
         /// </summary>
-        /// <response code="200">Returns all students</response>
+        /// <response code="200">Returns a page with students</response>
         /// <response code="401">Unauthorized user call</response>
         /// <response code="403">User lacks 'Administrator' role</response>
         [HttpGet]
         [Route("students")]
-        [ProducesResponseType(typeof(IEnumerable<UserViewDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Page<UserViewDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> GetAllStudentsAsync([FromQuery] PaginationProperties paginationProperties)
@@ -56,14 +56,14 @@ namespace EUniversity.Controllers
         }
 
         /// <summary>
-        /// Gets all teachers.
+        /// Gets a page with teachers.
         /// </summary>
-        /// <response code="200">Returns all teachers</response>
+        /// <response code="200">Returns a page with teachers</response>
         /// <response code="401">Unauthorized user call</response>
         /// <response code="403">User lacks 'Administrator' role</response>
         [HttpGet]
         [Route("teachers")]
-        [ProducesResponseType(typeof(IEnumerable<UserViewDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Page<UserViewDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> GetAllTeachersAsync([FromQuery] PaginationProperties paginationProperties)

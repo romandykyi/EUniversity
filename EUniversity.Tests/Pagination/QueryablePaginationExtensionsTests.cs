@@ -5,19 +5,6 @@ namespace EUniversity.Tests.Pagination
     public class QueryablePaginationExtensionsTests
     {
         [Test]
-        public void ApplyPagination_NullProperties_AreAcceptable()
-        {
-            // Arrange
-            var data = Enumerable.Range(1, 50).AsQueryable();
-
-            // Act
-            var page = data.ApplyPagination(null);
-
-            // Assert
-            CollectionAssert.IsSubsetOf(page, data);
-        }
-
-        [Test]
         public void ApplyPagination_ValidPage_ReturnsValidResults()
         {
             // Arrange

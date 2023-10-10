@@ -15,7 +15,7 @@ namespace EUniversity.Core.Services
         /// <returns>
         /// Page with all users with the role.
         /// </returns>
-        Task<IEnumerable<UserViewDto>> GetUsersInRoleAsync(string role, PaginationProperties? properties);
+        Task<Page<UserViewDto>> GetUsersInRoleAsync(string role, PaginationProperties? properties);
 
         /// <summary>
         /// Gets all users at the page.
@@ -23,6 +23,6 @@ namespace EUniversity.Core.Services
         /// <returns>
         /// Page with all users.
         /// </returns>
-        Task<IEnumerable<UserViewDto>> GetAllUsersAsync(PaginationProperties? properties);
+        Task<Page<UserViewDto>> GetAllUsersAsync(PaginationProperties? properties);
     }
 }
