@@ -13,7 +13,6 @@ namespace EUniversity.Controllers.University
     [ApiController]
     [Route("api/classrooms")]
     [FluentValidationAutoValidation]
-    [Authorize(Policies.HasAdministratorPermission)]
     public class ClassroomsController : ControllerBase
     {
         private readonly IClassroomsService _classroomsService;
@@ -30,7 +29,7 @@ namespace EUniversity.Controllers.University
         /// <response code="400">Bad request</response>
         /// <response code="404">Classroom does not exist</response>
         [HttpGet("{id:int}", Name = nameof(GetByIdAsync))]
-        [Authorize]
+        [Authorize(Policies.Default)]
         [ProducesResponseType(typeof(ViewClassroomDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -48,6 +47,7 @@ namespace EUniversity.Controllers.University
         /// <response code="401">Unauthorized user call</response>
         /// <response code="403">User lacks 'Administrator' role</response>
         [HttpPost]
+        [Authorize(Policies.HasAdministratorPermission)]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -70,6 +70,7 @@ namespace EUniversity.Controllers.University
         /// <response code="404">Classroom does not exist</response>
         [HttpPut]
         [Route("{id:int}")]
+        [Authorize(Policies.HasAdministratorPermission)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -91,6 +92,7 @@ namespace EUniversity.Controllers.University
         /// <response code="404">Classroom does not exist</response>
         [HttpDelete]
         [Route("{id:int}")]
+        [Authorize(Policies.HasAdministratorPermission)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
