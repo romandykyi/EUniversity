@@ -33,6 +33,8 @@ namespace EUniversity.IntegrationTests.Mocks
                 mockedUserStore, null, null, null, null, null, null, null, null
                 );
 
+            ClassroomsServiceMock = Substitute.For<IClassroomsService>();
+
             builder.ConfigureTestServices(services =>
             {
                 services.AddScoped(_ => ClaimsProvider);
