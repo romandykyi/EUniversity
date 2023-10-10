@@ -6,7 +6,7 @@ namespace EUniversity.Core.Validation
 {
     public class CreateClassroomDtoValidator : AbstractValidator<CreateClassromDto>
     {
-        public CreateClassroomDtoValidator() 
+        public CreateClassroomDtoValidator()
         {
             RuleFor(c => c.Name)
                 .NotEmpty()

@@ -3,7 +3,6 @@ using EUniversity.Core.Models;
 using EUniversity.Core.Pagination;
 using EUniversity.Core.Services;
 using EUniversity.Infrastructure.Data;
-using Microsoft.AspNetCore.Identity;
 
 namespace EUniversity.Infrastructure.Services
 {
@@ -39,7 +38,7 @@ namespace EUniversity.Infrastructure.Services
             string? roleId = await _dbContext.Roles
                 .Where(r => r.Name == role)
                 .Select(r => r.Id)
-                .FirstOrDefaultAsync() ?? 
+                .FirstOrDefaultAsync() ??
                 throw new InvalidOperationException($"Role {role} doesn't exists");
 
             var users = _dbContext.UserRoles
