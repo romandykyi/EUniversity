@@ -95,7 +95,11 @@ namespace EUniversity.Tests.Services
         }
 
         [Test]
-        public async Task GenerateUserName_Always_ContainsAlphanumericsOnly()
+        [TestCase("Joe", "Doe")]
+        [TestCase("Ąnna", "Śledź")]
+        [TestCase("'First", "!Last")]
+        [TestCase("Артем", "Марчук")]
+        public async Task GenerateUserName_Always_ContainsAlphanumericsOnly(string firstName, string lastName)
         {
             // Arrange
             _userManagerMock.FindByNameAsync(Arg.Any<string>())
@@ -103,7 +107,7 @@ namespace EUniversity.Tests.Services
             AuthHelper authHelper = new(_userManagerMock);
 
             // Act 
-            string userName = await authHelper.GenerateUserNameAsync(_rngMock, "Joe", "Doe");
+            string userName = await authHelper.GenerateUserNameAsync(_rngMock, firstName, lastName);
 
             // Assert
             Assert.That(userName.All(char.IsAsciiLetterOrDigit));
