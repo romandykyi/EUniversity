@@ -13,6 +13,7 @@ const ChangePassword = () => {
         newPassword: '',
     });
     const [error,setError] = useState('');
+    const [isButtonDisabled, setIsButtonDisabled] = useState(true);
     const [isPasswordCahnged, setIsPasswordCahnged] = useState(false);
     const [checkBoxes, setCheckBoxes] = useState({
        checkbox1: false,
@@ -24,14 +25,28 @@ const ChangePassword = () => {
 
         const { name, value } = e.target;
 
-       if (name === "newPassword") {
+        if (name === "currentPassword" && !value) {
+            setIsButtonDisabled(true);
+
+        }
+        else if (name === "currentPassword" && value && formData.newPassword) {
+
+            setIsButtonDisabled(false);
+
+        } else if (name === "newPassword") {
+
            const hasUpperCase = /[A-Z]/.test(value);
            const hasNumber = /\d/.test(value);
            const hasDistinctSymbols = new Set(value).size >= 3;
            const isLengthValid = value.length >= 8;
 
            if (isLengthValid && hasUpperCase && hasNumber && hasDistinctSymbols) {
+
                setError(false);
+
+               if (formData.currentPassword) {
+                   setIsButtonDisabled(false);
+               }
            }
            else {
                let errorMessage = 'New password must meet the following conditions:';
@@ -39,10 +54,10 @@ const ChangePassword = () => {
                if (!hasUpperCase) errorMessage += 'Contain at least one uppercase letter,\n';
                if (!hasNumber) errorMessage += 'Contain at least one digit,\n';
                if (!hasDistinctSymbols) errorMessage += 'Contain at least 3 distinct symbols\n';
-
+               setIsButtonDisabled(true);
                setError(errorMessage.trim());
            }
-       };
+       }
         setFormData({
             ...formData,
             [name]: value,
@@ -95,11 +110,11 @@ const ChangePassword = () => {
 
 
     return (
-        <div className="changePassword form">
+        <div className="newUser form">
             <div className="changePassword__title form__title">
                 Change your password
             </div>
-            <form onSubmit={handleSubmit} className="changePassword form__form">
+            <form onSubmit={handleSubmit} className="newUser form__form">
                 <div className="changePassword__inputs form__inputs">
                     <input
                         type={checkBoxes.checkbox1 ? "text" : "password"}
@@ -144,7 +159,7 @@ const ChangePassword = () => {
                     </div>
 
                 </div>
-                <Button type="submit">Change password</Button>
+                <Button type="submit" disabled={isButtonDisabled}>Change password</Button>
 
             </form>
         </div>

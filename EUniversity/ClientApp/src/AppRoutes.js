@@ -4,6 +4,7 @@ import { FetchData } from "./components/FetchData";
 import Home from "./components/Home";
 import Login from "./components/Pages/Login";
 import ChangePassword from "./components/Pages/ChangePassword";
+import RegisterNewUsers from "./components/Pages/RegisterNewUsers";
 
 const AppRoutes = [
   {
@@ -23,6 +24,12 @@ const AppRoutes = [
     path: '/change-password',
     requireAuth: true,
     element: <ChangePassword />
+  },
+  {
+    path: '/register-users',
+    requireAuth: true,
+    element: <RegisterNewUsers/>,
+    requireAdminRight: true,
   },
   {
     path: '/login',

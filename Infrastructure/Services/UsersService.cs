@@ -1,39 +1,48 @@
 ﻿using EUniversity.Core.Dtos.Users;
 using EUniversity.Core.Models;
+using EUniversity.Core.Pagination;
 using EUniversity.Core.Services;
 using EUniversity.Infrastructure.Data;
-using Microsoft.AspNetCore.Identity;
 
 namespace EUniversity.Infrastructure.Services
 {
     /// <inheritdoc />
     public class UsersService : IUsersService
     {
-        private readonly UserManager<ApplicationUser> _userManager;
         private readonly ApplicationDbContext _dbContext;
 
-        public UsersService(UserManager<ApplicationUser> userManager,
-            ApplicationDbContext dbContext)
+        public UsersService(ApplicationDbContext dbContext)
         {
-            _userManager = userManager;
             _dbContext = dbContext;
         }
 
-        /// <inheritdoc />
-        public async Task<UsersViewDto> GetAllUsersAsync()
+        private static async Task<Page<UserViewDto>> SelectUsersAsync(
+            IQueryable<ApplicationUser> query,
+            PaginationProperties? properties)
         {
-            var users = await _dbContext.Users
-                .ProjectToType<UserViewDto>()
-                .ToListAsync();
-            return new(users);
+            return await query
+                .ToPageAsync<ApplicationUser, UserViewDto>(properties);
         }
 
         /// <inheritdoc />
-        public async Task<UsersViewDto> GetUsersInRoleAsync(string role)
+        public async Task<Page<UserViewDto>> GetAllUsersAsync(PaginationProperties? properties)
         {
-            var users = await _userManager.GetUsersInRoleAsync(role);
-            var result = users.Adapt<List<UserViewDto>>();
-            return new(result);
+            return await SelectUsersAsync(_dbContext.Users, properties);
+        }
+
+        /// <inheritdoc />
+        public async Task<Page<UserViewDto>> GetUsersInRoleAsync(string role, PaginationProperties? properties)
+        {
+            string? roleId = await _dbContext.Roles
+                .Where(r => r.Name == role)
+                .Select(r => r.Id)
+                .FirstOrDefaultAsync() ??
+                throw new InvalidOperationException($"Role {role} doesn't exists");
+
+            var users = _dbContext.UserRoles
+                .Where(r => r.RoleId == roleId)
+                .Join(_dbContext.Users, r => r.UserId, u => u.Id, (r, u) => u);
+            return await SelectUsersAsync(users, properties);
         }
     }
 }
