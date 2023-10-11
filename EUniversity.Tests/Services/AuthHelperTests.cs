@@ -98,6 +98,8 @@ namespace EUniversity.Tests.Services
         [TestCase("Joe", "Doe")]
         [TestCase("Ąnna", "Śledź")]
         [TestCase("'First", "!Last")]
+        [TestCase(" Space", " Last")]
+        [TestCase("2Number", "1Last")]
         [TestCase("Артем", "Марчук")]
         public async Task GenerateUserName_Always_ContainsAlphanumericsOnly(string firstName, string lastName)
         {
