@@ -10,7 +10,7 @@ namespace EUniversity.IntegrationTests.Services.University
     public class ClassroomsServiceTests : ServicesTest
     {
         private IClassroomsService _classroomsService;
-        public static readonly CreateClassromDto 
+        public static readonly CreateClassromDto
             DefaultCreateClassroomDto = new("new classroom");
 
         private async Task<Classroom> CreateDefaultClassroomAsync()
