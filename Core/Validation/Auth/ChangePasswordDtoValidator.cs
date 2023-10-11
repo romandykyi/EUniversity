@@ -1,7 +1,7 @@
 ﻿using EUniversity.Core.Dtos.Auth;
 using FluentValidation;
 
-namespace EUniversity.Core.Validation
+namespace EUniversity.Core.Validation.Auth
 {
     public class ChangePasswordDtoValidator : AbstractValidator<ChangePasswordDto>
     {

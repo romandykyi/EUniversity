@@ -1,8 +1,9 @@
 ﻿using EUniversity.Core.Dtos.Auth;
 using EUniversity.Core.Validation;
+using EUniversity.Core.Validation.Auth;
 using FluentValidation.TestHelper;
 
-namespace EUniversity.Tests.Validation
+namespace EUniversity.Tests.Validation.Auth
 {
     public class LogInDtoValidatorTests
     {

@@ -1,6 +1,7 @@
 ﻿using EUniversity.Core.Models;
 using EUniversity.Core.Services;
 using EUniversity.Extensions;
+using EUniversity.Infrastructure.Services.University;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -20,6 +21,7 @@ namespace EUniversity.IntegrationTests.Mocks
         public TestClaimsProvider ClaimsProvider { get; private set; } = null!;
         public IAuthService AuthServiceMock { get; private set; } = null!;
         public UserManager<ApplicationUser> UserManagerMock { get; private set; } = null!;
+        public IClassroomsService ClassroomsServiceMock { get; private set; } = null!;
 
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
@@ -30,6 +32,8 @@ namespace EUniversity.IntegrationTests.Mocks
             UserManagerMock = Substitute.For<UserManager<ApplicationUser>>(
                 mockedUserStore, null, null, null, null, null, null, null, null
                 );
+
+            ClassroomsServiceMock = Substitute.For<IClassroomsService>();
 
             builder.ConfigureTestServices(services =>
             {
@@ -42,6 +46,7 @@ namespace EUniversity.IntegrationTests.Mocks
 
                 services.AddScoped(_ => AuthServiceMock);
                 services.AddScoped(_ => UserManagerMock);
+                services.AddScoped(_ => ClassroomsServiceMock);
             });
         }
 

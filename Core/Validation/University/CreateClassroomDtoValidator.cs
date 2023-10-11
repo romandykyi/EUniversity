@@ -2,7 +2,7 @@
 using EUniversity.Core.Models.University;
 using FluentValidation;
 
-namespace EUniversity.Core.Validation
+namespace EUniversity.Core.Validation.University
 {
     public class CreateClassroomDtoValidator : AbstractValidator<CreateClassromDto>
     {

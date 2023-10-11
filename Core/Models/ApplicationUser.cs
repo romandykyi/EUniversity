@@ -2,7 +2,7 @@
 
 namespace EUniversity.Core.Models
 {
-    public class ApplicationUser : IdentityUser
+    public class ApplicationUser : IdentityUser, IEntity<string>
     {
         /// <summary>
         /// Max length for first, middle and last names
