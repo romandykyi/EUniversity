@@ -14,11 +14,11 @@ namespace EUniversity.IntegrationTests.Services
         protected ApplicationDbContext DbContext { get; private set; }
 
         [SetUp]
-        public void SetUpTransaction()
+        public async Task SetUpTransaction()
         {
             DbContext = ServiceScope.ServiceProvider.GetService<ApplicationDbContext>()!;
             // Begin transaction to make tests isolated
-            DbContext.Database.BeginTransactionAsync();
+            await DbContext.Database.BeginTransactionAsync();
         }
 
         [TearDown]
