@@ -69,13 +69,13 @@ namespace EUniversity.Infrastructure.Services
         /// <inheritdoc />
         public async Task<bool> UpdateAsync(TId id, TUpdateDto dto)
         {
-            // Check if entity exists
-            if (!await Entities.AnyAsync(e => e.Id.Equals(id))) 
-                return false;
+            // Try to find an existing entity
+            var entity = await DbContext.Set<TEntity>()
+                .FirstOrDefaultAsync(e => e.Id.Equals(id));
+            if (entity == null) return false;
 
-            // Update entity
-            var entity = dto.Adapt<TEntity>();
-            entity.Id = id;
+            // Update the entity
+            dto.Adapt(entity);
             DbContext.Update(entity);
             await DbContext.SaveChangesAsync();
 
