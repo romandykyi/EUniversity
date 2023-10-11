@@ -110,7 +110,13 @@ namespace EUniversity.Tests.Services
             string userName = await authHelper.GenerateUserNameAsync(_rngMock, firstName, lastName);
 
             // Assert
-            Assert.That(userName.All(char.IsAsciiLetterOrDigit));
+            Assert.Multiple(() =>
+            {
+                Assert.That(userName.All(char.IsAsciiLetterOrDigit),
+                    $"Generated username \"{userName}\" contains nonalphanumerical characters");
+                Assert.That(userName.All(c => !char.IsLetter(c) || char.IsLower(c)),
+                    $"Generated username \"{userName}\" contains uppercase letters");
+            });
         }
     }
 }
