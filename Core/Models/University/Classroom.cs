@@ -1,4 +1,4 @@
-﻿namespace EUniversity.Core.Models
+﻿namespace EUniversity.Core.Models.University
 {
     public class Classroom
     {
