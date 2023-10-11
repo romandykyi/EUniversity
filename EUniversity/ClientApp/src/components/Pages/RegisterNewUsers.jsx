@@ -1,6 +1,5 @@
 import React, {useState} from 'react';
 import Button from "../UI/Button/Button";
-import {useNavigate} from "react-router-dom";
 import Table from "../UI/Table/Table";
 
 const RegisterNewUsers = () => {
@@ -8,7 +7,7 @@ const RegisterNewUsers = () => {
     const [error,setError] = useState('');
     const [isUserAdded, setIsUserAdded] = useState(false);
     const [users, setUsers] = useState([]);
-    const navigate = useNavigate();
+    const [postUsers, setPostUsers] = useState([]);
 
     const showIsUserAdded = async () => {
         setIsUserAdded(true);
@@ -22,13 +21,22 @@ const RegisterNewUsers = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
+        const postUsers = users.map(user => (
+            {
+                email: user.email,
+                firstName: user.firstName,
+                lastName: user.lastName,
+                middleName: user.middleName,
+            }
+            ));
+        console.log(`"users": ${JSON.stringify(postUsers)}`);
         try {
             const response = await fetch("/api/users/students", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify(users),
+                body: `"users": ${JSON.stringify(postUsers)}`,
             });
 
             if (response.ok) {
@@ -49,7 +57,12 @@ const RegisterNewUsers = () => {
                 Register new users
             </div>
             <form onSubmit={handleSubmit} className="newUser form__form">
-                    <Table users={users} setUsers={setUsers}/>
+                    <Table
+                        users={users}
+                        setUsers={setUsers}
+                        postUsers = {postUsers}
+                        setPostUsers = {setPostUsers}
+                    />
                     <div className="newUser__error form__error">
                         {error}
                     </div>

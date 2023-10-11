@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import styles from "./Table.module.css";
 import Button from "../Button/Button";
 
-const Table = ({users, setUsers}) => {
+const Table = ({users, setUsers, postUsers, setPostUsers}) => {
 
     const handleInputChange = (id, field, value) => {
         const newData = users.map((row) =>
@@ -21,13 +21,19 @@ const Table = ({users, setUsers}) => {
             lastName:'',
             middleName:''
         };
+        // const newPostUser = {
+        //     email:'',
+        //     firstName:'',
+        //     lastName:'',
+        //     middleName:''
+        // };
         setUsers([...users, newUser]);
+        //setPostUsers([...postUsers, newPostUser]);
     }
     const deleteUser = (id) => {
 
         const newData = users.filter(user => user.id !== id);
         setUsers(newData);
-        console.log(newData);
     }
 
     return (
