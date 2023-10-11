@@ -115,7 +115,7 @@ namespace EUniversity.Tests.Services
             Assert.Multiple(() =>
             {
                 Assert.That(userName.All(char.IsAsciiLetterOrDigit),
-                    $"Generated username \"{userName}\" contains nonalphanumerical characters");
+                    $"Generated username \"{userName}\" contains nonalphanumeric characters");
                 Assert.That(userName.All(c => !char.IsLetter(c) || char.IsLower(c)),
                     $"Generated username \"{userName}\" contains uppercase letters");
             });
