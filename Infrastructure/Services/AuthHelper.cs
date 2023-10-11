@@ -20,7 +20,7 @@ namespace EUniversity.Infrastructure.Services
 
         // Extracts the first letter of first/last name and makes it an ascii letter,
         // or returns empty string if this cannot be achieved
-        private string ExtractFirstLetter(string name)
+        private static string ExtractFirstLetter(string name)
         {
             string result = name[0].ToString().Transliterate().ToLower();
             if (!char.IsAsciiLetterLower(result[0]))
