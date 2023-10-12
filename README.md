@@ -31,7 +31,7 @@ Course(int)
 	-> Name
 	-> Description
 	-> Teachers
-	-> Students
+	-> AdminStudents
 	-> Classes
 	-> ClassesNumber
 
@@ -53,7 +53,7 @@ Classroom(int)
 Class(int)
 	-> Course
 	-> Teacher
-	-> Students
+	-> AdminStudents
 	-> Date
 	-> Classroom
 
@@ -68,7 +68,7 @@ Semester(int)
 	-> DateFrom
 	-> DateTo
 	-> Courses
-	-> Students
+	-> AdminStudents
 ```
 
 ## Architecture
