@@ -21,14 +21,8 @@ const Table = ({users, setUsers, postUsers, setPostUsers}) => {
             lastName:'',
             middleName:''
         };
-        // const newPostUser = {
-        //     email:'',
-        //     firstName:'',
-        //     lastName:'',
-        //     middleName:''
-        // };
+
         setUsers([...users, newUser]);
-        //setPostUsers([...postUsers, newPostUser]);
     }
     const deleteUser = (id) => {
 
