@@ -1,4 +1,7 @@
 # EUniversity
+
+**Warning:** this project is in development.
+
 An e-university Web Application built with ASP.NET and React.
 
 ## Tech Stack
