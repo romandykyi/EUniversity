@@ -10,6 +10,7 @@ const NavMenu = () => {
   const [collapsed, setCollapsed] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
+
     useEffect(() => {
         const checkAuthentication = async () => {
             const isAuthenticated = await authService.isAuthenticated();
@@ -43,9 +44,6 @@ const NavMenu = () => {
                             </NavItem>
                             <NavItem>
                                 <NavLink tag={Link} className="text-dark" to="/counter">Counter</NavLink>
-                            </NavItem>
-                            <NavItem>
-                                <NavLink tag={Link} className="text-dark" to="/fetch-data">Fetch data</NavLink>
                             </NavItem>
                             <NavItem>
                                 <NavLink tag={Link} className="text-dark" to="/change-password">Change password</NavLink>

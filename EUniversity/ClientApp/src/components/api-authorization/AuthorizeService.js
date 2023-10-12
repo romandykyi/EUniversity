@@ -86,7 +86,7 @@ export class AuthorizeService {
       this.updateState(user);
       return this.success(user && user.state);
     } catch (error) {
-      console.log('There was an error signing in: ', error);
+
       return this.error('There was an error signing in.');
     }
   }
