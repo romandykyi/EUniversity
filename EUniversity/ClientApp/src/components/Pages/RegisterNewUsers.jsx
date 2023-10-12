@@ -29,21 +29,20 @@ const RegisterNewUsers = () => {
                 middleName: user.middleName,
             }
             ));
-        console.log(`"users": ${JSON.stringify(postUsers)}`);
+
         try {
             const response = await fetch("/api/users/students", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: `"users": ${JSON.stringify(postUsers)}`,
             });
 
             if (response.ok) {
-                console.log("response ok");
                 await showIsUserAdded();
             } else {
                 console.error("Error:", response.status, response.statusText);
+                setError(`${response.status} ${response.statusText}`);
             }
         } catch (error) {
             console.error("An error occurred:", error);
