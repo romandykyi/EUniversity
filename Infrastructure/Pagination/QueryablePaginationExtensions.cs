@@ -1,6 +1,6 @@
-﻿using Mapster;
+﻿using EUniversity.Core.Pagination;
 
-namespace EUniversity.Core.Pagination
+namespace EUniversity.Infrastructure.Pagination
 {
     public static class QueryablePaginationExtensions
     {

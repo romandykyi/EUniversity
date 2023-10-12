@@ -3,6 +3,7 @@ using EUniversity.Core.Models;
 using EUniversity.Core.Pagination;
 using EUniversity.Core.Services;
 using EUniversity.Infrastructure.Data;
+using EUniversity.Infrastructure.Pagination;
 
 namespace EUniversity.Infrastructure.Services
 {
