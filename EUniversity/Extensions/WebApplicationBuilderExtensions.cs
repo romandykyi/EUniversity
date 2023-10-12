@@ -8,11 +8,6 @@ namespace EUniversity.Extensions
     {
         public static void ConnectDatabase(this WebApplicationBuilder builder)
         {
-            using var loggerFactory = LoggerFactory.Create(loggingBuilder => loggingBuilder
-                        .SetMinimumLevel(LogLevel.Trace)
-                        .AddConsole());
-            var logger = loggerFactory.CreateLogger<Program>();
-
             var useInMemoryDb = Environment.GetEnvironmentVariable("USE_IN_MEMORY_DATABASE");
             Action<DbContextOptionsBuilder> dbContextOptions;
             if (useInMemoryDb == null || useInMemoryDb == "false")
