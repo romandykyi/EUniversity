@@ -1,12 +1,15 @@
 ﻿using EUniversity.Core.Models;
 using EUniversity.Core.Services;
 using EUniversity.Extensions;
+using EUniversity.Infrastructure.Data;
 using EUniversity.Infrastructure.Services.University;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
 using System.Net.Http.Headers;
@@ -37,6 +40,9 @@ namespace EUniversity.IntegrationTests.Mocks
 
             builder.ConfigureTestServices(services =>
             {
+                services.AddDbContext<ApplicationDbContext>(o => o.UseInMemoryDatabase("Endpoints tests DB")
+                    .ConfigureWarnings(x => x.Ignore(InMemoryEventId.TransactionIgnoredWarning)));
+
                 services.AddScoped(_ => ClaimsProvider);
 
                 services.AddAuthentication(defaultScheme: "TestScheme")
