@@ -1,9 +1,10 @@
 ﻿using EUniversity.Core.Dtos.Auth;
 using EUniversity.Core.Dtos.Users;
 using EUniversity.Core.Validation;
+using EUniversity.Core.Validation.Users;
 using FluentValidation.TestHelper;
 
-namespace EUniversity.Tests.Validation
+namespace EUniversity.Tests.Validation.Users
 {
     public class RegisterUsersDtoValidatorTests
     {

@@ -1,6 +1,7 @@
 ﻿using EUniversity.Core.Dtos.Auth;
 using Microsoft.AspNetCore.Identity;
 using NSubstitute;
+using NSubstitute.ExceptionExtensions;
 using System.Net;
 
 namespace EUniversity.IntegrationTests.Controllers
@@ -49,6 +50,8 @@ namespace EUniversity.IntegrationTests.Controllers
             // Arrange
             using var client = CreateUnauthorizedClient();
             var loginDto = new LogInDto(string.Empty, string.Empty, false);
+            WebApplicationFactory.AuthServiceMock
+                .LogInAsync(loginDto).Throws<InvalidOperationException>();
 
             // Act
             var response = await client.PostAsJsonAsync("/api/auth/login", loginDto);
@@ -65,7 +68,7 @@ namespace EUniversity.IntegrationTests.Controllers
             using var client = CreateStudentClient(userId);
             ChangePasswordDto password = new(DefaultPassword, NewPassword);
             WebApplicationFactory.AuthServiceMock
-                .ChangePasswordAsync(userId, Arg.Any<ChangePasswordDto>())
+                .ChangePasswordAsync(Arg.Any<string>(), Arg.Any<ChangePasswordDto>())
                 .Returns(IdentityResult.Success);
 
             // Act
@@ -73,6 +76,9 @@ namespace EUniversity.IntegrationTests.Controllers
 
             // Assert
             response.EnsureSuccessStatusCode();
+            await WebApplicationFactory.AuthServiceMock
+                .Received(1)
+                .ChangePasswordAsync(userId, password);
         }
 
         [Test]
@@ -81,6 +87,9 @@ namespace EUniversity.IntegrationTests.Controllers
             // Arrange
             using var client = CreateUnauthorizedClient();
             var password = new ChangePasswordDto(DefaultPassword, NewPassword);
+            WebApplicationFactory.AuthServiceMock
+                .ChangePasswordAsync(Arg.Any<string>(), Arg.Any<ChangePasswordDto>())
+                .Throws<InvalidOperationException>();
 
             // Act
             var response = await client.PostAsJsonAsync("/api/auth/password/change", password);
@@ -96,6 +105,9 @@ namespace EUniversity.IntegrationTests.Controllers
             using var client = CreateStudentClient();
             // Equal passwords shouldn't be allowed
             var password = new ChangePasswordDto(DefaultPassword, DefaultPassword);
+            WebApplicationFactory.AuthServiceMock
+                .ChangePasswordAsync(Arg.Any<string>(), Arg.Any<ChangePasswordDto>())
+                .Throws<InvalidOperationException>();
 
             // Act
             var response = await client.PostAsJsonAsync("/api/auth/password/change", password);

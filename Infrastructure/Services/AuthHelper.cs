@@ -1,4 +1,5 @@
-﻿using EUniversity.Core.Models;
+﻿using AnyAscii;
+using EUniversity.Core.Models;
 using EUniversity.Core.Services;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Cryptography;
@@ -17,6 +18,18 @@ namespace EUniversity.Infrastructure.Services
             _userManager = userManager;
         }
 
+        // Extracts the first letter of first/last name and makes it an ascii letter,
+        // or returns empty string if this cannot be achieved
+        private static string ExtractFirstLetter(string name)
+        {
+            string result = name[0].ToString().Transliterate().ToLower();
+            if (!char.IsAsciiLetterLower(result[0]))
+            {
+                return string.Empty;
+            }
+            return result;
+        }
+
         /// <inheritdoc />
         public async Task<string> GenerateUserNameAsync(RandomNumberGenerator random, string firstName, string lastName)
         {
@@ -30,8 +43,18 @@ namespace EUniversity.Infrastructure.Services
                 int rndInt = bytes[0] | (bytes[1] << 8) | (bytes[2] << 16) | (bytes[3] << 24);
                 int rndNumber = rndInt % (max - min) + min;
 
+                // Username part based on first name and last name
+                // (or just "u" if it cannot be created)
+                StringBuilder namePart = new();
+                namePart.Append(ExtractFirstLetter(firstName));
+                namePart.Append(ExtractFirstLetter(lastName));
+                if (namePart.Length == 0)
+                {
+                    namePart.Append('u');
+                }
+
                 // Initials and random number
-                result = $"{firstName[0]}{lastName[0]}{rndNumber}";
+                result = $"{namePart}{rndNumber}";
             } while (await _userManager.FindByNameAsync(result) != null);
 
             return result;
@@ -57,7 +80,7 @@ namespace EUniversity.Infrastructure.Services
                 passwordBuilder.Append(allowedCharacters[rndIndex]);
             }
 
-            // Insert lowercase letter, uppercase letter, digit and nonalphanumerical
+            // Insert lowercase letter, uppercase letter, digit and nonalphanumerics
             string[] ranges =
             {
                 lowercases, uppercases, digits, nonalphanumerics
