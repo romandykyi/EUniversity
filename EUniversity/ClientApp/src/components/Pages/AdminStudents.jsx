@@ -7,7 +7,7 @@ const AdminStudents = () => {
 
     const [students, setStudents] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
-    const [itemsPerPage, setItemsPerPage] = useState(1);
+    const [itemsPerPage, setItemsPerPage] = useState(0);
 
     const fetchUsers = async() => {
         try {
@@ -15,7 +15,7 @@ const AdminStudents = () => {
             if (response.ok) {
                 const data = await response.json();
                 setStudents(data.items);
-                //setItemsPerPage(data.pageSize);
+                setItemsPerPage(data.pageSize);
                 setIsLoading(false);
             } else {
                 console.log('error');
