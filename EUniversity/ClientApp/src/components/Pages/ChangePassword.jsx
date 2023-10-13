@@ -111,9 +111,9 @@ const ChangePassword = () => {
 
     return (
         <div className="newUser form">
-            <div className="changePassword__title form__title">
+            <h1 className="changePassword__title form__title">
                 Change your password
-            </div>
+            </h1>
             <form onSubmit={handleSubmit} className="newUser form__form">
                 <div className="changePassword__inputs form__inputs">
                     <input

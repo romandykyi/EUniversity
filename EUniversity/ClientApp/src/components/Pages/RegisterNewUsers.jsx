@@ -36,6 +36,7 @@ const RegisterNewUsers = () => {
                 headers: {
                     "Content-Type": "application/json",
                 },
+                body: `"users": ${JSON.stringify(postUsers)}`,
             });
 
             if (response.ok) {
@@ -52,9 +53,9 @@ const RegisterNewUsers = () => {
 
     return (
         <div className="newUser form">
-            <div className="newUser__title form__title">
+            <h1 className="newUser__title form__title">
                 Register new users
-            </div>
+            </h1>
             <form onSubmit={handleSubmit} className="newUser form__form">
                     <Table
                         users={users}

@@ -1,16 +1,22 @@
 import React, {useEffect, useState} from 'react';
+import {PaginatedList} from "react-paginated-list";
+import TableOfStudents from "../TableOfStudents";
+import Loader from "../UI/Loader/Loader";
 
 const AdminStudents = () => {
 
     const [students, setStudents] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [itemsPerPage, setItemsPerPage] = useState(1);
 
     const fetchUsers = async() => {
         try {
             const response = await fetch('/api/users/students?Page=1&PageSize=10');
             if (response.ok) {
                 const data = await response.json();
-                console.log(data);
                 setStudents(data.items);
+                //setItemsPerPage(data.pageSize);
+                setIsLoading(false);
             } else {
                 console.log('error');
             }
@@ -26,28 +32,12 @@ const AdminStudents = () => {
 
     return (
         <div className="students">
-            <h1 className="students__title">
+            <h1 className="students__title form__title">
                 All students
             </h1>
-            <table className="table students__table">
-                <tr>
-                    <th>Email</th>
-                    <th>First name</th>
-                    <th>Last name</th>
-                    <th>Middle Name</th>
-                </tr>
-                {
-                    students.map(student =>
-                        <tr key={student.email}>
-                            <td>{student.email}</td>
-                            <td>{student.firstName}</td>
-                            <td>{student.lastName}</td>
-                            <td>{student.middleName}</td>
-                        </tr>
-                    )
-                }
-            </table>
+            <TableOfStudents itemsPerPage={itemsPerPage} items={students} isLoading={isLoading}/>
         </div>
+
     );
 };
 
