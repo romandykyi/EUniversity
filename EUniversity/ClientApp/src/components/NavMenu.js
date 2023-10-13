@@ -4,20 +4,54 @@ import { Link } from 'react-router-dom';
 import { LoginMenu } from './api-authorization/LoginMenu';
 import './NavMenu.css';
 import authService from "./api-authorization/AuthorizeService";
+import {ADMINISTRATOR_ROLE} from "./api-authorization/Roles";
 
+const AuthNav = () => {
+    return (
+        <div className="navbar-nav flex-grow">
+            <NavItem>
+                <NavLink tag={Link} className="text-dark" to="/">Home</NavLink>
+            </NavItem>
 
+            <NavItem>
+                <NavLink tag={Link} className="text-dark" to="/change-password">Change password</NavLink>
+            </NavItem>
+        </div>
+    )
+};
+const AdminNav = () => {
+    return (
+        <div className="navbar-nav flex-grow">
+            <NavItem>
+                <NavLink tag={Link} className="text-dark" to="/">Home</NavLink>
+            </NavItem>
+
+            <NavItem>
+                <NavLink tag={Link} className="text-dark" to="/change-password">Change password</NavLink>
+            </NavItem>
+            <NavItem>
+                <NavLink tag={Link} className="text-dark" to="/students">Students</NavLink>
+            </NavItem>
+            <NavItem>
+                <NavLink tag={Link} className="text-dark" to="/register-users">Register users</NavLink>
+            </NavItem>
+        </div>
+    )
+};
 const NavMenu = () => {
+
   const [collapsed, setCollapsed] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-
+  const [isAdmin, setIsAdmin] = useState(false);
 
     useEffect(() => {
         const checkAuthentication = async () => {
             const isAuthenticated = await authService.isAuthenticated();
             setIsAuthenticated(isAuthenticated);
+            const isAdmin = await authService.isInRole(ADMINISTRATOR_ROLE);
+            setIsAdmin(isAdmin);
         };
         checkAuthentication();
-
         const subscriptionId = authService.subscribe(checkAuthentication);
 
         return () => {
@@ -38,15 +72,9 @@ const NavMenu = () => {
             <ul className="navbar-nav flex-grow">
                 {
                     isAuthenticated
-                    ? <div className="navbar-nav flex-grow">
-                            <NavItem>
-                                <NavLink tag={Link} className="text-dark" to="/">Home</NavLink>
-                            </NavItem>
-
-                            <NavItem>
-                                <NavLink tag={Link} className="text-dark" to="/change-password">Change password</NavLink>
-                            </NavItem>
-                      </div>
+                    ? isAdmin
+                        ? <AdminNav/>
+                        :  <AuthNav/>
                     : ""
                 }
               <LoginMenu />
