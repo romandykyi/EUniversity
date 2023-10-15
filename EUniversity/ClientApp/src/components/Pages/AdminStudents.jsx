@@ -1,7 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {PaginatedList} from "react-paginated-list";
 import TableOfStudents from "../TableOfStudents";
-import Loader from "../UI/Loader/Loader";
 
 const AdminStudents = () => {
 
