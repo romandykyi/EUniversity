@@ -105,6 +105,18 @@ Username: ```admin```
 
 Password: ```Chang3M3InProduct10nPlz!```
 
+## Fake Data Generation
+
+To streamline the testing and development process, our project includes a "Fake Data Generation" feature. You can generate test data by running the following command:
+
+```
+dotnet run --fakedata
+```
+
+This feature utilizes the `Bogus` library to create random data, ensuring that you have a realistic test environment for your application. However, please be aware that this functionality is not intended for use in production environments. Data generation is consistent, so executing this command more than once may create duplicate data. 
+
+**Note:** running the following command may extend the application launch time.
+
 ## Test users
 
 #### Student
