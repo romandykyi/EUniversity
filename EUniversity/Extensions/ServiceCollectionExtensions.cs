@@ -141,6 +141,7 @@ namespace EUniversity.Extensions
         public static IServiceCollection ConfigureAppServices(this IServiceCollection services)
         {
             return services
+                .AddScoped<TestDataService>()
                 .AddScoped<IAuthService, AuthService>()
                 .AddScoped<IAuthHelper, AuthHelper>()
                 .AddScoped<IUsersService, UsersService>()

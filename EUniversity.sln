@@ -9,9 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EUniversity.Core", "Core\EU
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EUniversity.Infrastructure", "Infrastructure\EUniversity.Infrastructure.csproj", "{5608C68E-E50B-47AD-886F-77B9D52E7C31}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EUniversity.Tests", "EUniversity.Tests\EUniversity.Tests.csproj", "{2FE4BBE3-1646-4C60-9FBC-2A3EA8D8626B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EUniversity.Tests", "EUniversity.Tests\EUniversity.Tests.csproj", "{2FE4BBE3-1646-4C60-9FBC-2A3EA8D8626B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EUniversity.IntegrationTests", "IntegrationTests\EUniversity.IntegrationTests.csproj", "{8600CF5A-4F3B-4D6F-89B2-D311A0CFFD37}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EUniversity.IntegrationTests", "IntegrationTests\EUniversity.IntegrationTests.csproj", "{8600CF5A-4F3B-4D6F-89B2-D311A0CFFD37}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

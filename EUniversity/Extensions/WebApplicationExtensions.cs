@@ -2,6 +2,7 @@
 using EUniversity.Core.Models;
 using EUniversity.Core.Policy;
 using EUniversity.Core.Services;
+using EUniversity.Infrastructure.Services;
 using Microsoft.AspNetCore.Identity;
 using System.Reflection;
 
@@ -56,27 +57,24 @@ namespace EUniversity.Extensions
         {
             using var scope = app.Services.CreateScope();
 
-            var userManager =
-                scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-            var authService =
-                scope.ServiceProvider.GetRequiredService<IAuthService>();
+            var testDataService =
+                scope.ServiceProvider.GetRequiredService<TestDataService>();
 
-            const string studentUserName = "student";
-            const string teacherUserName = "teacher";
-            const string defaultPassword = "Password1!";
-            RegisterDto studentRegisterDto = new("test-student@e-university.com", "Jesse", "Pinkman", "Bruce");
-            RegisterDto teacherRegisterDto = new("test-teacher@e-university.com", "Walter", "White", "Hartwell");
+            testDataService.CreateTestUsers().Wait();
 
-            if (userManager.FindByNameAsync(studentUserName).Result == null)
-            {
-                authService.RegisterAsync(studentRegisterDto,
-                    studentUserName, defaultPassword, Roles.Student).Wait();
-            }
-            if (userManager.FindByNameAsync(teacherUserName).Result == null)
-            {
-                authService.RegisterAsync(teacherRegisterDto,
-                    teacherUserName, defaultPassword, Roles.Teacher).Wait();
-            }
+            return app;
+        }
+
+        public static WebApplication CreateFakeData(this WebApplication app)
+        {
+            using var scope = app.Services.CreateScope();
+
+            var testDataService =
+                scope.ServiceProvider.GetRequiredService<TestDataService>();
+
+            testDataService.CreateRandomUsers().Wait();
+            testDataService.CreateRandomClassrooms().Wait();
+
             return app;
         }
     }
