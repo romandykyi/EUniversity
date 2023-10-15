@@ -58,6 +58,11 @@ app.CreateAdministrator();
 if (app.Environment.IsDevelopment())
 {
     app.CreateTestUsers();
+
+    if (args.Contains("--fakedata"))
+    {
+        app.CreateFakeData();
+    }
 }
 
 app.Run();
