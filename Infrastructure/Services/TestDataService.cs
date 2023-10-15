@@ -4,7 +4,6 @@ using EUniversity.Core.Dtos.University;
 using EUniversity.Core.Policy;
 using EUniversity.Core.Services;
 using EUniversity.Infrastructure.Services.University;
-using Microsoft.EntityFrameworkCore.Migrations.Operations;
 
 namespace EUniversity.Infrastructure.Services
 {
@@ -62,7 +61,7 @@ namespace EUniversity.Infrastructure.Services
                 string lastName = faker.Name.LastName();
                 string email = faker.Internet.Email(firstName, lastName);
                 // Add middle name with 15% probabilty:
-                string? middleName = faker.Random.Bool(0.15f) ? 
+                string? middleName = faker.Random.Bool(0.15f) ?
                     faker.Name.FirstName() : null;
 
                 return new(email, firstName, lastName, middleName);
@@ -89,7 +88,7 @@ namespace EUniversity.Infrastructure.Services
             Randomizer.Seed = new(FakeDataGeneratorSeed);
             var classroomsFaker = new Faker<CreateClassromDto>()
                 .CustomInstantiator(f => new CreateClassromDto(
-                    new string(f.Random.Chars('A', 'Z', f.Random.Number(0, 3))) + 
+                    new string(f.Random.Chars('A', 'Z', f.Random.Number(0, 3))) +
                     new string(f.Random.Chars('0', '9', 5))
                     ));
 
