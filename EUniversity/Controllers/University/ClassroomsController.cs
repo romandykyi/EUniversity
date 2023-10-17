@@ -1,4 +1,5 @@
 ﻿using EUniversity.Core.Dtos.University;
+using EUniversity.Core.Pagination;
 using EUniversity.Core.Policy;
 using EUniversity.Infrastructure.Services.University;
 using Microsoft.AspNetCore.Authorization;
@@ -20,6 +21,23 @@ namespace EUniversity.Controllers.University
         public ClassroomsController(IClassroomsService classroomsService)
         {
             _classroomsService = classroomsService;
+        }
+
+        /// <summary>
+        /// Gets a page with classrooms.
+        /// </summary>
+        /// <remarks>
+        /// If there is no items in the requested page, then empty page will be returned.
+        /// </remarks>
+        /// <response code="200">Returns requested page with classrooms.</response>
+        /// <response code="400">Bad request</response>
+        [HttpGet]
+        [Authorize(Policies.Default)]
+        [ProducesResponseType(typeof(Page<ViewClassroomDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> GetPageAsync([FromQuery] PaginationProperties properties)
+        {
+            return Ok(await _classroomsService.GetPageAsync(properties));
         }
 
         /// <summary>

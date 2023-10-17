@@ -5,7 +5,7 @@ using EUniversity.Infrastructure.Services.University;
 namespace EUniversity.IntegrationTests.Services.University
 {
     public class ClassroomsServiceTests : CrudServicesTest
-        <IClassroomsService, Classroom, int, ViewClassroomDto, CreateClassromDto, CreateClassromDto>
+        <IClassroomsService, Classroom, int, ViewClassroomDto, ViewClassroomDto, CreateClassromDto, CreateClassromDto>
     {
         /// <inheritdoc />
         protected override void AssertThatWasUpdated(Classroom actualEntity, CreateClassromDto updateDto)

@@ -1,5 +1,7 @@
 ﻿using EUniversity.Core.Models;
+using EUniversity.Core.Pagination;
 using EUniversity.Core.Services;
+using EUniversity.Core.Filters;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
 using NSubstitute.ReturnsExtensions;
@@ -10,10 +12,11 @@ namespace EUniversity.IntegrationTests.Controllers
     /// <summary>
     /// Class that implements base CRUD controller tests.
     /// </summary>
-    public abstract class CrudControllersTest<TEntity, TId, TDetailsDto, TCreateDto, TUpdateDto>
+    public abstract class CrudControllersTest<TEntity, TId, TPreviewDto, TDetailsDto, TCreateDto, TUpdateDto>
         : ControllersTest
         where TEntity : class, IEntity<TId>
         where TId : IEquatable<TId>
+        where TPreviewDto : class, IEquatable<TPreviewDto>
         where TDetailsDto : class, IEquatable<TDetailsDto>
         where TCreateDto : class, IEquatable<TCreateDto>
         where TUpdateDto : class, IEquatable<TUpdateDto>
@@ -21,8 +24,31 @@ namespace EUniversity.IntegrationTests.Controllers
         /// <summary>
         /// Mock of the CRUD service. Should be initialized in <see cref="SetUpService"/>
         /// </summary>
-        protected ICrudService<TEntity, TId, TDetailsDto, TCreateDto, TUpdateDto> ServiceMock
+        protected ICrudService<TEntity, TId, TPreviewDto, TDetailsDto, TCreateDto, TUpdateDto> ServiceMock
         { get; set; } = null!;
+
+
+        /// <summary>
+        /// When implemented, gets test <typeparamref name="TPreviewDto"/>.
+        /// </summary>
+        /// <returns>
+        /// Test <typeparamref name="TPreviewDto"/>.
+        /// </returns>
+        protected abstract TPreviewDto GetTestPreviewDto();
+
+        /// <summary>
+        /// Returns a test page with <typeparamref name="TPreviewDto"/>s. 
+        /// </summary>
+        /// <param name="properties">Pagination properties used for the page.</param>
+        /// <returns>
+        /// A test page with <typeparamref name="TPreviewDto"/>s. 
+        /// </returns>
+        protected virtual Page<TPreviewDto> GetTestPreviewDtos(PaginationProperties properties)
+        {
+            IEnumerable<TPreviewDto> testEnumerable =
+                Enumerable.Repeat(GetTestPreviewDto(), 10);
+            return new(testEnumerable, properties, 100);
+        }
 
         /// <summary>
         /// When implemented, gets test <typeparamref name="TDetailsDto"/>.
@@ -30,7 +56,7 @@ namespace EUniversity.IntegrationTests.Controllers
         /// <returns>
         /// Test <typeparamref name="TDetailsDto"/>.
         /// </returns>
-        public abstract TDetailsDto GetTestDetailsDto();
+        protected abstract TDetailsDto GetTestDetailsDto();
 
         /// <summary>
         /// When implemented, gets valid <typeparamref name="TCreateDto"/>.
@@ -77,6 +103,13 @@ namespace EUniversity.IntegrationTests.Controllers
         public abstract void SetUpService();
 
         /// <summary>
+        /// Route of HTTP GET for getting a page of elements, without query parameters.
+        /// </summary>
+        /// <remarks>
+        /// Authentication is not checked.
+        /// </remarks>
+        public abstract string GetPageRoute { get; }
+        /// <summary>
         /// Route of HTTP GET for getting an element by its ID.
         /// </summary>
         /// <remarks>
@@ -109,6 +142,47 @@ namespace EUniversity.IntegrationTests.Controllers
         /// Default ID to be used for mocking.
         /// </summary>
         public abstract TId DefaultId { get; }
+
+        [Test]
+        public virtual async Task GetPage_ValidCall_SucceedsAndReturnsValidType()
+        {
+            // Arrange
+            using var client = GetTestClient();
+            PaginationProperties properties = new(2, 10);
+            ServiceMock
+                .GetPageAsync(Arg.Any<PaginationProperties>(), Arg.Any<IFilter<TEntity>>())
+                .Returns(Task.FromResult(GetTestPreviewDtos(properties)));
+
+            // Act
+            var result = await client.GetAsync($"{GetPageRoute}?page=1&pageSize=25");
+
+            // Assert
+            result.EnsureSuccessStatusCode();
+            var page = await result.Content.ReadFromJsonAsync<Page<TPreviewDto>>();
+            Assert.That(page, Is.Not.Null);
+            Assert.Multiple(() =>
+            {
+                Assert.That(page.PageNumber, Is.EqualTo(properties.Page));
+                Assert.That(page.PageSize, Is.EqualTo(properties.PageSize));
+                Assert.That(page.Items.Count(), Is.LessThanOrEqualTo(page.PageSize));
+            });
+        }
+
+        [Test]
+        public virtual async Task GetPage_InvalidInput_Returns400BadRequest()
+        {
+            // Arrange
+            using var client = GetTestClient();
+            ServiceMock
+                .GetPageAsync(Arg.Any<PaginationProperties>(), Arg.Any<IFilter<TEntity>>())
+                .Throws<InvalidOperationException>();
+
+            // Act
+            var result = await client.GetAsync($"{GetPageRoute}?page=-1");
+
+            // Assert
+            Assert.That(result.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
+        }
 
         [Test]
         public virtual async Task GetById_ValidCall_SucceedsAndReturnsValidType()

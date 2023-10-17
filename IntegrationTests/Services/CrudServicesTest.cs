@@ -1,18 +1,21 @@
-﻿using EUniversity.Core.Models;
+﻿using EUniversity.Core.Filters;
+using EUniversity.Core.Models;
 using EUniversity.Core.Models.University;
+using EUniversity.Core.Pagination;
 using EUniversity.Core.Services;
 using Mapster;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using NSubstitute;
 
 namespace EUniversity.IntegrationTests.Services
 {
     /// <summary>
     /// Class that implements base CRUD service tests.
     /// </summary>
-    public abstract class CrudServicesTest<TService, TEntity, TId, TDetailsDto, TCreateDto, TUpdateDto>
+    public abstract class CrudServicesTest<TService, TEntity, TId, TPreviewDto, TDetailsDto, TCreateDto, TUpdateDto>
          : ServicesTest
-        where TService : ICrudService<TEntity, TId, TDetailsDto, TCreateDto, TUpdateDto>
+        where TService : ICrudService<TEntity, TId, TPreviewDto, TDetailsDto, TCreateDto, TUpdateDto>
         where TEntity : class, IEntity<TId>
         where TId : IEquatable<TId>
     {
@@ -90,6 +93,63 @@ namespace EUniversity.IntegrationTests.Services
         /// <param name="actualEntity">Entity, that should be updated.</param>
         /// <param name="updateDto">Update DTO, that was used to update entity.</param>
         protected abstract void AssertThatWasUpdated(TEntity actualEntity, TUpdateDto updateDto);
+
+        [Test]
+        public virtual async Task GetPage_AppliesFilter()
+        {
+            // Arrange
+            var filter = Substitute.For<IFilter<TEntity>>();
+            filter
+                .Apply(Arg.Any<IQueryable<TEntity>>())
+                .Returns(x => x[0]);
+            PaginationProperties properties = new(1, 20);
+
+            // Act
+            await Service.GetPageAsync(properties, filter);
+
+            // Assert
+            filter.Received(1)
+                .Apply(Arg.Any<IQueryable<TEntity>>());
+        }
+
+        public virtual async Task GetPage_ReceivesPaginationProperties()
+        {
+            // Arrange
+            PaginationProperties properties = new(1, 20);
+
+            // Act
+            var result = await Service.GetPageAsync(properties);
+
+            // Assert
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.PageNumber, Is.EqualTo(properties.Page));
+                Assert.That(result.PageSize, Is.EqualTo(properties.PageSize));
+            });
+        }
+
+        [Test]
+        public virtual async Task GetPage_ReturnsCorrectTotalItemsCount()
+        {
+            // Arrange
+            var testEntity = await CreateTestEntityAsync();
+            int expectedCount = 1;
+
+            var filter = Substitute.For<IFilter<TEntity>>();
+            filter.Apply(Arg.Any<IQueryable<TEntity>>())
+                .Returns(x =>
+                {
+                    var query = (IQueryable<TEntity>)x[0];
+                    return query.Where(e => e.Id.Equals(testEntity.Id));
+                });
+            PaginationProperties properties = new(1, 20);
+
+            // Act
+            var result = await Service.GetPageAsync(properties, filter);
+
+            // Assert
+            Assert.That(result.TotalItemsCount, Is.EqualTo(expectedCount));
+        }
 
         [Test]
         public virtual async Task GetById_ElementExists_ReturnsValidElement()

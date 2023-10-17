@@ -9,10 +9,11 @@ namespace EUniversity.IntegrationTests.Controllers
     /// Class that implements base CRUD controller tests, where PUT, POST and DELETE methods require 
     /// Administrator role.
     /// </summary>
-    public abstract class AdminCrudControllersTest<TEntity, TId, TDetailsDto, TCreateDto, TUpdateDto> :
-        CrudControllersTest<TEntity, TId, TDetailsDto, TCreateDto, TUpdateDto>
+    public abstract class AdminCrudControllersTest<TEntity, TId, TPreviewDto, TDetailsDto, TCreateDto, TUpdateDto> :
+        CrudControllersTest<TEntity, TId, TPreviewDto, TDetailsDto, TCreateDto, TUpdateDto>
         where TEntity : class, IEntity<TId>
         where TId : IEquatable<TId>
+        where TPreviewDto : class, IEquatable<TPreviewDto>
         where TDetailsDto : class, IEquatable<TDetailsDto>
         where TCreateDto : class, IEquatable<TCreateDto>
         where TUpdateDto : class, IEquatable<TUpdateDto>

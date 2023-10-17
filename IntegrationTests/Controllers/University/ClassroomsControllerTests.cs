@@ -4,8 +4,10 @@ using EUniversity.Core.Models.University;
 namespace EUniversity.IntegrationTests.Controllers.University
 {
     public class ClassroomsControllerTests :
-        AdminCrudControllersTest<Classroom, int, ViewClassroomDto, CreateClassromDto, CreateClassromDto>
+        AdminCrudControllersTest<Classroom, int, ViewClassroomDto, ViewClassroomDto, CreateClassromDto, CreateClassromDto>
     {
+        public override string GetPageRoute => $"api/classrooms";
+
         public override string GetByIdRoute => $"api/classrooms/{DefaultId}";
 
         public override string PostRoute => $"api/classrooms/";
@@ -21,7 +23,12 @@ namespace EUniversity.IntegrationTests.Controllers.University
             ServiceMock = WebApplicationFactory.ClassroomsServiceMock;
         }
 
-        public override ViewClassroomDto GetTestDetailsDto()
+        protected override ViewClassroomDto GetTestPreviewDto()
+        {
+            return new("Test");
+        }
+
+        protected override ViewClassroomDto GetTestDetailsDto()
         {
             return new("Test classroom");
         }

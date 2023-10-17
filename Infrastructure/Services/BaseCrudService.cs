@@ -1,6 +1,9 @@
-﻿using EUniversity.Core.Models;
+﻿using EUniversity.Core.Filters;
+using EUniversity.Core.Models;
 using EUniversity.Core.Services;
+using EUniversity.Core.Pagination;
 using EUniversity.Infrastructure.Data;
+using EUniversity.Infrastructure.Pagination;
 
 namespace EUniversity.Infrastructure.Services
 {
@@ -15,11 +18,12 @@ namespace EUniversity.Infrastructure.Services
     /// </remarks>
     /// <typeparam name="TEntity">The entity type that implements <see cref="IEntity{TId}" />.</typeparam>
     /// <typeparam name="TId">The type of the entity's unique identifier.</typeparam>
+    /// <typeparam name="TPreviewDto">The DTO type for entity preview in the paged list.</typeparam>
     /// <typeparam name="TDetailsDto">The DTO type for entity details.</typeparam>
     /// <typeparam name="TCreateDto">The DTO type for creating a new entity.</typeparam>
     /// <typeparam name="TUpdateDto">The DTO type for updating an existing entity.</typeparam>
-    public abstract class BaseCrudService<TEntity, TId, TDetailsDto, TCreateDto, TUpdateDto> :
-        ICrudService<TEntity, TId, TDetailsDto, TCreateDto, TUpdateDto>
+    public abstract class BaseCrudService<TEntity, TId, TPreviewDto, TDetailsDto, TCreateDto, TUpdateDto> :
+        ICrudService<TEntity, TId, TPreviewDto, TDetailsDto, TCreateDto, TUpdateDto>
         where TEntity : class, IEntity<TId>
         where TId : IEquatable<TId>
     {
@@ -55,6 +59,15 @@ namespace EUniversity.Infrastructure.Services
             await DbContext.SaveChangesAsync();
 
             return true;
+        }
+
+        /// <inheritdoc />
+        public async Task<Page<TPreviewDto>> GetPageAsync(PaginationProperties properties, IFilter<TEntity>? filter = null)
+        {
+            var query = Entities.AsNoTracking();
+            if (filter != null) query = filter.Apply(query);
+
+            return await query.ToPageAsync<TEntity, TPreviewDto>(properties);
         }
 
         /// <inheritdoc />
