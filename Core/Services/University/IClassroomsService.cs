@@ -8,7 +8,7 @@ namespace EUniversity.Infrastructure.Services.University
     /// Service for classrooms.
     /// </summary>
     public interface IClassroomsService :
-        ICrudService<Classroom, int, ViewClassroomDto, CreateClassromDto, CreateClassromDto>
+        ICrudService<Classroom, int, ViewClassroomDto, ViewClassroomDto, CreateClassromDto, CreateClassromDto>
     {
     }
 }

@@ -4,7 +4,7 @@ using EUniversity.Core.Models.University;
 namespace EUniversity.IntegrationTests.Controllers.University
 {
     public class ClassroomsControllerTests :
-        AdminCrudControllersTest<Classroom, int, ViewClassroomDto, CreateClassromDto, CreateClassromDto>
+        AdminCrudControllersTest<Classroom, int, ViewClassroomDto, ViewClassroomDto, CreateClassromDto, CreateClassromDto>
     {
         public override string GetByIdRoute => $"api/classrooms/{DefaultId}";
 

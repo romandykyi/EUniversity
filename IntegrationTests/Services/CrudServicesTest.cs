@@ -10,9 +10,9 @@ namespace EUniversity.IntegrationTests.Services
     /// <summary>
     /// Class that implements base CRUD service tests.
     /// </summary>
-    public abstract class CrudServicesTest<TService, TEntity, TId, TDetailsDto, TCreateDto, TUpdateDto>
+    public abstract class CrudServicesTest<TService, TEntity, TId, TPreviewDto, TDetailsDto, TCreateDto, TUpdateDto>
          : ServicesTest
-        where TService : ICrudService<TEntity, TId, TDetailsDto, TCreateDto, TUpdateDto>
+        where TService : ICrudService<TEntity, TId, TPreviewDto, TDetailsDto, TCreateDto, TUpdateDto>
         where TEntity : class, IEntity<TId>
         where TId : IEquatable<TId>
     {

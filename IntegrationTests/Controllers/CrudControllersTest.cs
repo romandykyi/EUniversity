@@ -10,10 +10,11 @@ namespace EUniversity.IntegrationTests.Controllers
     /// <summary>
     /// Class that implements base CRUD controller tests.
     /// </summary>
-    public abstract class CrudControllersTest<TEntity, TId, TDetailsDto, TCreateDto, TUpdateDto>
+    public abstract class CrudControllersTest<TEntity, TId, TPreviewDto, TDetailsDto, TCreateDto, TUpdateDto>
         : ControllersTest
         where TEntity : class, IEntity<TId>
         where TId : IEquatable<TId>
+        where TPreviewDto : class, IEquatable<TPreviewDto>
         where TDetailsDto : class, IEquatable<TDetailsDto>
         where TCreateDto : class, IEquatable<TCreateDto>
         where TUpdateDto : class, IEquatable<TUpdateDto>
@@ -21,7 +22,7 @@ namespace EUniversity.IntegrationTests.Controllers
         /// <summary>
         /// Mock of the CRUD service. Should be initialized in <see cref="SetUpService"/>
         /// </summary>
-        protected ICrudService<TEntity, TId, TDetailsDto, TCreateDto, TUpdateDto> ServiceMock
+        protected ICrudService<TEntity, TId, TPreviewDto, TDetailsDto, TCreateDto, TUpdateDto> ServiceMock
         { get; set; } = null!;
 
         /// <summary>
