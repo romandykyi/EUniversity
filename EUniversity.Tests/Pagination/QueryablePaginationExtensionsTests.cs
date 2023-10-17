@@ -1,5 +1,5 @@
-﻿using EUniversity.Infrastructure.Pagination;
-using EUniversity.Core.Pagination;
+﻿using EUniversity.Core.Pagination;
+using EUniversity.Infrastructure.Pagination;
 
 namespace EUniversity.Tests.Pagination
 {

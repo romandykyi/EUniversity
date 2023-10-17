@@ -1,5 +1,4 @@
-﻿using EUniversity.Core.Dtos.University;
-using EUniversity.Core.Models;
+﻿using EUniversity.Core.Models;
 using EUniversity.Core.Services;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
