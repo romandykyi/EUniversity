@@ -12,6 +12,6 @@
         /// <returns>
         /// Filtered query.
         /// </returns>
-        IQueryable<T> Filter(IQueryable<T> query);
+        IQueryable<T> Apply(IQueryable<T> query);
     }
 }
