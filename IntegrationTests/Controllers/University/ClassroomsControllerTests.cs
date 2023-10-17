@@ -21,7 +21,7 @@ namespace EUniversity.IntegrationTests.Controllers.University
             ServiceMock = WebApplicationFactory.ClassroomsServiceMock;
         }
 
-        public override ViewClassroomDto GetTestDetailsDto()
+        protected override ViewClassroomDto GetTestDetailsDto()
         {
             return new("Test classroom");
         }

@@ -30,7 +30,7 @@ namespace EUniversity.IntegrationTests.Controllers
         /// <returns>
         /// Test <typeparamref name="TDetailsDto"/>.
         /// </returns>
-        public abstract TDetailsDto GetTestDetailsDto();
+        protected abstract TDetailsDto GetTestDetailsDto();
 
         /// <summary>
         /// When implemented, gets valid <typeparamref name="TCreateDto"/>.
