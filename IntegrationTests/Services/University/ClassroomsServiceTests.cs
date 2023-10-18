@@ -5,10 +5,10 @@ using EUniversity.Infrastructure.Services.University;
 namespace EUniversity.IntegrationTests.Services.University
 {
     public class ClassroomsServiceTests : CrudServicesTest
-        <IClassroomsService, Classroom, int, ViewClassroomDto, ViewClassroomDto, CreateClassromDto, CreateClassromDto>
+        <IClassroomsService, Classroom, int, ViewClassroomDto, ViewClassroomDto, CreateClassroomDto, CreateClassroomDto>
     {
         /// <inheritdoc />
-        protected override void AssertThatWasUpdated(Classroom actualEntity, CreateClassromDto updateDto)
+        protected override void AssertThatWasUpdated(Classroom actualEntity, CreateClassroomDto updateDto)
         {
             Assert.That(actualEntity.Name, Is.EqualTo(updateDto.Name));
         }
@@ -26,13 +26,13 @@ namespace EUniversity.IntegrationTests.Services.University
         }
 
         /// <inheritdoc />
-        protected override CreateClassromDto GetValidCreateDto()
+        protected override CreateClassroomDto GetValidCreateDto()
         {
             return new("#200");
         }
 
         /// <inheritdoc />
-        protected override CreateClassromDto GetValidUpdateDto()
+        protected override CreateClassroomDto GetValidUpdateDto()
         {
             return new("#300");
         }

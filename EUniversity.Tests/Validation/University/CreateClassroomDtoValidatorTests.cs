@@ -20,7 +20,7 @@ namespace EUniversity.Tests.Validation.University
         public void Name_Valid_IsValid()
         {
             // Arrange
-            CreateClassromDto dto = new("Room 115");
+            CreateClassroomDto dto = new("Room 115");
 
             // Act
             var result = _validator.TestValidate(dto);
@@ -33,7 +33,7 @@ namespace EUniversity.Tests.Validation.University
         public void Name_TooLarge_IsInvalid()
         {
             // Arrange
-            CreateClassromDto dto = new(new string('0', Classroom.MaxNameLength + 1));
+            CreateClassroomDto dto = new(new string('0', Classroom.MaxNameLength + 1));
 
             // Act
             var result = _validator.TestValidate(dto);
@@ -47,7 +47,7 @@ namespace EUniversity.Tests.Validation.University
         public void Name_Empty_IsInvalid()
         {
             // Arrange
-            CreateClassromDto dto = new(string.Empty);
+            CreateClassroomDto dto = new(string.Empty);
 
             // Act
             var result = _validator.TestValidate(dto);

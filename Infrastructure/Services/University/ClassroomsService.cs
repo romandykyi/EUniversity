@@ -6,7 +6,7 @@ namespace EUniversity.Infrastructure.Services.University
 {
     /// <inheritdoc />
     public class ClassroomsService :
-        BaseCrudService<Classroom, int, ViewClassroomDto, ViewClassroomDto, CreateClassromDto, CreateClassromDto>,
+        BaseCrudService<Classroom, int, ViewClassroomDto, ViewClassroomDto, CreateClassroomDto, CreateClassroomDto>,
         IClassroomsService
     {
         public ClassroomsService(ApplicationDbContext dbContext) : base(dbContext) { }

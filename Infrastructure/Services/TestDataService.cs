@@ -86,8 +86,8 @@ namespace EUniversity.Infrastructure.Services
         public async Task CreateRandomClassrooms(int classrooms = 70)
         {
             Randomizer.Seed = new(FakeDataGeneratorSeed);
-            var classroomsFaker = new Faker<CreateClassromDto>()
-                .CustomInstantiator(f => new CreateClassromDto(
+            var classroomsFaker = new Faker<CreateClassroomDto>()
+                .CustomInstantiator(f => new CreateClassroomDto(
                     new string(f.Random.Chars('A', 'Z', f.Random.Number(0, 3))) +
                     new string(f.Random.Chars('0', '9', 5))
                     ));

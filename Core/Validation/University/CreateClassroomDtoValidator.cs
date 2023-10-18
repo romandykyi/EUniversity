@@ -4,7 +4,7 @@ using FluentValidation;
 
 namespace EUniversity.Core.Validation.University
 {
-    public class CreateClassroomDtoValidator : AbstractValidator<CreateClassromDto>
+    public class CreateClassroomDtoValidator : AbstractValidator<CreateClassroomDto>
     {
         public CreateClassroomDtoValidator()
         {

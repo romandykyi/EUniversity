@@ -4,7 +4,7 @@ using EUniversity.Core.Models.University;
 namespace EUniversity.IntegrationTests.Controllers.University
 {
     public class ClassroomsControllerTests :
-        AdminCrudControllersTest<Classroom, int, ViewClassroomDto, ViewClassroomDto, CreateClassromDto, CreateClassromDto>
+        AdminCrudControllersTest<Classroom, int, ViewClassroomDto, ViewClassroomDto, CreateClassroomDto, CreateClassroomDto>
     {
         public override string GetPageRoute => $"api/classrooms";
 
@@ -33,22 +33,22 @@ namespace EUniversity.IntegrationTests.Controllers.University
             return new("Test classroom");
         }
 
-        protected override CreateClassromDto GetInvalidCreateDto()
+        protected override CreateClassroomDto GetInvalidCreateDto()
         {
             return new(string.Empty);
         }
 
-        protected override CreateClassromDto GetInvalidUpdateDto()
+        protected override CreateClassroomDto GetInvalidUpdateDto()
         {
             return new(string.Empty);
         }
 
-        protected override CreateClassromDto GetValidCreateDto()
+        protected override CreateClassroomDto GetValidCreateDto()
         {
             return new("#100");
         }
 
-        protected override CreateClassromDto GetValidUpdateDto()
+        protected override CreateClassroomDto GetValidUpdateDto()
         {
             return new("#200");
         }
