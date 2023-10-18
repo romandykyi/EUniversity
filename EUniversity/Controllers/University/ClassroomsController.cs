@@ -70,7 +70,7 @@ namespace EUniversity.Controllers.University
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        public async Task<IActionResult> CreateAsync([FromBody] CreateClassromDto dto)
+        public async Task<IActionResult> CreateAsync([FromBody] CreateClassroomDto dto)
         {
             int id = await _classroomsService.CreateAsync(dto);
             var routeValues = new { id };
@@ -95,7 +95,7 @@ namespace EUniversity.Controllers.University
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> UpdateAsync([FromRoute] int id,
-            [FromBody] CreateClassromDto dto)
+            [FromBody] CreateClassroomDto dto)
         {
             var result = await _classroomsService.UpdateAsync(id, dto);
             return result ? NoContent() : NotFound();
