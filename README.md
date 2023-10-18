@@ -34,7 +34,7 @@ Course(int)
 	-> Name
 	-> Description
 	-> Teachers
-	-> AdminStudents
+	-> Students
 	-> Classes
 	-> ClassesNumber
 
@@ -56,7 +56,8 @@ Classroom(int)
 Class(int)
 	-> Course
 	-> Teacher
-	-> AdminStudents
+	-> Group
+	-> Students
 	-> Date
 	-> Classroom
 
@@ -66,12 +67,18 @@ ClassSchedule(int)
 	-> Date?
 	-> Classroom?
 
+Group(int)
+	-> Name
+	-> Teacher
+	-> Students
+	-> Classes
+
 Semester(int)
 	-> Number
 	-> DateFrom
 	-> DateTo
 	-> Courses
-	-> AdminStudents
+	-> Students
 ```
 
 ## Architecture
