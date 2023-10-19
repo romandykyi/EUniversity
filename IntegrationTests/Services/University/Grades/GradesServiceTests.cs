@@ -1,10 +1,8 @@
-﻿using EUniversity.Core.Dtos.University;
-using EUniversity.Core.Dtos.University.Grades;
-using EUniversity.Core.Models.University;
+﻿using EUniversity.Core.Dtos.University.Grades;
 using EUniversity.Core.Models.University.Grades;
 using EUniversity.Infrastructure.Services.University;
 
-namespace EUniversity.IntegrationTests.Services.University
+namespace EUniversity.IntegrationTests.Services.University.Grades
 {
     public class GradesServiceTests : CrudServicesTest
         <IGradesService, Grade, int, GradeDto, GradeDto, GradeDto, GradeDto>
