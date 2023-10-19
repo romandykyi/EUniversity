@@ -3,7 +3,6 @@
     margin: 0;
     padding: 0;
 }
-
 .form {
     &__title {
         font-size: 40px;
@@ -64,5 +63,51 @@
     }
     &__hidden {
         bottom:-100%;
+    }
+}
+
+
+.noPage {
+    display: flex;
+    align-items: center;
+    position: absolute;
+    top: 60px;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    justify-content: center;
+    & p {
+        color: #ff4c4c;
+        font-size: 40px;
+    }
+}
+
+.pagination {
+    display: flex;
+    gap: 10px;
+    margin: 0 10px;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    max-width: 400px;
+    & li {
+        cursor: pointer;
+        padding: 5px 10px;
+    }
+    &__panel {
+        display: flex;
+        width: 100%;
+        justify-content: center;
+        margin-top: 20px;
+        align-items: center;
+        & button {
+            color:white;
+            background: blue;
+        }
+    }
+    &__chosen {
+        background: blue;
+        border-radius: 10px;
+        color: white;
     }
 }

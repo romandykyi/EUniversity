@@ -61,4 +61,49 @@
   bottom: -100%;
 }
 
+.noPage {
+  display: flex;
+  align-items: center;
+  position: absolute;
+  top: 60px;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  justify-content: center;
+}
+.noPage p {
+  color: #ff4c4c;
+  font-size: 40px;
+}
+
+.pagination {
+  display: flex;
+  gap: 10px;
+  margin: 0 10px;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  max-width: 400px;
+}
+.pagination li {
+  cursor: pointer;
+  padding: 5px 10px;
+}
+.pagination__panel {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  margin-top: 20px;
+  align-items: center;
+}
+.pagination__panel button {
+  color: white;
+  background: blue;
+}
+.pagination__chosen {
+  background: blue;
+  border-radius: 10px;
+  color: white;
+}
+
 /*# sourceMappingURL=style.css.map */
