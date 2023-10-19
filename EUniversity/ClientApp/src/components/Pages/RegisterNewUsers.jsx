@@ -67,7 +67,7 @@ const RegisterNewUsers = () => {
                         {error}
                     </div>
                 <Button type="submit">Register new users</Button>
-                <div className={`newUser__success ${isUserAdded ? "newUser__visible" : "newUser__hidden"}`}></div>
+                {/*<div className={`newUser__success ${isUserAdded ? "newUser__visible" : "newUser__hidden"}`}></div>*/}
             </form>
         </div>
     );

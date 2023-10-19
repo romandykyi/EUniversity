@@ -14,7 +14,6 @@ const PaginatedList =
 
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    const currentItems = items.slice(indexOfFirstItem, indexOfLastItem);
     const totalPages = Math.ceil(totalItems / itemsPerPage);
 
     const paginate = (pageNumber) => {
@@ -70,7 +69,7 @@ const PaginatedList =
                         </tr>
                         </thead>
                         <tbody>
-                        {currentItems.map((item) => (
+                        {items.map((item) => (
                             <tr key={item.email}>
                                 <td>{item.email}</td>
                                 <td>{item.firstName}</td>
