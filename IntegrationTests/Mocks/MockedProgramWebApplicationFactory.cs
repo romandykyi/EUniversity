@@ -38,6 +38,7 @@ namespace EUniversity.IntegrationTests.Mocks
                 );
 
             ClassroomsServiceMock = Substitute.For<IClassroomsService>();
+            GradesServiceMock = Substitute.For<IGradesService>();
 
             builder.ConfigureTestServices(services =>
             {
