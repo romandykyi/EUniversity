@@ -37,7 +37,7 @@ namespace EUniversity.IntegrationTests.Services
         /// </returns>
         protected async Task<bool> EntityExistsAsync(TId id)
         {
-            return await DbContext.Set<Classroom>().AnyAsync(x => x.Id.Equals(id));
+            return await DbContext.Set<TEntity>().AnyAsync(x => x.Id.Equals(id));
         }
 
         /// <summary>
