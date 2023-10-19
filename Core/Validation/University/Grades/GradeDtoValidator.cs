@@ -5,7 +5,7 @@ using FluentValidation;
 
 namespace EUniversity.Core.Validation.University.Grades
 {
-    public class GradeDtoValidator : AbstractValidator<GradeDto>
+    public class GradeDtoValidator : AbstractValidator<CreateGradeDto>
     {
         public GradeDtoValidator()
         {

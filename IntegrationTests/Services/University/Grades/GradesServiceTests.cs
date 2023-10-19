@@ -5,10 +5,10 @@ using EUniversity.Infrastructure.Services.University;
 namespace EUniversity.IntegrationTests.Services.University.Grades
 {
     public class GradesServiceTests : CrudServicesTest
-        <IGradesService, Grade, int, GradeDto, GradeDto, GradeDto, GradeDto>
+        <IGradesService, Grade, int, ViewGradeDto, ViewGradeDto, CreateGradeDto, CreateGradeDto>
     {
         /// <inheritdoc />
-        protected override void AssertThatWasUpdated(Grade actualEntity, GradeDto updateDto)
+        protected override void AssertThatWasUpdated(Grade actualEntity, CreateGradeDto updateDto)
         {
             Assert.Multiple(() =>
             {
@@ -31,13 +31,13 @@ namespace EUniversity.IntegrationTests.Services.University.Grades
         }
 
         /// <inheritdoc />
-        protected override GradeDto GetValidCreateDto()
+        protected override CreateGradeDto GetValidCreateDto()
         {
             return new("5", 5);
         }
 
         /// <inheritdoc />
-        protected override GradeDto GetValidUpdateDto()
+        protected override CreateGradeDto GetValidUpdateDto()
         {
             return new("4", 4);
         }

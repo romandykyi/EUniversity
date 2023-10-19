@@ -25,12 +25,12 @@ namespace EUniversity.IntegrationTests.Controllers.University
 
         protected override ViewClassroomDto GetTestPreviewDto()
         {
-            return new("Test");
+            return new(1, "Test");
         }
 
         protected override ViewClassroomDto GetTestDetailsDto()
         {
-            return new("Test classroom");
+            return new(2, "Test classroom");
         }
 
         protected override CreateClassroomDto GetInvalidCreateDto()

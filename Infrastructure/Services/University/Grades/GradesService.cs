@@ -5,7 +5,7 @@ using EUniversity.Infrastructure.Data;
 namespace EUniversity.Infrastructure.Services.University.Grades
 {
     public class GradesService :
-        BaseCrudService<Grade, int, GradeDto, GradeDto, GradeDto, GradeDto>,
+        BaseCrudService<Grade, int, ViewGradeDto, ViewGradeDto, CreateGradeDto, CreateGradeDto>,
         IGradesService
     {
         public GradesService(ApplicationDbContext dbContext) : base(dbContext)

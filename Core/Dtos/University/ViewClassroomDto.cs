@@ -1,4 +1,4 @@
 ﻿namespace EUniversity.Core.Dtos.University
 {
-    public record ViewClassroomDto(string Name);
+    public record ViewClassroomDto(int Id, string Name);
 }

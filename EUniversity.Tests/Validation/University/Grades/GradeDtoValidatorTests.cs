@@ -31,7 +31,7 @@ namespace EUniversity.Tests.Validation.University.Grades
         public void Name_Valid_IsValid()
         {
             // Arrange
-            GradeDto dto = new(DefaultName, DefaultScore);
+            CreateGradeDto dto = new(DefaultName, DefaultScore);
 
             // Act
             var result = _validator.TestValidate(dto);
@@ -44,7 +44,7 @@ namespace EUniversity.Tests.Validation.University.Grades
         public void Name_TooLarge_IsInvalid()
         {
             // Arrange
-            GradeDto dto = new(new string('0', Grade.MaxNameLength + 1), DefaultScore);
+            CreateGradeDto dto = new(new string('0', Grade.MaxNameLength + 1), DefaultScore);
 
             // Act
             var result = _validator.TestValidate(dto);
@@ -58,7 +58,7 @@ namespace EUniversity.Tests.Validation.University.Grades
         public void Name_Empty_IsInvalid()
         {
             // Arrange
-            GradeDto dto = new(string.Empty, DefaultScore);
+            CreateGradeDto dto = new(string.Empty, DefaultScore);
 
             // Act
             var result = _validator.TestValidate(dto);

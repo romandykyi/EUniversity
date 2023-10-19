@@ -4,7 +4,7 @@ using EUniversity.Core.Models.University.Grades;
 namespace EUniversity.IntegrationTests.Controllers.University.Grades
 {
     public class GradesControllerTestsAdminCrudControllersTest :
-        AdminCrudControllersTest<Grade, int, GradeDto, GradeDto, GradeDto, GradeDto>
+        AdminCrudControllersTest<Grade, int, ViewGradeDto, ViewGradeDto, CreateGradeDto, CreateGradeDto>
     {
         public override string GetPageRoute => $"api/grades";
 
@@ -23,32 +23,32 @@ namespace EUniversity.IntegrationTests.Controllers.University.Grades
             ServiceMock = WebApplicationFactory.GradesServiceMock;
         }
 
-        protected override GradeDto GetTestPreviewDto()
+        protected override ViewGradeDto GetTestPreviewDto()
         {
-            return new("100", 100);
+            return new(1, "100", 100);
         }
 
-        protected override GradeDto GetTestDetailsDto()
+        protected override ViewGradeDto GetTestDetailsDto()
         {
-            return new("100", 100);
+            return new(2, "100", 100);
         }
 
-        protected override GradeDto GetInvalidCreateDto()
-        {
-            return new(string.Empty, 0);
-        }
-
-        protected override GradeDto GetInvalidUpdateDto()
+        protected override CreateGradeDto GetInvalidCreateDto()
         {
             return new(string.Empty, 0);
         }
 
-        protected override GradeDto GetValidCreateDto()
+        protected override CreateGradeDto GetInvalidUpdateDto()
+        {
+            return new(string.Empty, 0);
+        }
+
+        protected override CreateGradeDto GetValidCreateDto()
         {
             return new("100", 100);
         }
 
-        protected override GradeDto GetValidUpdateDto()
+        protected override CreateGradeDto GetValidUpdateDto()
         {
             return new("100", 100);
         }

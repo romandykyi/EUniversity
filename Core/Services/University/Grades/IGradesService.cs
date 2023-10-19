@@ -8,7 +8,7 @@ namespace EUniversity.Infrastructure.Services.University
     /// Service for grades.
     /// </summary>
     public interface IGradesService :
-        ICrudService<Grade, int, GradeDto, GradeDto, GradeDto, GradeDto>
+        ICrudService<Grade, int, ViewGradeDto, ViewGradeDto, CreateGradeDto, CreateGradeDto>
     {
     }
 }

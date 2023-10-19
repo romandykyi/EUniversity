@@ -33,7 +33,7 @@ namespace EUniversity.Controllers.University
         /// <response code="400">Bad request</response>
         [HttpGet]
         [Authorize(Policies.Default)]
-        [ProducesResponseType(typeof(Page<GradeDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Page<CreateGradeDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> GetGradesPageAsync([FromQuery] PaginationProperties properties)
         {
@@ -48,7 +48,7 @@ namespace EUniversity.Controllers.University
         /// <response code="404">Grade does not exist</response>
         [HttpGet("{id:int}", Name = nameof(GetGradeByIdAsync))]
         [Authorize(Policies.Default)]
-        [ProducesResponseType(typeof(GradeDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(CreateGradeDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetGradeByIdAsync([FromRoute] int id)
@@ -70,7 +70,7 @@ namespace EUniversity.Controllers.University
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        public async Task<IActionResult> CreateGradeAsync([FromBody] GradeDto dto)
+        public async Task<IActionResult> CreateGradeAsync([FromBody] CreateGradeDto dto)
         {
             int id = await _gradesService.CreateAsync(dto);
             var routeValues = new { id };
@@ -95,7 +95,7 @@ namespace EUniversity.Controllers.University
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> UpdateGradeAsync([FromRoute] int id,
-            [FromBody] GradeDto dto)
+            [FromBody] CreateGradeDto dto)
         {
             var result = await _gradesService.UpdateAsync(id, dto);
             return result ? NoContent() : NotFound();
