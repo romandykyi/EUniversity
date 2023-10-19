@@ -25,6 +25,7 @@ namespace EUniversity.IntegrationTests.Mocks
         public IAuthService AuthServiceMock { get; private set; } = null!;
         public UserManager<ApplicationUser> UserManagerMock { get; private set; } = null!;
         public IClassroomsService ClassroomsServiceMock { get; private set; } = null!;
+        public IGradesService GradesServiceMock { get; private set; } = null!;
 
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
@@ -53,6 +54,7 @@ namespace EUniversity.IntegrationTests.Mocks
                 services.AddScoped(_ => AuthServiceMock);
                 services.AddScoped(_ => UserManagerMock);
                 services.AddScoped(_ => ClassroomsServiceMock);
+                services.AddScoped(_ => GradesServiceMock);
             });
         }
 
