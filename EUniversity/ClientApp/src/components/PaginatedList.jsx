@@ -4,28 +4,37 @@ import Button from "./UI/Button/Button"
 
 const PaginatedList =
     ({
-         items,
          itemsPerPage,
          isLoading,
          totalItems,
-         currentPage,
-         setCurrentPage,
-         setItemsPerPage
+         setItemsPerPage,
+         tableBody,
+         tableHead,
+         fetchItems
     }) => {
 
     const [totalPages, setTotalPages] = useState(Math.ceil(totalItems / itemsPerPage));
-
+    const [currentPage, setCurrentPage] = useState(1);
     const [windowSize, setWindowSize] = useState({
         width: window.innerWidth,
         height: window.innerHeight,
     });
-        useEffect(() => {
-            const handleResize = () => {
-                setWindowSize({
-                    width: window.innerWidth,
-                    height: window.innerHeight,
-                });
-            };
+
+    useEffect(() => {
+        fetchItems();
+    }, []);
+
+    useEffect(() => {
+        fetchItems(currentPage, itemsPerPage);
+    }, [currentPage, itemsPerPage]);
+
+    useEffect(() => {
+        const handleResize = () => {
+            setWindowSize({
+                width: window.innerWidth,
+                height: window.innerHeight,
+        });
+    };
 
             window.addEventListener('resize', handleResize);
 
@@ -122,24 +131,11 @@ const PaginatedList =
                 :  <div className="table-container">
                     <table className="table students__table">
                         <thead>
-                        <tr>
-                            <th>Email</th>
-                            <th>First name</th>
-                            <th>Last name</th>
-                            <th>Middle Name</th>
-                        </tr>
+                            {tableHead}
                         </thead>
-                        <tbody>
-                        {items.map((item) => (
-                            <tr key={item.email}>
-                                <td>{item.email}</td>
-                                <td>{item.firstName}</td>
-                                <td>{item.lastName}</td>
-                                <td>{item.middleName}</td>
-                            </tr>
-                        ))}
-
-                        </tbody>
+                       <tbody>
+                            {tableBody}
+                       </tbody>
                     </table>
                     </div>
             }

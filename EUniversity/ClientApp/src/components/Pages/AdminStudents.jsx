@@ -7,7 +7,6 @@
         const [isLoading, setIsLoading] = useState(true);
         const [itemsPerPage, setItemsPerPage] = useState(0);
         const [totalItems, setTotalItems] = useState(0);
-        const [currentPage, setCurrentPage] = useState(1);
 
         const fetchUsers = async(page = 1, pageSize = 10) => {
 
@@ -29,15 +28,6 @@
 
         }
 
-        useEffect(() => {
-            fetchUsers();
-        }, []);
-
-        useEffect(() => {
-            setIsLoading(true);
-            fetchUsers(currentPage, itemsPerPage);
-        }, [currentPage, itemsPerPage]);
-
         return (
             <div className="students">
                 <h1 className="students__title form__title">
@@ -46,11 +36,27 @@
                 <PaginatedList
                     itemsPerPage={itemsPerPage}
                     setItemsPerPage={setItemsPerPage}
-                    items={students}
                     isLoading={isLoading}
                     totalItems={totalItems}
-                    currentPage={currentPage}
-                    setCurrentPage={setCurrentPage}
+                    fetchItems={fetchUsers}
+                    tableHead={(
+                        <tr>
+                            <th>Email</th>
+                            <th>First name</th>
+                            <th>Last name</th>
+                            <th>Middle Name</th>
+                        </tr>
+                    )}
+                    tableBody={(
+                        students.map((item) => (
+                            <tr key={item.email}>
+                                <td>{item.email}</td>
+                                <td>{item.firstName}</td>
+                                <td>{item.lastName}</td>
+                                <td>{item.middleName}</td>
+                            </tr>
+                        ))
+                    )}
                 />
             </div>
 
