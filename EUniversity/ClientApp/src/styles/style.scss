@@ -104,6 +104,13 @@
             color:white;
             background: blue;
         }
+        & button:focus {
+            border: 5px solid #c2dbfe;
+        }
+        & select {
+            width: auto;
+            margin-left: 10px;
+        }
     }
     &__chosen {
         background: blue;

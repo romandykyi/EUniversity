@@ -100,6 +100,13 @@
   color: white;
   background: blue;
 }
+.pagination__panel button:focus {
+  border: 5px solid #c2dbfe;
+}
+.pagination__panel select {
+  width: auto;
+  margin-left: 10px;
+}
 .pagination__chosen {
   background: blue;
   border-radius: 10px;

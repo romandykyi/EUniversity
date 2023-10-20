@@ -10,13 +10,11 @@
         const [currentPage, setCurrentPage] = useState(1);
 
         const fetchUsers = async(page = 1, pageSize = 10) => {
-            console.log(`page ${page}`)
 
             try {
                 const response = await fetch(`/api/users/students?Page=${page}&PageSize=${pageSize}`);
                 if (response.ok) {
                     const data = await response.json();
-                    console.log(data.items[0]);
                     setStudents(data.items);
                     setItemsPerPage(data.pageSize);
                     setTotalItems(data.totalItemsCount);
@@ -32,9 +30,13 @@
         }
 
         useEffect(() => {
+            fetchUsers();
+        }, []);
+
+        useEffect(() => {
             setIsLoading(true);
-            fetchUsers(currentPage);
-        }, [currentPage]);
+            fetchUsers(currentPage, itemsPerPage);
+        }, [currentPage, itemsPerPage]);
 
         return (
             <div className="students">
@@ -43,12 +45,12 @@
                 </h1>
                 <PaginatedList
                     itemsPerPage={itemsPerPage}
+                    setItemsPerPage={setItemsPerPage}
                     items={students}
                     isLoading={isLoading}
                     totalItems={totalItems}
                     currentPage={currentPage}
                     setCurrentPage={setCurrentPage}
-                    fetchUsers={fetchUsers}
                 />
             </div>
 
