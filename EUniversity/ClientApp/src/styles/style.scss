@@ -94,12 +94,17 @@
         cursor: pointer;
         padding: 5px 10px;
     }
+    &__main {
+        display: flex;
+        align-items: center;
+    }
     &__panel {
         display: flex;
         width: 100%;
         justify-content: center;
         margin-top: 20px;
         align-items: center;
+        margin-bottom: 30px;
         & button {
             color:white;
             background: blue;
@@ -116,5 +121,20 @@
         background: blue;
         border-radius: 10px;
         color: white;
+    }
+}
+@media (max-width: 400px) {
+    .pagination {
+        &__main {
+            width: 100%;
+            justify-content: space-between;
+        }
+        &__panel {
+            flex-direction: column;
+            gap: 20px;
+            & select {
+                margin: 0;
+            }
+        }
     }
 }

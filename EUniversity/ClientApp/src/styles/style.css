@@ -89,12 +89,17 @@
   cursor: pointer;
   padding: 5px 10px;
 }
+.pagination__main {
+  display: flex;
+  align-items: center;
+}
 .pagination__panel {
   display: flex;
   width: 100%;
   justify-content: center;
   margin-top: 20px;
   align-items: center;
+  margin-bottom: 30px;
 }
 .pagination__panel button {
   color: white;
@@ -111,6 +116,20 @@
   background: blue;
   border-radius: 10px;
   color: white;
+}
+
+@media (max-width: 400px) {
+  .pagination__main {
+    width: 100%;
+    justify-content: space-between;
+  }
+  .pagination__panel {
+    flex-direction: column;
+    gap: 20px;
+  }
+  .pagination__panel select {
+    margin: 0;
+  }
 }
 
 /*# sourceMappingURL=style.css.map */

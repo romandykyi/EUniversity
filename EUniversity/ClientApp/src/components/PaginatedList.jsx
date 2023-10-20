@@ -119,7 +119,8 @@ const PaginatedList =
             {
                 isLoading
                 ? <Loader/>
-                : <table className="table students__table">
+                :  <div className="table-container" style={{ overflowX: 'auto' }}>
+                    <table className="table students__table">
                         <thead>
                         <tr>
                             <th>Email</th>
@@ -140,31 +141,34 @@ const PaginatedList =
 
                         </tbody>
                     </table>
+                    </div>
             }
             <div className="pagination__panel">
-                <Button onClick={handlePrev} disabled={currentPage === 1}>
-                    Prev
-                </Button>
-                {
-                    windowSize.width > 550
-                        ?  <ul className="pagination">
-                            {renderPageNumbers()}
-                           </ul>
-                        : <select
-                            style={{margin:"0 10px"}}
-                            className="form-select"
-                            value={currentPage}
-                            onChange={(e) => setCurrentPage(e.target.value)}>
-                            {renderPageNumbersForSelect().map((pageNumber, index) => (
-                                <option key={index} value={pageNumber.key}>
-                                    {pageNumber.key}
-                                </option>
-                            ))}
-                          </select>
-                }
-                <Button onClick={handleNext} disabled={currentPage === totalPages}>
-                    Next
-                </Button>
+                <div className="pagination__main">
+                    <Button onClick={handlePrev} disabled={currentPage === 1}>
+                        Prev
+                    </Button>
+                    {
+                        windowSize.width > 615
+                            ?  <ul className="pagination">
+                                {renderPageNumbers()}
+                            </ul>
+                            : <select
+                                style={{margin:"0 10px"}}
+                                className="form-select"
+                                value={currentPage}
+                                onChange={(e) => setCurrentPage(e.target.value)}>
+                                {renderPageNumbersForSelect().map((pageNumber, index) => (
+                                    <option key={index} value={pageNumber.key}>
+                                        {pageNumber.key}
+                                    </option>
+                                ))}
+                            </select>
+                    }
+                    <Button onClick={handleNext} disabled={currentPage === totalPages}>
+                        Next
+                    </Button>
+                </div>
                 <select
                     className="form-select"
                     id="floatingSelect"
