@@ -119,7 +119,7 @@ const PaginatedList =
             {
                 isLoading
                 ? <Loader/>
-                :  <div className="table-container" style={{ overflowX: 'auto' }}>
+                :  <div className="table-container">
                     <table className="table students__table">
                         <thead>
                         <tr>
