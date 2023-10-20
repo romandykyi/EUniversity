@@ -175,7 +175,7 @@ const PaginatedList =
                             setCurrentPage(totalPages);
                     }
                 }}>
-                    <option selected disabled>Items per page:</option>
+                    <option disabled>Items per page:</option>
                     <option value={5}>5</option>
                     <option value={10}>10</option>
                     <option value={20}>20</option>
