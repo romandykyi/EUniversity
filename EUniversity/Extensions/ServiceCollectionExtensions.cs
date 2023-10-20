@@ -1,6 +1,7 @@
 ﻿using EUniversity.Core.Models;
 using EUniversity.Core.Policy;
 using EUniversity.Core.Services;
+using EUniversity.Core.Services.University;
 using EUniversity.Core.Validation.Auth;
 using EUniversity.Infrastructure.Data;
 using EUniversity.Infrastructure.Identity;
@@ -142,12 +143,16 @@ namespace EUniversity.Extensions
         public static IServiceCollection ConfigureAppServices(this IServiceCollection services)
         {
             return services
+                // Testing/Development services
                 .AddScoped<TestDataService>()
+                // Auth/Users services:
                 .AddScoped<IAuthService, AuthService>()
                 .AddScoped<IAuthHelper, AuthHelper>()
                 .AddScoped<IUsersService, UsersService>()
+                // University services:
                 .AddScoped<IClassroomsService, ClassroomsService>()
-                .AddScoped<IGradesService, GradesService>();
+                .AddScoped<IGradesService, GradesService>()
+                .AddScoped<ICoursesService, CoursesService>();
         }
 
         public static IMvcBuilder ConfigureControllers(this IServiceCollection builder)
