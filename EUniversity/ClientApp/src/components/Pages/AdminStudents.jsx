@@ -5,11 +5,10 @@
 
         const [students, setStudents] = useState([]);
         const [isLoading, setIsLoading] = useState(true);
-        const [itemsPerPage, setItemsPerPage] = useState(0);
+        const [itemsPerPage, setItemsPerPage] = useState(10);
         const [totalItems, setTotalItems] = useState(0);
 
         const fetchUsers = async(page = 1, pageSize = 10) => {
-
             try {
                 const response = await fetch(`/api/users/students?Page=${page}&PageSize=${pageSize}`);
                 if (response.ok) {
@@ -27,6 +26,7 @@
             }
 
         }
+
 
         return (
             <div className="students">

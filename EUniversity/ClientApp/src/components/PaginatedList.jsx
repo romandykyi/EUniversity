@@ -21,7 +21,7 @@ const PaginatedList =
     });
 
     useEffect(() => {
-        fetchItems();
+        fetchItems(1,10);
     }, []);
 
     useEffect(() => {
@@ -47,7 +47,8 @@ const PaginatedList =
         setTotalPages(newTotalPages);
 
         if (currentPage > newTotalPages) {
-            setCurrentPage(newTotalPages);
+            if (newTotalPages > 1) setCurrentPage(newTotalPages);
+            else setCurrentPage(1);
            }
         }, [itemsPerPage, totalItems, currentPage]);
 
@@ -175,7 +176,7 @@ const PaginatedList =
                             setCurrentPage(totalPages);
                     }
                 }}>
-                    <option selected disabled>Items per page:</option>
+                    <option defaultValue disabled>Items per page:</option>
                     <option value={5}>5</option>
                     <option value={10}>10</option>
                     <option value={20}>20</option>
