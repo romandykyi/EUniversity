@@ -35,7 +35,7 @@ namespace EUniversity.Controllers.University
         [Authorize(Policies.Default)]
         [ProducesResponseType(typeof(Page<ViewClassroomDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> GetPageAsync([FromQuery] PaginationProperties properties)
+        public async Task<IActionResult> GetClassroomsPageAsync([FromQuery] PaginationProperties properties)
         {
             return Ok(await _classroomsService.GetPageAsync(properties));
         }
@@ -46,12 +46,12 @@ namespace EUniversity.Controllers.University
         /// <response code="200">Returns requested classroom</response>
         /// <response code="400">Bad request</response>
         /// <response code="404">Classroom does not exist</response>
-        [HttpGet("{id:int}", Name = nameof(GetByIdAsync))]
+        [HttpGet("{id:int}", Name = nameof(GetClassroomByIdAsync))]
         [Authorize(Policies.Default)]
         [ProducesResponseType(typeof(ViewClassroomDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> GetByIdAsync([FromRoute] int id)
+        public async Task<IActionResult> GetClassroomByIdAsync([FromRoute] int id)
         {
             var classroom = await _classroomsService.GetByIdAsync(id);
             return classroom != null ? Ok(classroom) : NotFound();
@@ -70,12 +70,12 @@ namespace EUniversity.Controllers.University
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        public async Task<IActionResult> CreateAsync([FromBody] CreateClassroomDto dto)
+        public async Task<IActionResult> CreateClassroomAsync([FromBody] CreateClassroomDto dto)
         {
             int id = await _classroomsService.CreateAsync(dto);
             var routeValues = new { id };
             var body = new { id };
-            return CreatedAtRoute(nameof(GetByIdAsync), routeValues, body);
+            return CreatedAtRoute(nameof(GetClassroomByIdAsync), routeValues, body);
         }
 
         /// <summary>
@@ -94,7 +94,7 @@ namespace EUniversity.Controllers.University
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> UpdateAsync([FromRoute] int id,
+        public async Task<IActionResult> UpdateClassroomAsync([FromRoute] int id,
             [FromBody] CreateClassroomDto dto)
         {
             var result = await _classroomsService.UpdateAsync(id, dto);
@@ -115,7 +115,7 @@ namespace EUniversity.Controllers.University
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> DeleteAsync([FromRoute] int id)
+        public async Task<IActionResult> DeleteClassroomAsync([FromRoute] int id)
         {
             var result = await _classroomsService.DeleteAsync(id);
             return result ? NoContent() : NotFound();
