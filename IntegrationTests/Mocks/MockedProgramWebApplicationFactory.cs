@@ -1,5 +1,6 @@
 ﻿using EUniversity.Core.Models;
 using EUniversity.Core.Services;
+using EUniversity.Core.Services.University;
 using EUniversity.Extensions;
 using EUniversity.Infrastructure.Data;
 using EUniversity.Infrastructure.Services.University;
@@ -26,6 +27,7 @@ namespace EUniversity.IntegrationTests.Mocks
         public UserManager<ApplicationUser> UserManagerMock { get; private set; } = null!;
         public IClassroomsService ClassroomsServiceMock { get; private set; } = null!;
         public IGradesService GradesServiceMock { get; private set; } = null!;
+        public ICoursesService CoursesServiceMock { get; private set; } = null!;
 
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
@@ -39,23 +41,27 @@ namespace EUniversity.IntegrationTests.Mocks
 
             ClassroomsServiceMock = Substitute.For<IClassroomsService>();
             GradesServiceMock = Substitute.For<IGradesService>();
+            CoursesServiceMock = Substitute.For<ICoursesService>();
 
             builder.ConfigureTestServices(services =>
             {
+                // DB
                 services.AddDbContext<ApplicationDbContext>(o => o.UseInMemoryDatabase("Endpoints tests DB")
                     .ConfigureWarnings(x => x.Ignore(InMemoryEventId.TransactionIgnoredWarning)));
 
+                // Auth
                 services.AddScoped(_ => ClaimsProvider);
-
                 services.AddAuthentication(defaultScheme: "TestScheme")
                     .AddScheme<AuthenticationSchemeOptions, TestAuthHandler>(
                         "TestScheme", options => { });
                 services.AddCustomizedAuthorization("TestScheme");
-
                 services.AddScoped(_ => AuthServiceMock);
                 services.AddScoped(_ => UserManagerMock);
+
+                // University
                 services.AddScoped(_ => ClassroomsServiceMock);
                 services.AddScoped(_ => GradesServiceMock);
+                services.AddScoped(_ => CoursesServiceMock);
             });
         }
 
