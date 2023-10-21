@@ -129,8 +129,8 @@ namespace EUniversity.Infrastructure.Services
         /// <summary>
         /// Creates many random classrooms.
         /// </summary>
-        /// <param name="classrooms">Number of classrooms to be created.</param>
-        public async Task CreateRandomClassroomsAsync(int classrooms = 70)
+        /// <param name="count">Number of classrooms to be created.</param>
+        public async Task CreateRandomClassroomsAsync(int count = 70)
         {
             var classroomsFaker = new Faker<Classroom>()
                 .RuleFor(c => c.Name, f =>
