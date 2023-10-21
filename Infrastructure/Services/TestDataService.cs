@@ -41,7 +41,7 @@ namespace EUniversity.Infrastructure.Services
         /// <summary>
         /// Creates one test student and one test teacher.
         /// </summary>
-        public async Task CreateTestUsers()
+        public async Task CreateTestUsersAsync()
         {
             const string studentUserName = "student";
             const string teacherUserName = "teacher";
@@ -60,7 +60,7 @@ namespace EUniversity.Infrastructure.Services
         /// </summary>
         /// <param name="teachers">Number of teachers to be created.</param>
         /// <param name="students">Number of studetns to be created.</param>
-        public async Task CreateRandomUsers(int teachers = 50, int students = 200)
+        public async Task CreateRandomUsersAsync(int teachers = 50, int students = 200)
         {
             // Do not generate users if there are enough of them already
             int usersCount = await _dbContext.Users.CountAsync();
@@ -100,7 +100,7 @@ namespace EUniversity.Infrastructure.Services
             _logger.LogInformation("Users were generated");
         }
 
-        private async Task CreateRandomEntities<T>(Faker<T> faker, int count) where T : class
+        private async Task CreateRandomEntitiesAsync<T>(Faker<T> faker, int count) where T : class
         {
             string typeName = typeof(T).Name;
 
@@ -130,14 +130,15 @@ namespace EUniversity.Infrastructure.Services
         /// Creates many random classrooms.
         /// </summary>
         /// <param name="classrooms">Number of classrooms to be created.</param>
-        public async Task CreateRandomClassrooms(int classrooms = 70)
+        public async Task CreateRandomClassroomsAsync(int classrooms = 70)
         {
             var classroomsFaker = new Faker<Classroom>()
                 .RuleFor(c => c.Name, f =>
                     new string(f.Random.Chars('A', 'Z', f.Random.Number(0, 3))) +
                     new string(f.Random.Chars('0', '9', 5)));
 
-            await CreateRandomEntities(classroomsFaker, classrooms);
+            await CreateRandomEntitiesAsync(classroomsFaker, classrooms);
         }
+)
     }
 }
