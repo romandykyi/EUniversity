@@ -1,11 +1,13 @@
 ﻿using EUniversity.Core.Models;
 using EUniversity.Core.Policy;
 using EUniversity.Core.Services;
+using EUniversity.Core.Services.University;
 using EUniversity.Core.Validation.Auth;
 using EUniversity.Infrastructure.Data;
 using EUniversity.Infrastructure.Identity;
 using EUniversity.Infrastructure.Services;
 using EUniversity.Infrastructure.Services.University;
+using EUniversity.Infrastructure.Services.University.Grades;
 using FluentValidation;
 using IdentityModel;
 using Microsoft.AspNetCore.Authentication;
@@ -141,11 +143,16 @@ namespace EUniversity.Extensions
         public static IServiceCollection ConfigureAppServices(this IServiceCollection services)
         {
             return services
+                // Testing/Development services
                 .AddScoped<TestDataService>()
+                // Auth/Users services:
                 .AddScoped<IAuthService, AuthService>()
                 .AddScoped<IAuthHelper, AuthHelper>()
                 .AddScoped<IUsersService, UsersService>()
-                .AddScoped<IClassroomsService, ClassroomsService>();
+                // University services:
+                .AddScoped<IClassroomsService, ClassroomsService>()
+                .AddScoped<IGradesService, GradesService>()
+                .AddScoped<ICoursesService, CoursesService>();
         }
 
         public static IMvcBuilder ConfigureControllers(this IServiceCollection builder)

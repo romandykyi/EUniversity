@@ -37,7 +37,7 @@ namespace EUniversity.IntegrationTests.Services
         /// </returns>
         protected async Task<bool> EntityExistsAsync(TId id)
         {
-            return await DbContext.Set<Classroom>().AnyAsync(x => x.Id.Equals(id));
+            return await DbContext.Set<TEntity>().AnyAsync(x => x.Id.Equals(id));
         }
 
         /// <summary>
@@ -172,7 +172,7 @@ namespace EUniversity.IntegrationTests.Services
             var result = await Service.GetByIdAsync(GetNonExistentId());
 
             // Assert
-            Assert.That(result, Is.Null);
+            Assert.That(result, Is.Null, "Element with non-existend ID exists");
         }
 
         [Test]
@@ -185,7 +185,7 @@ namespace EUniversity.IntegrationTests.Services
             TId id = await Service.CreateAsync(dto);
 
             // Assert(check if element is actually created)
-            Assert.That(await EntityExistsAsync(id));
+            Assert.That(await EntityExistsAsync(id), "Entity doesn't exist");
         }
 
         [Test]
@@ -209,7 +209,7 @@ namespace EUniversity.IntegrationTests.Services
         }
 
         [Test]
-        public virtual async Task Update_ElementDoesNotExist_ReturnFalse()
+        public virtual async Task Update_ElementDoesNotExist_ReturnsFalse()
         {
             // Act
             bool result = await Service.UpdateAsync(GetNonExistentId(), GetValidUpdateDto());
@@ -231,7 +231,7 @@ namespace EUniversity.IntegrationTests.Services
             Assert.Multiple(async () =>
             {
                 Assert.That(result);
-                Assert.That(await EntityExistsAsync(classroom.Id), Is.False);
+                Assert.That(await EntityExistsAsync(classroom.Id), Is.False, "Entity wasn't deleted");
             });
         }
 

@@ -4,6 +4,7 @@ using EUniversity.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EUniversity.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231018091634_AddCoursesGroupsAndGrades")]
+    partial class AddCoursesGroupsAndGrades
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -269,6 +272,7 @@ namespace EUniversity.Infrastructure.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Description")
+                        .IsRequired()
                         .HasMaxLength(1000)
                         .HasColumnType("nvarchar(1000)");
 
@@ -511,7 +515,7 @@ namespace EUniversity.Infrastructure.Migrations
                         .IsRequired();
 
                     b.HasOne("EUniversity.Core.Models.University.Grades.Grade", "Grade")
-                        .WithMany("CourseGrades")
+                        .WithMany()
                         .HasForeignKey("GradeId")
                         .OnDelete(DeleteBehavior.ClientCascade)
                         .IsRequired();
@@ -591,11 +595,6 @@ namespace EUniversity.Infrastructure.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("EUniversity.Core.Models.University.Grades.Grade", b =>
-                {
-                    b.Navigation("CourseGrades");
                 });
 #pragma warning restore 612, 618
         }
