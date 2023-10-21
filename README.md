@@ -18,6 +18,8 @@ An e-university Web Application built with ASP.NET and React.
 
 ### Front end
 * React
+* React-router-dom
+* Yarn
 
 ## Database Scheme(draft)
 ```
