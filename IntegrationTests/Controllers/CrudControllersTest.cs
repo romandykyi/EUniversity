@@ -1,7 +1,7 @@
-﻿using EUniversity.Core.Models;
+﻿using EUniversity.Core.Filters;
+using EUniversity.Core.Models;
 using EUniversity.Core.Pagination;
 using EUniversity.Core.Services;
-using EUniversity.Core.Filters;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
 using NSubstitute.ReturnsExtensions;

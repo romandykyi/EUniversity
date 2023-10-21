@@ -1,5 +1,4 @@
 ﻿using EUniversity.Core.Dtos.University.Grades;
-using EUniversity.Core.Models.University;
 using EUniversity.Core.Models.University.Grades;
 using FluentValidation;
 

@@ -1,16 +1,8 @@
-﻿using EUniversity.Core.Dtos.University;
-using EUniversity.Core.Models.University;
-using EUniversity.Core.Validation.University;
-using EUniversity.Core.Validation;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using EUniversity.Core.Validation.University.Grades;
-using EUniversity.Core.Dtos.University.Grades;
-using FluentValidation.TestHelper;
+﻿using EUniversity.Core.Dtos.University.Grades;
 using EUniversity.Core.Models.University.Grades;
+using EUniversity.Core.Validation;
+using EUniversity.Core.Validation.University.Grades;
+using FluentValidation.TestHelper;
 
 namespace EUniversity.Tests.Validation.University.Grades
 {
