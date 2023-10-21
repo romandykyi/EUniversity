@@ -59,7 +59,7 @@ if (app.Environment.IsDevelopment())
 {
     app.CreateTestUsers();
 
-    if (true)
+    if (args.Contains("--fakedata"))
     {
         app.Logger.LogInformation("Generating fake data, please be patient");
         app.CreateFakeData();
