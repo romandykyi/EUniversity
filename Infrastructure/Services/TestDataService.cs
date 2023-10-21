@@ -1,13 +1,10 @@
 ﻿using Bogus;
 using EUniversity.Core.Dtos.Auth;
-using EUniversity.Core.Dtos.University;
-using EUniversity.Core.Models;
 using EUniversity.Core.Models.University;
 using EUniversity.Core.Models.University.Grades;
 using EUniversity.Core.Policy;
 using EUniversity.Core.Services;
 using EUniversity.Infrastructure.Data;
-using EUniversity.Infrastructure.Services.University;
 using Microsoft.Extensions.Logging;
 
 namespace EUniversity.Infrastructure.Services
@@ -57,11 +54,11 @@ namespace EUniversity.Infrastructure.Services
         }
 
         /// <summary>
-        /// Creates many random teachers and students.
+        /// Creates many fake teachers and students.
         /// </summary>
         /// <param name="teachers">Number of teachers to be created.</param>
         /// <param name="students">Number of studetns to be created.</param>
-        public async Task CreateRandomUsersAsync(int teachers = 50, int students = 200)
+        public async Task CreateFakeUsersAsync(int teachers = 50, int students = 200)
         {
             // Do not generate users if there are enough of them already
             int usersCount = await _dbContext.Users.CountAsync();
@@ -101,7 +98,7 @@ namespace EUniversity.Infrastructure.Services
             _logger.LogInformation("Users generation has been finished");
         }
 
-        private async Task CreateRandomEntitiesAsync<T>(Faker<T> faker, int count) where T : class
+        private async Task CreateFakeEntitiesAsync<T>(Faker<T> faker, int count) where T : class
         {
             string typeName = typeof(T).Name;
 
@@ -128,43 +125,43 @@ namespace EUniversity.Infrastructure.Services
         }
 
         /// <summary>
-        /// Creates many random classrooms.
+        /// Creates many fake classrooms.
         /// </summary>
         /// <param name="count">Number of classrooms to be created.</param>
-        public async Task CreateRandomClassroomsAsync(int count = 70)
+        public async Task CreateFakeClassroomsAsync(int count = 70)
         {
             var classroomsFaker = new Faker<Classroom>()
                 .RuleFor(c => c.Name, f =>
                     new string(f.Random.Chars('A', 'Z', f.Random.Number(0, 3))) +
                     new string(f.Random.Chars('0', '9', 5)));
 
-            await CreateRandomEntitiesAsync(classroomsFaker, count);
+            await CreateFakeEntitiesAsync(classroomsFaker, count);
         }
 
         /// <summary>
-        /// Creates many test grades within the range from 1 to count.
+        /// Creates many fake grades within the range from 1 to count.
         /// </summary>
-        public async Task CreateTestGradesAsync(int count = 10)
+        public async Task CreateFakeGradesAsync(int count = 10)
         {
             int grade = 1;
             var gradesFaker = new Faker<Grade>()
                 .RuleFor(g => g.Score, f => grade++)
                 .RuleFor(g => g.Name, (f, g) => g.Score.ToString());
 
-            await CreateRandomEntitiesAsync(gradesFaker, count);
+            await CreateFakeEntitiesAsync(gradesFaker, count);
         }
 
         /// <summary>
         /// Creates many fake courses.
         /// </summary>
         /// <param name="count">Number of courses to be created.</param>
-        public async Task CreateRandomCoursesAsync(int count = 50)
+        public async Task CreateFakeCoursesAsync(int count = 50)
         {
             var coursesFaker = new Faker<Course>()
                 .RuleFor(c => c.Name, f => f.Company.CatchPhrase())
                 .RuleFor(c => c.Description, f => f.Lorem.Sentences(f.Random.Number(1, 3), " "));
 
-            await CreateRandomEntitiesAsync(coursesFaker, count);
+            await CreateFakeEntitiesAsync(coursesFaker, count);
         }
     }
 }

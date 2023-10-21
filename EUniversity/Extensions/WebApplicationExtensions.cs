@@ -72,10 +72,10 @@ namespace EUniversity.Extensions
             var testDataService =
                 scope.ServiceProvider.GetRequiredService<TestDataService>();
 
-            testDataService.CreateRandomUsersAsync().Wait();
-            testDataService.CreateRandomClassroomsAsync().Wait();
-            testDataService.CreateTestGradesAsync().Wait();
-            testDataService.CreateRandomCoursesAsync().Wait();
+            testDataService.CreateFakeUsersAsync().Wait();
+            testDataService.CreateFakeClassroomsAsync().Wait();
+            testDataService.CreateFakeGradesAsync().Wait();
+            testDataService.CreateFakeCoursesAsync().Wait();
 
             return app;
         }
