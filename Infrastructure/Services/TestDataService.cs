@@ -98,7 +98,7 @@ namespace EUniversity.Infrastructure.Services
             await _authService.RegisterManyAsync(usersFaker.GenerateLazy(students), Roles.Student)
                 .ToListAsync();
 
-            _logger.LogInformation("Users were generated");
+            _logger.LogInformation("Users generation has been finished");
         }
 
         private async Task CreateRandomEntitiesAsync<T>(Faker<T> faker, int count) where T : class
@@ -153,5 +153,7 @@ namespace EUniversity.Infrastructure.Services
 
             await CreateRandomEntitiesAsync(gradesFaker, count);
         }
+
+        public asy
     }
 }
