@@ -3,6 +3,7 @@ using EUniversity.Core.Dtos.Auth;
 using EUniversity.Core.Dtos.University;
 using EUniversity.Core.Models;
 using EUniversity.Core.Models.University;
+using EUniversity.Core.Models.University.Grades;
 using EUniversity.Core.Policy;
 using EUniversity.Core.Services;
 using EUniversity.Infrastructure.Data;
@@ -137,8 +138,20 @@ namespace EUniversity.Infrastructure.Services
                     new string(f.Random.Chars('A', 'Z', f.Random.Number(0, 3))) +
                     new string(f.Random.Chars('0', '9', 5)));
 
-            await CreateRandomEntitiesAsync(classroomsFaker, classrooms);
+            await CreateRandomEntitiesAsync(classroomsFaker, count);
         }
 
+        /// <summary>
+        /// Creates many test grades within the range from 1 to count.
+        /// </summary>
+        public async Task CreateTestGradesAsync(int count = 10)
+        {
+            int grade = 1;
+            var gradesFaker = new Faker<Grade>()
+                .RuleFor(g => g.Score, f => grade++)
+                .RuleFor(g => g.Name, (f, g) => g.Score.ToString());
+
+            await CreateRandomEntitiesAsync(gradesFaker, count);
+        }
     }
 }

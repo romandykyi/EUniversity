@@ -74,6 +74,7 @@ namespace EUniversity.Extensions
 
             testDataService.CreateRandomUsersAsync().Wait();
             testDataService.CreateRandomClassroomsAsync().Wait();
+            testDataService.CreateTestGradesAsync().Wait();
 
             return app;
         }
