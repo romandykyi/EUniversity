@@ -139,6 +139,6 @@ namespace EUniversity.Infrastructure.Services
 
             await CreateRandomEntitiesAsync(classroomsFaker, classrooms);
         }
-)
+
     }
 }
