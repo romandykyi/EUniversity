@@ -154,6 +154,17 @@ namespace EUniversity.Infrastructure.Services
             await CreateRandomEntitiesAsync(gradesFaker, count);
         }
 
-        public asy
+        /// <summary>
+        /// Creates many fake courses.
+        /// </summary>
+        /// <param name="count">Number of courses to be created.</param>
+        public async Task CreateRandomCoursesAsync(int count = 50)
+        {
+            var coursesFaker = new Faker<Course>()
+                .RuleFor(c => c.Name, f => f.Company.CatchPhrase())
+                .RuleFor(c => c.Description, f => f.Lorem.Sentences(f.Random.Number(1, 3), " "));
+
+            await CreateRandomEntitiesAsync(coursesFaker, count);
+        }
     }
 }
