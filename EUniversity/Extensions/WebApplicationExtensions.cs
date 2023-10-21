@@ -60,7 +60,7 @@ namespace EUniversity.Extensions
             var testDataService =
                 scope.ServiceProvider.GetRequiredService<TestDataService>();
 
-            testDataService.CreateTestUsers().Wait();
+            testDataService.CreateTestUsersAsync().Wait();
 
             return app;
         }
@@ -72,8 +72,10 @@ namespace EUniversity.Extensions
             var testDataService =
                 scope.ServiceProvider.GetRequiredService<TestDataService>();
 
-            testDataService.CreateRandomUsers().Wait();
-            testDataService.CreateRandomClassrooms().Wait();
+            testDataService.CreateFakeUsersAsync().Wait();
+            testDataService.CreateFakeClassroomsAsync().Wait();
+            testDataService.CreateFakeGradesAsync().Wait();
+            testDataService.CreateFakeCoursesAsync().Wait();
 
             return app;
         }
