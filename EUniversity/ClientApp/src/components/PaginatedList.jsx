@@ -110,20 +110,26 @@ const PaginatedList =
         }
     };
 
-    const renderPageNumbersForSelect = () => {
-        const pageNumbers = [];
-        for (let i = 1; i <= totalPages; i++) {
-            pageNumbers.push(
-                <option key={i} value={i}>
-                    {i}
-                </option>
-            );
-        }
-        return pageNumbers;
-    };
-
     return (
         <>
+            <div className="select__container">
+                <select
+                    className="form-select"
+                    id="floatingSelect"
+                    value = {itemsPerPage}
+                    onChange={e => {
+                        setItemsPerPage(e.target.value);
+                        if (currentPage > totalPages) {
+                            setCurrentPage(totalPages);
+                        }
+                    }}>
+                    <option defaultValue disabled>Items per page:</option>
+                    <option value={5}>5</option>
+                    <option value={10}>10</option>
+                    <option value={20}>20</option>
+                    <option value={100}>100</option>
+                </select>
+            </div>
             {
                 isLoading
                 ? <Loader/>
@@ -140,46 +146,34 @@ const PaginatedList =
             }
             <div className="pagination__panel">
                 <div className="pagination__main">
-                    <Button onClick={handlePrev} disabled={currentPage === 1}>
-                        Prev
-                    </Button>
                     {
-                        windowSize.width > 615
-                            ?  <ul className="pagination">
-                                {renderPageNumbers()}
-                            </ul>
-                            : <select
-                                style={{margin:"0 10px"}}
-                                className="form-select"
-                                value={currentPage}
-                                onChange={e => setCurrentPage(e.target.value)}>
-                                {renderPageNumbersForSelect().map((pageNumber, index) => (
-                                    <option key={index} value={pageNumber.key}>
-                                        {pageNumber.key}
-                                    </option>
-                                ))}
-                            </select>
+                        windowSize.width < 450
+                        ? <>
+                                <div className="pagination">
+                                    {renderPageNumbers()}
+                                </div>
+                                <div className="pagination__buttons">
+                                    <Button onClick={handlePrev} disabled={currentPage === 1}>
+                                        Prev
+                                    </Button>
+                                    <Button onClick={handleNext} disabled={currentPage === totalPages}>
+                                        Next
+                                    </Button>
+                                </div>
+                            </>
+                        : <>
+                                <Button onClick={handlePrev} disabled={currentPage === 1}>
+                                    Prev
+                                </Button>
+                                <div className="pagination">
+                                    {renderPageNumbers()}
+                                </div>
+                                <Button onClick={handleNext} disabled={currentPage === totalPages}>
+                                    Next
+                                </Button>
+                          </>
                     }
-                    <Button onClick={handleNext} disabled={currentPage === totalPages}>
-                        Next
-                    </Button>
                 </div>
-                <select
-                    className="form-select"
-                    id="floatingSelect"
-                    value = {itemsPerPage}
-                    onChange={e => {
-                        setItemsPerPage(e.target.value);
-                        if (currentPage > totalPages) {
-                            setCurrentPage(totalPages);
-                    }
-                }}>
-                    <option defaultValue disabled>Items per page:</option>
-                    <option value={5}>5</option>
-                    <option value={10}>10</option>
-                    <option value={20}>20</option>
-                    <option value={100}>100</option>
-                </select>
             </div>
         </>
     );
