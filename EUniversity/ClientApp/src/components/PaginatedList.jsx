@@ -72,7 +72,6 @@ const PaginatedList =
 
 
     const renderPageNumbers = () => {
-        console.log(totalPages);
         const pageNumbers = [];
         if (totalPages <= 7) {
             addPageButtons(1, totalPages, pageNumbers);
