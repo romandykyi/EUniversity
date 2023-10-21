@@ -31,7 +31,8 @@ const Table = ({users, setUsers, postUsers, setPostUsers}) => {
     }
 
     return (
-        <div className={`${styles.tableDiv}`}>
+        <>
+            <div className={`${styles.tableDiv} table-container`}>
             <table className={`table ${styles.table}`}>
                 <thead>
                 <tr>
@@ -91,8 +92,9 @@ const Table = ({users, setUsers, postUsers, setPostUsers}) => {
                 ))}
                 </tbody>
             </table>
-            <Button onClick={handleAddUserClick}>Add new user</Button>
         </div>
+            <Button onClick={handleAddUserClick}>Add new user</Button>
+        </>
     );
 };
 
