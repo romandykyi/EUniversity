@@ -1,9 +1,13 @@
 ﻿using Bogus;
 using EUniversity.Core.Dtos.Auth;
 using EUniversity.Core.Dtos.University;
+using EUniversity.Core.Models;
+using EUniversity.Core.Models.University;
 using EUniversity.Core.Policy;
 using EUniversity.Core.Services;
+using EUniversity.Infrastructure.Data;
 using EUniversity.Infrastructure.Services.University;
+using Microsoft.Extensions.Logging;
 
 namespace EUniversity.Infrastructure.Services
 {
@@ -14,7 +18,8 @@ namespace EUniversity.Infrastructure.Services
     public class TestDataService
     {
         private readonly IAuthService _authService;
-        private readonly IClassroomsService _classroomsService;
+        private readonly ApplicationDbContext _dbContext;
+        private readonly ILogger<TestDataService> _logger;
 
         /// <summary>
         /// Password that is assigned to all test users(but not for fake users).
@@ -25,10 +30,12 @@ namespace EUniversity.Infrastructure.Services
         /// </summary>
         public const int FakeDataGeneratorSeed = 70222500;
 
-        public TestDataService(IAuthService authService, IClassroomsService classroomsService)
+        public TestDataService(IAuthService authService,
+            ApplicationDbContext dbContext, ILogger<TestDataService> logger)
         {
             _authService = authService;
-            _classroomsService = classroomsService;
+            _dbContext = dbContext;
+            _logger = logger;
         }
 
         /// <summary>
@@ -55,6 +62,16 @@ namespace EUniversity.Infrastructure.Services
         /// <param name="students">Number of studetns to be created.</param>
         public async Task CreateRandomUsers(int teachers = 50, int students = 200)
         {
+            // Do not generate users if there are enough of them already
+            int usersCount = await _dbContext.Users.CountAsync();
+            if (usersCount >= teachers + students)
+            {
+                _logger.LogInformation("Users generation was skipped: There are {usersCount} users already", usersCount);
+                return;
+            }
+
+            _logger.LogInformation("Users generation has been started");
+
             static RegisterDto GenerateUser(Faker faker)
             {
                 string firstName = faker.Name.FirstName();
@@ -72,11 +89,41 @@ namespace EUniversity.Infrastructure.Services
                 .CustomInstantiator(GenerateUser);
 
             // Register teachers
+            _logger.LogInformation("Generating {teachers} teachers", teachers);
             await _authService.RegisterManyAsync(usersFaker.GenerateLazy(teachers), Roles.Teacher)
                 .ToListAsync();
             // Register students
+            _logger.LogInformation("Generating {students} teachers", students);
             await _authService.RegisterManyAsync(usersFaker.GenerateLazy(students), Roles.Student)
                 .ToListAsync();
+
+            _logger.LogInformation("Users were generated");
+        }
+
+        private async Task CreateRandomEntities<T>(Faker<T> faker, int count) where T : class
+        {
+            string typeName = typeof(T).Name;
+
+            // Do not generate entities if there are enough of them already
+            int entitiesCount = await _dbContext.Set<T>().CountAsync();
+            if (entitiesCount >= count)
+            {
+                _logger.LogInformation("Generation of '{typeName}' entities was skipped:" +
+                    " There are {entitiesCount} entities of this type already",
+                    typeName, entitiesCount);
+                return;
+            }
+
+            Randomizer.Seed = new(FakeDataGeneratorSeed);
+
+            foreach (var entity in faker.GenerateLazy(count))
+            {
+                _dbContext.Add(entity);
+            }
+            await _dbContext.SaveChangesAsync();
+
+            _logger.LogInformation("{count} entities of type '{typeName}' have been generated",
+                count, typeName);
         }
 
         /// <summary>
@@ -85,17 +132,12 @@ namespace EUniversity.Infrastructure.Services
         /// <param name="classrooms">Number of classrooms to be created.</param>
         public async Task CreateRandomClassrooms(int classrooms = 70)
         {
-            Randomizer.Seed = new(FakeDataGeneratorSeed);
-            var classroomsFaker = new Faker<CreateClassroomDto>()
-                .CustomInstantiator(f => new CreateClassroomDto(
+            var classroomsFaker = new Faker<Classroom>()
+                .RuleFor(c => c.Name, f =>
                     new string(f.Random.Chars('A', 'Z', f.Random.Number(0, 3))) +
-                    new string(f.Random.Chars('0', '9', 5))
-                    ));
+                    new string(f.Random.Chars('0', '9', 5)));
 
-            foreach (var classroom in classroomsFaker.GenerateLazy(classrooms))
-            {
-                await _classroomsService.CreateAsync(classroom);
-            }
+            await CreateRandomEntities(classroomsFaker, classrooms);
         }
     }
 }
