@@ -120,9 +120,9 @@ To streamline the testing and development process, our project includes a "Fake 
 dotnet run --fakedata
 ```
 
-This feature utilizes the `Bogus` library to create random data, ensuring that you have a realistic test environment for your application. However, please be aware that this functionality is not intended for use in production environments. Data generation is consistent, so executing this command more than once may create duplicate data. 
+This feature utilizes the `Bogus` library to create random data, ensuring that you have a realistic test environment for your application. However, please be aware that this functionality is not intended for use in production environments.
 
-**Note:** running the following command may extend the application launch time.
+**Note:** Duplicate data will may be generated if test entities are removed. If the existing test data remains untouched, executing this command won't result in duplicate records, ensuring data consistency during testing. Please be aware that running this command may increase the application's launch time due to the data generation process.
 
 ## Test users
 
