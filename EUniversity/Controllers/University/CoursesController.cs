@@ -32,10 +32,12 @@ namespace EUniversity.Controllers.University
         /// </remarks>
         /// <response code="200">Returns requested page with courses.</response>
         /// <response code="400">Bad request</response>
+        /// <response code="401">Unauthorized user call</response>
         [HttpGet]
         [Authorize(Policies.Default)]
         [ProducesResponseType(typeof(Page<ViewCourseDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> GetCoursesPageAsync([FromQuery] PaginationProperties properties)
         {
             return Ok(await _coursesService.GetPageAsync(properties));
@@ -46,11 +48,13 @@ namespace EUniversity.Controllers.University
         /// </summary>
         /// <response code="200">Returns requested course</response>
         /// <response code="400">Bad request</response>
+        /// <response code="401">Unauthorized user call</response>
         /// <response code="404">Course does not exist</response>
         [HttpGet("{id:int}", Name = nameof(GetCourseByIdAsync))]
         [Authorize(Policies.Default)]
         [ProducesResponseType(typeof(ViewCourseDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetCourseByIdAsync([FromRoute] int id)
         {

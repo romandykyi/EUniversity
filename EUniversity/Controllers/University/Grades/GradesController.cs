@@ -31,10 +31,12 @@ namespace EUniversity.Controllers.University
         /// </remarks>
         /// <response code="200">Returns requested page with grades.</response>
         /// <response code="400">Bad request</response>
+        /// <response code="401">Unauthorized user call</response>
         [HttpGet]
         [Authorize(Policies.Default)]
         [ProducesResponseType(typeof(Page<CreateGradeDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> GetGradesPageAsync([FromQuery] PaginationProperties properties)
         {
             return Ok(await _gradesService.GetPageAsync(properties));
@@ -45,11 +47,13 @@ namespace EUniversity.Controllers.University
         /// </summary>
         /// <response code="200">Returns requested grade</response>
         /// <response code="400">Bad request</response>
+        /// <response code="401">Unauthorized user call</response>
         /// <response code="404">Grade does not exist</response>
         [HttpGet("{id:int}", Name = nameof(GetGradeByIdAsync))]
         [Authorize(Policies.Default)]
         [ProducesResponseType(typeof(CreateGradeDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetGradeByIdAsync([FromRoute] int id)
         {
