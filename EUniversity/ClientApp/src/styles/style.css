@@ -89,9 +89,14 @@
   justify-content: center;
   max-width: 400px;
 }
-.pagination li {
+.pagination__panelbutton {
   cursor: pointer;
   padding: 5px 10px;
+  border-radius: 10px;
+  border: none;
+  outline: none;
+  background: #ffffff;
+  color: black;
 }
 .pagination__main {
   display: flex;
@@ -104,10 +109,6 @@
   margin-top: 20px;
   align-items: center;
   margin-bottom: 30px;
-}
-.pagination__panel button {
-  color: white;
-  background: blue;
 }
 .pagination__panel button:focus {
   border: 5px solid #c2dbfe;

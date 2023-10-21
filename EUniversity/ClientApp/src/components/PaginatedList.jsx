@@ -72,43 +72,41 @@ const PaginatedList =
 
 
     const renderPageNumbers = () => {
+        console.log(totalPages);
         const pageNumbers = [];
-        const maxPagesVisible = 7;
-        const maxBoundaryPagesVisible = 5;
-        if (totalPages <= maxPagesVisible) {
+        if (totalPages <= 7) {
             addPageButtons(1, totalPages, pageNumbers);
         }
-        else if (currentPage < maxBoundaryPagesVisible) {
-            addPageButtons(1, maxBoundaryPagesVisible, pageNumbers);
+        else if (currentPage < 5) {
+            addPageButtons(1, 5, pageNumbers);
             addThreeDotsButtons('right-three-dots-pagination', pageNumbers);
-            addPageButtons(totalPages - 1 + 1, totalPages, pageNumbers);
+            addPageButtons(totalPages, totalPages, pageNumbers);
         }
-        else if (currentPage > totalPages - maxBoundaryPagesVisible + 1) {
+        else if (currentPage > totalPages - 4) {
             addPageButtons(1, 1, pageNumbers);
             addThreeDotsButtons('left-three-dots-pagination', pageNumbers);
-            addPageButtons(totalPages - maxBoundaryPagesVisible + 1, totalPages, pageNumbers);
+            addPageButtons(totalPages - 4, totalPages, pageNumbers);
         }
         else {
             addPageButtons(1, 1, pageNumbers);
             addThreeDotsButtons('left-three-dots-pagination', pageNumbers);
-            const offset = 1;
-            const start = currentPage - Math.floor(offset);
-            const end = currentPage + Math.ceil(offset);
+            const start = currentPage - 1;
+            const end = currentPage + 1;
             addPageButtons(start, end, pageNumbers);
             addThreeDotsButtons('right-three-dots-pagination', pageNumbers);
-            addPageButtons(totalPages - 1 + 1, totalPages,pageNumbers);
+            addPageButtons(totalPages, totalPages,pageNumbers);
         }
         return pageNumbers;
     }
 
     const addThreeDotsButtons = (key, pageNumbers) => {
-        pageNumbers.push(<li key={key}>...</li>);
+        pageNumbers.push(<button disabled className="pagination__panelbutton" key={key}>...</button>);
     };
 
     const addPageButtons = (start, end, pageNumbers) => {
         for (let i = start; i <= end; i++) {
             const clName = i === currentPage ? 'pagination__chosen' : '';
-            pageNumbers.push(<li key={i} className={clName} onClick={() => paginate(i)}>{i}</li>);
+            pageNumbers.push(<button key={i} className={`${clName} pagination__panelbutton`} onClick={() => paginate(i)}>{i}</button>);
         }
     };
 
@@ -154,7 +152,7 @@ const PaginatedList =
                                 style={{margin:"0 10px"}}
                                 className="form-select"
                                 value={currentPage}
-                                onChange={(e) => setCurrentPage(e.target.value)}>
+                                onChange={e => setCurrentPage(e.target.value)}>
                                 {renderPageNumbersForSelect().map((pageNumber, index) => (
                                     <option key={index} value={pageNumber.key}>
                                         {pageNumber.key}
