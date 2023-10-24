@@ -3,6 +3,9 @@
     margin: 0;
     padding: 0;
 }
+.table-container {
+    overflow-x: auto;
+}
 .form {
     &__title {
         font-size: 40px;
@@ -90,9 +93,18 @@
     align-items: center;
     justify-content: center;
     max-width: 400px;
-    & li {
+    &__panelbutton {
         cursor: pointer;
         padding: 5px 10px;
+        border-radius: 10px;
+        border:none;
+        outline:none;
+        background: #ffffff;
+        color: black;
+    }
+    &__main {
+        display: flex;
+        align-items: center;
     }
     &__panel {
         display: flex;
@@ -100,14 +112,71 @@
         justify-content: center;
         margin-top: 20px;
         align-items: center;
-        & button {
-            color:white;
-            background: blue;
+        margin-bottom: 30px;
+
+        & button:focus {
+            border: 5px solid #c2dbfe;
+        }
+        & select {
+            width: auto;
+            margin-left: 10px;
         }
     }
     &__chosen {
         background: blue;
         border-radius: 10px;
         color: white;
+    }
+}
+.select {
+    &__container {
+        display: flex;
+        justify-content: flex-end;
+        margin-bottom: 15px;
+        & select {
+            max-width:140px;
+        }
+    }
+}
+@media (max-width: 400px) {
+    .pagination {
+        &__main {
+            width: 100%;
+            justify-content: space-between;
+        }
+        &__panel {
+            flex-direction: column;
+            gap: 20px;
+            & select {
+                margin: 0;
+            }
+        }
+    }
+}
+@media (max-width: 450px) {
+    .pagination {
+        width: 100%;
+        justify-content: space-between;
+        & button {
+            font-size: 18px;
+        }
+        &__main {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+        }
+        &__buttons {
+            margin-top: 30px;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 20px;
+        }
+    }
+}
+
+@media (max-width: 320px) {
+    .pagination {
+        gap: 0px;
     }
 }
