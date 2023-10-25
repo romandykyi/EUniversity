@@ -42,10 +42,5 @@ namespace EUniversity.Core.Services
                 _password = password;
             }
         }
-
-        public static implicit operator IdentityResult(RegisterResult registerResult)
-        {
-            return registerResult._identityResult;
-        }
     }
 }
