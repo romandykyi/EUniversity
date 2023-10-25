@@ -1,18 +1,17 @@
 ﻿using EUniversity.Core.Dtos.Auth;
 using FluentValidation;
 
-namespace EUniversity.Core.Validation.Auth
+namespace EUniversity.Core.Validation.Auth;
+
+public class LogInDtoValidator : AbstractValidator<LogInDto>
 {
-    public class LogInDtoValidator : AbstractValidator<LogInDto>
+    public LogInDtoValidator()
     {
-        public LogInDtoValidator()
-        {
-            RuleFor(l => l.UserName).NotEmpty()
-                .WithErrorCode(ValidationErrorCodes.PropertyRequired)
-                .WithMessage("Username is required");
-            RuleFor(l => l.Password).NotEmpty()
-                .WithErrorCode(ValidationErrorCodes.PropertyRequired)
-                .WithMessage("Password is required");
-        }
+        RuleFor(l => l.UserName).NotEmpty()
+            .WithErrorCode(ValidationErrorCodes.PropertyRequired)
+            .WithMessage("Username is required");
+        RuleFor(l => l.Password).NotEmpty()
+            .WithErrorCode(ValidationErrorCodes.PropertyRequired)
+            .WithMessage("Password is required");
     }
 }

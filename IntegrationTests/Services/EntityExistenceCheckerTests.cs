@@ -1,7 +1,5 @@
-﻿using EUniversity.Core.Models;
-using EUniversity.Core.Models.University;
+﻿using EUniversity.Core.Models.University;
 using EUniversity.Core.Services;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace EUniversity.IntegrationTests.Services;

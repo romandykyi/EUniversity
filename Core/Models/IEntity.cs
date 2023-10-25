@@ -1,7 +1,6 @@
-﻿namespace EUniversity.Core.Models
+﻿namespace EUniversity.Core.Models;
+
+public interface IEntity<T> where T : IEquatable<T>
 {
-    public interface IEntity<T> where T : IEquatable<T>
-    {
-        public T Id { get; set; }
-    }
+    public T Id { get; set; }
 }

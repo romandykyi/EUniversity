@@ -4,89 +4,88 @@ using EUniversity.Core.Validation;
 using EUniversity.Core.Validation.University;
 using FluentValidation.TestHelper;
 
-namespace EUniversity.Tests.Validation.University
+namespace EUniversity.Tests.Validation.University;
+
+public class CourseCreateDtoValidatorTests
 {
-    public class CourseCreateDtoValidatorTests
+    private CourseCreateDtoValidator _validator;
+
+    private const string DefaultName = "Course";
+    private const string DefaultDescription = "Course description. . .";
+
+    [OneTimeSetUp]
+    public void OneTimeSetUp()
     {
-        private CourseCreateDtoValidator _validator;
+        _validator = new();
+    }
 
-        private const string DefaultName = "Course";
-        private const string DefaultDescription = "Course description. . .";
+    [Test]
+    public void Dto_Valid_IsValid()
+    {
+        // Arrange
+        CourseCreateDto dto = new(DefaultName, DefaultDescription);
 
-        [OneTimeSetUp]
-        public void OneTimeSetUp()
-        {
-            _validator = new();
-        }
+        // Act
+        var result = _validator.TestValidate(dto);
 
-        [Test]
-        public void Dto_Valid_IsValid()
-        {
-            // Arrange
-            CourseCreateDto dto = new(DefaultName, DefaultDescription);
+        // Assert
+        result.ShouldNotHaveAnyValidationErrors();
+    }
 
-            // Act
-            var result = _validator.TestValidate(dto);
+    [Test]
+    public void Name_TooLarge_IsInvalid()
+    {
+        // Arrange
+        CourseCreateDto dto = new(new string('0', Course.MaxNameLength + 1), DefaultDescription);
 
-            // Assert
-            result.ShouldNotHaveAnyValidationErrors();
-        }
+        // Act
+        var result = _validator.TestValidate(dto);
 
-        [Test]
-        public void Name_TooLarge_IsInvalid()
-        {
-            // Arrange
-            CourseCreateDto dto = new(new string('0', Course.MaxNameLength + 1), DefaultDescription);
+        // Assert
+        result.ShouldHaveValidationErrorFor(dto => dto.Name)
+            .WithErrorCode(ValidationErrorCodes.PropertyTooLarge);
+    }
 
-            // Act
-            var result = _validator.TestValidate(dto);
+    [Test]
+    public void Name_Empty_IsInvalid()
+    {
+        // Arrange
+        CourseCreateDto dto = new(string.Empty, DefaultDescription);
 
-            // Assert
-            result.ShouldHaveValidationErrorFor(dto => dto.Name)
-                .WithErrorCode(ValidationErrorCodes.PropertyTooLarge);
-        }
+        // Act
+        var result = _validator.TestValidate(dto);
 
-        [Test]
-        public void Name_Empty_IsInvalid()
-        {
-            // Arrange
-            CourseCreateDto dto = new(string.Empty, DefaultDescription);
+        // Assert
+        result.ShouldHaveValidationErrorFor(dto => dto.Name)
+            .WithErrorCode(ValidationErrorCodes.PropertyRequired);
+    }
 
-            // Act
-            var result = _validator.TestValidate(dto);
+    [Test]
+    [TestCase(null)]
+    [TestCase("")]
+    public void Description_NullOrEmpty_IsValid(string? description)
+    {
+        // Arrange
+        CourseCreateDto dto = new(DefaultName, description);
 
-            // Assert
-            result.ShouldHaveValidationErrorFor(dto => dto.Name)
-                .WithErrorCode(ValidationErrorCodes.PropertyRequired);
-        }
+        // Act
+        var result = _validator.TestValidate(dto);
 
-        [Test]
-        [TestCase(null)]
-        [TestCase("")]
-        public void Description_NullOrEmpty_IsValid(string? description)
-        {
-            // Arrange
-            CourseCreateDto dto = new(DefaultName, description);
+        // Assert
+        result.ShouldNotHaveAnyValidationErrors();
+    }
 
-            // Act
-            var result = _validator.TestValidate(dto);
+    [Test]
+    public void Description_TooLarge_IsInvalid()
+    {
+        // Arrange
+        CourseCreateDto dto = new(DefaultName, new string('0', Course.MaxDescriptionLength + 1));
 
-            // Assert
-            result.ShouldNotHaveAnyValidationErrors();
-        }
+        // Act
+        var result = _validator.TestValidate(dto);
 
-        [Test]
-        public void Description_TooLarge_IsInvalid()
-        {
-            // Arrange
-            CourseCreateDto dto = new(DefaultName, new string('0', Course.MaxDescriptionLength + 1));
-
-            // Act
-            var result = _validator.TestValidate(dto);
-
-            // Assert
-            result.ShouldHaveValidationErrorFor(dto => dto.Description)
-                .WithErrorCode(ValidationErrorCodes.PropertyTooLarge);
-        }
+        // Assert
+        result.ShouldHaveValidationErrorFor(dto => dto.Description)
+            .WithErrorCode(ValidationErrorCodes.PropertyTooLarge);
     }
 }
