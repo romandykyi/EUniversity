@@ -1,11 +1,13 @@
 ﻿using EUniversity.Core.Models;
 using EUniversity.Core.Policy;
+using EUniversity.Core.Services;
 using EUniversity.Core.Services.Auth;
 using EUniversity.Core.Services.University;
 using EUniversity.Core.Services.Users;
 using EUniversity.Core.Validation.Auth;
 using EUniversity.Infrastructure.Data;
 using EUniversity.Infrastructure.Identity;
+using EUniversity.Infrastructure.Services;
 using EUniversity.Infrastructure.Services.Auth;
 using EUniversity.Infrastructure.Services.Test;
 using EUniversity.Infrastructure.Services.University;
@@ -152,6 +154,8 @@ namespace EUniversity.Extensions
                 .AddScoped<IAuthService, AuthService>()
                 .AddScoped<IAuthHelper, AuthHelper>()
                 .AddScoped<IUsersService, UsersService>()
+                // General purpose services:
+                .AddScoped<IEntityExistenceChecker, EntityExistenceChecker>()
                 // University services:
                 .AddScoped<IClassroomsService, ClassroomsService>()
                 .AddScoped<IGradesService, GradesService>()
