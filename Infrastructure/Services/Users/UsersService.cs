@@ -22,6 +22,7 @@ public class UsersService : IUsersService
         PaginationProperties? properties)
     {
         return await query
+            .AsNoTracking()
             .ToPageAsync<ApplicationUser, UserViewDto>(properties);
     }
 
