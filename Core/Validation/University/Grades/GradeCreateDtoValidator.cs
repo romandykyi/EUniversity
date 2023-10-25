@@ -4,9 +4,9 @@ using FluentValidation;
 
 namespace EUniversity.Core.Validation.University.Grades
 {
-    public class GradeDtoValidator : AbstractValidator<CreateGradeDto>
+    public class GradeCreateDtoValidator : AbstractValidator<GradeCreateDto>
     {
-        public GradeDtoValidator()
+        public GradeCreateDtoValidator()
         {
             RuleFor(c => c.Name)
                 .NotEmpty()

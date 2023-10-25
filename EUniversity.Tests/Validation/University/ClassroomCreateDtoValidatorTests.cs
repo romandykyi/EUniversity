@@ -6,9 +6,9 @@ using FluentValidation.TestHelper;
 
 namespace EUniversity.Tests.Validation.University
 {
-    public class CreateClassroomDtoValidatorTests
+    public class ClassroomCreateDtoValidatorTests
     {
-        private CreateClassroomDtoValidator _validator;
+        private ClassroomCreateDtoValidator _validator;
 
         [OneTimeSetUp]
         public void OneTimeSetUp()
@@ -20,7 +20,7 @@ namespace EUniversity.Tests.Validation.University
         public void Name_Valid_IsValid()
         {
             // Arrange
-            CreateClassroomDto dto = new("Room 115");
+            ClassroomCreateDto dto = new("Room 115");
 
             // Act
             var result = _validator.TestValidate(dto);
@@ -33,7 +33,7 @@ namespace EUniversity.Tests.Validation.University
         public void Name_TooLarge_IsInvalid()
         {
             // Arrange
-            CreateClassroomDto dto = new(new string('0', Classroom.MaxNameLength + 1));
+            ClassroomCreateDto dto = new(new string('0', Classroom.MaxNameLength + 1));
 
             // Act
             var result = _validator.TestValidate(dto);
@@ -47,7 +47,7 @@ namespace EUniversity.Tests.Validation.University
         public void Name_Empty_IsInvalid()
         {
             // Arrange
-            CreateClassroomDto dto = new(string.Empty);
+            ClassroomCreateDto dto = new(string.Empty);
 
             // Act
             var result = _validator.TestValidate(dto);

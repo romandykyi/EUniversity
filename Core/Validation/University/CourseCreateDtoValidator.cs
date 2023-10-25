@@ -4,9 +4,9 @@ using FluentValidation;
 
 namespace EUniversity.Core.Validation.University
 {
-    public class CreateCourseDtoValidator : AbstractValidator<CreateCourseDto>
+    public class CourseCreateDtoValidator : AbstractValidator<CourseCreateDto>
     {
-        public CreateCourseDtoValidator()
+        public CourseCreateDtoValidator()
         {
             RuleFor(x => x.Name)
                 .NotEmpty()

@@ -34,7 +34,7 @@ namespace EUniversity.Controllers.University
         /// <response code="401">Unauthorized user call</response>
         [HttpGet]
         [Authorize(Policies.Default)]
-        [ProducesResponseType(typeof(Page<ViewClassroomDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Page<ClassroomViewDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> GetClassroomsPageAsync([FromQuery] PaginationProperties properties)
@@ -51,7 +51,7 @@ namespace EUniversity.Controllers.University
         /// <response code="404">Classroom does not exist</response>
         [HttpGet("{id:int}", Name = nameof(GetClassroomByIdAsync))]
         [Authorize(Policies.Default)]
-        [ProducesResponseType(typeof(ViewClassroomDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ClassroomViewDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -74,7 +74,7 @@ namespace EUniversity.Controllers.University
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        public async Task<IActionResult> CreateClassroomAsync([FromBody] CreateClassroomDto dto)
+        public async Task<IActionResult> CreateClassroomAsync([FromBody] ClassroomCreateDto dto)
         {
             int id = await _classroomsService.CreateAsync(dto);
             var routeValues = new { id };
@@ -99,7 +99,7 @@ namespace EUniversity.Controllers.University
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> UpdateClassroomAsync([FromRoute] int id,
-            [FromBody] CreateClassroomDto dto)
+            [FromBody] ClassroomCreateDto dto)
         {
             var result = await _classroomsService.UpdateAsync(id, dto);
             return result ? NoContent() : NotFound();

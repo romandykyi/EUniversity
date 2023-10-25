@@ -6,9 +6,9 @@ using FluentValidation.TestHelper;
 
 namespace EUniversity.Tests.Validation.University
 {
-    public class CreateCourseDtoValidatorTests
+    public class CourseCreateDtoValidatorTests
     {
-        private CreateCourseDtoValidator _validator;
+        private CourseCreateDtoValidator _validator;
 
         private const string DefaultName = "Course";
         private const string DefaultDescription = "Course description. . .";
@@ -23,7 +23,7 @@ namespace EUniversity.Tests.Validation.University
         public void Dto_Valid_IsValid()
         {
             // Arrange
-            CreateCourseDto dto = new(DefaultName, DefaultDescription);
+            CourseCreateDto dto = new(DefaultName, DefaultDescription);
 
             // Act
             var result = _validator.TestValidate(dto);
@@ -36,7 +36,7 @@ namespace EUniversity.Tests.Validation.University
         public void Name_TooLarge_IsInvalid()
         {
             // Arrange
-            CreateCourseDto dto = new(new string('0', Course.MaxNameLength + 1), DefaultDescription);
+            CourseCreateDto dto = new(new string('0', Course.MaxNameLength + 1), DefaultDescription);
 
             // Act
             var result = _validator.TestValidate(dto);
@@ -50,7 +50,7 @@ namespace EUniversity.Tests.Validation.University
         public void Name_Empty_IsInvalid()
         {
             // Arrange
-            CreateCourseDto dto = new(string.Empty, DefaultDescription);
+            CourseCreateDto dto = new(string.Empty, DefaultDescription);
 
             // Act
             var result = _validator.TestValidate(dto);
@@ -66,7 +66,7 @@ namespace EUniversity.Tests.Validation.University
         public void Description_NullOrEmpty_IsValid(string? description)
         {
             // Arrange
-            CreateCourseDto dto = new(DefaultName, description);
+            CourseCreateDto dto = new(DefaultName, description);
 
             // Act
             var result = _validator.TestValidate(dto);
@@ -79,7 +79,7 @@ namespace EUniversity.Tests.Validation.University
         public void Description_TooLarge_IsInvalid()
         {
             // Arrange
-            CreateCourseDto dto = new(DefaultName, new string('0', Course.MaxDescriptionLength + 1));
+            CourseCreateDto dto = new(DefaultName, new string('0', Course.MaxDescriptionLength + 1));
 
             // Act
             var result = _validator.TestValidate(dto);

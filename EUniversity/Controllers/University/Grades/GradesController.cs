@@ -34,7 +34,7 @@ namespace EUniversity.Controllers.University
         /// <response code="401">Unauthorized user call</response>
         [HttpGet]
         [Authorize(Policies.Default)]
-        [ProducesResponseType(typeof(Page<CreateGradeDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Page<GradeCreateDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> GetGradesPageAsync([FromQuery] PaginationProperties properties)
@@ -51,7 +51,7 @@ namespace EUniversity.Controllers.University
         /// <response code="404">Grade does not exist</response>
         [HttpGet("{id:int}", Name = nameof(GetGradeByIdAsync))]
         [Authorize(Policies.Default)]
-        [ProducesResponseType(typeof(CreateGradeDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(GradeCreateDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -74,7 +74,7 @@ namespace EUniversity.Controllers.University
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        public async Task<IActionResult> CreateGradeAsync([FromBody] CreateGradeDto dto)
+        public async Task<IActionResult> CreateGradeAsync([FromBody] GradeCreateDto dto)
         {
             int id = await _gradesService.CreateAsync(dto);
             var routeValues = new { id };
@@ -99,7 +99,7 @@ namespace EUniversity.Controllers.University
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> UpdateGradeAsync([FromRoute] int id,
-            [FromBody] CreateGradeDto dto)
+            [FromBody] GradeCreateDto dto)
         {
             var result = await _gradesService.UpdateAsync(id, dto);
             return result ? NoContent() : NotFound();

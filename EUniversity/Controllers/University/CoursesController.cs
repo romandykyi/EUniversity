@@ -34,7 +34,7 @@ namespace EUniversity.Controllers.University
         /// <response code="401">Unauthorized user call</response>
         [HttpGet]
         [Authorize(Policies.Default)]
-        [ProducesResponseType(typeof(Page<ViewCourseDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Page<CourseViewDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> GetCoursesPageAsync([FromQuery] PaginationProperties properties)
@@ -51,7 +51,7 @@ namespace EUniversity.Controllers.University
         /// <response code="404">Course does not exist</response>
         [HttpGet("{id:int}", Name = nameof(GetCourseByIdAsync))]
         [Authorize(Policies.Default)]
-        [ProducesResponseType(typeof(ViewCourseDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(CourseViewDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -74,7 +74,7 @@ namespace EUniversity.Controllers.University
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        public async Task<IActionResult> CreateCourseAsync([FromBody] CreateCourseDto dto)
+        public async Task<IActionResult> CreateCourseAsync([FromBody] CourseCreateDto dto)
         {
             int id = await _coursesService.CreateAsync(dto);
             var routeValues = new { id };
@@ -99,7 +99,7 @@ namespace EUniversity.Controllers.University
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> UpdateCourseAsync([FromRoute] int id,
-            [FromBody] CreateCourseDto dto)
+            [FromBody] CourseCreateDto dto)
         {
             var result = await _coursesService.UpdateAsync(id, dto);
             return result ? NoContent() : NotFound();

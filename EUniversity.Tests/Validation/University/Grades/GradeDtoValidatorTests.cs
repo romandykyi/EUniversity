@@ -8,7 +8,7 @@ namespace EUniversity.Tests.Validation.University.Grades
 {
     internal class GradeDtoValidatorTests
     {
-        private GradeDtoValidator _validator;
+        private GradeCreateDtoValidator _validator;
 
         public const int DefaultScore = 5;
         public readonly string DefaultName = "5";
@@ -23,7 +23,7 @@ namespace EUniversity.Tests.Validation.University.Grades
         public void Name_Valid_IsValid()
         {
             // Arrange
-            CreateGradeDto dto = new(DefaultName, DefaultScore);
+            GradeCreateDto dto = new(DefaultName, DefaultScore);
 
             // Act
             var result = _validator.TestValidate(dto);
@@ -36,7 +36,7 @@ namespace EUniversity.Tests.Validation.University.Grades
         public void Name_TooLarge_IsInvalid()
         {
             // Arrange
-            CreateGradeDto dto = new(new string('0', Grade.MaxNameLength + 1), DefaultScore);
+            GradeCreateDto dto = new(new string('0', Grade.MaxNameLength + 1), DefaultScore);
 
             // Act
             var result = _validator.TestValidate(dto);
@@ -50,7 +50,7 @@ namespace EUniversity.Tests.Validation.University.Grades
         public void Name_Empty_IsInvalid()
         {
             // Arrange
-            CreateGradeDto dto = new(string.Empty, DefaultScore);
+            GradeCreateDto dto = new(string.Empty, DefaultScore);
 
             // Act
             var result = _validator.TestValidate(dto);

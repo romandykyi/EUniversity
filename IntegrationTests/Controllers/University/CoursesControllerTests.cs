@@ -4,7 +4,7 @@ using EUniversity.Core.Models.University;
 namespace EUniversity.IntegrationTests.Controllers.University
 {
     public class CoursesControllerTests :
-        AdminCrudControllersTest<Course, int, PreviewCourseDto, ViewCourseDto, CreateCourseDto, CreateCourseDto>
+        AdminCrudControllersTest<Course, int, CoursePreviewDto, CourseViewDto, CourseCreateDto, CourseCreateDto>
     {
         public override string GetPageRoute => "api/courses";
 
@@ -23,32 +23,32 @@ namespace EUniversity.IntegrationTests.Controllers.University
             ServiceMock = WebApplicationFactory.CoursesServiceMock;
         }
 
-        protected override CreateCourseDto GetInvalidCreateDto()
+        protected override CourseCreateDto GetInvalidCreateDto()
         {
             return new(string.Empty, null);
         }
 
-        protected override CreateCourseDto GetInvalidUpdateDto()
+        protected override CourseCreateDto GetInvalidUpdateDto()
         {
             return new(string.Empty, null);
         }
 
-        protected override ViewCourseDto GetTestDetailsDto()
+        protected override CourseViewDto GetTestDetailsDto()
         {
             return new(DefaultId, "Test", null);
         }
 
-        protected override PreviewCourseDto GetTestPreviewDto()
+        protected override CoursePreviewDto GetTestPreviewDto()
         {
             return new(DefaultId, "Test");
         }
 
-        protected override CreateCourseDto GetValidCreateDto()
+        protected override CourseCreateDto GetValidCreateDto()
         {
             return new("Test", "test");
         }
 
-        protected override CreateCourseDto GetValidUpdateDto()
+        protected override CourseCreateDto GetValidUpdateDto()
         {
             return new("Test", "test2");
         }

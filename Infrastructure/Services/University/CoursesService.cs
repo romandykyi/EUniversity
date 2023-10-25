@@ -6,7 +6,7 @@ using EUniversity.Infrastructure.Data;
 namespace EUniversity.Infrastructure.Services.University
 {
     public class CoursesService :
-        BaseCrudService<Course, int, PreviewCourseDto, ViewCourseDto, CreateCourseDto, CreateCourseDto>,
+        BaseCrudService<Course, int, CoursePreviewDto, CourseViewDto, CourseCreateDto, CourseCreateDto>,
         ICoursesService
     {
         public CoursesService(ApplicationDbContext dbContext) : base(dbContext)

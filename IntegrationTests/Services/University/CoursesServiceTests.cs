@@ -5,10 +5,10 @@ using EUniversity.Core.Services.University;
 namespace EUniversity.IntegrationTests.Services.University
 {
     public class CoursesServiceTests :
-        CrudServicesTest<ICoursesService, Course, int, PreviewCourseDto, ViewCourseDto, CreateCourseDto, CreateCourseDto>
+        CrudServicesTest<ICoursesService, Course, int, CoursePreviewDto, CourseViewDto, CourseCreateDto, CourseCreateDto>
     {
         /// <inheritdoc />
-        protected override void AssertThatWasUpdated(Course actualEntity, CreateCourseDto updateDto)
+        protected override void AssertThatWasUpdated(Course actualEntity, CourseCreateDto updateDto)
         {
             Assert.Multiple(() =>
             {
@@ -34,13 +34,13 @@ namespace EUniversity.IntegrationTests.Services.University
         }
 
         /// <inheritdoc />
-        protected override CreateCourseDto GetValidCreateDto()
+        protected override CourseCreateDto GetValidCreateDto()
         {
             return new("Physics", "g/(pi^2) = 1");
         }
 
         /// <inheritdoc />
-        protected override CreateCourseDto GetValidUpdateDto()
+        protected override CourseCreateDto GetValidUpdateDto()
         {
             return new("Math", "Not to be confused with meth");
         }

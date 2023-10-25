@@ -4,7 +4,7 @@ using EUniversity.Core.Models.University;
 namespace EUniversity.IntegrationTests.Controllers.University
 {
     public class ClassroomsControllerTests :
-        AdminCrudControllersTest<Classroom, int, ViewClassroomDto, ViewClassroomDto, CreateClassroomDto, CreateClassroomDto>
+        AdminCrudControllersTest<Classroom, int, ClassroomViewDto, ClassroomViewDto, ClassroomCreateDto, ClassroomCreateDto>
     {
         public override string GetPageRoute => $"api/classrooms";
 
@@ -23,32 +23,32 @@ namespace EUniversity.IntegrationTests.Controllers.University
             ServiceMock = WebApplicationFactory.ClassroomsServiceMock;
         }
 
-        protected override ViewClassroomDto GetTestPreviewDto()
+        protected override ClassroomViewDto GetTestPreviewDto()
         {
             return new(1, "Test");
         }
 
-        protected override ViewClassroomDto GetTestDetailsDto()
+        protected override ClassroomViewDto GetTestDetailsDto()
         {
             return new(2, "Test classroom");
         }
 
-        protected override CreateClassroomDto GetInvalidCreateDto()
+        protected override ClassroomCreateDto GetInvalidCreateDto()
         {
             return new(string.Empty);
         }
 
-        protected override CreateClassroomDto GetInvalidUpdateDto()
+        protected override ClassroomCreateDto GetInvalidUpdateDto()
         {
             return new(string.Empty);
         }
 
-        protected override CreateClassroomDto GetValidCreateDto()
+        protected override ClassroomCreateDto GetValidCreateDto()
         {
             return new("#100");
         }
 
-        protected override CreateClassroomDto GetValidUpdateDto()
+        protected override ClassroomCreateDto GetValidUpdateDto()
         {
             return new("#200");
         }
