@@ -1,5 +1,5 @@
 ﻿using EUniversity.Core.Models;
-using EUniversity.Infrastructure.Services;
+using EUniversity.Infrastructure.Services.Auth;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Cryptography;
 

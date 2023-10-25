@@ -1,11 +1,11 @@
 ﻿using EUniversity.Core.Dtos.Users;
 using EUniversity.Core.Models;
 using EUniversity.Core.Pagination;
-using EUniversity.Core.Services;
+using EUniversity.Core.Services.Users;
 using EUniversity.Infrastructure.Data;
 using EUniversity.Infrastructure.Pagination;
 
-namespace EUniversity.Infrastructure.Services
+namespace EUniversity.Infrastructure.Services.Users
 {
     /// <inheritdoc />
     public class UsersService : IUsersService

@@ -1,10 +1,10 @@
 ﻿using EUniversity.Core.Dtos.Auth;
 using EUniversity.Core.Models;
-using EUniversity.Core.Services;
+using EUniversity.Core.Services.Auth;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Cryptography;
 
-namespace EUniversity.Infrastructure.Services
+namespace EUniversity.Infrastructure.Services.Auth
 {
     /// <inheritdoc cref="IAuthService" />
     public class AuthService : IAuthService

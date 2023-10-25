@@ -1,6 +1,6 @@
 ﻿using Duende.IdentityServer.Extensions;
 using EUniversity.Core.Dtos.Auth;
-using EUniversity.Core.Services;
+using EUniversity.Core.Services.Auth;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;

@@ -2,7 +2,7 @@
 using EUniversity.Core.Dtos.Users;
 using EUniversity.Core.Pagination;
 using EUniversity.Core.Policy;
-using EUniversity.Core.Services;
+using EUniversity.Core.Services.Auth;
 using Microsoft.AspNetCore.Identity;
 using NSubstitute;
 using NSubstitute.ReceivedExtensions;

@@ -1,5 +1,5 @@
 ﻿using EUniversity.Core.Models;
-using EUniversity.Core.Services;
+using EUniversity.Core.Services.Auth;
 using EUniversity.Core.Services.University;
 using EUniversity.Extensions;
 using EUniversity.Infrastructure.Data;

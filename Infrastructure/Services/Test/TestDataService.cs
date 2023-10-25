@@ -3,11 +3,11 @@ using EUniversity.Core.Dtos.Auth;
 using EUniversity.Core.Models.University;
 using EUniversity.Core.Models.University.Grades;
 using EUniversity.Core.Policy;
-using EUniversity.Core.Services;
+using EUniversity.Core.Services.Auth;
 using EUniversity.Infrastructure.Data;
 using Microsoft.Extensions.Logging;
 
-namespace EUniversity.Infrastructure.Services
+namespace EUniversity.Infrastructure.Services.Test
 {
     /// <summary>
     /// Service that creates test data. 

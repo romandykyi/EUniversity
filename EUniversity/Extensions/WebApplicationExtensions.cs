@@ -1,8 +1,8 @@
 ﻿using EUniversity.Core.Dtos.Auth;
 using EUniversity.Core.Models;
 using EUniversity.Core.Policy;
-using EUniversity.Core.Services;
-using EUniversity.Infrastructure.Services;
+using EUniversity.Core.Services.Auth;
+using EUniversity.Infrastructure.Services.Test;
 using Microsoft.AspNetCore.Identity;
 using System.Reflection;
 

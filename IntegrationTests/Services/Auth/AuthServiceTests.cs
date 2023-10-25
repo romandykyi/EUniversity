@@ -1,11 +1,11 @@
 ﻿using EUniversity.Core.Dtos.Auth;
 using EUniversity.Core.Models;
 using EUniversity.Core.Policy;
-using EUniversity.Core.Services;
+using EUniversity.Core.Services.Auth;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace EUniversity.IntegrationTests.Services
+namespace EUniversity.IntegrationTests.Services.Auth
 {
     public class AuthServiceTests : ServicesTest
     {

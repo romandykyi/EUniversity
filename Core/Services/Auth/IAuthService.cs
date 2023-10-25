@@ -1,7 +1,7 @@
 ﻿using EUniversity.Core.Dtos.Auth;
 using Microsoft.AspNetCore.Identity;
 
-namespace EUniversity.Core.Services
+namespace EUniversity.Core.Services.Auth
 {
     /// <summary>
     /// Authentication service.

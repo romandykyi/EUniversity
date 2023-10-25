@@ -1,11 +1,11 @@
 ﻿using AnyAscii;
 using EUniversity.Core.Models;
-using EUniversity.Core.Services;
+using EUniversity.Core.Services.Auth;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace EUniversity.Infrastructure.Services
+namespace EUniversity.Infrastructure.Services.Auth
 {
     public class AuthHelper : IAuthHelper
     {
@@ -40,7 +40,7 @@ namespace EUniversity.Infrastructure.Services
                 const int min = 10000, max = 1000000;
                 byte[] bytes = new byte[4];
                 random.GetBytes(bytes);
-                int rndInt = bytes[0] | (bytes[1] << 8) | (bytes[2] << 16) | (bytes[3] << 24);
+                int rndInt = bytes[0] | bytes[1] << 8 | bytes[2] << 16 | bytes[3] << 24;
                 int rndNumber = rndInt % (max - min) + min;
 
                 // Username part based on first name and last name

@@ -1,6 +1,6 @@
 ﻿using System.Security.Cryptography;
 
-namespace EUniversity.Core.Services
+namespace EUniversity.Core.Services.Auth
 {
     /// <summary>
     /// Provides methods for generating usernames and passwords.

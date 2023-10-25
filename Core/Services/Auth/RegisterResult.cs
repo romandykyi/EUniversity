@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace EUniversity.Core.Services
+namespace EUniversity.Core.Services.Auth
 {
     /// <summary>
     /// Wrapper class for IdentityResult with username and password properties.

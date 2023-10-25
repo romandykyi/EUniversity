@@ -1,6 +1,6 @@
 ﻿using EUniversity.Core.Dtos.Auth;
 using EUniversity.Core.Models;
-using EUniversity.Infrastructure.Services;
+using EUniversity.Infrastructure.Services.Auth;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using NSubstitute.ReceivedExtensions;

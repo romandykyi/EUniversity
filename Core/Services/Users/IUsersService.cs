@@ -1,7 +1,7 @@
 ﻿using EUniversity.Core.Dtos.Users;
 using EUniversity.Core.Pagination;
 
-namespace EUniversity.Core.Services
+namespace EUniversity.Core.Services.Users
 {
     /// <summary>
     /// Service for finding users.
