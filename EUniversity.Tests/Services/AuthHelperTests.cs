@@ -7,6 +7,9 @@ namespace EUniversity.Tests.Services;
 
 public class AuthHelperTests
 {
+    // Seed used for mocking RandomNumberGenerator through Random
+    public const int RandomSeed = 50024030;
+
     private RandomNumberGenerator _rngMock;
     private UserManager<ApplicationUser> _userManagerMock;
 
@@ -15,15 +18,12 @@ public class AuthHelperTests
     {
         _rngMock = Substitute.For<RandomNumberGenerator>();
 
-        // GetBytes will return only zeros
+        // GetBytes will pseudorandom values controlled with a seed
+        Random random = new(RandomSeed);
         _rngMock.When(x => x.GetBytes(Arg.Any<byte[]>()))
             .Do(x =>
             {
-                var bytes = x.ArgAt<byte[]>(0);
-                for (int i = 0; i < bytes.Length; i++)
-                {
-                    bytes[i] = 0x00;
-                }
+                random.NextBytes(x.ArgAt<byte[]>(0));
             });
 
         // Mock user manager
