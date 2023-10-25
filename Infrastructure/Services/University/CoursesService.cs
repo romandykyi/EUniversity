@@ -3,14 +3,13 @@ using EUniversity.Core.Models.University;
 using EUniversity.Core.Services.University;
 using EUniversity.Infrastructure.Data;
 
-namespace EUniversity.Infrastructure.Services.University
+namespace EUniversity.Infrastructure.Services.University;
+
+public class CoursesService :
+    BaseCrudService<Course, int, CoursePreviewDto, CourseViewDto, CourseCreateDto, CourseCreateDto>,
+    ICoursesService
 {
-    public class CoursesService :
-        BaseCrudService<Course, int, PreviewCourseDto, ViewCourseDto, CreateCourseDto, CreateCourseDto>,
-        ICoursesService
+    public CoursesService(ApplicationDbContext dbContext) : base(dbContext)
     {
-        public CoursesService(ApplicationDbContext dbContext) : base(dbContext)
-        {
-        }
     }
 }

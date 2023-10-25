@@ -2,39 +2,38 @@
 using EUniversity.Core.Models.University;
 using EUniversity.Infrastructure.Services.University;
 
-namespace EUniversity.IntegrationTests.Services.University
+namespace EUniversity.IntegrationTests.Services.University;
+
+public class ClassroomsServiceTests : CrudServicesTest
+    <IClassroomsService, Classroom, int, ClassroomViewDto, ClassroomViewDto, ClassroomCreateDto, ClassroomCreateDto>
 {
-    public class ClassroomsServiceTests : CrudServicesTest
-        <IClassroomsService, Classroom, int, ViewClassroomDto, ViewClassroomDto, CreateClassroomDto, CreateClassroomDto>
+    /// <inheritdoc />
+    protected override void AssertThatWasUpdated(Classroom actualEntity, ClassroomCreateDto updateDto)
     {
-        /// <inheritdoc />
-        protected override void AssertThatWasUpdated(Classroom actualEntity, CreateClassroomDto updateDto)
-        {
-            Assert.That(actualEntity.Name, Is.EqualTo(updateDto.Name));
-        }
+        Assert.That(actualEntity.Name, Is.EqualTo(updateDto.Name));
+    }
 
-        /// <inheritdoc />
-        protected override int GetNonExistentId() => -1;
+    /// <inheritdoc />
+    protected override int GetNonExistentId() => -1;
 
-        /// <inheritdoc />
-        protected override Classroom GetTestEntity()
+    /// <inheritdoc />
+    protected override Classroom GetTestEntity()
+    {
+        return new()
         {
-            return new()
-            {
-                Name = "#100"
-            };
-        }
+            Name = "#100"
+        };
+    }
 
-        /// <inheritdoc />
-        protected override CreateClassroomDto GetValidCreateDto()
-        {
-            return new("#200");
-        }
+    /// <inheritdoc />
+    protected override ClassroomCreateDto GetValidCreateDto()
+    {
+        return new("#200");
+    }
 
-        /// <inheritdoc />
-        protected override CreateClassroomDto GetValidUpdateDto()
-        {
-            return new("#300");
-        }
+    /// <inheritdoc />
+    protected override ClassroomCreateDto GetValidUpdateDto()
+    {
+        return new("#300");
     }
 }

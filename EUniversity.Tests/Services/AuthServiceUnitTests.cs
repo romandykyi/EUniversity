@@ -1,102 +1,101 @@
 ﻿using EUniversity.Core.Dtos.Auth;
 using EUniversity.Core.Models;
-using EUniversity.Infrastructure.Services;
+using EUniversity.Infrastructure.Services.Auth;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using NSubstitute.ReceivedExtensions;
 
-namespace EUniversity.Tests.Services
+namespace EUniversity.Tests.Services;
+
+public class AuthServiceUnitTests
 {
-    public class AuthServiceUnitTests
+    private UserManager<ApplicationUser> _userManagerMock;
+    private SignInManager<ApplicationUser> _signInManagerMock;
+    private AuthService _authService;
+
+    private const string DefaultUserName = "user";
+    private const string DefaultPassword = "Password1!@Gs";
+
+    [SetUp]
+    public void SetUp()
     {
-        private UserManager<ApplicationUser> _userManagerMock;
-        private SignInManager<ApplicationUser> _signInManagerMock;
-        private AuthService _authService;
+        var userStore = Substitute.For<IUserStore<ApplicationUser>>();
+        _userManagerMock = Substitute.For<UserManager<ApplicationUser>>(
+            userStore, null, null, null, null, null, null, null, null
+            );
 
-        private const string DefaultUserName = "user";
-        private const string DefaultPassword = "Password1!@Gs";
+        var contextAccessor = Substitute.For<IHttpContextAccessor>();
+        var claimsFactory = Substitute.For<IUserClaimsPrincipalFactory<ApplicationUser>>();
 
-        [SetUp]
-        public void SetUp()
-        {
-            var userStore = Substitute.For<IUserStore<ApplicationUser>>();
-            _userManagerMock = Substitute.For<UserManager<ApplicationUser>>(
-                userStore, null, null, null, null, null, null, null, null
-                );
+        _signInManagerMock = Substitute.For<SignInManager<ApplicationUser>>(
+            _userManagerMock, contextAccessor, claimsFactory, null, null, null, null
+            );
 
-            var contextAccessor = Substitute.For<IHttpContextAccessor>();
-            var claimsFactory = Substitute.For<IUserClaimsPrincipalFactory<ApplicationUser>>();
+        AuthHelper helper = new(_userManagerMock);
 
-            _signInManagerMock = Substitute.For<SignInManager<ApplicationUser>>(
-                _userManagerMock, contextAccessor, claimsFactory, null, null, null, null
-                );
+        _authService = new(_userManagerMock, _signInManagerMock, helper);
+    }
 
-            AuthHelper helper = new(_userManagerMock);
+    [Test]
+    public async Task LogIn_ValidLogin_Succeeds()
+    {
+        // Arrange
+        LogInDto login = new(DefaultUserName, DefaultPassword, true);
+        _signInManagerMock
+            .PasswordSignInAsync(login.UserName, login.Password, login.RememberMe, Arg.Any<bool>())
+            .Returns(SignInResult.Success);
 
-            _authService = new(_userManagerMock, _signInManagerMock, helper);
-        }
+        // Act
+        bool result = await _authService.LogInAsync(login);
 
-        [Test]
-        public async Task LogIn_ValidLogin_Succeeds()
-        {
-            // Arrange
-            LogInDto login = new(DefaultUserName, DefaultPassword, true);
-            _signInManagerMock
-                .PasswordSignInAsync(login.UserName, login.Password, login.RememberMe, Arg.Any<bool>())
-                .Returns(SignInResult.Success);
+        // Assert
+        await _signInManagerMock
+            .Received(1)
+            .PasswordSignInAsync(login.UserName, login.Password, login.RememberMe, Arg.Any<bool>());
+        Assert.That(result);
+    }
 
-            // Act
-            bool result = await _authService.LogInAsync(login);
+    [Test]
+    public async Task LogIn_InvalidLogin_Fails()
+    {
+        // Arrange
+        LogInDto login = new(DefaultUserName, DefaultPassword, true);
+        _signInManagerMock
+            .PasswordSignInAsync(login.UserName, login.Password, login.RememberMe, Arg.Any<bool>())
+            .Returns(SignInResult.Failed);
 
-            // Assert
-            await _signInManagerMock
-                .Received(1)
-                .PasswordSignInAsync(login.UserName, login.Password, login.RememberMe, Arg.Any<bool>());
-            Assert.That(result);
-        }
+        // Act
+        bool result = await _authService.LogInAsync(login);
 
-        [Test]
-        public async Task LogIn_InvalidLogin_Fails()
-        {
-            // Arrange
-            LogInDto login = new(DefaultUserName, DefaultPassword, true);
-            _signInManagerMock
-                .PasswordSignInAsync(login.UserName, login.Password, login.RememberMe, Arg.Any<bool>())
-                .Returns(SignInResult.Failed);
+        // Assert
+        await _signInManagerMock
+            .Received(1)
+            .PasswordSignInAsync(login.UserName, login.Password, login.RememberMe, Arg.Any<bool>());
+        Assert.That(result, Is.False);
+    }
 
-            // Act
-            bool result = await _authService.LogInAsync(login);
+    [Test]
+    public async Task RegisterMany_Always_CallsRegister()
+    {
+        // Arrange
+        _userManagerMock
+            .CreateAsync(Arg.Any<ApplicationUser>(), Arg.Any<string>())
+            .Returns(IdentityResult.Success);
+        _userManagerMock
+            .AddToRolesAsync(Arg.Any<ApplicationUser>(), Arg.Any<IEnumerable<string>>())
+            .Returns(IdentityResult.Success);
 
-            // Assert
-            await _signInManagerMock
-                .Received(1)
-                .PasswordSignInAsync(login.UserName, login.Password, login.RememberMe, Arg.Any<bool>());
-            Assert.That(result, Is.False);
-        }
+        const int samples = 5;
 
-        [Test]
-        public async Task RegisterMany_Always_CallsRegister()
-        {
-            // Arrange
-            _userManagerMock
-                .CreateAsync(Arg.Any<ApplicationUser>(), Arg.Any<string>())
-                .Returns(IdentityResult.Success);
-            _userManagerMock
-                .AddToRolesAsync(Arg.Any<ApplicationUser>(), Arg.Any<IEnumerable<string>>())
-                .Returns(IdentityResult.Success);
+        RegisterDto sampleRegister = new("test@email.com", "Test", "Test");
+        IEnumerable<RegisterDto> users = Enumerable.Repeat(sampleRegister, samples);
 
-            const int samples = 5;
+        // Act
+        await _authService.RegisterManyAsync(users).ToListAsync();
 
-            RegisterDto sampleRegister = new("test@email.com", "Test", "Test");
-            IEnumerable<RegisterDto> users = Enumerable.Repeat(sampleRegister, samples);
-
-            // Act
-            await _authService.RegisterManyAsync(users).ToListAsync();
-
-            // Assert
-            await _userManagerMock
-                .Received(samples)
-                .CreateAsync(Arg.Any<ApplicationUser>(), Arg.Any<string>());
-        }
+        // Assert
+        await _userManagerMock
+            .Received(samples)
+            .CreateAsync(Arg.Any<ApplicationUser>(), Arg.Any<string>());
     }
 }

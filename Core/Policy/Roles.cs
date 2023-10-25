@@ -1,9 +1,8 @@
-﻿namespace EUniversity.Core.Policy
+﻿namespace EUniversity.Core.Policy;
+
+public static class Roles
 {
-    public static class Roles
-    {
-        public const string Administrator = "Administrator";
-        public const string Student = "Student";
-        public const string Teacher = "Teacher";
-    }
+    public const string Administrator = "Administrator";
+    public const string Student = "Student";
+    public const string Teacher = "Teacher";
 }

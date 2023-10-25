@@ -1,35 +1,34 @@
-﻿namespace EUniversity.Core.Pagination
+﻿namespace EUniversity.Core.Pagination;
+
+/// <summary>
+/// A class that represents a single page with items.
+/// </summary>
+public class Page<TItem>
 {
     /// <summary>
-    /// A class that represents a single page with items.
+    /// Number of the page(starting from one).
     /// </summary>
-    public class Page<TItem>
+    public int PageNumber { get; set; }
+    /// <summary>
+    /// Maximum number of items this page can contain.
+    /// </summary>
+    public int PageSize { get; set; }
+    /// <summary>
+    /// Total number of items.
+    /// </summary>
+    public int TotalItemsCount { get; set; }
+    /// <summary>
+    /// Items at this page.
+    /// </summary>
+    public IEnumerable<TItem> Items { get; set; } = null!;
+
+    public Page() { }
+
+    public Page(IEnumerable<TItem> items, PaginationProperties properties, int totalItemsCount)
     {
-        /// <summary>
-        /// Number of the page(starting from one).
-        /// </summary>
-        public int PageNumber { get; set; }
-        /// <summary>
-        /// Maximum number of items this page can contain.
-        /// </summary>
-        public int PageSize { get; set; }
-        /// <summary>
-        /// Total number of items.
-        /// </summary>
-        public int TotalItemsCount { get; set; }
-        /// <summary>
-        /// Items at this page.
-        /// </summary>
-        public IEnumerable<TItem> Items { get; set; } = null!;
-
-        public Page() { }
-
-        public Page(IEnumerable<TItem> items, PaginationProperties properties, int totalItemsCount)
-        {
-            PageNumber = properties.Page;
-            PageSize = properties.PageSize;
-            Items = items;
-            TotalItemsCount = totalItemsCount;
-        }
+        PageNumber = properties.Page;
+        PageSize = properties.PageSize;
+        Items = items;
+        TotalItemsCount = totalItemsCount;
     }
 }
