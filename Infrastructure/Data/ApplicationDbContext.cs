@@ -12,6 +12,7 @@ namespace EUniversity.Infrastructure.Data
         public DbSet<Classroom> Classrooms { get; set; }
         public DbSet<Course> Courses { get; set; }
         public DbSet<Group> Groups { get; set; }
+        public DbSet<StudentGroup> StudentGroups { get; set; }
         public DbSet<Grade> Grades { get; set; }
         public DbSet<CourseGrade> CourseGrades { get; set; }
 
@@ -31,6 +32,12 @@ namespace EUniversity.Infrastructure.Data
                 .WithMany(g => g.CourseGrades)
                 .HasForeignKey(c => c.GradeId)
                 .OnDelete(DeleteBehavior.ClientCascade);
+
+            // ApplicationUser(Student)->Groups
+            builder.Entity<ApplicationUser>()
+                .HasMany<Group>()
+                .WithMany(g => g.Students)
+                .UsingEntity<StudentGroup>();
         }
     }
 }
