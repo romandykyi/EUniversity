@@ -41,7 +41,7 @@ public class AuthHelper : IAuthHelper
             byte[] bytes = new byte[4];
             random.GetBytes(bytes);
             int rndInt = bytes[0] | bytes[1] << 8 | bytes[2] << 16 | bytes[3] << 24;
-            int rndNumber = rndInt % (max - min) + min;
+            int rndNumber = Math.Abs(rndInt) % (max - min) + min;
 
             // Username part based on first name and last name
             // (or just "u" if it cannot be created)
