@@ -112,6 +112,7 @@ namespace EUniversity.IntegrationTests.Services
                 .Apply(Arg.Any<IQueryable<TEntity>>());
         }
 
+        [Test]
         public virtual async Task GetPage_ReceivesPaginationProperties()
         {
             // Arrange
