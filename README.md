@@ -21,68 +21,6 @@ An e-university Web Application built with ASP.NET and React.
 * React-router-dom
 * Yarn
 
-## Database Scheme(draft)
-```
-ApplicationUser(string)
-	-> FirstName
-	-> LastName
-	-> MiddleName?
-	-> Email
-	-> UserName
-	-> Roles(Administrator, Student, Teacher)
-	...
-
-Course(int)
-	-> Name
-	-> Description
-	-> Teachers
-	-> Students
-	-> Classes
-	-> ClassesNumber
-
-Grade(int)
-	-> Name
-	-> Score
-
-CourseGrade(int)
-	-> Teacher
-	-> Student
-	-> Grade
-	-> Course
-	-> Notes
-
-Classroom(int)
-	-> Name
-	-> Description
-
-Class(int)
-	-> Course
-	-> Teacher
-	-> Group
-	-> Students
-	-> Date
-	-> Classroom
-
-ClassSchedule(int)
-	-> Class
-	-> Teacher?
-	-> Date?
-	-> Classroom?
-
-Group(int)
-	-> Name
-	-> Teacher
-	-> Students
-	-> Classes
-
-Semester(int)
-	-> Number
-	-> DateFrom
-	-> DateTo
-	-> Courses
-	-> Students
-```
-
 ## Architecture
 
 This application is built on a modular architecture that follows a three-layered design pattern. The architecture consists of three primary projects, each with its distinct responsibilities:
