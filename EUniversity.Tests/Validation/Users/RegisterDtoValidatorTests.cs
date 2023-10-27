@@ -39,7 +39,7 @@ public class RegisterDtoValidatorTests
     }
 
     [Test]
-    public void Email_TooLarge_Fails()
+    public void Email_TooLarge_FailsWithPropertyTooLargeError()
     {
         // Arrange
         string bigString = new('a', ApplicationUser.MaxEmailLength);
@@ -56,7 +56,7 @@ public class RegisterDtoValidatorTests
     }
 
     [Test]
-    public void Email_Empty_Fails()
+    public void Email_Empty_FailsWithPropertyRequiredError()
     {
         // Arrange
         RegisterDto register = new(string.Empty, DefaultFirstName, DefaultLastName, DefaultMiddleName);
@@ -71,7 +71,7 @@ public class RegisterDtoValidatorTests
     }
 
     [Test]
-    public void Email_Invalid_Fails()
+    public void Email_Invalid_FailsWithInvalidEmailError()
     {
         // Arrange
         RegisterDto register = new("invalid", DefaultFirstName, DefaultLastName, DefaultMiddleName);
@@ -104,7 +104,7 @@ public class RegisterDtoValidatorTests
     }
 
     [Test]
-    public void FirstName_Empty_Fails()
+    public void FirstName_Empty_FailsWithPropertyRequiredError()
     {
         // Arrange
         RegisterDto register = new(DefaultEmail, string.Empty, DefaultLastName, DefaultMiddleName);
@@ -119,7 +119,7 @@ public class RegisterDtoValidatorTests
     }
 
     [Test]
-    public void FirstName_TooLarge_Fails()
+    public void FirstName_TooLarge_FailsWithPropertyTooLargeError()
     {
         // Arrange
         string bigFirstName = new('a', ApplicationUser.MaxNameLength + 1);
@@ -153,7 +153,7 @@ public class RegisterDtoValidatorTests
     }
 
     [Test]
-    public void LastName_Empty_Fails()
+    public void LastName_Empty_FailsWithPropertyRequiredError()
     {
         // Arrange
         RegisterDto register = new(DefaultEmail, DefaultFirstName, string.Empty, DefaultMiddleName);
@@ -168,7 +168,7 @@ public class RegisterDtoValidatorTests
     }
 
     [Test]
-    public void LastName_TooLarge_Fails()
+    public void LastName_TooLarge_FailsWithPropertyTooLargeError()
     {
         // Arrange
         string bigLastName = new('a', ApplicationUser.MaxNameLength + 1);
@@ -216,7 +216,7 @@ public class RegisterDtoValidatorTests
     }
 
     [Test]
-    public void MiddleName_TooLarge_Fails()
+    public void MiddleName_TooLarge_FailsWithPropertyTooLargeError()
     {
         // Arrange
         string bigMiddleName = new('a', ApplicationUser.MaxNameLength + 1);

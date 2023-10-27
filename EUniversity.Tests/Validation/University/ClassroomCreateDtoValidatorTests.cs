@@ -17,7 +17,7 @@ public class ClassroomCreateDtoValidatorTests
     }
 
     [Test]
-    public void Name_Valid_IsValid()
+    public void Dto_Valid_Succeeds()
     {
         // Arrange
         ClassroomCreateDto dto = new("Room 115");
@@ -30,7 +30,7 @@ public class ClassroomCreateDtoValidatorTests
     }
 
     [Test]
-    public void Name_TooLarge_IsInvalid()
+    public void Name_TooLarge_FailsWithPropertyTooLargeError()
     {
         // Arrange
         ClassroomCreateDto dto = new(new string('0', Classroom.MaxNameLength + 1));
@@ -44,7 +44,7 @@ public class ClassroomCreateDtoValidatorTests
     }
 
     [Test]
-    public void Name_Empty_IsInvalid()
+    public void Name_Empty_FailsWithPropertyRequiredError()
     {
         // Arrange
         ClassroomCreateDto dto = new(string.Empty);
