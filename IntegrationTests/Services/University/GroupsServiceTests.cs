@@ -1,8 +1,10 @@
 ﻿using EUniversity.Core.Dtos.University;
+using EUniversity.Core.Dtos.Users;
 using EUniversity.Core.Models;
 using EUniversity.Core.Models.University;
 using EUniversity.Core.Policy;
 using EUniversity.Core.Services.University;
+using Mapster;
 
 namespace EUniversity.IntegrationTests.Services.University;
 
@@ -36,7 +38,10 @@ public class GroupsServiceTests :
         {
             Name = "100-A",
             CourseId = _testCourse.Id,
-            TeacherId = _testTeacher.Id
+            Course = _testCourse,
+            TeacherId = _testTeacher.Id,
+            Teacher = _testTeacher,
+            Students = new List<ApplicationUser>()
         };
     }
 
@@ -60,5 +65,27 @@ public class GroupsServiceTests :
         await DbContext.SaveChangesAsync();
 
         _testTeacher = await RegisterTestUser(Roles.Teacher);
+    }
+
+    [Test]
+    public override async Task GetById_ElementExists_ReturnsValidElement()
+    {
+        // Arrange
+        var group = await CreateTestEntityAsync();
+        var expectedResult = group.Adapt<GroupViewDto>();
+
+        // Act
+        var result = await Service.GetByIdAsync(group.Id);
+
+        // Assert
+        Assert.That(result, Is.Not.Null);
+        Assert.Multiple(() =>
+        {
+            Assert.That(result.Id, Is.EqualTo(expectedResult.Id));
+            Assert.That(result.Name, Is.EqualTo(expectedResult.Name));
+            Assert.That(result.Teacher, Is.EqualTo(expectedResult.Teacher));
+            Assert.That(result.Course, Is.EqualTo(expectedResult.Course));
+            CollectionAssert.AreEquivalent(expectedResult.Students, group.Students);
+        });
     }
 }
