@@ -62,7 +62,7 @@ public class ClassroomsController : ControllerBase
     }
 
     /// <summary>
-    /// Creates a new classroom by its ID.
+    /// Creates a new classroom.
     /// </summary>
     /// <response code="201">Successfully created</response>
     /// <response code="400">Malformed/invalid input</response>
@@ -83,7 +83,7 @@ public class ClassroomsController : ControllerBase
     }
 
     /// <summary>
-    /// Edits a classroom.
+    /// Edits a classroom by its ID.
     /// </summary>
     /// <response code="204">Success</response>
     /// <response code="400">Malformed/invalid input</response>
@@ -106,7 +106,7 @@ public class ClassroomsController : ControllerBase
     }
 
     /// <summary>
-    /// Deletes a classroom.
+    /// Deletes a classroom by its ID.
     /// </summary>
     /// <response code="204">Success</response>
     /// <response code="401">Unauthorized user call</response>

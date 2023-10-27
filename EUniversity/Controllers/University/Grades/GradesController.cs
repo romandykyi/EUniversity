@@ -62,7 +62,7 @@ public class GradesController : ControllerBase
     }
 
     /// <summary>
-    /// Creates a new grade by its ID.
+    /// Creates a new grade.
     /// </summary>
     /// <response code="201">Successfully created</response>
     /// <response code="400">Malformed/invalid input</response>
@@ -83,7 +83,7 @@ public class GradesController : ControllerBase
     }
 
     /// <summary>
-    /// Edits a grade.
+    /// Edits a grade by its ID.
     /// </summary>
     /// <response code="204">Success</response>
     /// <response code="400">Malformed/invalid input</response>
@@ -106,7 +106,7 @@ public class GradesController : ControllerBase
     }
 
     /// <summary>
-    /// Deletes a grade.
+    /// Deletes a grade by its ID.
     /// </summary>
     /// <response code="204">Success</response>
     /// <response code="401">Unauthorized user call</response>

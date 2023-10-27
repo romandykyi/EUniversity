@@ -62,7 +62,7 @@ public class CoursesController : ControllerBase
     }
 
     /// <summary>
-    /// Creates a new course by its ID.
+    /// Creates a new course.
     /// </summary>
     /// <response code="201">Successfully created</response>
     /// <response code="400">Malformed/invalid input</response>
@@ -83,7 +83,7 @@ public class CoursesController : ControllerBase
     }
 
     /// <summary>
-    /// Edits a course.
+    /// Edits a course by its ID.
     /// </summary>
     /// <response code="204">Success</response>
     /// <response code="400">Malformed/invalid input</response>
@@ -106,7 +106,7 @@ public class CoursesController : ControllerBase
     }
 
     /// <summary>
-    /// Deletes a course.
+    /// Deletes a course by its ID.
     /// </summary>
     /// <response code="204">Success</response>
     /// <response code="401">Unauthorized user call</response>
