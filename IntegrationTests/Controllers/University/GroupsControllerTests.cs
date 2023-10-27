@@ -22,6 +22,18 @@ public class GroupsControllerTests :
 
     public override int DefaultId => 1;
 
+    protected override void AssertThatViewDtosAreEqual(GroupViewDto expected, GroupViewDto actual)
+    {
+        Assert.Multiple(() =>
+        {
+            Assert.That(actual.Id, Is.EqualTo(expected.Id));
+            Assert.That(actual.Name, Is.EqualTo(expected.Name));
+            Assert.That(actual.Course, Is.EqualTo(expected.Course));
+            Assert.That(actual.Teacher, Is.EqualTo(expected.Teacher));
+            Assert.That(actual.Students, Is.EquivalentTo(expected.Students));
+        });
+    }
+
     public override void SetUpService()
     {
         ServiceMock = WebApplicationFactory.GroupsServiceMock;

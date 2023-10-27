@@ -170,8 +170,18 @@ public abstract class CrudControllersTest<TEntity, TId, TPreviewDto, TDetailsDto
     /// </summary>
     public abstract TId DefaultId { get; }
 
+    /// <summary>
+    /// Asserts that two <typeparamref name="TDetailsDto"/>s are equal.
+    /// </summary>
+    /// <param name="expected">Expected DTO.</param>
+    /// <param name="actual">Actual DTO.</param>
+    protected virtual void AssertThatViewDtosAreEqual(TDetailsDto expected, TDetailsDto actual)
+    {
+        Assert.That(actual, Is.EqualTo(expected));
+    }
+
     [Test]
-    public virtual async Task GetPage_ValidCall_SucceedsAndReturnsValidType()
+    public virtual async Task GetPage_ValidCall_SucceedsAndReturnsValidDto()
     {
         // Arrange
         using var client = GetTestClient();
@@ -230,7 +240,7 @@ public abstract class CrudControllersTest<TEntity, TId, TPreviewDto, TDetailsDto
             .GetByIdAsync(DefaultId);
         result.EnsureSuccessStatusCode();
         var dto = await result.Content.ReadFromJsonAsync<TDetailsDto>();
-        Assert.That(dto, Is.EqualTo(expectedDto));
+        AssertThatViewDtosAreEqual(expectedDto, dto);
     }
 
     [Test]

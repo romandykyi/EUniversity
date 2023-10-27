@@ -85,7 +85,7 @@ public class GroupsServiceTests :
             Assert.That(result.Name, Is.EqualTo(expectedResult.Name));
             Assert.That(result.Teacher, Is.EqualTo(expectedResult.Teacher));
             Assert.That(result.Course, Is.EqualTo(expectedResult.Course));
-            CollectionAssert.AreEquivalent(expectedResult.Students, group.Students);
+            Assert.That(result.Students, Is.EquivalentTo(expectedResult.Students));
         });
     }
 }
