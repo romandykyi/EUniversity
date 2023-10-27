@@ -48,7 +48,7 @@ public static class RuleBuilderOptionsExtensions
             {
                 ValidationFailure failure = new(context.PropertyPath, "User does not have the required role", userId)
                 {
-                    ErrorCode = ValidationErrorCodes.InvalidForeignKey
+                    ErrorCode = ValidationErrorCodes.UserIsNotInRole
                 };
                 context.AddFailure(failure);
             }
