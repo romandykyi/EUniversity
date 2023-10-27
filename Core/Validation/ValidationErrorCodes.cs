@@ -10,4 +10,7 @@ public static class ValidationErrorCodes
     public const string InvalidEmail = "InvalidEmailError";
     public const string Equal = "EqualError";
     public const string EmptyCollection = "EmptyCollectionError";
+
+    public const string InvalidForeignKey = "InvalidForeignKeyError";
+    public const string UserIsNotInRole = "UserIsNotInRole";
 }
