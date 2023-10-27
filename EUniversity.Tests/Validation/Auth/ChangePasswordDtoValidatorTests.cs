@@ -19,7 +19,7 @@ public class ChangePasswordDtoValidatorTests
     }
 
     [Test]
-    public void Input_Valid_Succeeds()
+    public void Dto_Valid_Succeeds()
     {
         // Arrange
         ChangePasswordDto password = new(CurrentPassword, ValidNewPassword);
@@ -76,7 +76,7 @@ public class ChangePasswordDtoValidatorTests
     }
 
     [Test]
-    public void Passwords_Equal_Fails()
+    public void Passwords_Equal_FailsWithEqualError()
     {
         // Arrange
         ChangePasswordDto password = new(ValidNewPassword, ValidNewPassword);

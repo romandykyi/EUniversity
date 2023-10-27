@@ -20,7 +20,7 @@ internal class GradeDtoValidatorTests
     }
 
     [Test]
-    public void Name_Valid_IsValid()
+    public void Name_Valid_Succeeds()
     {
         // Arrange
         GradeCreateDto dto = new(DefaultName, DefaultScore);
@@ -33,7 +33,7 @@ internal class GradeDtoValidatorTests
     }
 
     [Test]
-    public void Name_TooLarge_IsInvalid()
+    public void Name_TooLarge_FailsWithPropertyTooLargeError()
     {
         // Arrange
         GradeCreateDto dto = new(new string('0', Grade.MaxNameLength + 1), DefaultScore);
@@ -47,7 +47,7 @@ internal class GradeDtoValidatorTests
     }
 
     [Test]
-    public void Name_Empty_IsInvalid()
+    public void Name_Empty_FailsWithPropertyRequiredError()
     {
         // Arrange
         GradeCreateDto dto = new(string.Empty, DefaultScore);

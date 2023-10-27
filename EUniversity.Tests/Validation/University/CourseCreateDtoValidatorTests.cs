@@ -20,7 +20,7 @@ public class CourseCreateDtoValidatorTests
     }
 
     [Test]
-    public void Dto_Valid_IsValid()
+    public void Dto_Valid_Succeeds()
     {
         // Arrange
         CourseCreateDto dto = new(DefaultName, DefaultDescription);
@@ -33,7 +33,7 @@ public class CourseCreateDtoValidatorTests
     }
 
     [Test]
-    public void Name_TooLarge_IsInvalid()
+    public void Name_TooLarge_FailsWithPropertyTooLargeError()
     {
         // Arrange
         CourseCreateDto dto = new(new string('0', Course.MaxNameLength + 1), DefaultDescription);
@@ -47,7 +47,7 @@ public class CourseCreateDtoValidatorTests
     }
 
     [Test]
-    public void Name_Empty_IsInvalid()
+    public void Name_Empty_FailsWithPropertyRequiredError()
     {
         // Arrange
         CourseCreateDto dto = new(string.Empty, DefaultDescription);
@@ -63,7 +63,7 @@ public class CourseCreateDtoValidatorTests
     [Test]
     [TestCase(null)]
     [TestCase("")]
-    public void Description_NullOrEmpty_IsValid(string? description)
+    public void Description_NullOrEmpty_Succeeds(string? description)
     {
         // Arrange
         CourseCreateDto dto = new(DefaultName, description);
@@ -76,7 +76,7 @@ public class CourseCreateDtoValidatorTests
     }
 
     [Test]
-    public void Description_TooLarge_IsInvalid()
+    public void Description_TooLarge_FailsWithPropertyTooLargeError()
     {
         // Arrange
         CourseCreateDto dto = new(DefaultName, new string('0', Course.MaxDescriptionLength + 1));

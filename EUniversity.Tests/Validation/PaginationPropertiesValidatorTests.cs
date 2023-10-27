@@ -18,7 +18,7 @@ public class PaginationPropertiesValidatorTests
     }
 
     [Test]
-    public void Input_Valid_IsValid()
+    public void Properties_Valid_Succeeds()
     {
         // Arrange
         PaginationProperties properties = new(ValidPage, ValidPageSize);
@@ -33,7 +33,7 @@ public class PaginationPropertiesValidatorTests
     [Test]
     [TestCase(0)]
     [TestCase(-3)]
-    public void Page_NotPositive_IsInvalid(int page)
+    public void Page_NotPositive_FailsWithPropertyTooSmallError(int page)
     {
         // Arrange
         PaginationProperties properties = new(page, ValidPageSize);
@@ -47,7 +47,7 @@ public class PaginationPropertiesValidatorTests
     }
 
     [Test]
-    public void PageSize_Small_IsInvalid()
+    public void PageSize_Small_FailsWithPropertyTooSmallError()
     {
         // Arrange
         PaginationProperties properties = new(ValidPage, PaginationProperties.MinPageSize - 1);
@@ -61,7 +61,7 @@ public class PaginationPropertiesValidatorTests
     }
 
     [Test]
-    public void PageSize_Large_IsInvalid()
+    public void PageSize_Large_FailsWithPropertyTooLargeError()
     {
         // Arrange
         PaginationProperties properties = new(ValidPage, PaginationProperties.MaxPageSize + 1);

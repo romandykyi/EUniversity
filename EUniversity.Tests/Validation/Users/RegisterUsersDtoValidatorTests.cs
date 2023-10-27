@@ -19,7 +19,7 @@ public class RegisterUsersDtoValidatorTests
     }
 
     [Test]
-    public void Dtos_ValidChildren_IsValid()
+    public void Dtos_ValidChildren_Succeed()
     {
         // Arrange
         RegisterUsersDto dto = new(new RegisterDto[1] { _validRegisterDto });
@@ -32,7 +32,7 @@ public class RegisterUsersDtoValidatorTests
     }
 
     [Test]
-    public void Dtos_Empty_IsInvalid()
+    public void Dtos_Empty_FailsWithEmptyCollectionError()
     {
         // Arrange
         RegisterUsersDto dto = new(Enumerable.Empty<RegisterDto>());
@@ -47,7 +47,7 @@ public class RegisterUsersDtoValidatorTests
     }
 
     [Test]
-    public void Dtos_InvalidChildElement_IsInvalid()
+    public void Dtos_InvalidChildElement_Fails()
     {
         // Arrange
         RegisterUsersDto users = new(

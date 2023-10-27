@@ -18,7 +18,7 @@ public class LogInDtoValidatorTests
     }
 
     [Test]
-    public void Input_Valid_IsValid()
+    public void Dto_Valid_Succeeds()
     {
         // Arrange
         LogInDto login = new(DefaultUserName, DefaultPassword, false);
@@ -31,7 +31,7 @@ public class LogInDtoValidatorTests
     }
 
     [Test]
-    public void UserName_Empty_IsInvalid()
+    public void UserName_Empty_FailsWithPropertyRequiredError()
     {
         // Arrange
         LogInDto login = new(string.Empty, DefaultPassword, false);
