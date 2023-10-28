@@ -240,6 +240,7 @@ public abstract class CrudControllersTest<TEntity, TId, TPreviewDto, TDetailsDto
             .GetByIdAsync(DefaultId);
         result.EnsureSuccessStatusCode();
         var dto = await result.Content.ReadFromJsonAsync<TDetailsDto>();
+        Assert.That(dto, Is.Not.Null);
         AssertThatViewDtosAreEqual(expectedDto, dto);
     }
 
