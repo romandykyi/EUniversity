@@ -80,6 +80,7 @@ public class UsersController : ControllerBase
         await foreach (var result in _authService.RegisterManyAsync(students.Users, role))
         {
             CreatedUserDto createdUser = new(
+                result.Id,
                 result.UserName,
                 result.Password,
                 result.Succeeded,

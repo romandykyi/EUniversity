@@ -7,7 +7,7 @@ namespace EUniversity.IntegrationTests.Controllers.University;
 public class GroupsControllerTests :
     CrudControllersTest<Group, int, GroupPreviewDto, GroupViewDto, GroupCreateDto, GroupCreateDto>
 {
-    public readonly TeacherPreviewDto TeacherPreviewDto = new("test-teacher", "Teacher1", "Teacher2", null);
+    public readonly TeacherPreviewDto TeacherPreviewDto = new(Guid.NewGuid().ToString(), "test-teacher", "Teacher1", "Teacher2", null);
     public readonly CoursePreviewDto CoursePreviewDto = new(5, "Some Course");
 
     public override string GetPageRoute => "api/groups";
@@ -54,7 +54,7 @@ public class GroupsControllerTests :
     {
         List<StudentPreviewDto> students = new() 
         { 
-            new("test-user", "Student1", "Student2", null) 
+            new(Guid.NewGuid().ToString(), "test-user", "Student1", "Student2", null) 
         };
         return new(DefaultId, "Group", TeacherPreviewDto, 
             CoursePreviewDto, students);

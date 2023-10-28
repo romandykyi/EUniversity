@@ -50,7 +50,7 @@ public class AuthService : IAuthService
         }
 
         var roleResult = await _userManager.AddToRolesAsync(user, roles);
-        return new(roleResult, userName, password);
+        return new(roleResult, user.Id, userName, password);
     }
 
     /// <inheritdoc />
