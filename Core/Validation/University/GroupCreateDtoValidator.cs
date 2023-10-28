@@ -26,7 +26,8 @@ public class GroupCreateDtoValidator : AbstractValidator<GroupCreateDto>
         RuleFor(g => g.CourseId)
             .MustAsync(async (id, _) =>
                 await existenceChecker.ExistsAsync<Course, int>(id))
-            .WithErrorCode(ValidationErrorCodes.InvalidForeignKey);
+            .WithErrorCode(ValidationErrorCodes.InvalidForeignKey)
+            .WithMessage("Course does not exist");
 
         RuleFor(g => g.TeacherId!)
             .IsIdOfValidUserInRole(userManager, Roles.Teacher)
