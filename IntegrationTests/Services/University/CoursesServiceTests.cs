@@ -7,6 +7,15 @@ namespace EUniversity.IntegrationTests.Services.University;
 public class CoursesServiceTests :
     CrudServicesTest<ICoursesService, Course, int, CoursePreviewDto, CourseViewDto, CourseCreateDto, CourseCreateDto>
 {
+    public static Course CreateTestCourse()
+    {
+        return new()
+        {
+            Name = "Chemistry",
+            Description = "Walter's White cooking course"
+        };
+    }
+
     /// <inheritdoc />
     protected override void AssertThatWasUpdated(Course actualEntity, CourseCreateDto updateDto)
     {
@@ -26,11 +35,7 @@ public class CoursesServiceTests :
     /// <inheritdoc />
     protected override Course GetTestEntity()
     {
-        return new()
-        {
-            Name = "Chemistry",
-            Description = "Walter's White cooking course"
-        };
+        return CreateTestCourse();
     }
 
     /// <inheritdoc />

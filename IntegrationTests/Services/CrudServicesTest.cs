@@ -156,11 +156,11 @@ public abstract class CrudServicesTest<TService, TEntity, TId, TPreviewDto, TDet
     public virtual async Task GetById_ElementExists_ReturnsValidElement()
     {
         // Arrange
-        var classroom = await CreateTestEntityAsync();
-        var expectedResult = classroom.Adapt<TDetailsDto>();
+        var entity = await CreateTestEntityAsync();
+        var expectedResult = entity.Adapt<TDetailsDto>();
 
         // Act
-        var result = await Service.GetByIdAsync(classroom.Id);
+        var result = await Service.GetByIdAsync(entity.Id);
 
         // Assert
         Assert.That(result, Is.EqualTo(expectedResult));
@@ -223,16 +223,16 @@ public abstract class CrudServicesTest<TService, TEntity, TId, TPreviewDto, TDet
     public virtual async Task Delete_ElementExists_Succeeds()
     {
         // Arrange
-        var classroom = await CreateTestEntityAsync();
+        var entity = await CreateTestEntityAsync();
 
         // Act
-        bool result = await Service.DeleteAsync(classroom.Id);
+        bool result = await Service.DeleteAsync(entity.Id);
 
         // Assert
         Assert.Multiple(async () =>
         {
             Assert.That(result);
-            Assert.That(await EntityExistsAsync(classroom.Id), Is.False, "Entity wasn't deleted");
+            Assert.That(await EntityExistsAsync(entity.Id), Is.False, "Entity wasn't deleted");
         });
     }
 

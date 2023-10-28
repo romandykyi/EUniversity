@@ -2,6 +2,7 @@
 using EUniversity.Core.Models;
 using EUniversity.Core.Pagination;
 using EUniversity.Core.Services;
+using EUniversity.IntegrationTests.Mocks;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
 using NSubstitute.ReturnsExtensions;
@@ -99,8 +100,34 @@ public abstract class CrudControllersTest<TEntity, TId, TPreviewDto, TDetailsDto
     /// </returns>
     protected virtual HttpClient GetTestClient() => CreateAdministratorClient();
 
+    /// <summary>
+    /// Sets up a <see cref="ServiceMock"/> used for testing.
+    /// </summary>
     [SetUp]
     public abstract void SetUpService();
+
+    /// <summary>
+    /// Sets up validation mocks in such a way that all
+    /// foreign key validations pass.
+    /// </summary>
+    protected void SetUpValidationMocks()
+    {
+        WebApplicationFactory.ExistenceCheckerMock
+            .ExistsAsync<AnyEntity, AnyEntityId>(Arg.Any<AnyEntityId>())
+            .ReturnsForAnyArgs(true);
+
+        WebApplicationFactory.UserManagerMock
+            .FindByIdAsync(Arg.Any<string>())
+            .Returns(new ApplicationUser() 
+            { 
+                Id = "test", Email = "a@example.com", 
+                FirstName = "Test1", LastName = "Test2"
+            });
+
+        WebApplicationFactory.UserManagerMock
+            .IsInRoleAsync(Arg.Any<ApplicationUser>(), Arg.Any<string>())
+            .Returns(true);
+    }
 
     /// <summary>
     /// Route of HTTP GET for getting a page of elements, without query parameters.
@@ -143,8 +170,18 @@ public abstract class CrudControllersTest<TEntity, TId, TPreviewDto, TDetailsDto
     /// </summary>
     public abstract TId DefaultId { get; }
 
+    /// <summary>
+    /// Asserts that two <typeparamref name="TDetailsDto"/>s are equal.
+    /// </summary>
+    /// <param name="expected">Expected DTO.</param>
+    /// <param name="actual">Actual DTO.</param>
+    protected virtual void AssertThatViewDtosAreEqual(TDetailsDto expected, TDetailsDto actual)
+    {
+        Assert.That(actual, Is.EqualTo(expected));
+    }
+
     [Test]
-    public virtual async Task GetPage_ValidCall_SucceedsAndReturnsValidType()
+    public virtual async Task GetPage_ValidCall_SucceedsAndReturnsValidDto()
     {
         // Arrange
         using var client = GetTestClient();
@@ -203,7 +240,8 @@ public abstract class CrudControllersTest<TEntity, TId, TPreviewDto, TDetailsDto
             .GetByIdAsync(DefaultId);
         result.EnsureSuccessStatusCode();
         var dto = await result.Content.ReadFromJsonAsync<TDetailsDto>();
-        Assert.That(dto, Is.EqualTo(expectedDto));
+        Assert.That(dto, Is.Not.Null);
+        AssertThatViewDtosAreEqual(expectedDto, dto);
     }
 
     [Test]

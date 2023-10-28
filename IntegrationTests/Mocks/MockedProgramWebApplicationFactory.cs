@@ -1,4 +1,5 @@
 ﻿using EUniversity.Core.Models;
+using EUniversity.Core.Services;
 using EUniversity.Core.Services.Auth;
 using EUniversity.Core.Services.University;
 using EUniversity.Extensions;
@@ -25,9 +26,13 @@ public class MockedProgramWebApplicationFactory : WebApplicationFactory<Program>
     public TestClaimsProvider ClaimsProvider { get; private set; } = null!;
     public IAuthService AuthServiceMock { get; private set; } = null!;
     public UserManager<ApplicationUser> UserManagerMock { get; private set; } = null!;
+
+    public IEntityExistenceChecker ExistenceCheckerMock { get; private set; } = null!;
+
     public IClassroomsService ClassroomsServiceMock { get; private set; } = null!;
     public IGradesService GradesServiceMock { get; private set; } = null!;
     public ICoursesService CoursesServiceMock { get; private set; } = null!;
+    public IGroupsService GroupsServiceMock { get; private set; } = null!;
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
@@ -39,9 +44,12 @@ public class MockedProgramWebApplicationFactory : WebApplicationFactory<Program>
             mockedUserStore, null, null, null, null, null, null, null, null
             );
 
+        ExistenceCheckerMock = Substitute.For<IEntityExistenceChecker>();
+
         ClassroomsServiceMock = Substitute.For<IClassroomsService>();
         GradesServiceMock = Substitute.For<IGradesService>();
         CoursesServiceMock = Substitute.For<ICoursesService>();
+        GroupsServiceMock = Substitute.For<IGroupsService>();
 
         builder.ConfigureTestServices(services =>
         {
@@ -58,10 +66,14 @@ public class MockedProgramWebApplicationFactory : WebApplicationFactory<Program>
             services.AddScoped(_ => AuthServiceMock);
             services.AddScoped(_ => UserManagerMock);
 
+            // General-purpose
+            services.AddScoped(_ => ExistenceCheckerMock);
+
             // University
             services.AddScoped(_ => ClassroomsServiceMock);
             services.AddScoped(_ => GradesServiceMock);
             services.AddScoped(_ => CoursesServiceMock);
+            services.AddScoped(_ => GroupsServiceMock);
         });
     }
 

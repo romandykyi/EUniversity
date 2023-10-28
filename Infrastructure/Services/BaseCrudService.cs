@@ -30,13 +30,22 @@ public abstract class BaseCrudService<TEntity, TId, TPreviewDto, TDetailsDto, TC
     protected ApplicationDbContext DbContext { get; init; }
     protected DbSet<TEntity> Entities => DbContext.Set<TEntity>();
 
+    /// <summary>
+    /// Query used for obtaining an entity by its ID.
+    /// </summary>
+    protected virtual IQueryable<TEntity> GetByIdQuery => Entities.AsNoTracking();
+    /// <summary>
+    /// Query used for obtaining a page with entities.
+    /// </summary>
+    protected virtual IQueryable<TEntity> GetPageQuery => Entities.AsNoTracking();
+
     protected BaseCrudService(ApplicationDbContext dbContext)
     {
         DbContext = dbContext;
     }
 
     /// <inheritdoc />
-    public async Task<TId> CreateAsync(TCreateDto dto)
+    public virtual async Task<TId> CreateAsync(TCreateDto dto)
     {
         TEntity entity = dto.Adapt<TEntity>();
         DbContext.Set<TEntity>().Add(entity);
@@ -46,7 +55,7 @@ public abstract class BaseCrudService<TEntity, TId, TPreviewDto, TDetailsDto, TC
     }
 
     /// <inheritdoc />
-    public async Task<bool> DeleteAsync(TId id)
+    public virtual async Task<bool> DeleteAsync(TId id)
     {
         // Find entity by its ID
         var entity = await Entities
@@ -62,25 +71,25 @@ public abstract class BaseCrudService<TEntity, TId, TPreviewDto, TDetailsDto, TC
     }
 
     /// <inheritdoc />
-    public async Task<Page<TPreviewDto>> GetPageAsync(PaginationProperties properties, IFilter<TEntity>? filter = null)
+    public virtual async Task<Page<TPreviewDto>> GetPageAsync(PaginationProperties properties, IFilter<TEntity>? filter = null)
     {
-        var query = Entities.AsNoTracking();
+        var query = GetPageQuery;
         if (filter != null) query = filter.Apply(query);
 
         return await query.ToPageAsync<TEntity, TPreviewDto>(properties);
     }
 
     /// <inheritdoc />
-    public async Task<TDetailsDto?> GetByIdAsync(TId id)
+    public virtual async Task<TDetailsDto?> GetByIdAsync(TId id)
     {
-        var entity = await Entities.AsNoTracking()
+        var entity = await GetByIdQuery
             .FirstOrDefaultAsync(e => e.Id.Equals(id));
 
         return entity.Adapt<TDetailsDto>();
     }
 
     /// <inheritdoc />
-    public async Task<bool> UpdateAsync(TId id, TUpdateDto dto)
+    public virtual async Task<bool> UpdateAsync(TId id, TUpdateDto dto)
     {
         // Try to find an existing entity
         var entity = await DbContext.Set<TEntity>()

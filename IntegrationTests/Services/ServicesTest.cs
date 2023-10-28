@@ -1,4 +1,6 @@
-﻿using EUniversity.Infrastructure.Data;
+﻿using EUniversity.Core.Models;
+using EUniversity.Infrastructure.Data;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace EUniversity.IntegrationTests.Services;
@@ -27,5 +29,29 @@ public abstract class ServicesTest : IntegrationTest<ProgramWebApplicationFactor
         // Undo all changes
         DbContext.ChangeTracker.Clear();
         DbContext.Database.RollbackTransaction();
+    }
+
+    /// <summary>
+    /// Registers a test user.
+    /// </summary>
+    /// <param name="roles">Roles that will be assigned to the user.</param>
+    /// <returns>
+    /// <see cref="ApplicationUser"/> that exists in the test database.
+    /// </returns>
+    protected async Task<ApplicationUser> RegisterTestUser(params string[] roles)
+    {
+        string userName = Guid.NewGuid().ToString();
+        ApplicationUser user = new()
+        {
+            UserName = userName,
+            FirstName = "Test1",
+            LastName = "Test2",
+            Email = $"{userName}@example.com"
+        };
+        var userManager = ServiceScope.ServiceProvider.GetService<UserManager<ApplicationUser>>()!;
+        await userManager.CreateAsync(user, "StrongPa$$w0rd");
+        await userManager.AddToRolesAsync(user, roles);
+
+        return user;
     }
 }
