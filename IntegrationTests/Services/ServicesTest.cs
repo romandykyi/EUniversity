@@ -40,12 +40,13 @@ public abstract class ServicesTest : IntegrationTest<ProgramWebApplicationFactor
     /// </returns>
     protected async Task<ApplicationUser> RegisterTestUser(params string[] roles)
     {
+        string userName = Guid.NewGuid().ToString();
         ApplicationUser user = new()
         {
-            UserName = "test-user",
+            UserName = userName,
             FirstName = "Test1",
             LastName = "Test2",
-            Email = "test@example.com"
+            Email = $"{userName}@example.com"
         };
         var userManager = ServiceScope.ServiceProvider.GetService<UserManager<ApplicationUser>>()!;
         await userManager.CreateAsync(user, "StrongPa$$w0rd");
