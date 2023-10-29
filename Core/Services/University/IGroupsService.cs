@@ -17,7 +17,7 @@ public interface IGroupsService :
     /// If the student was already part of the group., then <see langword="false" />
     /// is returned.
     /// </returns>
-    Task<bool> AddStudent(StudentGroupDto dto);
+    Task<bool> AddStudentAsync(StudentGroupDto dto);
 
     /// <summary>
     /// Removes a student from a group based on the information provided in the
@@ -30,5 +30,5 @@ public interface IGroupsService :
     /// If the student was not part of the group., then <see langword="false" />
     /// is returned.
     /// </returns>
-    Task<bool> RemoveStudent(StudentGroupDto dto);
+    Task<bool> RemoveStudentAsync(StudentGroupDto dto);
 }
