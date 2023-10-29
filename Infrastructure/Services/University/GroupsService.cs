@@ -27,7 +27,7 @@ public class GroupsService :
     }
 
     /// <inheritdoc />
-    public Task AddStudent(StudentGroupDto dto)
+    public Task<bool> AddStudent(StudentGroupDto dto)
     {
         throw new NotImplementedException();
     }
