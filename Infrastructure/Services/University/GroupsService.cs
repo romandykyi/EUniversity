@@ -27,13 +27,13 @@ public class GroupsService :
     }
 
     /// <inheritdoc />
-    public Task<StudentGroupResult> AddStudent(StudentGroupDto dto)
+    public Task<AddStudentToGroupResult> AddStudent(StudentGroupDto dto)
     {
         throw new NotImplementedException();
     }
 
     /// <inheritdoc />
-    public Task<StudentGroupResult> RemoveStudent(StudentGroupDto dto)
+    public Task<bool> RemoveStudent(StudentGroupDto dto)
     {
         throw new NotImplementedException();
     }

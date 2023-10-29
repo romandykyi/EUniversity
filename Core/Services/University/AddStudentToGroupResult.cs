@@ -4,7 +4,7 @@
 /// Represents the possible results of add/remove 
 /// operations involving student-group associations.
 /// </summary>
-public enum StudentGroupResult
+public enum AddStudentToGroupResult
 {
     /// <summary>
     /// The operation was successful.

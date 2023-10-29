@@ -13,9 +13,9 @@ public interface IGroupsService :
     /// <param name="dto">The DTO containing data for adding the student to the group.</param>
     /// <returns>
     /// A task that represents the asynchronous operation, containing a result of type
-    /// <see cref="StudentGroupResult" /> indicating the outcome of the operation.
+    /// <see cref="AddStudentToGroupResult" /> indicating the outcome of the operation.
     /// </returns>
-    Task<StudentGroupResult> AddStudent(StudentGroupDto dto);
+    Task<AddStudentToGroupResult> AddStudent(StudentGroupDto dto);
 
     /// <summary>
     /// Removes a student from a group based on the information provided in the
@@ -23,8 +23,10 @@ public interface IGroupsService :
     /// </summary>
     /// <param name="dto">The DTO containing data for removing the student from the group.</param>
     /// <returns>
-    /// A task that represents the asynchronous operation, containing a result of type
-    /// <see cref="StudentGroupResult" /> indicating the outcome of the operation.
+    /// A task that represents the asynchronous operation. If the student was
+    /// successfully removed from the group, it returns <see langword="true" />.
+    /// If the student could not be removed from the group, then <see langword="false" />
+    /// is returned.
     /// </returns>
-    Task<StudentGroupResult> RemoveStudent(StudentGroupDto dto);
+    Task<bool> RemoveStudent(StudentGroupDto dto);
 }
