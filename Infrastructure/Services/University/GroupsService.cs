@@ -27,14 +27,39 @@ public class GroupsService :
     }
 
     /// <inheritdoc />
-    public Task<bool> AddStudentAsync(StudentGroupDto dto)
+    public async Task<bool> AddStudentAsync(StudentGroupDto dto)
     {
-        throw new NotImplementedException();
+        // Check if student is already in the group
+        bool studentIsInGroup = await DbContext.StudentGroups
+            .AnyAsync(sg => sg.StudentId == dto.StudentId && dto.GroupId == dto.GroupId);
+        if (studentIsInGroup)
+        {
+            return false;
+        }
+
+        // Add a student to the group
+        var studentGroup = dto.Adapt<StudentGroup>();
+        DbContext.StudentGroups.Add(studentGroup);
+        await DbContext.SaveChangesAsync();
+
+        return true;
     }
 
     /// <inheritdoc />
-    public Task<bool> RemoveStudentAsync(StudentGroupDto dto)
+    public async Task<bool> RemoveStudentAsync(StudentGroupDto dto)
     {
-        throw new NotImplementedException();
+        // Check if student is in the group
+        var studentGroup = await DbContext.StudentGroups
+            .FirstOrDefaultAsync(
+             sg => sg.StudentId == dto.StudentId && dto.GroupId == dto.GroupId
+            );
+        // User is not in the group
+        if (studentGroup == null) return false;
+
+        // Remove student from the group
+        DbContext.Remove(studentGroup);
+        await DbContext.SaveChangesAsync();
+
+        return true;
     }
 }
