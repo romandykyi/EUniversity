@@ -1,10 +1,12 @@
 ﻿using Bogus;
 using EUniversity.Core.Dtos.Auth;
+using EUniversity.Core.Models;
 using EUniversity.Core.Models.University;
 using EUniversity.Core.Models.University.Grades;
 using EUniversity.Core.Policy;
 using EUniversity.Core.Services.Auth;
 using EUniversity.Infrastructure.Data;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 
 namespace EUniversity.Infrastructure.Services.Test;
@@ -17,6 +19,7 @@ public class TestDataService
 {
     private readonly IAuthService _authService;
     private readonly ApplicationDbContext _dbContext;
+    private readonly UserManager<ApplicationUser> _userManager;
     private readonly ILogger<TestDataService> _logger;
 
     /// <summary>
@@ -28,12 +31,14 @@ public class TestDataService
     /// </summary>
     public const int FakeDataGeneratorSeed = 70222500;
 
-    public TestDataService(IAuthService authService,
-        ApplicationDbContext dbContext, ILogger<TestDataService> logger)
+    public TestDataService(IAuthService authService, ApplicationDbContext dbContext,
+        UserManager<ApplicationUser> userManager, ILogger<TestDataService> logger)
     {
         _authService = authService;
         _dbContext = dbContext;
+        _userManager = userManager;
         _logger = logger;
+        Randomizer.Seed = new(FakeDataGeneratorSeed);
     }
 
     /// <summary>
@@ -98,26 +103,25 @@ public class TestDataService
         _logger.LogInformation("Users generation has been finished");
     }
 
-    private async Task CreateFakeEntitiesAsync<T>(Faker<T> faker, int count) where T : class
+    private async Task CreateFakeEntitiesAsync<T>(Faker<T> faker, int count, bool skipable = true)
+        where T : class
     {
         string typeName = typeof(T).Name;
 
-        // Do not generate entities if there are enough of them already
-        int entitiesCount = await _dbContext.Set<T>().CountAsync();
-        if (entitiesCount >= count)
+        if (skipable)
         {
-            _logger.LogInformation("Generation of '{typeName}' entities was skipped:" +
-                " There are {entitiesCount} entities of this type already",
-                typeName, entitiesCount);
-            return;
+            // Do not generate entities if there are enough of them already
+            int entitiesCount = await _dbContext.Set<T>().CountAsync();
+            if (entitiesCount >= count)
+            {
+                _logger.LogInformation("Generation of '{typeName}' entities was skipped:" +
+                    " There are {entitiesCount} entities of this type already",
+                    typeName, entitiesCount);
+                return;
+            }
         }
 
-        Randomizer.Seed = new(FakeDataGeneratorSeed);
-
-        foreach (var entity in faker.GenerateLazy(count))
-        {
-            _dbContext.Add(entity);
-        }
+        _dbContext.AddRange(faker.GenerateLazy(count));
         await _dbContext.SaveChangesAsync();
 
         _logger.LogInformation("{count} entities of type '{typeName}' have been generated",
@@ -162,5 +166,63 @@ public class TestDataService
             .RuleFor(c => c.Description, f => f.Lorem.Sentences(f.Random.Number(1, 3), " "));
 
         await CreateFakeEntitiesAsync(coursesFaker, count);
+    }
+
+    /// <summary>
+    /// Creates many fake groups.
+    /// </summary>
+    /// <param name="count">Number of groups to be created.</param>
+    /// <param name="minStudentsInGroup">Minimum number of students in one group.</param>
+    /// <param name="maxStudentsInGroup">Maximum number of students in one group.</param>
+    public async Task CreateFakeGroupsAsync(int count = 150,
+        int minStudentsInGroup = 15, int maxStudentsInGroup = 30)
+    {
+        Faker faker = new();
+
+        // IDs of teachers
+        var teachersIds = (await _userManager.GetUsersInRoleAsync(Roles.Teacher))
+            .Select(u => u.Id)
+            .ToArray();
+        // IDs of courses
+        var coursesIds = _dbContext.Courses
+            .Select(c => c.Id)
+            .ToArray();
+
+        // Generate groups
+        var groupsFaker = new Faker<Group>()
+            .RuleFor(g => g.Name, f => f.Random.AlphaNumeric(6))
+            .RuleFor(g => g.CourseId, f => f.Random.CollectionItem(coursesIds))
+            .RuleFor(g => g.TeacherId, f => f.Random.CollectionItem(teachersIds));
+        await CreateFakeEntitiesAsync(groupsFaker, count);
+
+        // Get all groups
+        var groupsIds = _dbContext.Groups
+            .Select(g => g.Id)
+            .ToArray();
+
+        // Assign random students to groups
+        var studentsIds = (await _userManager.GetUsersInRoleAsync(Roles.Student))
+            .Select(u => u.Id)
+            .ToArray();
+        foreach (var groupId in groupsIds)
+        {
+            // Do not assign students if group has at least one assigned students
+            // or with 10% probability
+            if (await _dbContext.StudentGroups.AnyAsync(sg => sg.GroupId == groupId) ||
+                faker.Random.Bool(0.1f))
+            {
+                continue;
+            }
+
+            var shuffledStudentsIds = faker.Random
+                .Shuffle(studentsIds)
+                .ToArray();
+            int i = 0;
+            var studentGroupFaker = new Faker<StudentGroup>()
+                .RuleFor(s => s.GroupId, _ => groupId)
+                .RuleFor(s => s.StudentId, _ => shuffledStudentsIds[i++]);
+            int studentsCount = faker.Random.Int(minStudentsInGroup, maxStudentsInGroup);
+            await CreateFakeEntitiesAsync(studentGroupFaker, studentsCount, false);
+        }
     }
 }
