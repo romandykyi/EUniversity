@@ -25,4 +25,16 @@ public class GroupsService :
     public GroupsService(ApplicationDbContext dbContext) : base(dbContext)
     {
     }
+
+    /// <inheritdoc />
+    public Task<StudentGroupResult> AddStudent(StudentGroupDto dto)
+    {
+        throw new NotImplementedException();
+    }
+
+    /// <inheritdoc />
+    public Task<StudentGroupResult> RemoveStudent(StudentGroupDto dto)
+    {
+        throw new NotImplementedException();
+    }
 }
