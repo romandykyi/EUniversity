@@ -12,10 +12,8 @@ public interface IGroupsService :
     /// </summary>
     /// <param name="dto">The DTO containing data for adding the student to the group.</param>
     /// <returns>
-    /// A task that represents the asynchronous operation, containing a result of type
-    /// <see cref="AddStudentToGroupResult" /> indicating the outcome of the operation.
-    /// </returns>
-    Task<AddStudentToGroupResult> AddStudent(StudentGroupDto dto);
+    /// A task that represents the asynchronous operation.
+    Task AddStudent(StudentGroupDto dto);
 
     /// <summary>
     /// Removes a student from a group based on the information provided in the
