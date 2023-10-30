@@ -45,9 +45,9 @@ public interface ICrudService<TEntity, TId, TPreviewDto, TDetailsDto, TCreateDto
     /// <param name="dto">The DTO containing data for creating the entity.</param>
     /// <returns>
     /// A task that represents the asynchronous operation, containing
-    /// the identifier of the newly created entity.
+    /// the newly created entity.
     /// </returns>
-    Task<TId> CreateAsync(TCreateDto dto);
+    Task<TEntity> CreateAsync(TCreateDto dto);
 
     /// <summary>
     /// Updates an existing entity identified by its unique identifier asynchronously.

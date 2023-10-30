@@ -248,7 +248,7 @@ public abstract class CrudControllersTest<TEntity, TId, TPreviewDto, TDetailsDto
         using var client = GetTestClient();
         ServiceMock
             .CreateAsync(Arg.Any<TCreateDto>())
-            .Returns(DefaultId);
+            .Returns(Activator.CreateInstance<TEntity>());
 
         // Act
         var result = await client.PostAsJsonAsync(PostRoute, validCreateDto);

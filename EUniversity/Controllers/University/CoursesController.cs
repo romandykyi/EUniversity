@@ -2,6 +2,7 @@
 using EUniversity.Core.Pagination;
 using EUniversity.Core.Policy;
 using EUniversity.Core.Services.University;
+using Mapster;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Attributes;
@@ -70,15 +71,15 @@ public class CoursesController : ControllerBase
     /// <response code="403">User lacks 'Administrator' role</response>
     [HttpPost]
     [Authorize(Policies.HasAdministratorPermission)]
-    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(CourseViewDto), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> CreateCourseAsync([FromBody] CourseCreateDto dto)
     {
-        int id = await _coursesService.CreateAsync(dto);
-        var routeValues = new { id };
-        var body = new { id };
+        var course = await _coursesService.CreateAsync(dto);
+        var routeValues = new { id = course.Id };
+        var body = course.Adapt<CourseViewDto>();
         return CreatedAtRoute(nameof(GetCourseByIdAsync), routeValues, body);
     }
 

@@ -183,10 +183,10 @@ public abstract class CrudServicesTest<TService, TEntity, TId, TPreviewDto, TDet
         TCreateDto dto = GetValidCreateDto();
 
         // Act
-        TId id = await Service.CreateAsync(dto);
+        TEntity entity = await Service.CreateAsync(dto);
 
         // Assert(check if element is actually created)
-        Assert.That(await EntityExistsAsync(id), "Entity doesn't exist");
+        Assert.That(await EntityExistsAsync(entity.Id), "Entity doesn't exist");
     }
 
     [Test]
