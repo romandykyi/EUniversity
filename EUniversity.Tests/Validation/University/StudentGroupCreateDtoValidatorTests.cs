@@ -1,6 +1,4 @@
 ﻿using EUniversity.Core.Dtos.University;
-using EUniversity.Core.Models.University;
-using EUniversity.Core.Services;
 using EUniversity.Core.Validation;
 using EUniversity.Core.Validation.University;
 using FluentValidation.TestHelper;
@@ -10,9 +8,6 @@ namespace EUniversity.Tests.Validation.University;
 public class StudentGroupCreateDtoValidatorTests : UsersValidatorTests
 {
     private StudentGroupCreateDtoValidator _validator;
-
-    private const int TestGroupId = 1;
-    private const int NonExistentGroupId = 2;
 
     [OneTimeSetUp]
     public void OneTimeSetUp()
