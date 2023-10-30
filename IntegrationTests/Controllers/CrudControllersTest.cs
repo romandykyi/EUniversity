@@ -2,405 +2,442 @@
 using EUniversity.Core.Models;
 using EUniversity.Core.Pagination;
 using EUniversity.Core.Services;
+using EUniversity.IntegrationTests.Mocks;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
 using NSubstitute.ReturnsExtensions;
 using System.Net;
 
-namespace EUniversity.IntegrationTests.Controllers
+namespace EUniversity.IntegrationTests.Controllers;
+
+/// <summary>
+/// Class that implements base CRUD controller tests.
+/// </summary>
+public abstract class CrudControllersTest<TEntity, TId, TPreviewDto, TDetailsDto, TCreateDto, TUpdateDto>
+    : ControllersTest
+    where TEntity : class, IEntity<TId>
+    where TId : IEquatable<TId>
+    where TPreviewDto : class, IEquatable<TPreviewDto>
+    where TDetailsDto : class, IEquatable<TDetailsDto>
+    where TCreateDto : class, IEquatable<TCreateDto>
+    where TUpdateDto : class, IEquatable<TUpdateDto>
 {
     /// <summary>
-    /// Class that implements base CRUD controller tests.
+    /// Mock of the CRUD service. Should be initialized in <see cref="SetUpService"/>
     /// </summary>
-    public abstract class CrudControllersTest<TEntity, TId, TPreviewDto, TDetailsDto, TCreateDto, TUpdateDto>
-        : ControllersTest
-        where TEntity : class, IEntity<TId>
-        where TId : IEquatable<TId>
-        where TPreviewDto : class, IEquatable<TPreviewDto>
-        where TDetailsDto : class, IEquatable<TDetailsDto>
-        where TCreateDto : class, IEquatable<TCreateDto>
-        where TUpdateDto : class, IEquatable<TUpdateDto>
+    protected ICrudService<TEntity, TId, TPreviewDto, TDetailsDto, TCreateDto, TUpdateDto> ServiceMock
+    { get; set; } = null!;
+
+
+    /// <summary>
+    /// When implemented, gets test <typeparamref name="TPreviewDto"/>.
+    /// </summary>
+    /// <returns>
+    /// Test <typeparamref name="TPreviewDto"/>.
+    /// </returns>
+    protected abstract TPreviewDto GetTestPreviewDto();
+
+    /// <summary>
+    /// Returns a test page with <typeparamref name="TPreviewDto"/>s. 
+    /// </summary>
+    /// <param name="properties">Pagination properties used for the page.</param>
+    /// <returns>
+    /// A test page with <typeparamref name="TPreviewDto"/>s. 
+    /// </returns>
+    protected virtual Page<TPreviewDto> GetTestPreviewDtos(PaginationProperties properties)
     {
-        /// <summary>
-        /// Mock of the CRUD service. Should be initialized in <see cref="SetUpService"/>
-        /// </summary>
-        protected ICrudService<TEntity, TId, TPreviewDto, TDetailsDto, TCreateDto, TUpdateDto> ServiceMock
-        { get; set; } = null!;
+        IEnumerable<TPreviewDto> testEnumerable =
+            Enumerable.Repeat(GetTestPreviewDto(), 10);
+        return new(testEnumerable, properties, 100);
+    }
 
+    /// <summary>
+    /// When implemented, gets test <typeparamref name="TDetailsDto"/>.
+    /// </summary>
+    /// <returns>
+    /// Test <typeparamref name="TDetailsDto"/>.
+    /// </returns>
+    protected abstract TDetailsDto GetTestDetailsDto();
 
-        /// <summary>
-        /// When implemented, gets test <typeparamref name="TPreviewDto"/>.
-        /// </summary>
-        /// <returns>
-        /// Test <typeparamref name="TPreviewDto"/>.
-        /// </returns>
-        protected abstract TPreviewDto GetTestPreviewDto();
+    /// <summary>
+    /// When implemented, gets valid <typeparamref name="TCreateDto"/>.
+    /// </summary>
+    /// <returns>
+    /// Valid <typeparamref name="TCreateDto"/>.
+    /// </returns>
+    protected abstract TCreateDto GetValidCreateDto();
 
-        /// <summary>
-        /// Returns a test page with <typeparamref name="TPreviewDto"/>s. 
-        /// </summary>
-        /// <param name="properties">Pagination properties used for the page.</param>
-        /// <returns>
-        /// A test page with <typeparamref name="TPreviewDto"/>s. 
-        /// </returns>
-        protected virtual Page<TPreviewDto> GetTestPreviewDtos(PaginationProperties properties)
-        {
-            IEnumerable<TPreviewDto> testEnumerable =
-                Enumerable.Repeat(GetTestPreviewDto(), 10);
-            return new(testEnumerable, properties, 100);
-        }
+    /// <summary>
+    /// When implemented, gets invalid <typeparamref name="TCreateDto"/>.
+    /// </summary>
+    /// <returns>
+    /// Invalid <typeparamref name="TCreateDto"/>.
+    /// </returns>
+    protected abstract TCreateDto GetInvalidCreateDto();
 
-        /// <summary>
-        /// When implemented, gets test <typeparamref name="TDetailsDto"/>.
-        /// </summary>
-        /// <returns>
-        /// Test <typeparamref name="TDetailsDto"/>.
-        /// </returns>
-        protected abstract TDetailsDto GetTestDetailsDto();
+    /// <summary>
+    /// When implemented, gets valid <typeparamref name="TUpdateDto"/>.
+    /// </summary>
+    /// <returns>
+    /// Valid <typeparamref name="TUpdateDto"/>.
+    /// </returns>
+    protected abstract TUpdateDto GetValidUpdateDto();
 
-        /// <summary>
-        /// When implemented, gets valid <typeparamref name="TCreateDto"/>.
-        /// </summary>
-        /// <returns>
-        /// Valid <typeparamref name="TCreateDto"/>.
-        /// </returns>
-        protected abstract TCreateDto GetValidCreateDto();
+    /// <summary>
+    /// When implemented, gets invalid <typeparamref name="TUpdateDto"/>.
+    /// </summary>
+    /// <returns>
+    /// Invalid <typeparamref name="TUpdateDto"/>.
+    /// </returns>
+    protected abstract TUpdateDto GetInvalidUpdateDto();
 
-        /// <summary>
-        /// When implemented, gets invalid <typeparamref name="TCreateDto"/>.
-        /// </summary>
-        /// <returns>
-        /// Invalid <typeparamref name="TCreateDto"/>.
-        /// </returns>
-        protected abstract TCreateDto GetInvalidCreateDto();
+    /// <summary>
+    /// Gets HTTP client used for testing [Authorize] methods. 
+    /// Uses client with 'Administrator' role by default.
+    /// </summary>
+    /// <returns>
+    /// HTTP client for testing [Authorize] methods.
+    /// </returns>
+    protected virtual HttpClient GetTestClient() => CreateAdministratorClient();
 
-        /// <summary>
-        /// When implemented, gets valid <typeparamref name="TUpdateDto"/>.
-        /// </summary>
-        /// <returns>
-        /// Valid <typeparamref name="TUpdateDto"/>.
-        /// </returns>
-        protected abstract TUpdateDto GetValidUpdateDto();
+    /// <summary>
+    /// Sets up a <see cref="ServiceMock"/> used for testing.
+    /// </summary>
+    [SetUp]
+    public abstract void SetUpService();
 
-        /// <summary>
-        /// When implemented, gets invalid <typeparamref name="TUpdateDto"/>.
-        /// </summary>
-        /// <returns>
-        /// Invalid <typeparamref name="TUpdateDto"/>.
-        /// </returns>
-        protected abstract TUpdateDto GetInvalidUpdateDto();
+    /// <summary>
+    /// Sets up validation mocks in such a way that all
+    /// foreign key validations pass.
+    /// </summary>
+    protected void SetUpValidationMocks()
+    {
+        WebApplicationFactory.ExistenceCheckerMock
+            .ExistsAsync<AnyEntity, AnyEntityId>(Arg.Any<AnyEntityId>())
+            .ReturnsForAnyArgs(true);
 
-        /// <summary>
-        /// Gets HTTP client used for testing [Authorize] methods. 
-        /// Uses client with 'Administrator' role by default.
-        /// </summary>
-        /// <returns>
-        /// HTTP client for testing [Authorize] methods.
-        /// </returns>
-        protected virtual HttpClient GetTestClient() => CreateAdministratorClient();
-
-        [SetUp]
-        public abstract void SetUpService();
-
-        /// <summary>
-        /// Route of HTTP GET for getting a page of elements, without query parameters.
-        /// </summary>
-        /// <remarks>
-        /// Authentication is not checked.
-        /// </remarks>
-        public abstract string GetPageRoute { get; }
-        /// <summary>
-        /// Route of HTTP GET for getting an element by its ID.
-        /// </summary>
-        /// <remarks>
-        /// Authentication is not checked.
-        /// </remarks>
-        public abstract string GetByIdRoute { get; }
-        /// <summary>
-        /// Route of HTTP POST.
-        /// </summary>
-        /// <remarks>
-        /// Authentication is checked.
-        /// </remarks>
-        public abstract string PostRoute { get; }
-        /// <summary>
-        /// Route of HTTP PUT.
-        /// </summary>
-        /// <remarks>
-        /// Authentication is checked.
-        /// </remarks>
-        public abstract string PutRoute { get; }
-        /// <summary>
-        /// Route of HTTP DELETE.
-        /// </summary>
-        /// <remarks>
-        /// Authentication is checked.
-        /// </remarks>
-        public abstract string DeleteRoute { get; }
-
-        /// <summary>
-        /// Default ID to be used for mocking.
-        /// </summary>
-        public abstract TId DefaultId { get; }
-
-        [Test]
-        public virtual async Task GetPage_ValidCall_SucceedsAndReturnsValidType()
-        {
-            // Arrange
-            using var client = GetTestClient();
-            PaginationProperties properties = new(2, 10);
-            ServiceMock
-                .GetPageAsync(Arg.Any<PaginationProperties>(), Arg.Any<IFilter<TEntity>>())
-                .Returns(Task.FromResult(GetTestPreviewDtos(properties)));
-
-            // Act
-            var result = await client.GetAsync($"{GetPageRoute}?page=1&pageSize=25");
-
-            // Assert
-            result.EnsureSuccessStatusCode();
-            var page = await result.Content.ReadFromJsonAsync<Page<TPreviewDto>>();
-            Assert.That(page, Is.Not.Null);
-            Assert.Multiple(() =>
-            {
-                Assert.That(page.PageNumber, Is.EqualTo(properties.Page));
-                Assert.That(page.PageSize, Is.EqualTo(properties.PageSize));
-                Assert.That(page.Items.Count(), Is.LessThanOrEqualTo(page.PageSize));
+        WebApplicationFactory.UserManagerMock
+            .FindByIdAsync(Arg.Any<string>())
+            .Returns(new ApplicationUser() 
+            { 
+                Id = "test", Email = "a@example.com", 
+                FirstName = "Test1", LastName = "Test2"
             });
-        }
 
-        [Test]
-        public virtual async Task GetPage_InvalidInput_Returns400BadRequest()
+        WebApplicationFactory.UserManagerMock
+            .IsInRoleAsync(Arg.Any<ApplicationUser>(), Arg.Any<string>())
+            .Returns(true);
+    }
+
+    /// <summary>
+    /// Route of HTTP GET for getting a page of elements, without query parameters.
+    /// </summary>
+    /// <remarks>
+    /// Authentication is not checked.
+    /// </remarks>
+    public abstract string GetPageRoute { get; }
+    /// <summary>
+    /// Route of HTTP GET for getting an element by its ID.
+    /// </summary>
+    /// <remarks>
+    /// Authentication is not checked.
+    /// </remarks>
+    public abstract string GetByIdRoute { get; }
+    /// <summary>
+    /// Route of HTTP POST.
+    /// </summary>
+    /// <remarks>
+    /// Authentication is checked.
+    /// </remarks>
+    public abstract string PostRoute { get; }
+    /// <summary>
+    /// Route of HTTP PUT.
+    /// </summary>
+    /// <remarks>
+    /// Authentication is checked.
+    /// </remarks>
+    public abstract string PutRoute { get; }
+    /// <summary>
+    /// Route of HTTP DELETE.
+    /// </summary>
+    /// <remarks>
+    /// Authentication is checked.
+    /// </remarks>
+    public abstract string DeleteRoute { get; }
+
+    /// <summary>
+    /// Default ID to be used for mocking.
+    /// </summary>
+    public abstract TId DefaultId { get; }
+
+    /// <summary>
+    /// Asserts that two <typeparamref name="TDetailsDto"/>s are equal.
+    /// </summary>
+    /// <param name="expected">Expected DTO.</param>
+    /// <param name="actual">Actual DTO.</param>
+    protected virtual void AssertThatViewDtosAreEqual(TDetailsDto expected, TDetailsDto actual)
+    {
+        Assert.That(actual, Is.EqualTo(expected));
+    }
+
+    [Test]
+    public virtual async Task GetPage_ValidCall_SucceedsAndReturnsValidDto()
+    {
+        // Arrange
+        using var client = GetTestClient();
+        PaginationProperties properties = new(2, 10);
+        ServiceMock
+            .GetPageAsync(Arg.Any<PaginationProperties>(), Arg.Any<IFilter<TEntity>>())
+            .Returns(Task.FromResult(GetTestPreviewDtos(properties)));
+
+        // Act
+        var result = await client.GetAsync($"{GetPageRoute}?page=1&pageSize=25");
+
+        // Assert
+        result.EnsureSuccessStatusCode();
+        var page = await result.Content.ReadFromJsonAsync<Page<TPreviewDto>>();
+        Assert.That(page, Is.Not.Null);
+        Assert.Multiple(() =>
         {
-            // Arrange
-            using var client = GetTestClient();
-            ServiceMock
-                .GetPageAsync(Arg.Any<PaginationProperties>(), Arg.Any<IFilter<TEntity>>())
-                .Throws<InvalidOperationException>();
+            Assert.That(page.PageNumber, Is.EqualTo(properties.Page));
+            Assert.That(page.PageSize, Is.EqualTo(properties.PageSize));
+            Assert.That(page.Items.Count(), Is.LessThanOrEqualTo(page.PageSize));
+        });
+    }
 
-            // Act
-            var result = await client.GetAsync($"{GetPageRoute}?page=-1");
+    [Test]
+    public virtual async Task GetPage_InvalidInput_Returns400BadRequest()
+    {
+        // Arrange
+        using var client = GetTestClient();
+        ServiceMock
+            .GetPageAsync(Arg.Any<PaginationProperties>(), Arg.Any<IFilter<TEntity>>())
+            .Throws<InvalidOperationException>();
 
-            // Assert
-            Assert.That(result.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
-        }
+        // Act
+        var result = await client.GetAsync($"{GetPageRoute}?page=-1");
 
-        [Test]
-        public virtual async Task GetById_ValidCall_SucceedsAndReturnsValidType()
-        {
-            // Arrange
-            TDetailsDto expectedDto = GetTestDetailsDto();
-            ServiceMock
-                .GetByIdAsync(Arg.Any<TId>())
-                .Returns(expectedDto);
-            using var client = GetTestClient();
+        // Assert
+        Assert.That(result.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
+    }
 
-            // Act
-            var result = await client.GetAsync(GetByIdRoute);
+    [Test]
+    public virtual async Task GetById_ValidCall_SucceedsAndReturnsValidType()
+    {
+        // Arrange
+        TDetailsDto expectedDto = GetTestDetailsDto();
+        ServiceMock
+            .GetByIdAsync(Arg.Any<TId>())
+            .Returns(expectedDto);
+        using var client = GetTestClient();
 
-            // Assert
-            await ServiceMock
-                .Received(1)
-                .GetByIdAsync(DefaultId);
-            result.EnsureSuccessStatusCode();
-            var dto = await result.Content.ReadFromJsonAsync<TDetailsDto>();
-            Assert.That(dto, Is.EqualTo(expectedDto));
-        }
+        // Act
+        var result = await client.GetAsync(GetByIdRoute);
 
-        [Test]
-        public virtual async Task GetById_ElementDoesNotExist_Return404NotFound()
-        {
-            // Arrange
-            ServiceMock
-                .GetByIdAsync(Arg.Any<TId>())
-                .ReturnsNull();
-            using var client = GetTestClient();
+        // Assert
+        await ServiceMock
+            .Received(1)
+            .GetByIdAsync(DefaultId);
+        result.EnsureSuccessStatusCode();
+        var dto = await result.Content.ReadFromJsonAsync<TDetailsDto>();
+        Assert.That(dto, Is.Not.Null);
+        AssertThatViewDtosAreEqual(expectedDto, dto);
+    }
 
-            // Act
-            var result = await client.GetAsync(GetByIdRoute);
+    [Test]
+    public virtual async Task GetById_ElementDoesNotExist_Return404NotFound()
+    {
+        // Arrange
+        ServiceMock
+            .GetByIdAsync(Arg.Any<TId>())
+            .ReturnsNull();
+        using var client = GetTestClient();
 
-            // Assert
-            await ServiceMock
-                .Received(1)
-                .GetByIdAsync(DefaultId);
-            Assert.That(result.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
-        }
+        // Act
+        var result = await client.GetAsync(GetByIdRoute);
 
-        [Test]
-        public virtual async Task Post_ValidCall_Succeeds()
-        {
-            // Arrange
-            TCreateDto validCreateDto = GetValidCreateDto();
-            using var client = GetTestClient();
-            ServiceMock
-                .CreateAsync(Arg.Any<TCreateDto>())
-                .Returns(DefaultId);
+        // Assert
+        await ServiceMock
+            .Received(1)
+            .GetByIdAsync(DefaultId);
+        Assert.That(result.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
+    }
 
-            // Act
-            var result = await client.PostAsJsonAsync(PostRoute, validCreateDto);
+    [Test]
+    public virtual async Task Post_ValidCall_Succeeds()
+    {
+        // Arrange
+        TCreateDto validCreateDto = GetValidCreateDto();
+        using var client = GetTestClient();
+        ServiceMock
+            .CreateAsync(Arg.Any<TCreateDto>())
+            .Returns(DefaultId);
 
-            // Assert
-            result.EnsureSuccessStatusCode();
-            await ServiceMock
-                .Received(1)
-                .CreateAsync(validCreateDto);
-        }
+        // Act
+        var result = await client.PostAsJsonAsync(PostRoute, validCreateDto);
 
-        [Test]
-        public virtual async Task Post_InvalidInput_Returns400BadRequest()
-        {
-            // Arrange
-            using var client = GetTestClient();
-            ServiceMock
-                .CreateAsync(Arg.Any<TCreateDto>())
-                .Throws<InvalidOperationException>();
+        // Assert
+        result.EnsureSuccessStatusCode();
+        await ServiceMock
+            .Received(1)
+            .CreateAsync(validCreateDto);
+    }
 
-            // Act
-            var result = await client.PostAsJsonAsync(PostRoute, GetInvalidCreateDto());
+    [Test]
+    public virtual async Task Post_InvalidInput_Returns400BadRequest()
+    {
+        // Arrange
+        using var client = GetTestClient();
+        ServiceMock
+            .CreateAsync(Arg.Any<TCreateDto>())
+            .Throws<InvalidOperationException>();
 
-            // Assert
-            Assert.That(result.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
-        }
+        // Act
+        var result = await client.PostAsJsonAsync(PostRoute, GetInvalidCreateDto());
 
-        [Test]
-        public virtual async Task Post_UnauthenticatedUser_Returns401Unauthorized()
-        {
-            // Arrange
-            using var client = CreateUnauthorizedClient();
-            ServiceMock
-                .CreateAsync(Arg.Any<TCreateDto>())
-                .Throws<InvalidOperationException>();
+        // Assert
+        Assert.That(result.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
+    }
 
-            // Act
-            var result = await client.PostAsJsonAsync(PostRoute, GetValidCreateDto());
+    [Test]
+    public virtual async Task Post_UnauthenticatedUser_Returns401Unauthorized()
+    {
+        // Arrange
+        using var client = CreateUnauthorizedClient();
+        ServiceMock
+            .CreateAsync(Arg.Any<TCreateDto>())
+            .Throws<InvalidOperationException>();
 
-            // Assert
-            Assert.That(result.StatusCode, Is.EqualTo(HttpStatusCode.Unauthorized));
-        }
+        // Act
+        var result = await client.PostAsJsonAsync(PostRoute, GetValidCreateDto());
 
-        [Test]
-        public virtual async Task Put_ValidCall_Succeeds()
-        {
-            // Arrange
-            TUpdateDto validUpdateDto = GetValidUpdateDto();
-            using var client = GetTestClient();
-            ServiceMock
-                .UpdateAsync(Arg.Any<TId>(), Arg.Any<TUpdateDto>())
-                .Returns(true);
+        // Assert
+        Assert.That(result.StatusCode, Is.EqualTo(HttpStatusCode.Unauthorized));
+    }
 
-            // Act
-            var result = await client.PutAsJsonAsync(PutRoute, validUpdateDto);
+    [Test]
+    public virtual async Task Put_ValidCall_Succeeds()
+    {
+        // Arrange
+        TUpdateDto validUpdateDto = GetValidUpdateDto();
+        using var client = GetTestClient();
+        ServiceMock
+            .UpdateAsync(Arg.Any<TId>(), Arg.Any<TUpdateDto>())
+            .Returns(true);
 
-            // Assert
-            await ServiceMock
-                .Received(1)
-                .UpdateAsync(DefaultId, validUpdateDto);
-            result.EnsureSuccessStatusCode();
-        }
+        // Act
+        var result = await client.PutAsJsonAsync(PutRoute, validUpdateDto);
 
-        [Test]
-        public virtual async Task Put_ElementDoesNotExist_Returns404NotFound()
-        {
-            // Arrange
-            TUpdateDto validUpdateDto = GetValidUpdateDto();
-            using var client = GetTestClient();
-            ServiceMock
-                .UpdateAsync(Arg.Any<TId>(), Arg.Any<TUpdateDto>())
-                .Returns(false);
+        // Assert
+        await ServiceMock
+            .Received(1)
+            .UpdateAsync(DefaultId, validUpdateDto);
+        result.EnsureSuccessStatusCode();
+    }
 
-            // Act
-            var result = await client.PutAsJsonAsync(PutRoute, validUpdateDto);
+    [Test]
+    public virtual async Task Put_ElementDoesNotExist_Returns404NotFound()
+    {
+        // Arrange
+        TUpdateDto validUpdateDto = GetValidUpdateDto();
+        using var client = GetTestClient();
+        ServiceMock
+            .UpdateAsync(Arg.Any<TId>(), Arg.Any<TUpdateDto>())
+            .Returns(false);
 
-            // Assert
-            await ServiceMock
-                .Received(1)
-                .UpdateAsync(DefaultId, validUpdateDto);
-            Assert.That(result.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
-        }
+        // Act
+        var result = await client.PutAsJsonAsync(PutRoute, validUpdateDto);
 
-        [Test]
-        public virtual async Task Put_InvalidInput_Returns400BadRequest()
-        {
-            // Arrange
-            using var client = GetTestClient();
-            ServiceMock
-                .UpdateAsync(Arg.Any<TId>(), Arg.Any<TUpdateDto>())
-                .Throws<InvalidOperationException>();
+        // Assert
+        await ServiceMock
+            .Received(1)
+            .UpdateAsync(DefaultId, validUpdateDto);
+        Assert.That(result.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
+    }
 
-            // Act
-            var result = await client.PutAsJsonAsync(PutRoute, GetInvalidUpdateDto());
+    [Test]
+    public virtual async Task Put_InvalidInput_Returns400BadRequest()
+    {
+        // Arrange
+        using var client = GetTestClient();
+        ServiceMock
+            .UpdateAsync(Arg.Any<TId>(), Arg.Any<TUpdateDto>())
+            .Throws<InvalidOperationException>();
 
-            // Assert
-            Assert.That(result.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
-        }
+        // Act
+        var result = await client.PutAsJsonAsync(PutRoute, GetInvalidUpdateDto());
 
-        [Test]
-        public virtual async Task Put_UnauthenticatedUser_Returns401Unauthorized()
-        {
-            // Arrange
-            using var client = CreateUnauthorizedClient();
-            ServiceMock
-                .UpdateAsync(Arg.Any<TId>(), Arg.Any<TUpdateDto>())
-                .Throws<InvalidOperationException>();
+        // Assert
+        Assert.That(result.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
+    }
 
-            // Act
-            var result = await client.PutAsJsonAsync(PutRoute, GetValidUpdateDto());
+    [Test]
+    public virtual async Task Put_UnauthenticatedUser_Returns401Unauthorized()
+    {
+        // Arrange
+        using var client = CreateUnauthorizedClient();
+        ServiceMock
+            .UpdateAsync(Arg.Any<TId>(), Arg.Any<TUpdateDto>())
+            .Throws<InvalidOperationException>();
 
-            // Assert
-            Assert.That(result.StatusCode, Is.EqualTo(HttpStatusCode.Unauthorized));
-        }
+        // Act
+        var result = await client.PutAsJsonAsync(PutRoute, GetValidUpdateDto());
 
-        [Test]
-        public virtual async Task Delete_ValidCall_Succeeds()
-        {
-            // Arrange
-            using var client = GetTestClient();
-            ServiceMock
-                .DeleteAsync(Arg.Any<TId>())
-                .Returns(true);
+        // Assert
+        Assert.That(result.StatusCode, Is.EqualTo(HttpStatusCode.Unauthorized));
+    }
 
-            // Act
-            var result = await client.DeleteAsync(DeleteRoute);
+    [Test]
+    public virtual async Task Delete_ValidCall_Succeeds()
+    {
+        // Arrange
+        using var client = GetTestClient();
+        ServiceMock
+            .DeleteAsync(Arg.Any<TId>())
+            .Returns(true);
 
-            // Assert
-            await ServiceMock
-                .Received(1)
-                .DeleteAsync(DefaultId);
-            result.EnsureSuccessStatusCode();
-        }
+        // Act
+        var result = await client.DeleteAsync(DeleteRoute);
 
-        [Test]
-        public virtual async Task Delete_ElementDoesNotExist_Return404NotFound()
-        {
-            // Arrange
-            using var client = GetTestClient();
-            ServiceMock
-                .DeleteAsync(Arg.Any<TId>())
-                .Returns(false);
+        // Assert
+        await ServiceMock
+            .Received(1)
+            .DeleteAsync(DefaultId);
+        result.EnsureSuccessStatusCode();
+    }
 
-            // Act
-            var result = await client.DeleteAsync(DeleteRoute);
+    [Test]
+    public virtual async Task Delete_ElementDoesNotExist_Return404NotFound()
+    {
+        // Arrange
+        using var client = GetTestClient();
+        ServiceMock
+            .DeleteAsync(Arg.Any<TId>())
+            .Returns(false);
 
-            // Assert
-            await ServiceMock
-                .Received(1)
-                .DeleteAsync(DefaultId);
-            Assert.That(result.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
-        }
+        // Act
+        var result = await client.DeleteAsync(DeleteRoute);
 
-        [Test]
-        public async Task Delete_UnauthenticatedUser_Returns401Unauthorized()
-        {
-            // Arrange
-            using var client = CreateUnauthorizedClient();
-            ServiceMock
-                .DeleteAsync(Arg.Any<TId>())
-                .Throws<InvalidOperationException>();
+        // Assert
+        await ServiceMock
+            .Received(1)
+            .DeleteAsync(DefaultId);
+        Assert.That(result.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
+    }
 
-            // Act
-            var result = await client.DeleteAsync(DeleteRoute);
+    [Test]
+    public async Task Delete_UnauthenticatedUser_Returns401Unauthorized()
+    {
+        // Arrange
+        using var client = CreateUnauthorizedClient();
+        ServiceMock
+            .DeleteAsync(Arg.Any<TId>())
+            .Throws<InvalidOperationException>();
 
-            // Assert
-            Assert.That(result.StatusCode, Is.EqualTo(HttpStatusCode.Unauthorized));
-        }
+        // Act
+        var result = await client.DeleteAsync(DeleteRoute);
+
+        // Assert
+        Assert.That(result.StatusCode, Is.EqualTo(HttpStatusCode.Unauthorized));
     }
 }

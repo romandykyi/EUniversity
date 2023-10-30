@@ -4,60 +4,59 @@ using EUniversity.Core.Validation;
 using EUniversity.Core.Validation.University.Grades;
 using FluentValidation.TestHelper;
 
-namespace EUniversity.Tests.Validation.University.Grades
+namespace EUniversity.Tests.Validation.University.Grades;
+
+internal class GradeDtoValidatorTests
 {
-    internal class GradeDtoValidatorTests
+    private GradeCreateDtoValidator _validator;
+
+    public const int DefaultScore = 5;
+    public readonly string DefaultName = "5";
+
+    [OneTimeSetUp]
+    public void OneTimeSetUp()
     {
-        private GradeDtoValidator _validator;
+        _validator = new();
+    }
 
-        public const int DefaultScore = 5;
-        public readonly string DefaultName = "5";
+    [Test]
+    public void Name_Valid_Succeeds()
+    {
+        // Arrange
+        GradeCreateDto dto = new(DefaultName, DefaultScore);
 
-        [OneTimeSetUp]
-        public void OneTimeSetUp()
-        {
-            _validator = new();
-        }
+        // Act
+        var result = _validator.TestValidate(dto);
 
-        [Test]
-        public void Name_Valid_IsValid()
-        {
-            // Arrange
-            CreateGradeDto dto = new(DefaultName, DefaultScore);
+        // Assert
+        result.ShouldNotHaveAnyValidationErrors();
+    }
 
-            // Act
-            var result = _validator.TestValidate(dto);
+    [Test]
+    public void Name_TooLarge_FailsWithPropertyTooLargeError()
+    {
+        // Arrange
+        GradeCreateDto dto = new(new string('0', Grade.MaxNameLength + 1), DefaultScore);
 
-            // Assert
-            result.ShouldNotHaveAnyValidationErrors();
-        }
+        // Act
+        var result = _validator.TestValidate(dto);
 
-        [Test]
-        public void Name_TooLarge_IsInvalid()
-        {
-            // Arrange
-            CreateGradeDto dto = new(new string('0', Grade.MaxNameLength + 1), DefaultScore);
+        // Assert
+        result.ShouldHaveValidationErrorFor(dto => dto.Name)
+            .WithErrorCode(ValidationErrorCodes.PropertyTooLarge);
+    }
 
-            // Act
-            var result = _validator.TestValidate(dto);
+    [Test]
+    public void Name_Empty_FailsWithPropertyRequiredError()
+    {
+        // Arrange
+        GradeCreateDto dto = new(string.Empty, DefaultScore);
 
-            // Assert
-            result.ShouldHaveValidationErrorFor(dto => dto.Name)
-                .WithErrorCode(ValidationErrorCodes.PropertyTooLarge);
-        }
+        // Act
+        var result = _validator.TestValidate(dto);
 
-        [Test]
-        public void Name_Empty_IsInvalid()
-        {
-            // Arrange
-            CreateGradeDto dto = new(string.Empty, DefaultScore);
-
-            // Act
-            var result = _validator.TestValidate(dto);
-
-            // Assert
-            result.ShouldHaveValidationErrorFor(dto => dto.Name)
-                .WithErrorCode(ValidationErrorCodes.PropertyRequired);
-        }
+        // Assert
+        result.ShouldHaveValidationErrorFor(dto => dto.Name)
+            .WithErrorCode(ValidationErrorCodes.PropertyRequired);
     }
 }

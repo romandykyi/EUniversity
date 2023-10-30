@@ -5,45 +5,44 @@ using EUniversity.Core.Models;
 using IdentityModel;
 using Microsoft.AspNetCore.Identity;
 
-namespace EUniversity.Infrastructure.Identity
+namespace EUniversity.Infrastructure.Identity;
+
+public class CustomProfileService : IProfileService
 {
-    public class CustomProfileService : IProfileService
+    private readonly UserManager<ApplicationUser> _userManager;
+
+    public CustomProfileService(UserManager<ApplicationUser> userManager)
     {
-        private readonly UserManager<ApplicationUser> _userManager;
+        _userManager = userManager;
+    }
 
-        public CustomProfileService(UserManager<ApplicationUser> userManager)
+    public Task GetProfileDataAsync(ProfileDataRequestContext context)
+    {
+        var user = context.Subject;
+        HashSet<string> claimsTypes = new()
         {
-            _userManager = userManager;
+            JwtClaimTypes.Subject, JwtClaimTypes.Name, JwtClaimTypes.Email,
+            JwtClaimTypes.Role, JwtClaimTypes.GivenName,
+            JwtClaimTypes.MiddleName, JwtClaimTypes.FamilyName
+        };
+        var claims = user.Claims.Where(c => claimsTypes.Contains(c.Type));
+        context.IssuedClaims.AddRange(claims);
+
+        return Task.CompletedTask;
+    }
+
+    public async Task IsActiveAsync(IsActiveContext context)
+    {
+        var user = await _userManager.FindByIdAsync(context.Subject.GetSubjectId());
+
+        if (user != null)
+        {
+            context.IsActive = true;
         }
-
-        public Task GetProfileDataAsync(ProfileDataRequestContext context)
+        else
         {
-            var user = context.Subject;
-            HashSet<string> claimsTypes = new()
-            {
-                JwtClaimTypes.Subject, JwtClaimTypes.Name, JwtClaimTypes.Email,
-                JwtClaimTypes.Role, JwtClaimTypes.GivenName,
-                JwtClaimTypes.MiddleName, JwtClaimTypes.FamilyName
-            };
-            var claims = user.Claims.Where(c => claimsTypes.Contains(c.Type));
-            context.IssuedClaims.AddRange(claims);
-
-            return Task.CompletedTask;
-        }
-
-        public async Task IsActiveAsync(IsActiveContext context)
-        {
-            var user = await _userManager.FindByIdAsync(context.Subject.GetSubjectId());
-
-            if (user != null)
-            {
-                context.IsActive = true;
-            }
-            else
-            {
-                // The user is not found, so consider them as not active
-                context.IsActive = false;
-            }
+            // The user is not found, so consider them as not active
+            context.IsActive = false;
         }
     }
 }

@@ -2,13 +2,12 @@
 using EUniversity.Core.Models.University;
 using EUniversity.Core.Services;
 
-namespace EUniversity.Infrastructure.Services.University
+namespace EUniversity.Infrastructure.Services.University;
+
+/// <summary>
+/// Service for classrooms.
+/// </summary>
+public interface IClassroomsService :
+    ICrudService<Classroom, int, ClassroomViewDto, ClassroomViewDto, ClassroomCreateDto, ClassroomCreateDto>
 {
-    /// <summary>
-    /// Service for classrooms.
-    /// </summary>
-    public interface IClassroomsService :
-        ICrudService<Classroom, int, ViewClassroomDto, ViewClassroomDto, CreateClassroomDto, CreateClassroomDto>
-    {
-    }
 }

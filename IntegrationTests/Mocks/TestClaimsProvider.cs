@@ -1,26 +1,25 @@
 ﻿using IdentityModel;
 using System.Security.Claims;
 
-namespace EUniversity.IntegrationTests.Mocks
+namespace EUniversity.IntegrationTests.Mocks;
+
+public class TestClaimsProvider
 {
-    public class TestClaimsProvider
+    public IList<Claim> Claims { get; }
+
+    public TestClaimsProvider()
     {
-        public IList<Claim> Claims { get; }
+        Claims = new List<Claim>();
+    }
 
-        public TestClaimsProvider()
+    public void Init(string? id, string name, params string[] roles)
+    {
+        Claims.Clear();
+        Claims.Add(new(JwtClaimTypes.Subject, id ?? Guid.NewGuid().ToString()));
+        Claims.Add(new(JwtClaimTypes.Name, name));
+        foreach (var role in roles)
         {
-            Claims = new List<Claim>();
-        }
-
-        public void Init(string? id, string name, params string[] roles)
-        {
-            Claims.Clear();
-            Claims.Add(new(JwtClaimTypes.Subject, id ?? Guid.NewGuid().ToString()));
-            Claims.Add(new(JwtClaimTypes.Name, name));
-            foreach (var role in roles)
-            {
-                Claims.Add(new(JwtClaimTypes.Role, role));
-            }
+            Claims.Add(new(JwtClaimTypes.Role, role));
         }
     }
 }

@@ -1,32 +1,57 @@
-﻿using EUniversity.Infrastructure.Data;
+﻿using EUniversity.Core.Models;
+using EUniversity.Infrastructure.Data;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace EUniversity.IntegrationTests.Services
+namespace EUniversity.IntegrationTests.Services;
+
+/// <summary>
+/// Base class for isolated integration tests of services against local/in-memory db.
+/// </summary>
+/// <remarks>
+/// Each test in derived classes is isolated, and no changes to the database will be saved.
+/// </remarks>
+public abstract class ServicesTest : IntegrationTest<ProgramWebApplicationFactory>
 {
-    /// <summary>
-    /// Base class for isolated integration tests of services against local/in-memory db.
-    /// </summary>
-    /// <remarks>
-    /// Each test in derived classes is isolated, and no changes to the database will be saved.
-    /// </remarks>
-    public abstract class ServicesTest : IntegrationTest<ProgramWebApplicationFactory>
+    protected ApplicationDbContext DbContext { get; private set; }
+
+    [SetUp]
+    public async Task SetUpTransaction()
     {
-        protected ApplicationDbContext DbContext { get; private set; }
+        DbContext = ServiceScope.ServiceProvider.GetService<ApplicationDbContext>()!;
+        // Begin transaction to make tests isolated
+        await DbContext.Database.BeginTransactionAsync();
+    }
 
-        [SetUp]
-        public async Task SetUpTransaction()
-        {
-            DbContext = ServiceScope.ServiceProvider.GetService<ApplicationDbContext>()!;
-            // Begin transaction to make tests isolated
-            await DbContext.Database.BeginTransactionAsync();
-        }
+    [TearDown]
+    public void TearDownTransaction()
+    {
+        // Undo all changes
+        DbContext.ChangeTracker.Clear();
+        DbContext.Database.RollbackTransaction();
+    }
 
-        [TearDown]
-        public void TearDownTransaction()
+    /// <summary>
+    /// Registers a test user.
+    /// </summary>
+    /// <param name="roles">Roles that will be assigned to the user.</param>
+    /// <returns>
+    /// <see cref="ApplicationUser"/> that exists in the test database.
+    /// </returns>
+    protected async Task<ApplicationUser> RegisterTestUser(params string[] roles)
+    {
+        string userName = Guid.NewGuid().ToString();
+        ApplicationUser user = new()
         {
-            // Undo all changes
-            DbContext.ChangeTracker.Clear();
-            DbContext.Database.RollbackTransaction();
-        }
+            UserName = userName,
+            FirstName = "Test1",
+            LastName = "Test2",
+            Email = $"{userName}@example.com"
+        };
+        var userManager = ServiceScope.ServiceProvider.GetService<UserManager<ApplicationUser>>()!;
+        await userManager.CreateAsync(user, "StrongPa$$w0rd");
+        await userManager.AddToRolesAsync(user, roles);
+
+        return user;
     }
 }

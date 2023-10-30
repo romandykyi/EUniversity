@@ -2,13 +2,12 @@
 using EUniversity.Core.Models.University;
 using EUniversity.Infrastructure.Data;
 
-namespace EUniversity.Infrastructure.Services.University
+namespace EUniversity.Infrastructure.Services.University;
+
+/// <inheritdoc />
+public class ClassroomsService :
+    BaseCrudService<Classroom, int, ClassroomViewDto, ClassroomViewDto, ClassroomCreateDto, ClassroomCreateDto>,
+    IClassroomsService
 {
-    /// <inheritdoc />
-    public class ClassroomsService :
-        BaseCrudService<Classroom, int, ViewClassroomDto, ViewClassroomDto, CreateClassroomDto, CreateClassroomDto>,
-        IClassroomsService
-    {
-        public ClassroomsService(ApplicationDbContext dbContext) : base(dbContext) { }
-    }
+    public ClassroomsService(ApplicationDbContext dbContext) : base(dbContext) { }
 }

@@ -1,5 +1,6 @@
 ﻿using EUniversity.Core.Models;
 using EUniversity.Core.Services;
+using EUniversity.Core.Services.Auth;
 using EUniversity.Core.Services.University;
 using EUniversity.Extensions;
 using EUniversity.Infrastructure.Data;
@@ -15,66 +16,76 @@ using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
 using System.Net.Http.Headers;
 
-namespace EUniversity.IntegrationTests.Mocks
+namespace EUniversity.IntegrationTests.Mocks;
+
+/// <summary>
+/// <see cref="WebApplicationFactory{}" /> for testing with mocked services and authentication.
+/// </summary>
+public class MockedProgramWebApplicationFactory : WebApplicationFactory<Program>
 {
-    /// <summary>
-    /// <see cref="WebApplicationFactory{}" /> for testing with mocked services and authentication.
-    /// </summary>
-    public class MockedProgramWebApplicationFactory : WebApplicationFactory<Program>
+    public TestClaimsProvider ClaimsProvider { get; private set; } = null!;
+    public IAuthService AuthServiceMock { get; private set; } = null!;
+    public UserManager<ApplicationUser> UserManagerMock { get; private set; } = null!;
+
+    public IEntityExistenceChecker ExistenceCheckerMock { get; private set; } = null!;
+
+    public IClassroomsService ClassroomsServiceMock { get; private set; } = null!;
+    public IGradesService GradesServiceMock { get; private set; } = null!;
+    public ICoursesService CoursesServiceMock { get; private set; } = null!;
+    public IGroupsService GroupsServiceMock { get; private set; } = null!;
+
+    protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
-        public TestClaimsProvider ClaimsProvider { get; private set; } = null!;
-        public IAuthService AuthServiceMock { get; private set; } = null!;
-        public UserManager<ApplicationUser> UserManagerMock { get; private set; } = null!;
-        public IClassroomsService ClassroomsServiceMock { get; private set; } = null!;
-        public IGradesService GradesServiceMock { get; private set; } = null!;
-        public ICoursesService CoursesServiceMock { get; private set; } = null!;
+        ClaimsProvider = new();
+        AuthServiceMock = Substitute.For<IAuthService>();
 
-        protected override void ConfigureWebHost(IWebHostBuilder builder)
+        var mockedUserStore = Substitute.For<IUserStore<ApplicationUser>>();
+        UserManagerMock = Substitute.For<UserManager<ApplicationUser>>(
+            mockedUserStore, null, null, null, null, null, null, null, null
+            );
+
+        ExistenceCheckerMock = Substitute.For<IEntityExistenceChecker>();
+
+        ClassroomsServiceMock = Substitute.For<IClassroomsService>();
+        GradesServiceMock = Substitute.For<IGradesService>();
+        CoursesServiceMock = Substitute.For<ICoursesService>();
+        GroupsServiceMock = Substitute.For<IGroupsService>();
+
+        builder.ConfigureTestServices(services =>
         {
-            ClaimsProvider = new();
-            AuthServiceMock = Substitute.For<IAuthService>();
+            // DB
+            services.AddDbContext<ApplicationDbContext>(o => o.UseInMemoryDatabase("Endpoints tests DB")
+                .ConfigureWarnings(x => x.Ignore(InMemoryEventId.TransactionIgnoredWarning)));
 
-            var mockedUserStore = Substitute.For<IUserStore<ApplicationUser>>();
-            UserManagerMock = Substitute.For<UserManager<ApplicationUser>>(
-                mockedUserStore, null, null, null, null, null, null, null, null
-                );
+            // Auth
+            services.AddScoped(_ => ClaimsProvider);
+            services.AddAuthentication(defaultScheme: "TestScheme")
+                .AddScheme<AuthenticationSchemeOptions, TestAuthHandler>(
+                    "TestScheme", options => { });
+            services.AddCustomizedAuthorization("TestScheme");
+            services.AddScoped(_ => AuthServiceMock);
+            services.AddScoped(_ => UserManagerMock);
 
-            ClassroomsServiceMock = Substitute.For<IClassroomsService>();
-            GradesServiceMock = Substitute.For<IGradesService>();
-            CoursesServiceMock = Substitute.For<ICoursesService>();
+            // General-purpose
+            services.AddScoped(_ => ExistenceCheckerMock);
 
-            builder.ConfigureTestServices(services =>
-            {
-                // DB
-                services.AddDbContext<ApplicationDbContext>(o => o.UseInMemoryDatabase("Endpoints tests DB")
-                    .ConfigureWarnings(x => x.Ignore(InMemoryEventId.TransactionIgnoredWarning)));
+            // University
+            services.AddScoped(_ => ClassroomsServiceMock);
+            services.AddScoped(_ => GradesServiceMock);
+            services.AddScoped(_ => CoursesServiceMock);
+            services.AddScoped(_ => GroupsServiceMock);
+        });
+    }
 
-                // Auth
-                services.AddScoped(_ => ClaimsProvider);
-                services.AddAuthentication(defaultScheme: "TestScheme")
-                    .AddScheme<AuthenticationSchemeOptions, TestAuthHandler>(
-                        "TestScheme", options => { });
-                services.AddCustomizedAuthorization("TestScheme");
-                services.AddScoped(_ => AuthServiceMock);
-                services.AddScoped(_ => UserManagerMock);
-
-                // University
-                services.AddScoped(_ => ClassroomsServiceMock);
-                services.AddScoped(_ => GradesServiceMock);
-                services.AddScoped(_ => CoursesServiceMock);
-            });
-        }
-
-        public HttpClient CreateCustomClient()
+    public HttpClient CreateCustomClient()
+    {
+        var client = CreateClient(new()
         {
-            var client = CreateClient(new()
-            {
-                AllowAutoRedirect = false
-            });
+            AllowAutoRedirect = false
+        });
 
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("TestScheme");
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("TestScheme");
 
-            return client;
-        }
+        return client;
     }
 }

@@ -3,91 +3,90 @@ using EUniversity.Core.Validation;
 using EUniversity.Core.Validation.Auth;
 using FluentValidation.TestHelper;
 
-namespace EUniversity.Tests.Validation.Auth
+namespace EUniversity.Tests.Validation.Auth;
+
+public class ChangePasswordDtoValidatorTests
 {
-    public class ChangePasswordDtoValidatorTests
+    private ChangePasswordDtoValidator _validator;
+
+    public const string CurrentPassword = "password";
+    public const string ValidNewPassword = "Password1!";
+
+    [OneTimeSetUp]
+    public void OneTimeSetUp()
     {
-        private ChangePasswordDtoValidator _validator;
+        _validator = new ChangePasswordDtoValidator();
+    }
 
-        public const string CurrentPassword = "password";
-        public const string ValidNewPassword = "Password1!";
+    [Test]
+    public void Dto_Valid_Succeeds()
+    {
+        // Arrange
+        ChangePasswordDto password = new(CurrentPassword, ValidNewPassword);
 
-        [OneTimeSetUp]
-        public void OneTimeSetUp()
-        {
-            _validator = new ChangePasswordDtoValidator();
-        }
+        // Act
+        var result = _validator.TestValidate(password);
 
-        [Test]
-        public void Input_Valid_Succeeds()
-        {
-            // Arrange
-            ChangePasswordDto password = new(CurrentPassword, ValidNewPassword);
+        // Assert
+        result.ShouldNotHaveAnyValidationErrors();
+    }
 
-            // Act
-            var result = _validator.TestValidate(password);
+    [Test]
+    public void OldPassword_Empty_Fails()
+    {
+        // Arrange
+        ChangePasswordDto password = new(string.Empty, ValidNewPassword);
 
-            // Assert
-            result.ShouldNotHaveAnyValidationErrors();
-        }
+        // Act
+        var result = _validator.TestValidate(password);
 
-        [Test]
-        public void OldPassword_Empty_Fails()
-        {
-            // Arrange
-            ChangePasswordDto password = new(string.Empty, ValidNewPassword);
+        // Assert
+        result.ShouldHaveValidationErrorFor(x => x.Current)
+            .WithErrorCode(ValidationErrorCodes.PropertyRequired)
+            .Only();
+    }
 
-            // Act
-            var result = _validator.TestValidate(password);
+    [Test]
+    public void NewPassword_Empty_Succeeds()
+    {
+        // Arrange
+        ChangePasswordDto password = new(CurrentPassword, string.Empty);
 
-            // Assert
-            result.ShouldHaveValidationErrorFor(x => x.Current)
-                .WithErrorCode(ValidationErrorCodes.PropertyRequired)
-                .Only();
-        }
+        // Act
+        var result = _validator.TestValidate(password);
 
-        [Test]
-        public void NewPassword_Empty_Succeeds()
-        {
-            // Arrange
-            ChangePasswordDto password = new(CurrentPassword, string.Empty);
+        // Assert
+        result.ShouldHaveValidationErrorFor(x => x.New)
+            .WithErrorCode(ValidationErrorCodes.PropertyRequired)
+            .Only();
+    }
 
-            // Act
-            var result = _validator.TestValidate(password);
+    [Test]
+    public void Passwords_Empty_FailsWithoutEqualErrorCode()
+    {
+        // Arrange
+        ChangePasswordDto password = new(string.Empty, string.Empty);
 
-            // Assert
-            result.ShouldHaveValidationErrorFor(x => x.New)
-                .WithErrorCode(ValidationErrorCodes.PropertyRequired)
-                .Only();
-        }
+        // Act
+        var result = _validator.TestValidate(password);
 
-        [Test]
-        public void Passwords_Empty_FailsWithoutEqualErrorCode()
-        {
-            // Arrange
-            ChangePasswordDto password = new(string.Empty, string.Empty);
+        // Assert
+        result.ShouldHaveValidationErrorFor(x => x.New)
+            .WithoutErrorCode(ValidationErrorCodes.Equal);
+    }
 
-            // Act
-            var result = _validator.TestValidate(password);
+    [Test]
+    public void Passwords_Equal_FailsWithEqualError()
+    {
+        // Arrange
+        ChangePasswordDto password = new(ValidNewPassword, ValidNewPassword);
 
-            // Assert
-            result.ShouldHaveValidationErrorFor(x => x.New)
-                .WithoutErrorCode(ValidationErrorCodes.Equal);
-        }
+        // Act
+        var result = _validator.TestValidate(password);
 
-        [Test]
-        public void Passwords_Equal_Fails()
-        {
-            // Arrange
-            ChangePasswordDto password = new(ValidNewPassword, ValidNewPassword);
-
-            // Act
-            var result = _validator.TestValidate(password);
-
-            // Assert
-            result.ShouldHaveValidationErrorFor(x => x.New)
-                .WithErrorCode(ValidationErrorCodes.Equal)
-                .Only();
-        }
+        // Assert
+        result.ShouldHaveValidationErrorFor(x => x.New)
+            .WithErrorCode(ValidationErrorCodes.Equal)
+            .Only();
     }
 }

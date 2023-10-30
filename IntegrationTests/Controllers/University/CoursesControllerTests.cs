@@ -1,56 +1,55 @@
 ﻿using EUniversity.Core.Dtos.University;
 using EUniversity.Core.Models.University;
 
-namespace EUniversity.IntegrationTests.Controllers.University
+namespace EUniversity.IntegrationTests.Controllers.University;
+
+public class CoursesControllerTests :
+    AdminCrudControllersTest<Course, int, CoursePreviewDto, CourseViewDto, CourseCreateDto, CourseCreateDto>
 {
-    public class CoursesControllerTests :
-        AdminCrudControllersTest<Course, int, PreviewCourseDto, ViewCourseDto, CreateCourseDto, CreateCourseDto>
+    public override string GetPageRoute => "api/courses";
+
+    public override string GetByIdRoute => $"api/courses/{DefaultId}";
+
+    public override string PostRoute => "api/courses";
+
+    public override string PutRoute => $"api/courses/{DefaultId}";
+
+    public override string DeleteRoute => $"api/courses/{DefaultId}";
+
+    public override int DefaultId => 1;
+
+    public override void SetUpService()
     {
-        public override string GetPageRoute => "api/courses";
+        ServiceMock = WebApplicationFactory.CoursesServiceMock;
+    }
 
-        public override string GetByIdRoute => $"api/courses/{DefaultId}";
+    protected override CourseCreateDto GetInvalidCreateDto()
+    {
+        return new(string.Empty, null);
+    }
 
-        public override string PostRoute => "api/courses";
+    protected override CourseCreateDto GetInvalidUpdateDto()
+    {
+        return new(string.Empty, null);
+    }
 
-        public override string PutRoute => $"api/courses/{DefaultId}";
+    protected override CourseViewDto GetTestDetailsDto()
+    {
+        return new(DefaultId, "Test", null);
+    }
 
-        public override string DeleteRoute => $"api/courses/{DefaultId}";
+    protected override CoursePreviewDto GetTestPreviewDto()
+    {
+        return new(DefaultId, "Test");
+    }
 
-        public override int DefaultId => 1;
+    protected override CourseCreateDto GetValidCreateDto()
+    {
+        return new("Test", "test");
+    }
 
-        public override void SetUpService()
-        {
-            ServiceMock = WebApplicationFactory.CoursesServiceMock;
-        }
-
-        protected override CreateCourseDto GetInvalidCreateDto()
-        {
-            return new(string.Empty, null);
-        }
-
-        protected override CreateCourseDto GetInvalidUpdateDto()
-        {
-            return new(string.Empty, null);
-        }
-
-        protected override ViewCourseDto GetTestDetailsDto()
-        {
-            return new(DefaultId, "Test", null);
-        }
-
-        protected override PreviewCourseDto GetTestPreviewDto()
-        {
-            return new(DefaultId, "Test");
-        }
-
-        protected override CreateCourseDto GetValidCreateDto()
-        {
-            return new("Test", "test");
-        }
-
-        protected override CreateCourseDto GetValidUpdateDto()
-        {
-            return new("Test", "test2");
-        }
+    protected override CourseCreateDto GetValidUpdateDto()
+    {
+        return new("Test", "test2");
     }
 }
