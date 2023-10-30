@@ -19,7 +19,7 @@ public abstract class AdminCrudControllersTest<TEntity, TId, TPreviewDto, TDetai
     where TUpdateDto : class, IEquatable<TUpdateDto>
 {
     [Test]
-    public virtual async Task Post_StudentRole_Return403Forbidden()
+    public virtual async Task Post_StudentRole_Returns403Forbidden()
     {
         // Arrange
         using var client = CreateStudentClient();
@@ -35,7 +35,7 @@ public abstract class AdminCrudControllersTest<TEntity, TId, TPreviewDto, TDetai
     }
 
     [Test]
-    public virtual async Task Put_StudentRole_Return403Forbidden()
+    public virtual async Task Put_StudentRole_Returns403Forbidden()
     {
         // Arrange
         using var client = CreateStudentClient();
@@ -51,7 +51,7 @@ public abstract class AdminCrudControllersTest<TEntity, TId, TPreviewDto, TDetai
     }
 
     [Test]
-    public async Task Delete_StudentRole_Return403Forbidden()
+    public async Task Delete_StudentRole_Returns403Forbidden()
     {
         // Arrange
         using var client = CreateStudentClient();
