@@ -1,3 +1,4 @@
+using EUniversity.Controllers.University;
 using EUniversity.Core.Mapping;
 using EUniversity.Extensions;
 
@@ -50,6 +51,9 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller}/{action=Index}/{id?}");
+app.MapControllerRoute(
+    name: nameof(GroupsController.DeleteStudentFromGroupAsync),
+    pattern: "api/groups/{groupId:int}/students/{studentId}");
 
 app.MapFallbackToFile("index.html");
 

@@ -1,11 +1,12 @@
 ﻿using EUniversity.Core.Dtos.University;
 using EUniversity.Core.Dtos.Users;
 using EUniversity.Core.Models.University;
+using EUniversity.Core.Services.University;
 
 namespace EUniversity.IntegrationTests.Controllers.University;
 
 public class GroupsControllerTests :
-    CrudControllersTest<Group, int, GroupPreviewDto, GroupViewDto, GroupCreateDto, GroupCreateDto>
+    AdminCrudControllersTest<Group, int, GroupPreviewDto, GroupViewDto, GroupCreateDto, GroupCreateDto>
 {
     public readonly TeacherPreviewDto TeacherPreviewDto = new(Guid.NewGuid().ToString(), "test-teacher", "Teacher1", "Teacher2", null);
     public readonly CoursePreviewDto CoursePreviewDto = new(5, "Some Course");
@@ -37,6 +38,7 @@ public class GroupsControllerTests :
     public override void SetUpService()
     {
         ServiceMock = WebApplicationFactory.GroupsServiceMock;
+        Assert.That(ServiceMock, Is.InstanceOf<IGroupsService>());
         SetUpValidationMocks();
     }
 
@@ -52,11 +54,11 @@ public class GroupsControllerTests :
 
     protected override GroupViewDto GetTestDetailsDto()
     {
-        List<StudentPreviewDto> students = new() 
-        { 
-            new(Guid.NewGuid().ToString(), "test-user", "Student1", "Student2", null) 
+        List<StudentPreviewDto> students = new()
+        {
+            new(Guid.NewGuid().ToString(), "test-user", "Student1", "Student2", null)
         };
-        return new(DefaultId, "Group", TeacherPreviewDto, 
+        return new(DefaultId, "Group", TeacherPreviewDto,
             CoursePreviewDto, students);
     }
 
