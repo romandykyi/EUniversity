@@ -7,9 +7,9 @@ using FluentValidation.TestHelper;
 
 namespace EUniversity.Tests.Validation.University;
 
-public class StudentGroupValidatorTests : UsersValidatorTests
+public class StudentGroupCreateDtoValidatorTests : UsersValidatorTests
 {
-    private StudentGroupDtoValidator _validator;
+    private StudentGroupCreateDtoValidator _validator;
 
     private const int TestGroupId = 1;
     private const int NonExistentGroupId = 2;
@@ -17,23 +17,14 @@ public class StudentGroupValidatorTests : UsersValidatorTests
     [OneTimeSetUp]
     public void OneTimeSetUp()
     {
-        // Mock validator dependencies
-        var existenceChecker = Substitute.For<IEntityExistenceChecker>();
-        existenceChecker
-            .ExistsAsync<Group, int>(Arg.Any<int>())
-            .Returns(false);
-        existenceChecker
-            .ExistsAsync<Group, int>(TestGroupId)
-            .Returns(true);
-
-        _validator = new(existenceChecker, UserManagerMock);
+        _validator = new(UserManagerMock);
     }
 
     [Test]
     public async Task Dto_Valid_Succeeds()
     {
         // Arrange
-        StudentGroupDto dto = new(TestStudentId, TestGroupId);
+        StudentGroupCreateDto dto = new(TestStudentId);
 
         // Act
         var result = await _validator.TestValidateAsync(dto);
@@ -49,7 +40,7 @@ public class StudentGroupValidatorTests : UsersValidatorTests
     public async Task StudentId_Empty_FailsWithPropertyRequiredError(string studentId)
     {
         // Arrange
-        StudentGroupDto dto = new(studentId, TestGroupId);
+        StudentGroupCreateDto dto = new(studentId);
 
         // Act
         var result = await _validator.TestValidateAsync(dto);
@@ -63,7 +54,7 @@ public class StudentGroupValidatorTests : UsersValidatorTests
     public async Task StudentId_UserDoesNotExist_FailsWithInvalidForeignKeyError()
     {
         // Arrange
-        StudentGroupDto dto = new(NonExistentUserId, TestGroupId);
+        StudentGroupCreateDto dto = new(NonExistentUserId);
 
         // Act
         var result = await _validator.TestValidateAsync(dto);
@@ -79,7 +70,7 @@ public class StudentGroupValidatorTests : UsersValidatorTests
     public async Task StudentId_UserWithoutStudentRole_FailsWithUserIsNotInRoleError(string userId)
     {
         // Arrange
-        StudentGroupDto dto = new(userId, TestGroupId);
+        StudentGroupCreateDto dto = new(userId);
 
         // Act
         var result = await _validator.TestValidateAsync(dto);
@@ -87,19 +78,5 @@ public class StudentGroupValidatorTests : UsersValidatorTests
         // Assert
         result.ShouldHaveValidationErrorFor(dto => dto.StudentId)
             .WithErrorCode(ValidationErrorCodes.UserIsNotInRole);
-    }
-
-    [Test]
-    public async Task GroupId_GroupDoesNotExist_FailsWithInvalidForeignKeyError()
-    {
-        // Arrange
-        StudentGroupDto dto = new(TestStudentId, NonExistentGroupId);
-
-        // Act
-        var result = await _validator.TestValidateAsync(dto);
-
-        // Assert
-        result.ShouldHaveValidationErrorFor(dto => dto.GroupId)
-            .WithErrorCode(ValidationErrorCodes.InvalidForeignKey);
     }
 }

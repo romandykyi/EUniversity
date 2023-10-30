@@ -118,10 +118,9 @@ public class GroupsServiceTests :
         // Arrange
         var student = await RegisterTestUser(Roles.Student);
         var group = await CreateTestEntityAsync();
-        StudentGroupDto dto = new(student.Id, group.Id);
 
         // Act
-        bool result = await Service.AddStudentAsync(dto);
+        bool result = await Service.AddStudentAsync(student.Id, group.Id);
 
         // Assert
         Assert.That(result, Is.True);
@@ -135,10 +134,9 @@ public class GroupsServiceTests :
     {
         // Arrange
         var studentGroup = await CreateTestStudentGroupAsync();
-        StudentGroupDto dto = new(studentGroup.StudentId, studentGroup.GroupId);
 
         // Act
-        bool result = await Service.AddStudentAsync(dto);
+        bool result = await Service.AddStudentAsync(studentGroup.StudentId, studentGroup.GroupId);
 
         // Assert
         Assert.That(result, Is.False);
@@ -149,15 +147,16 @@ public class GroupsServiceTests :
     {
         // Arrange
         var studentGroup = await CreateTestStudentGroupAsync();
-        StudentGroupDto dto = new(studentGroup.StudentId, studentGroup.GroupId);
+        string studentId = studentGroup.StudentId;
+        int groupId = studentGroup.GroupId;
 
         // Act
-        bool result = await Service.RemoveStudentAsync(dto);
+        bool result = await Service.RemoveStudentAsync(studentId, groupId);
 
         // Assert
         Assert.That(result, Is.True);
         // Assert that student was removed
-        bool exists = await CheckStudentGroupExistenceAsync(dto.StudentId, dto.GroupId);
+        bool exists = await CheckStudentGroupExistenceAsync(studentId, groupId);
         Assert.That(exists, Is.False, "Student wasn't removed from the group");
     }
 
@@ -167,10 +166,9 @@ public class GroupsServiceTests :
         // Arrange
         var student = await RegisterTestUser(Roles.Student);
         var group = await CreateTestEntityAsync();
-        StudentGroupDto dto = new(student.Id, group.Id);
 
         // Act
-        bool result = await Service.RemoveStudentAsync(dto);
+        bool result = await Service.RemoveStudentAsync(student.Id, group.Id);
 
         // Assert
         Assert.That(result, Is.False);

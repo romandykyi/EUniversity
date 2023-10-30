@@ -27,18 +27,22 @@ public class GroupsService :
     }
 
     /// <inheritdoc />
-    public async Task<bool> AddStudentAsync(StudentGroupDto dto)
+    public async Task<bool> AddStudentAsync(string studentId, int groupId)
     {
         // Check if student is already in the group
         bool studentIsInGroup = await DbContext.StudentGroups
-            .AnyAsync(sg => sg.StudentId == dto.StudentId && dto.GroupId == dto.GroupId);
+            .AnyAsync(sg => sg.StudentId == studentId && sg.GroupId == groupId);
         if (studentIsInGroup)
         {
             return false;
         }
 
         // Add a student to the group
-        var studentGroup = dto.Adapt<StudentGroup>();
+        StudentGroup studentGroup = new()
+        {
+            StudentId = studentId,
+            GroupId = groupId
+        };
         DbContext.StudentGroups.Add(studentGroup);
         await DbContext.SaveChangesAsync();
 
@@ -46,12 +50,12 @@ public class GroupsService :
     }
 
     /// <inheritdoc />
-    public async Task<bool> RemoveStudentAsync(StudentGroupDto dto)
+    public async Task<bool> RemoveStudentAsync(string studentId, int groupId)
     {
         // Check if student is in the group
         var studentGroup = await DbContext.StudentGroups
             .FirstOrDefaultAsync(
-             sg => sg.StudentId == dto.StudentId && dto.GroupId == dto.GroupId
+             sg => sg.StudentId == studentId && sg.GroupId == groupId
             );
         // User is not in the group
         if (studentGroup == null) return false;

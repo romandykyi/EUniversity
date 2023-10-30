@@ -1,14 +1,22 @@
 ﻿using EUniversity.Core.Dtos.University;
 using EUniversity.Core.Dtos.Users;
 using EUniversity.Core.Models.University;
+using EUniversity.Core.Services.University;
+using EUniversity.Infrastructure.Services.University;
+using NSubstitute;
+using NSubstitute.ExceptionExtensions;
+using System.Net;
+using System.Security.Cryptography;
 
 namespace EUniversity.IntegrationTests.Controllers.University;
 
 public class GroupsControllerTests :
-    CrudControllersTest<Group, int, GroupPreviewDto, GroupViewDto, GroupCreateDto, GroupCreateDto>
+    AdminCrudControllersTest<Group, int, GroupPreviewDto, GroupViewDto, GroupCreateDto, GroupCreateDto>
 {
     public readonly TeacherPreviewDto TeacherPreviewDto = new(Guid.NewGuid().ToString(), "test-teacher", "Teacher1", "Teacher2", null);
     public readonly CoursePreviewDto CoursePreviewDto = new(5, "Some Course");
+
+    private IGroupsService _groupServiceMock;
 
     public override string GetPageRoute => "api/groups";
 
@@ -37,6 +45,8 @@ public class GroupsControllerTests :
     public override void SetUpService()
     {
         ServiceMock = WebApplicationFactory.GroupsServiceMock;
+        Assert.That(ServiceMock, Is.InstanceOf<IGroupsService>());
+        _groupServiceMock = (ServiceMock as IGroupsService)!;
         SetUpValidationMocks();
     }
 
@@ -74,4 +84,10 @@ public class GroupsControllerTests :
     {
         return new("Group2", 5, null);
     }
+
+    public const string PostStudentGroupRoute = "api/groups/students";
+    public const string DeleteStudentGroupRoute = "api/groups/students";
+
+    public readonly StudentGroupCreateDto ValidStudentGroupDto = new("ID");
+    public readonly StudentGroupCreateDto InalidStudentGroupDto = new(string.Empty);
 }
