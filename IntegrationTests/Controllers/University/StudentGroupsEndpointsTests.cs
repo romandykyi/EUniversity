@@ -1,8 +1,6 @@
 ﻿using EUniversity.Core.Dtos.University;
 using EUniversity.Core.Models;
 using EUniversity.Core.Models.University;
-using EUniversity.Core.Services.University;
-using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
 using System.Net;

@@ -5,6 +5,7 @@ using EUniversity.Core.Pagination;
 using EUniversity.Core.Policy;
 using EUniversity.Core.Services;
 using EUniversity.Core.Services.University;
+using Mapster;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Attributes;
@@ -77,15 +78,15 @@ public class GroupsController : ControllerBase
     /// <response code="403">User lacks 'Administrator' role</response>
     [HttpPost]
     [Authorize(Policies.HasAdministratorPermission)]
-    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(GroupViewDto), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> CreateGroupAsync([FromBody] GroupCreateDto dto)
     {
-        int id = await _groupsService.CreateAsync(dto);
-        var routeValues = new { id };
-        var body = new { id };
+        var group = await _groupsService.CreateAsync(dto);
+        var routeValues = new { id = group.Id };
+        var body = group.Adapt<GroupViewDto>();
         return CreatedAtRoute(nameof(GetGroupByIdAsync), routeValues, body);
     }
 

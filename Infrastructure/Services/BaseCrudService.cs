@@ -45,13 +45,13 @@ public abstract class BaseCrudService<TEntity, TId, TPreviewDto, TDetailsDto, TC
     }
 
     /// <inheritdoc />
-    public virtual async Task<TId> CreateAsync(TCreateDto dto)
+    public virtual async Task<TEntity> CreateAsync(TCreateDto dto)
     {
         TEntity entity = dto.Adapt<TEntity>();
         DbContext.Set<TEntity>().Add(entity);
         await DbContext.SaveChangesAsync();
 
-        return entity.Id;
+        return entity;
     }
 
     /// <inheritdoc />

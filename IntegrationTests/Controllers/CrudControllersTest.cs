@@ -2,7 +2,6 @@
 using EUniversity.Core.Models;
 using EUniversity.Core.Pagination;
 using EUniversity.Core.Services;
-using EUniversity.IntegrationTests.Mocks;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
 using NSubstitute.ReturnsExtensions;
@@ -248,7 +247,7 @@ public abstract class CrudControllersTest<TEntity, TId, TPreviewDto, TDetailsDto
         using var client = GetTestClient();
         ServiceMock
             .CreateAsync(Arg.Any<TCreateDto>())
-            .Returns(DefaultId);
+            .Returns(Activator.CreateInstance<TEntity>());
 
         // Act
         var result = await client.PostAsJsonAsync(PostRoute, validCreateDto);
