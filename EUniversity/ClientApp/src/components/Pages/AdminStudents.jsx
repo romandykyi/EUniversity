@@ -13,6 +13,7 @@
                 const response = await fetch(`/api/users/students?Page=${page}&PageSize=${pageSize}`);
                 if (response.ok) {
                     const data = await response.json();
+
                     setStudents(data.items);
                     setItemsPerPage(data.pageSize);
                     setTotalItems(data.totalItemsCount);
@@ -49,7 +50,7 @@
                     )}
                     tableBody={(
                         students.map((item) => (
-                            <tr key={item.email}>
+                            <tr key={item.id}>
                                 <td>{item.email}</td>
                                 <td>{item.firstName}</td>
                                 <td>{item.lastName}</td>
