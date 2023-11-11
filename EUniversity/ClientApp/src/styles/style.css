@@ -124,8 +124,6 @@
 }
 
 .select__container {
-  display: flex;
-  justify-content: flex-end;
   margin-bottom: 15px;
 }
 .select__container select {
@@ -171,5 +169,7 @@
     gap: 0px;
   }
 }
-
-/*# sourceMappingURL=style.css.map */
+.students__select {
+  width: 140px;
+  margin-bottom: 20px;
+}

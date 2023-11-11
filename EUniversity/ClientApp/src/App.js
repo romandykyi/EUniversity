@@ -5,6 +5,7 @@ import AuthorizeRoute from './components/api-authorization/AuthorizeRoute';
 import Layout from "./components/Layout";
 import './custom.css';
 import './styles/style.css';
+import './styles/index.css';
 import Login from "./components/Pages/Login";
 //To do
     // end a PasswordChangeBlock when password changes successfully

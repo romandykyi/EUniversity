@@ -110,7 +110,7 @@ const ChangePassword = () => {
 
 
     return (
-        <div className="newUser form">
+        <div className="newUser form container max-w-[1100px] pt-10">
             <h1 className="changePassword__title form__title">
                 Change your password
             </h1>

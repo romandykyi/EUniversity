@@ -77,7 +77,7 @@ const Login = () => {
     };
 
     return (
-        <div className="login form">
+        <div className="login form container max-w-[1100px] pt-10">
             <h1 className="login__title form__title">
                 Log in to your account
             </h1>

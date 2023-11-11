@@ -10,7 +10,8 @@ const PaginatedList =
          setItemsPerPage,
          tableBody,
          tableHead,
-         fetchItems
+         fetchItems,
+         usersType
     }) => {
 
     const [totalPages, setTotalPages] = useState(Math.ceil(totalItems / itemsPerPage));
@@ -26,7 +27,7 @@ const PaginatedList =
 
     useEffect(() => {
         fetchItems(currentPage, itemsPerPage);
-    }, [currentPage, itemsPerPage]);
+    }, [currentPage, itemsPerPage, usersType]);
 
     useEffect(() => {
         const handleResize = () => {

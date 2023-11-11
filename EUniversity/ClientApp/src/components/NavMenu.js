@@ -30,7 +30,7 @@ const AdminNav = () => {
                 <NavLink tag={Link} className="text-dark" to="/change-password">Change password</NavLink>
             </NavItem>
             <NavItem>
-                <NavLink tag={Link} className="text-dark" to="/students">Students</NavLink>
+                <NavLink tag={Link} className="text-dark" to="/users">Users</NavLink>
             </NavItem>
             <NavItem>
                 <NavLink tag={Link} className="text-dark" to="/register-users">Register users</NavLink>
@@ -64,8 +64,8 @@ const NavMenu = () => {
   };
 
   return (
-      <header>
-        <Navbar className="navbar-expand-sm navbar-toggleable-sm ng-white border-bottom box-shadow mb-3" container light>
+      <header className="ng-white border-bottom box-shadow">
+        <Navbar className="navbar-expand-sm navbar-toggleable-sm container max-w-[1100px]" container light>
           <NavbarBrand tag={Link} to="/">EUniversity</NavbarBrand>
           <NavbarToggler onClick={toggleNavbar} className="mr-2" />
           <Collapse className="d-sm-inline-flex flex-sm-row-reverse" isOpen={!collapsed} navbar>

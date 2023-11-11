@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+    import React, {useState} from 'react';
 import Button from "../UI/Button/Button";
 import Table from "../UI/Table/Table";
 
@@ -52,7 +52,7 @@ const RegisterNewUsers = () => {
     };
 
     return (
-        <div className="newUser form">
+        <div className="newUser form container max-w-[1100px] pt-10">
             <h1 className="newUser__title form__title">
                 Register new users
             </h1>

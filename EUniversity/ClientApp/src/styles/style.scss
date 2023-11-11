@@ -130,8 +130,6 @@
 }
 .select {
     &__container {
-        display: flex;
-        justify-content: flex-end;
         margin-bottom: 15px;
         & select {
             max-width:140px;
@@ -178,5 +176,12 @@
 @media (max-width: 320px) {
     .pagination {
         gap: 0px;
+    }
+}
+
+.students {
+    &__select {
+        width: 140px;
+        margin-bottom: 20px;
     }
 }
