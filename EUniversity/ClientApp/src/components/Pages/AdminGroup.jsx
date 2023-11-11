@@ -1,10 +1,8 @@
 import {React, useEffect, useState} from 'react';
-import { useAppSelector } from '../../store/store';
 import { useLocation } from 'react-router-dom';
 
 const AdminGroup = () => {
 
-    const group = useAppSelector(state => state.currentGroup.currentGroup);
 
     const [students, setStudents] = useState([]);
     const [teacher, setTeacher] = useState({});
@@ -15,7 +13,7 @@ const AdminGroup = () => {
 
     const fetchGroup = async(page = 1, pageSize = 10) => {
         try {
-            const response = await fetch(`/api/groups/${!group.id ? groupNumber : group.id}`);
+            const response = await fetch(`/api/groups/${groupNumber}`);
             if (response.ok) {
                 const data = await response.json();
                 setStudents(data.students);
@@ -38,7 +36,7 @@ const AdminGroup = () => {
     return (
         <div className="students container max-w-[1100px] pt-10">
             <h1 className="students__title form__title">
-                Group #{!group.id ? groupNumber : group.id}
+                Group #{groupNumber}
             </h1>
             <h2 className="text-3xl font-bold mb-5">
                 Teacher: {teacher.firstName} {teacher.lastName}
