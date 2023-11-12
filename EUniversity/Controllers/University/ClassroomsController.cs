@@ -1,4 +1,6 @@
 ﻿using EUniversity.Core.Dtos.University;
+using EUniversity.Core.Filters;
+using EUniversity.Core.Models.University;
 using EUniversity.Core.Pagination;
 using EUniversity.Core.Policy;
 using EUniversity.Infrastructure.Services.University;
@@ -38,9 +40,12 @@ public class ClassroomsController : ControllerBase
     [ProducesResponseType(typeof(Page<ClassroomViewDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    public async Task<IActionResult> GetClassroomsPageAsync([FromQuery] PaginationProperties properties)
+    public async Task<IActionResult> GetClassroomsPageAsync(
+        [FromQuery] PaginationProperties properties, 
+        [FromQuery] string? name)
     {
-        return Ok(await _classroomsService.GetPageAsync(properties));
+        NameFilter<Classroom>? filter = name != null ? new(name) : null;
+        return Ok(await _classroomsService.GetPageAsync(properties, filter));
     }
 
     /// <summary>

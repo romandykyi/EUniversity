@@ -1,4 +1,8 @@
-﻿using EUniversity.Core.Dtos.University.Grades;
+﻿using Bogus.DataSets;
+using EUniversity.Core.Dtos.University.Grades;
+using EUniversity.Core.Filters;
+using EUniversity.Core.Models.University;
+using EUniversity.Core.Models.University.Grades;
 using EUniversity.Core.Pagination;
 using EUniversity.Core.Policy;
 using EUniversity.Infrastructure.Services.University;
@@ -38,9 +42,12 @@ public class GradesController : ControllerBase
     [ProducesResponseType(typeof(Page<GradeCreateDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    public async Task<IActionResult> GetGradesPageAsync([FromQuery] PaginationProperties properties)
+    public async Task<IActionResult> GetGradesPageAsync(
+        [FromQuery] PaginationProperties properties,
+        [FromQuery] string? name)
     {
-        return Ok(await _gradesService.GetPageAsync(properties));
+        NameFilter<Grade>? filter = name != null ? new(name) : null;
+        return Ok(await _gradesService.GetPageAsync(properties, filter));
     }
 
     /// <summary>

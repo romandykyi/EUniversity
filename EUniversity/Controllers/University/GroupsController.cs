@@ -1,4 +1,6 @@
-﻿using EUniversity.Core.Dtos.University;
+﻿using Bogus.DataSets;
+using EUniversity.Core.Dtos.University;
+using EUniversity.Core.Filters;
 using EUniversity.Core.Models;
 using EUniversity.Core.Models.University;
 using EUniversity.Core.Pagination;
@@ -45,9 +47,12 @@ public class GroupsController : ControllerBase
     [ProducesResponseType(typeof(Page<GroupViewDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    public async Task<IActionResult> GetGroupsPageAsync([FromQuery] PaginationProperties properties)
+    public async Task<IActionResult> GetGroupsPageAsync(
+        [FromQuery] PaginationProperties properties,
+        [FromQuery] string? name)
     {
-        return Ok(await _groupsService.GetPageAsync(properties));
+        NameFilter<Group>? filter = name != null ? new(name) : null;
+        return Ok(await _groupsService.GetPageAsync(properties, filter));
     }
 
     /// <summary>
