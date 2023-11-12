@@ -39,6 +39,8 @@ public class GroupsController : ControllerBase
     /// <remarks>
     /// If there is no items in the requested page, then empty page will be returned.
     /// </remarks>
+    /// <param name="properties">Pagination properties.</param>
+    /// <param name="name">An optional name to filter groups by.</param>
     /// <response code="200">Returns requested page with groups.</response>
     /// <response code="400">Bad request</response>
     /// <response code="401">Unauthorized user call</response>

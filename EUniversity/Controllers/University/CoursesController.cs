@@ -33,6 +33,8 @@ public class CoursesController : ControllerBase
     /// <remarks>
     /// If there is no items in the requested page, then empty page will be returned.
     /// </remarks>
+    /// <param name="properties">Pagination properties.</param>
+    /// <param name="name">An optional name to filter courses by.</param>
     /// <response code="200">Returns requested page with courses.</response>
     /// <response code="400">Bad request</response>
     /// <response code="401">Unauthorized user call</response>
