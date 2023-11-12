@@ -6,7 +6,7 @@ namespace EUniversity.Core.Models.University;
 /// Represents a group entity, 
 /// which contains students with its own teacher and course.
 /// </summary>
-public class Group : IEntity<int>
+public class Group : IEntity<int>, IHasName
 {
     public const int MaxNameLength = 50;
 

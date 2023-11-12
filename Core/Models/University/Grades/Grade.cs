@@ -3,7 +3,7 @@
 /// <summary>
 /// Represents an available grade entity that can be assigned to students.
 /// </summary>
-public class Grade : IEntity<int>
+public class Grade : IEntity<int>, IHasName
 {
     public const int MaxNameLength = 50;
 
