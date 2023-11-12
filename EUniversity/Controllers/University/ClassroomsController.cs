@@ -1,4 +1,6 @@
 ﻿using EUniversity.Core.Dtos.University;
+using EUniversity.Core.Filters;
+using EUniversity.Core.Models.University;
 using EUniversity.Core.Pagination;
 using EUniversity.Core.Policy;
 using EUniversity.Infrastructure.Services.University;
@@ -30,6 +32,8 @@ public class ClassroomsController : ControllerBase
     /// <remarks>
     /// If there is no items in the requested page, then empty page will be returned.
     /// </remarks>
+    /// <param name="properties">Pagination properties.</param>
+    /// <param name="name">An optional name to filter classrooms by.</param>
     /// <response code="200">Returns requested page with classrooms.</response>
     /// <response code="400">Bad request</response>
     /// <response code="401">Unauthorized user call</response>
@@ -38,9 +42,12 @@ public class ClassroomsController : ControllerBase
     [ProducesResponseType(typeof(Page<ClassroomViewDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    public async Task<IActionResult> GetClassroomsPageAsync([FromQuery] PaginationProperties properties)
+    public async Task<IActionResult> GetClassroomsPageAsync(
+        [FromQuery] PaginationProperties properties, 
+        [FromQuery] string? name)
     {
-        return Ok(await _classroomsService.GetPageAsync(properties));
+        NameFilter<Classroom>? filter = name != null ? new(name) : null;
+        return Ok(await _classroomsService.GetPageAsync(properties, filter));
     }
 
     /// <summary>

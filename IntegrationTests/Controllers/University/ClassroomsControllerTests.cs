@@ -1,5 +1,7 @@
 ﻿using EUniversity.Core.Dtos.University;
+using EUniversity.Core.Filters;
 using EUniversity.Core.Models.University;
+using NUnit.Framework.Internal;
 
 namespace EUniversity.IntegrationTests.Controllers.University;
 
@@ -17,6 +19,8 @@ public class ClassroomsControllerTests :
     public override string DeleteRoute => $"api/classrooms/{DefaultId}";
 
     public override int DefaultId => 1;
+
+    public override string GetPageFilter => "name=testfilter";
 
     public override void SetUpService()
     {
@@ -51,5 +55,10 @@ public class ClassroomsControllerTests :
     protected override ClassroomCreateDto GetValidUpdateDto()
     {
         return new("#200");
+    }
+
+    protected override bool AssertThatFilterWasApplied(IFilter<Classroom> filter)
+    {
+        return filter is NameFilter<Classroom> nameFilter && nameFilter.Name == "testfilter";
     }
 }

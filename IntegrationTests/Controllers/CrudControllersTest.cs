@@ -27,7 +27,6 @@ public abstract class CrudControllersTest<TEntity, TId, TPreviewDto, TDetailsDto
     protected ICrudService<TEntity, TId, TPreviewDto, TDetailsDto, TCreateDto, TUpdateDto> ServiceMock
     { get; set; } = null!;
 
-
     /// <summary>
     /// When implemented, gets test <typeparamref name="TPreviewDto"/>.
     /// </summary>
@@ -100,6 +99,16 @@ public abstract class CrudControllersTest<TEntity, TId, TPreviewDto, TDetailsDto
     protected virtual HttpClient GetTestClient() => CreateAdministratorClient();
 
     /// <summary>
+    /// When overriden, should assert that <paramref name="filter"/> was applied
+    /// by passing GetPageFilter to GetPageRoute.
+    /// </summary>
+    /// <param name="filter"></param>
+    /// <returns>
+    /// <see langword="true"/> if filter was correctly applied, otherwise <see cref="false"/>.
+    /// </returns>
+    protected abstract bool AssertThatFilterWasApplied(IFilter<TEntity> filter);
+
+    /// <summary>
     /// Sets up a <see cref="ServiceMock"/> used for testing.
     /// </summary>
     [SetUp]
@@ -112,6 +121,10 @@ public abstract class CrudControllersTest<TEntity, TId, TPreviewDto, TDetailsDto
     /// Authentication is not checked.
     /// </remarks>
     public abstract string GetPageRoute { get; }
+    /// <summary>
+    /// Filtering query parameters of HTTP GET for getting a page of elements.
+    /// </summary>
+    public abstract string GetPageFilter { get; }
     /// <summary>
     /// Route of HTTP GET for getting an element by its ID.
     /// </summary>
@@ -157,7 +170,7 @@ public abstract class CrudControllersTest<TEntity, TId, TPreviewDto, TDetailsDto
     }
 
     [Test]
-    public virtual async Task GetPage_ValidCall_SucceedsAndReturnsValidDto()
+    public virtual async Task GetPage_NoFilter_SucceedsAndReturnsValidDto()
     {
         // Arrange
         using var client = GetTestClient();
@@ -179,6 +192,28 @@ public abstract class CrudControllersTest<TEntity, TId, TPreviewDto, TDetailsDto
             Assert.That(page.PageSize, Is.EqualTo(properties.PageSize));
             Assert.That(page.Items.Count(), Is.LessThanOrEqualTo(page.PageSize));
         });
+    }
+
+    [Test]
+    public virtual async Task GetPage_WithFilter_SucceedsAndAppliesFilter()
+    {
+        // Arrange
+        using var client = GetTestClient();
+        PaginationProperties properties = new(2, 10);
+        ServiceMock
+            .GetPageAsync(Arg.Any<PaginationProperties>(), Arg.Any<IFilter<TEntity>>())
+            .Returns(Task.FromResult(GetTestPreviewDtos(properties)));
+
+        // Act
+        var result = await client.GetAsync($"{GetPageRoute}?page=1&pageSize=25&{GetPageFilter}");
+
+        // Assert
+        result.EnsureSuccessStatusCode();
+        var page = await result.Content.ReadFromJsonAsync<Page<TPreviewDto>>();
+        Assert.That(page, Is.Not.Null);
+        await ServiceMock
+            .Received(1)
+            .GetPageAsync(Arg.Any<PaginationProperties>(), Arg.Is<IFilter<TEntity>>(e => AssertThatFilterWasApplied(e)));
     }
 
     [Test]

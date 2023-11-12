@@ -3,7 +3,7 @@
 /// <summary>
 /// Represents a course entity.
 /// </summary>
-public class Course : IEntity<int>
+public class Course : IEntity<int>, IHasName
 {
     public const int MaxNameLength = 200;
     public const int MaxDescriptionLength = 1000;

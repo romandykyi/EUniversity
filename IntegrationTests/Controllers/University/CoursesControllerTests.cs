@@ -1,4 +1,5 @@
 ﻿using EUniversity.Core.Dtos.University;
+using EUniversity.Core.Filters;
 using EUniversity.Core.Models.University;
 
 namespace EUniversity.IntegrationTests.Controllers.University;
@@ -18,9 +19,16 @@ public class CoursesControllerTests :
 
     public override int DefaultId => 1;
 
+    public override string GetPageFilter => "name=testfilter";
+
     public override void SetUpService()
     {
         ServiceMock = WebApplicationFactory.CoursesServiceMock;
+    }
+
+    protected override bool AssertThatFilterWasApplied(IFilter<Course> filter)
+    {
+        return filter is NameFilter<Course> nameFilter && nameFilter.Name == "testfilter";
     }
 
     protected override CourseCreateDto GetInvalidCreateDto()

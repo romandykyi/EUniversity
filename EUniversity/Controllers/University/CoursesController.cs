@@ -1,4 +1,7 @@
-﻿using EUniversity.Core.Dtos.University;
+﻿using Bogus.DataSets;
+using EUniversity.Core.Dtos.University;
+using EUniversity.Core.Filters;
+using EUniversity.Core.Models.University;
 using EUniversity.Core.Pagination;
 using EUniversity.Core.Policy;
 using EUniversity.Core.Services.University;
@@ -30,6 +33,8 @@ public class CoursesController : ControllerBase
     /// <remarks>
     /// If there is no items in the requested page, then empty page will be returned.
     /// </remarks>
+    /// <param name="properties">Pagination properties.</param>
+    /// <param name="name">An optional name to filter courses by.</param>
     /// <response code="200">Returns requested page with courses.</response>
     /// <response code="400">Bad request</response>
     /// <response code="401">Unauthorized user call</response>
@@ -38,9 +43,12 @@ public class CoursesController : ControllerBase
     [ProducesResponseType(typeof(Page<CourseViewDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    public async Task<IActionResult> GetCoursesPageAsync([FromQuery] PaginationProperties properties)
+    public async Task<IActionResult> GetCoursesPageAsync(
+        [FromQuery] PaginationProperties properties,
+        [FromQuery] string? name)
     {
-        return Ok(await _coursesService.GetPageAsync(properties));
+        NameFilter<Course>? filter = name != null ? new(name) : null;
+        return Ok(await _coursesService.GetPageAsync(properties, filter));
     }
 
     /// <summary>

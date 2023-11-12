@@ -1,5 +1,6 @@
 ﻿using EUniversity.Core.Dtos.University;
 using EUniversity.Core.Dtos.Users;
+using EUniversity.Core.Filters;
 using EUniversity.Core.Models.University;
 using EUniversity.Core.Services.University;
 
@@ -22,6 +23,8 @@ public class GroupsControllerTests :
     public override string DeleteRoute => $"api/groups/{DefaultId}";
 
     public override int DefaultId => 1;
+
+    public override string GetPageFilter => "name=testfilter";
 
     protected override void AssertThatViewDtosAreEqual(GroupViewDto expected, GroupViewDto actual)
     {
@@ -75,5 +78,10 @@ public class GroupsControllerTests :
     protected override GroupCreateDto GetValidUpdateDto()
     {
         return new("Group2", 5, null);
+    }
+
+    protected override bool AssertThatFilterWasApplied(IFilter<Group> filter)
+    {
+        return filter is NameFilter<Group> nameFilter && nameFilter.Name == "testfilter";
     }
 }
