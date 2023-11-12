@@ -1,4 +1,6 @@
 ﻿using EUniversity.Core.Dtos.University.Grades;
+using EUniversity.Core.Filters;
+using EUniversity.Core.Models.University;
 using EUniversity.Core.Models.University.Grades;
 
 namespace EUniversity.IntegrationTests.Controllers.University.Grades;
@@ -17,6 +19,8 @@ public class GradesControllerTestsAdminCrudControllersTest :
     public override string DeleteRoute => $"api/grades/{DefaultId}";
 
     public override int DefaultId => 1;
+
+    public override string GetPageFilter => "name=testfilter";
 
     public override void SetUpService()
     {
@@ -51,5 +55,11 @@ public class GradesControllerTestsAdminCrudControllersTest :
     protected override GradeCreateDto GetValidUpdateDto()
     {
         return new("100", 100);
+    }
+
+    protected override bool AssertThatFilterWasApplied(IFilter<Grade> filter)
+    {
+        return filter is NameFilter<Grade> nameFilter && nameFilter.Name == "testfilter";
+
     }
 }
