@@ -20,6 +20,8 @@ An e-university Web Application built with ASP.NET and React.
 * React
 * React-router-dom
 * Yarn
+* TailwindCSS
+* Redux
 
 ## Architecture
 
