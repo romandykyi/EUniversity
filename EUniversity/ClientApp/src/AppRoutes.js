@@ -1,11 +1,13 @@
 import ApiAuthorzationRoutes from './components/api-authorization/ApiAuthorizationRoutes';
-import Home from "./components/Home";
+import Home from "./components/Pages/Home";
 import Login from "./components/Pages/Login";
 import ChangePassword from "./components/Pages/ChangePassword";
 import RegisterNewUsers from "./components/Pages/RegisterNewUsers";
 import AdminUsers from "./components/Pages/AdminUsers";
 import AdminGroups from './components/Pages/AdminGroups';
 import AdminGroup from "./components/Pages/AdminGroup";
+import AdminCourses from "./components/Pages/AdminCourses";
+import AdminClassrooms from './components/Pages/AdminClassrooms';
 
 const AppRoutes = [
   {
@@ -31,19 +33,26 @@ const AppRoutes = [
     path: '/users',
     requireAuth: true,
     element: <AdminUsers/>,
-    requireAdminRight: true,
   },
   {
     path: '/groups',
     requireAuth: true,
     element: <AdminGroups/>,
-    requireAdminRight: true,
   },
   {
     path: '/groups/:id',
     requireAuth: true,
     element: <AdminGroup/>,
-    requireAdminRight: true,
+  },
+  {
+    path: '/courses',
+    requireAuth: true,
+    element: <AdminCourses/>,
+  },
+  {
+    path: '/classrooms',
+    requireAuth: true,
+    element: <AdminClassrooms/>,
   },
   ...ApiAuthorzationRoutes
 ];

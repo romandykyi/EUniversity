@@ -26,7 +26,7 @@ const PaginatedList =
     }, []);
 
     useEffect(() => {
-        fetchItems(currentPage, itemsPerPage);
+        fetchItems(currentPage, itemsPerPage, usersType);
     }, [currentPage, itemsPerPage, usersType]);
 
     useEffect(() => {

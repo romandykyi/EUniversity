@@ -3,21 +3,21 @@ import PageOfItems from '../PageOfItems';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const AdminGroup = () => {
+const AdminClassrooms = () => {
 
-    const [groups, setGroups] = useState([]);
+    const [classrooms, setClassrooms] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [itemsPerPage, setItemsPerPage] = useState(10);
     const [totalItems, setTotalItems] = useState(0);
     const navigate = useNavigate();
 
-    const fetchGroups = async(page = 1, pageSize = 10) => {
+    const fetchClassrooms = async(page = 1, pageSize = 10) => {
 
         try {
-            const response = await fetch(`/api/groups?Page=${page}&PageSize=${pageSize}`);
+            const response = await fetch(`/api/classrooms?Page=${page}&PageSize=${pageSize}`);
             if (response.ok) {
                 const data = await response.json();
-                setGroups(data.items);
+                setClassrooms(data.items);
                 setItemsPerPage(data.pageSize);
                 setTotalItems(data.totalItemsCount);
                 setIsLoading(false);
@@ -34,8 +34,8 @@ const AdminGroup = () => {
     return (
         <>
             <PageOfItems
-                title = 'All Groups'
-                fetchFunction = {fetchGroups}
+                title = 'All Classrooms'
+                fetchFunction = {fetchClassrooms}
                 isLoading = {isLoading}
                 itemsPerPage = {itemsPerPage}
                 setItemsPerPage = {setItemsPerPage}
@@ -43,13 +43,10 @@ const AdminGroup = () => {
                 tableHead = {(
                     <tr>
                         <th>Name</th>
-                        <th>Course</th>
-                        <th>Teacher</th>
-                        <th>Teacher username</th>
                     </tr>
                 )}
                 tableBody = {(
-                    groups.map((item) => (
+                    classrooms.map((item) => (
                         <tr 
                             onClick={() => {
                                 navigate(`${item.id}`);
@@ -57,9 +54,6 @@ const AdminGroup = () => {
                             key={item.id} className="cursor-pointer"
                         >
                             <td>{item.name}</td>
-                            <td>{item.course.name}</td>
-                            <td>{item.teacher.firstName} {item.teacher.lastName}</td>
-                            <td>{item.teacher.userName}</td>
                         </tr>
                     ))
                 )}
@@ -68,4 +62,4 @@ const AdminGroup = () => {
     );
 };
 
-export default AdminGroup;
+export default AdminClassrooms;
