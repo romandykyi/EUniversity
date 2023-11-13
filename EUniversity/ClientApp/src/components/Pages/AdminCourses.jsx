@@ -1,23 +1,21 @@
 import React from 'react';
 import PageOfItems from '../PageOfItems';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 const AdminGroup = () => {
 
-    const [groups, setGroups] = useState([]);
+    const [courses, setCourses] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [itemsPerPage, setItemsPerPage] = useState(10);
     const [totalItems, setTotalItems] = useState(0);
-    const navigate = useNavigate();
 
-    const fetchGroups = async(page = 1, pageSize = 10) => {
+    const fetchCourses = async(page = 1, pageSize = 10) => {
 
         try {
-            const response = await fetch(`/api/groups?Page=${page}&PageSize=${pageSize}`);
+            const response = await fetch(`/api/courses?Page=${page}&PageSize=${pageSize}`);
             if (response.ok) {
                 const data = await response.json();
-                setGroups(data.items);
+                setCourses(data.items);
                 setItemsPerPage(data.pageSize);
                 setTotalItems(data.totalItemsCount);
                 setIsLoading(false);
@@ -34,32 +32,23 @@ const AdminGroup = () => {
     return (
         <>
             <PageOfItems
-                title = 'All Groups'
-                fetchFunction = {fetchGroups}
+                title = 'All Courses'
+                fetchFunction = {fetchCourses}
                 isLoading = {isLoading}
                 itemsPerPage = {itemsPerPage}
                 setItemsPerPage = {setItemsPerPage}
                 totalItems = {totalItems}
                 tableHead = {(
                     <tr>
-                        <th>Name</th>
-                        <th>Course</th>
-                        <th>Teacher</th>
-                        <th>Teacher username</th>
+                        <th>Name of the course</th>
                     </tr>
                 )}
                 tableBody = {(
-                    groups.map((item) => (
+                    courses.map((item) => (
                         <tr 
-                            onClick={() => {
-                                navigate(`${item.id}`);
-                            }} 
-                            key={item.id} className="cursor-pointer"
+                            key={item.id}
                         >
                             <td>{item.name}</td>
-                            <td>{item.course.name}</td>
-                            <td>{item.teacher.firstName} {item.teacher.lastName}</td>
-                            <td>{item.teacher.userName}</td>
                         </tr>
                     ))
                 )}
