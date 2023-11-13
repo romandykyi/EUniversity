@@ -29,12 +29,12 @@ const LoginMenu = () => {
   const authenticatedView = (userName, profilePath, logoutPath, logoutState) => (
     <ul className="flex items-center gap-3">
       <li>
-        <Link className="text-dark" to={profilePath}>
+        <Link className="text-black font-medium" to={profilePath}>
           Hello {userName}
         </Link>
       </li>
       <li>
-        <Link replace className="text-dark" to={logoutPath} state={logoutState}>
+        <Link replace className="text-black font-medium" to={logoutPath} state={logoutState}>
           Logout
         </Link>
       </li>
@@ -44,7 +44,7 @@ const LoginMenu = () => {
   const anonymousView = (registerPath) => (
     <ul>
       <li>
-        <Link className="text-dark" to="/login">
+        <Link className="text-black font-medium" to="/login">
           Login
         </Link>
       </li>

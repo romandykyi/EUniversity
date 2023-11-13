@@ -8,6 +8,7 @@ import AdminGroups from './components/Pages/AdminGroups';
 import AdminGroup from "./components/Pages/AdminGroup";
 import AdminCourses from "./components/Pages/AdminCourses";
 import AdminClassrooms from './components/Pages/AdminClassrooms';
+import AdminClassroom from './components/Pages/AdminClassroom';
 
 const AppRoutes = [
   {
@@ -53,6 +54,11 @@ const AppRoutes = [
     path: '/classrooms',
     requireAuth: true,
     element: <AdminClassrooms/>,
+  },
+  {
+    path: '/classrooms/:id',
+    requireAuth: true,
+    element: <AdminClassroom/>,
   },
   ...ApiAuthorzationRoutes
 ];

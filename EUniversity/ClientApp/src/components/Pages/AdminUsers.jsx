@@ -30,7 +30,6 @@ const AdminUsers = () => {
     const changeUsersType = async (e) => {
         const newUserType = e.target.value;
         setUsersType(newUserType);
-        //await fetchUsers();
     };
     
 
