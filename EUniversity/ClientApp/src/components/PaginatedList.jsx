@@ -11,7 +11,8 @@ const PaginatedList =
          tableBody,
          tableHead,
          fetchItems,
-         usersType
+         usersType,
+         additionalItems
     }) => {
 
     const [totalPages, setTotalPages] = useState(Math.ceil(totalItems / itemsPerPage));
@@ -112,7 +113,7 @@ const PaginatedList =
 
     return (
         <>
-            <div className="select__container">
+            <div className="select__container flex gap-3">
                 <select
                     className="form-select"
                     id="floatingSelect"
@@ -129,6 +130,7 @@ const PaginatedList =
                     <option value={20}>20</option>
                     <option value={100}>100</option>
                 </select>
+                {additionalItems}
             </div>
             {
                 isLoading

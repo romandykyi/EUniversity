@@ -18,8 +18,8 @@ const PageOfItems = ({
             <h1 className="students__title form__title">
                 {title}
             </h1>
-            {additionalItems}
             <PaginatedList
+                additionalItems = {additionalItems}
                 itemsPerPage={itemsPerPage}
                 setItemsPerPage={setItemsPerPage}
                 isLoading={isLoading}
