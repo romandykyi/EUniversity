@@ -48,11 +48,11 @@ const NavMenu = () => {
     const AuthNav = () => {
         return (
             <ul>
-                <li onClick = {() => setCollapsed(false)}>
-                    <Link className="text-sky-500 text-2xl font-medium"  to="/">Home</Link>
+                <li onClick = {() => setCollapsed(false)} className="bg-sky-blue px-3 py-1 rounded-lg">
+                    <Link className="text-white text-2xl font-medium w-full block"  to="/">Home</Link>
                 </li>
                 {
-                    authNavList.map(link => <li key={link.title} onClick = {() => setCollapsed(false)}><Link className="text-black text-2xl font-medium" to={link.to}>{link.title}</Link></li>)
+                    authNavList.map(link => <li key={link.title} onClick = {() => setCollapsed(false)}><Link className="text-black text-2xl font-medium px-3 py-1 w-full block" to={link.to}>{link.title}</Link></li>)
                 }
             </ul>
         )
@@ -60,11 +60,11 @@ const NavMenu = () => {
     const AdminNav = () => {
         return (
             <ul className =" flex flex-col justify-end gap-3">
-                <li onClick = {() => setCollapsed(false)}>
-                    <Link className="text-sky-500 text-2xl font-medium"  to="/">Home</Link>
+                <li onClick = {() => setCollapsed(false)} className="bg-sky-500 px-3 py-1 rounded-lg w-full inline">
+                    <Link className="text-white text-2xl font-medium w-full block"  to="/">Home</Link>
                 </li>
                 {
-                    adminNavList.map(link => <li key={link.title} onClick = {() => setCollapsed(false)}><Link className="text-black text-2xl font-medium" to={link.to}>{link.title}</Link></li>)
+                    adminNavList.map(link => <li key={link.title} onClick = {() => setCollapsed(false)}><Link className="text-black text-2xl font-medium px-3 py-1 w-full block" to={link.to}>{link.title}</Link></li>)
                 }
             </ul>
         )

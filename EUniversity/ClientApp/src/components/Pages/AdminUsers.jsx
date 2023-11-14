@@ -34,26 +34,26 @@ const AdminUsers = () => {
     }
   };
 
-  const deleteUser = async (userId) => {
-    try {
-      setUsers((prevUsers) => prevUsers.filter((user) => user.id !== userId));
-      const response = await fetch(`/api/users/${usersType}`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: `{"users": ${JSON.stringify(users)}}`,
-    });
+  // const deleteUser = async (userId) => {
+  //   try {
+  //     setUsers((prevUsers) => prevUsers.filter((user) => user.id !== userId));           //add when DELETE method will be ready
+  //     const response = await fetch(`/api/users/${usersType}`, {
+  //       method: "POST",
+  //       headers: {
+  //           "Content-Type": "application/json",
+  //       },
+  //       body: `{"users": ${JSON.stringify(users)}}`,
+  //   });
 
-      if (response.ok) {
-        console.log('ok')
-      } else {
-        console.log('error');
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  //     if (response.ok) {
+  //       console.log('ok')
+  //     } else {
+  //       console.log('error');
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
   const changeUsersType = (e) => {
     const newUserType = e.target.value;
@@ -77,7 +77,7 @@ const AdminUsers = () => {
             <th>First name</th>
             <th>Last name</th>
             <th>Middle Name</th>
-            <th>Delete user</th>
+            {/* <th>Delete user</th> add when DELETE method will be ready */}
           </tr>
         }
         tableBody={
@@ -87,9 +87,9 @@ const AdminUsers = () => {
               <td>{item.firstName}</td>
               <td>{item.lastName}</td>
               <td>{item.middleName}</td>
-              <td>
-                <Button onClick={() => deleteUser(item.id)}>Delete</Button>
-              </td>
+              {/* <td>
+                <Button onClick={() => deleteUser(item.id)}>Delete</Button> //add when DELETE method will be ready
+              </td> */}
             </tr>
           ))
         }
