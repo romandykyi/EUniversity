@@ -28,10 +28,6 @@ const NavMenu = () => {
             title: "Users"
         },
         {
-            to: "/register-users",
-            title: "Register users"
-        },
-        {
             to: "/groups",
             title: "Groups"
         },

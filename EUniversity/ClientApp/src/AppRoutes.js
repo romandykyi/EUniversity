@@ -2,7 +2,6 @@ import ApiAuthorzationRoutes from './components/api-authorization/ApiAuthorizati
 import Home from "./components/Pages/Home";
 import Login from "./components/Pages/Login";
 import ChangePassword from "./components/Pages/ChangePassword";
-import RegisterNewUsers from "./components/Pages/RegisterNewUsers";
 import AdminUsers from "./components/Pages/AdminUsers";
 import AdminGroups from './components/Pages/AdminGroups';
 import AdminGroup from "./components/Pages/AdminGroup";
@@ -19,12 +18,6 @@ const AppRoutes = [
     path: '/change-password',
     requireAuth: true,
     element: <ChangePassword />
-  },
-  {
-    path: '/register-users',
-    requireAuth: true,
-    element: <RegisterNewUsers/>,
-    requireAdminRight: true,
   },
   {
     path: '/login',

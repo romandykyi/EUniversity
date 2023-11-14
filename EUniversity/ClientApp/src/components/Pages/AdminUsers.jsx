@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import PageOfItems from '../PageOfItems';
 import { useAppSelector } from '../../store/store';
 import Button from '../UI/Button/Button';
-import AddItemModal from '../UI/AddItemModal/AddItemModal';
+import AddItemModal from "../UI/AddItemModal/AddItemModal";
 
 const AdminUsers = () => {
   const [users, setUsers] = useState([]);
@@ -62,7 +62,11 @@ const AdminUsers = () => {
 
   return (
     <>
-      <AddItemModal isVisible={isModalVisible} setIsVisible={setIsModalVisible} />
+      <AddItemModal 
+        isVisible={isModalVisible} 
+        setIsVisible={setIsModalVisible} 
+        fetchItems={fetchUsers}
+      />
       <PageOfItems
         title={`All ${usersType} (${totalItems})`}
         fetchFunction={fetchUsers}

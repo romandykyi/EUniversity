@@ -2,6 +2,9 @@ import React from 'react';
 import PageOfItems from '../PageOfItems';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Button from '../UI/Button/Button';
+import { useAppSelector } from '../../store/store';
+import DeleteModal from '../UI/DeleteModal/DeleteModal';
 
 const AdminGroup = () => {
 
@@ -9,7 +12,14 @@ const AdminGroup = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [itemsPerPage, setItemsPerPage] = useState(10);
     const [totalItems, setTotalItems] = useState(0);
+    const [isEditable, setIsEditable] = useState(false);
+    const [isDeleteVisible, setIsDeleteVisible] = useState(false);
+    const [deletedGroup, setDeletedGroup] = useState({
+        id: '',
+        name: ''
+    });
     const navigate = useNavigate();
+    const isAdmin = useAppSelector(state => state.isAdmin.isAdmin);
 
     const fetchGroups = async(page = 1, pageSize = 10) => {
 
@@ -31,10 +41,37 @@ const AdminGroup = () => {
 
     };
 
+    const deleteGroup = async(groupId) => {
+        try {
+            const response = await fetch(`/api/groups/${groupId}`, {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                }
+            });
+            if (response.ok) {
+                console.log(`deleted group: ${deletedGroup.name}`);
+                fetchGroups();
+                setIsDeleteVisible(false);
+            } else {
+                console.log('error');
+            }
+        } catch(error) {
+            console.log(error);
+        }
+    };
+
     return (
         <>
+            <DeleteModal
+                isVisible={isDeleteVisible}
+                setIsVisible={setIsDeleteVisible}
+                itemType = "group"
+                deleteFunction = {deleteGroup}
+                deletedUser = {deletedGroup}
+            />
             <PageOfItems
-                title = 'All Groups'
+                title = "All Groups"
                 fetchFunction = {fetchGroups}
                 isLoading = {isLoading}
                 itemsPerPage = {itemsPerPage}
@@ -46,6 +83,14 @@ const AdminGroup = () => {
                         <th>Course</th>
                         <th>Teacher</th>
                         <th>Teacher username</th>
+                        {
+                            isAdmin
+                                ? <>
+                                    {/* <th>Edit</th> */}
+                                    <th>Delete</th>
+                                  </>
+                                : ""
+                        }
                     </tr>
                 )}
                 tableBody = {(
@@ -60,6 +105,34 @@ const AdminGroup = () => {
                             <td>{item.course.name}</td>
                             <td>{item.teacher.firstName} {item.teacher.lastName}</td>
                             <td>{item.teacher.userName}</td>
+                            {
+                            isAdmin
+                                ? <>
+                                    {/* {
+                                        isEditable
+                                        ? <th className="flex gap-2 items-center">
+                                            <Button onClick = {e => {
+                                                e.stopPropagation();
+                                                setIsEditable(false);
+                                            }}>Save</Button>
+                                            <Button onClick = {e => {
+                                                e.stopPropagation();                //add when it will be search teachers by id method
+                                                setIsEditable(false);
+                                            }}>Cancel</Button>
+                                          </th>
+                                        : <th><Button onClick = {e => {
+                                            e.stopPropagation();
+                                            setIsEditable(true);
+                                        }}>Edit</Button></th>
+                                    } */}
+                                    <th><Button onClick = {e => {
+                                        e.stopPropagation();
+                                        setIsDeleteVisible(true);
+                                        setDeletedGroup({id: item.id, name: item.name});
+                                    }}>Delete Group</Button></th>
+                                  </>
+                                : ""
+                        }
                         </tr>
                     ))
                 )}

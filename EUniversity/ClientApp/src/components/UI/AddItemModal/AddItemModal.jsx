@@ -2,17 +2,22 @@ import { useState } from "react";
 import Table from "../Table/Table";
 import Button from "../Button/Button";
 
-const RegisterNewUsers = ({
-    isVisible, setIsVisible 
+const AddItemModal = ({
+    isVisible,
+    setIsVisible,
+    fetchItems
 }) => {
 
     const [error,setError] = useState('');
-    const [users, setUsers] = useState([]);
-    const [usersType, setUsersType] = useState('students');
+    const [users, setUsers] = useState([]); 
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const postUsers = users.map(user => (
+        
+        const students = [...users.filter(user => user.role === "student"), ...users.filter(user => !user.role)];
+        const teachers = users.filter(user => user.role === "teacher");
+
+        const postStudents = students.map(user => (
             {
                 email: user.email,
                 firstName: user.firstName,
@@ -20,13 +25,29 @@ const RegisterNewUsers = ({
                 middleName: user.middleName,
             }
             ));
+        const postTeachers = teachers.map(user => (
+            {
+                email: user.email,
+                firstName: user.firstName,
+                lastName: user.lastName,
+                middleName: user.middleName,
+            }
+        ));
+
+        if (students.length) await getResponse("students", postStudents);
+        if (teachers.length) await getResponse("teachers", postTeachers);
+        setUsers([]);
+        await fetchItems();
+    };
+
+    const getResponse = async(usersType, usersList) => {
         try {
             const response = await fetch(`/api/users/${usersType}`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: `{"users": ${JSON.stringify(postUsers)}}`,
+                body: `{"users": ${JSON.stringify(usersList)}}`,
             });
 
             if (response.ok) {
@@ -56,10 +77,9 @@ const RegisterNewUsers = ({
     };
 
     const deleteUser = (id) => {
-
         const newData = users.filter(user => user.id !== id);
         setUsers(newData);
-    }
+    };
 
     return (
         <div 
@@ -75,8 +95,15 @@ const RegisterNewUsers = ({
                 </h1>
                 <form onSubmit={handleSubmit} className="newUser form__form">
                         <Table
-                            users={users}
-                            setUsers={setUsers}
+                            items={users}
+                            setItems={setUsers}
+                            title="users"
+                            itemParams={{
+                                email:'',
+                                firstName:'',
+                                lastName:'',
+                                middleName:''
+                            }}
                             tableHead={(
                                 <tr>
                                     <th>Email</th>
@@ -84,7 +111,7 @@ const RegisterNewUsers = ({
                                     <th>Last Name</th>
                                     <th>Middle Name</th>
                                     <th>Role</th>
-                                    <th>Action</th>
+                                    <th>Delete</th>
                                 </tr>
                             )}
                             tableBody={users.map((row) => (
@@ -128,13 +155,10 @@ const RegisterNewUsers = ({
                                     <td> 
                                         <select 
                                             className="form-select w-40" 
-                                            onChange={e => {
-                                                setUsersType(e.target.value);
-
-                                            }}
+                                            onChange={(e) => handleInputChange(row.id, 'role', e.target.value)}
                                         >
-                                            <option value="students">student</option>
-                                            <option value="teachers">teacher</option>
+                                            <option value="student">student</option>
+                                            <option value="teacher">teacher</option>
                                         </select>
                                     </td>
                                     <td>
@@ -156,4 +180,4 @@ const RegisterNewUsers = ({
     );
 };
 
-export default RegisterNewUsers;
+export default AddItemModal;
