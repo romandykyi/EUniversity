@@ -86,7 +86,11 @@ const AdminGroup = () => {
                 <h2 className="text-3xl font-bold mb-5">
                     Teacher: {teacher.firstName} {teacher.lastName}
                 </h2>
-                <Button onClick={() => setIsAddStudentVisible(true)}>Add student to group</Button>
+                {
+                    isAdmin 
+                    ?   <Button onClick={() => setIsAddStudentVisible(true)}>Add student to group</Button>
+                    :   ""
+                }
                 <div className="table-container mt-5">
                     <table className="table students__table">
                     <thead>
