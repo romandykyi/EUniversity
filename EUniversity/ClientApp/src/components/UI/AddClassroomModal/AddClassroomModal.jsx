@@ -36,7 +36,8 @@ const AddClassroomModal = ({
                     setItems([]);
                     setError('');
                     await fetchItems();
-                } else {
+                } 
+                else {
                     console.error("Error:", response.status, response.statusText);
                     setError(`${response.status} ${response.statusText}`);
                 }

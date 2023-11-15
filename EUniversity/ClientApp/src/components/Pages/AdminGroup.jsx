@@ -3,6 +3,7 @@ import { useLocation } from 'react-router-dom';
 import { useAppSelector } from '../../store/store';
 import Button from "../UI/Button/Button";
 import DeleteModal from '../UI/DeleteModal/DeleteModal';
+import AddItemToGroupModal from '../UI/AddItemToGroupModal/AddItemToGroupModal';
 
 const AdminGroup = () => {
 
@@ -11,6 +12,7 @@ const AdminGroup = () => {
     const [teacher, setTeacher] = useState({});
     const [isLoading, setIsLoading] = useState(true);
     const [isDeleteVisible, setIsDeleteVisible] = useState(false);
+    const [isAddStudentVisible, setIsAddStudentVisible] = useState(false);
     const [deletedUser, setDeletedUser] = useState({
         id: '',
         name: ''
@@ -52,7 +54,7 @@ const AdminGroup = () => {
             if (response.ok) {
                 console.log(`deleted user: ${userId}`);
                 fetchGroup();
-                setIsDeleteVisible();
+                setIsDeleteVisible(false);
             } else {
                 console.log('error');
             }
@@ -69,7 +71,13 @@ const AdminGroup = () => {
                 itemType="student"
                 deleteFunction={deleteUserFromGroup}
                 deletedUser={deletedUser}
-
+            />
+            <AddItemToGroupModal
+                isVisible={isAddStudentVisible}
+                setIsVisible={setIsAddStudentVisible}
+                title="student"
+                groupId={groupNumber}
+                fetchItems={fetchGroup}
             />
             <div className="students container max-w-[1100px] pt-10">
                 <h1 className="students__title form__title">
@@ -78,7 +86,8 @@ const AdminGroup = () => {
                 <h2 className="text-3xl font-bold mb-5">
                     Teacher: {teacher.firstName} {teacher.lastName}
                 </h2>
-                <div className="table-container">
+                <Button onClick={() => setIsAddStudentVisible(true)}>Add student to group</Button>
+                <div className="table-container mt-5">
                     <table className="table students__table">
                     <thead>
                         <tr>
