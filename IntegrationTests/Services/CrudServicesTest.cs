@@ -116,7 +116,7 @@ public abstract class CrudServicesTest<TService, TEntity, TId, TPreviewDto, TDet
     public virtual async Task GetPage_ReceivesPaginationProperties()
     {
         // Arrange
-        PaginationProperties properties = new(1, 20);
+        PaginationProperties properties = new(3, PaginationProperties.MinPageSize);
 
         // Act
         var result = await Service.GetPageAsync(properties);
