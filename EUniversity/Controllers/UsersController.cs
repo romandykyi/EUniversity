@@ -1,4 +1,5 @@
 ﻿using EUniversity.Core.Dtos.Users;
+using EUniversity.Core.Filters;
 using EUniversity.Core.Pagination;
 using EUniversity.Core.Policy;
 using EUniversity.Core.Services.Auth;
@@ -35,9 +36,12 @@ public class UsersController : ControllerBase
     [ProducesResponseType(typeof(Page<UserViewDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
-    public async Task<IActionResult> GetAllUsersAsync([FromQuery] PaginationProperties paginationProperties)
+    public async Task<IActionResult> GetAllUsersAsync(
+        [FromQuery] PaginationProperties paginationProperties,
+        [FromQuery] UsersFilterProperties usersFilter)
     {
-        return Ok(await _usersService.GetAllUsersAsync(paginationProperties));
+        return Ok(await _usersService.GetAllUsersAsync(paginationProperties, 
+            new UsersFilter(usersFilter)));
     }
 
     /// <summary>
@@ -51,9 +55,12 @@ public class UsersController : ControllerBase
     [ProducesResponseType(typeof(Page<UserViewDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
-    public async Task<IActionResult> GetAllStudentsAsync([FromQuery] PaginationProperties paginationProperties)
+    public async Task<IActionResult> GetAllStudentsAsync(
+        [FromQuery] PaginationProperties paginationProperties,
+        [FromQuery] UsersFilterProperties usersFilter)
     {
-        return Ok(await _usersService.GetUsersInRoleAsync(Roles.Student, paginationProperties));
+        return Ok(await _usersService.GetUsersInRoleAsync(Roles.Student, 
+            paginationProperties, new UsersFilter(usersFilter)));
     }
 
     /// <summary>
@@ -67,9 +74,12 @@ public class UsersController : ControllerBase
     [ProducesResponseType(typeof(Page<UserViewDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
-    public async Task<IActionResult> GetAllTeachersAsync([FromQuery] PaginationProperties paginationProperties)
+    public async Task<IActionResult> GetAllTeachersAsync(
+        [FromQuery] PaginationProperties paginationProperties,
+        [FromQuery] UsersFilterProperties usersFilter)
     {
-        return Ok(await _usersService.GetUsersInRoleAsync(Roles.Teacher, paginationProperties));
+        return Ok(await _usersService.GetUsersInRoleAsync(Roles.Teacher, 
+            paginationProperties, new UsersFilter(usersFilter)));
     }
     #endregion
 

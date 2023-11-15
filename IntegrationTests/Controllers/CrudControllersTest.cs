@@ -174,23 +174,23 @@ public abstract class CrudControllersTest<TEntity, TId, TPreviewDto, TDetailsDto
     {
         // Arrange
         using var client = GetTestClient();
-        PaginationProperties properties = new(2, 10);
+        const int page = 2, pageSize = 25;
         ServiceMock
             .GetPageAsync(Arg.Any<PaginationProperties>(), Arg.Any<IFilter<TEntity>>())
-            .Returns(Task.FromResult(GetTestPreviewDtos(properties)));
+            .Returns(x => Task.FromResult(GetTestPreviewDtos((PaginationProperties)x[0])));
 
         // Act
-        var result = await client.GetAsync($"{GetPageRoute}?page=1&pageSize=25");
+        var result = await client.GetAsync($"{GetPageRoute}?page={page}&pageSize={pageSize}");
 
         // Assert
         result.EnsureSuccessStatusCode();
-        var page = await result.Content.ReadFromJsonAsync<Page<TPreviewDto>>();
-        Assert.That(page, Is.Not.Null);
+        var resultPage = await result.Content.ReadFromJsonAsync<Page<TPreviewDto>>();
+        Assert.That(resultPage, Is.Not.Null);
         Assert.Multiple(() =>
         {
-            Assert.That(page.PageNumber, Is.EqualTo(properties.Page));
-            Assert.That(page.PageSize, Is.EqualTo(properties.PageSize));
-            Assert.That(page.Items.Count(), Is.LessThanOrEqualTo(page.PageSize));
+            Assert.That(resultPage.PageNumber, Is.EqualTo(page));
+            Assert.That(resultPage.PageSize, Is.EqualTo(pageSize));
+            Assert.That(resultPage.Items.Count(), Is.LessThanOrEqualTo(pageSize));
         });
     }
 
@@ -199,10 +199,9 @@ public abstract class CrudControllersTest<TEntity, TId, TPreviewDto, TDetailsDto
     {
         // Arrange
         using var client = GetTestClient();
-        PaginationProperties properties = new(2, 10);
         ServiceMock
             .GetPageAsync(Arg.Any<PaginationProperties>(), Arg.Any<IFilter<TEntity>>())
-            .Returns(Task.FromResult(GetTestPreviewDtos(properties)));
+            .Returns(x => Task.FromResult(GetTestPreviewDtos((PaginationProperties)x[0])));
 
         // Act
         var result = await client.GetAsync($"{GetPageRoute}?page=1&pageSize=25&{GetPageFilter}");
