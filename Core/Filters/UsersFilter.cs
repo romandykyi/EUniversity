@@ -27,6 +27,21 @@ public class UsersFilter : IFilter<ApplicationUser>
     /// </returns>
     public IQueryable<ApplicationUser> Apply(IQueryable<ApplicationUser> query)
     {
-        throw new NotImplementedException();
+        if (Properties.FullName != null)
+        {
+            query = query.Where(
+                u => (u.FirstName + ' ' + (u.MiddleName != null ? u.MiddleName + ' ' : "") + u.LastName)
+                .Contains(Properties.FullName)
+                );
+        }
+        if (Properties.Email != null)
+        {
+            query = query.Where(u => u.Email != null && u.Email.Contains(Properties.Email));
+        }
+        if (Properties.UserName != null)
+        {
+            query = query.Where(u => u.UserName != null && u.UserName.Contains(Properties.UserName));
+        }
+        return query;
     }
 }
