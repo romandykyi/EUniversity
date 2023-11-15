@@ -11,6 +11,7 @@ namespace EUniversity.IntegrationTests.Services;
 public class UsersServiceTests : ServicesTest
 {
     private IUsersService _usersService;
+    private readonly UsersFilter _usersFilter = new(new("Name", "username123", "email@example.com"));
 
     // Helper method that adds many users in roles and returns their IDs.
     private async Task<string[]> RegisterManyRolesAsync(int count, params string[] roles)
@@ -44,12 +45,12 @@ public class UsersServiceTests : ServicesTest
     }
 
     [Test]
-    public async Task GetAllUsers_AppliesFilter()
+    public async Task GetAllUsers_AppliesUsersFilter()
     {
         // Arrange
         var filter = Substitute.For<IFilter<ApplicationUser>>();
         filter.Apply(Arg.Any<IQueryable<ApplicationUser>>())
-            .Returns(x => x[0]);
+            .Returns(x => _usersFilter.Apply((IQueryable<ApplicationUser>)x[0]));
 
         // Act
         await _usersService.GetAllUsersAsync(filter: filter);
@@ -98,12 +99,12 @@ public class UsersServiceTests : ServicesTest
     }
 
     [Test]
-    public async Task GetUsersInRole_AppliesFilter()
+    public async Task GetUsersInRole_AppliesUsersFilter()
     {
         // Arrange
         var filter = Substitute.For<IFilter<ApplicationUser>>();
         filter.Apply(Arg.Any<IQueryable<ApplicationUser>>())
-            .Returns(x => x[0]);
+            .Returns(x => _usersFilter.Apply((IQueryable<ApplicationUser>)x[0]));
 
         // Act
         await _usersService.GetUsersInRoleAsync(Roles.Student, filter: filter);
