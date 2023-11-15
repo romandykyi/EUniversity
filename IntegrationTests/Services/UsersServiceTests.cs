@@ -146,7 +146,7 @@ public class UsersServiceTests : ServicesTest
         // Assert
         Assert.Multiple(() =>
         {
-            Assert.That(result.TotalItemsCount, Is.EqualTo(expectedIds.Count()));
+            Assert.That(result.TotalItemsCount, Is.EqualTo(expectedIds.Length));
             Assert.That(result.Items.Select(u => u.Id), Is.EquivalentTo(expectedIds));
         });
     }
