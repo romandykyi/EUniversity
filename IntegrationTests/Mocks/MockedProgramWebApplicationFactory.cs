@@ -2,6 +2,7 @@
 using EUniversity.Core.Services;
 using EUniversity.Core.Services.Auth;
 using EUniversity.Core.Services.University;
+using EUniversity.Core.Services.Users;
 using EUniversity.Extensions;
 using EUniversity.Infrastructure.Data;
 using EUniversity.Infrastructure.Services.University;
@@ -26,6 +27,7 @@ public class MockedProgramWebApplicationFactory : WebApplicationFactory<Program>
     public TestClaimsProvider ClaimsProvider { get; private set; } = null!;
     public IAuthService AuthServiceMock { get; private set; } = null!;
     public UserManager<ApplicationUser> UserManagerMock { get; private set; } = null!;
+    public IUsersService UsersServiceMock { get; private set; } = null!;
 
     public IEntityExistenceChecker ExistenceCheckerMock { get; private set; } = null!;
 
@@ -43,6 +45,7 @@ public class MockedProgramWebApplicationFactory : WebApplicationFactory<Program>
         UserManagerMock = Substitute.For<UserManager<ApplicationUser>>(
             mockedUserStore, null, null, null, null, null, null, null, null
             );
+        UsersServiceMock = Substitute.For<IUsersService>();
 
         ExistenceCheckerMock = Substitute.For<IEntityExistenceChecker>();
 
@@ -64,7 +67,10 @@ public class MockedProgramWebApplicationFactory : WebApplicationFactory<Program>
                     "TestScheme", options => { });
             services.AddCustomizedAuthorization("TestScheme");
             services.AddScoped(_ => AuthServiceMock);
+
+            // Users
             services.AddScoped(_ => UserManagerMock);
+            services.AddScoped(_ => UsersServiceMock);
 
             // General-purpose
             services.AddScoped(_ => ExistenceCheckerMock);

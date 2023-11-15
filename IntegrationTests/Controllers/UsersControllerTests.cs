@@ -1,9 +1,14 @@
-﻿using EUniversity.Core.Dtos.Auth;
+﻿using Duende.IdentityServer.Test;
+using EUniversity.Core.Dtos.Auth;
 using EUniversity.Core.Dtos.Users;
+using EUniversity.Core.Filters;
+using EUniversity.Core.Models;
 using EUniversity.Core.Pagination;
 using EUniversity.Core.Policy;
 using EUniversity.Core.Services.Auth;
+using IdentityModel;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using NSubstitute;
 using NSubstitute.ReceivedExtensions;
 using System.Net;
@@ -15,12 +20,21 @@ public class UsersControllerTests : ControllersTest
     public readonly RegisterDto RegisterUser1 = new("example-email1@email.com", "Test1", "Test1");
     public readonly RegisterDto RegisterUser2 = new("example-email2@email.com", "Test2", "Test2");
     public const int SampleRegisterUsersCount = 2;
-    public RegisterUsersDto SampleRegisterUsers => new(
+    private RegisterUsersDto SampleRegisterUsers => new(
         new RegisterDto[SampleRegisterUsersCount]
         {
             RegisterUser1,
             RegisterUser2
         });
+
+    public UserViewDto[] TestUsers =
+    {
+        new("1", "mail1@example.com", "user1", "First1", "Last1", null),
+        new("2", "mail2@example.com", "user2", "First2", "Last2", "Middle2")
+    };
+
+    public UsersFilterProperties TestFilterProperties = new("Joe Doe", "joedoe777", "mail@example.com");
+    public const string TestFilterQuery = "fullName=Joe%20Doe&userName=joedoe777&email=mail@example.com";
 
     public static readonly string[] GetMethods =
     {
@@ -44,6 +58,22 @@ public class UsersControllerTests : ControllersTest
         (RolesGetMethods[1], Roles.Teacher)
     };
 
+    private Page<UserViewDto> GetTestPage(PaginationProperties paginationProperties)
+    {
+        return new(TestUsers, paginationProperties, TestUsers.Length);
+    }
+
+    [SetUp]
+    public void SetUp()
+    {
+        WebApplicationFactory.UsersServiceMock
+            .GetUsersInRoleAsync(Arg.Any<string>(), Arg.Any<PaginationProperties>(), Arg.Any<IFilter<ApplicationUser>>())
+            .Returns(x => GetTestPage((PaginationProperties)x[1]));
+        WebApplicationFactory.UsersServiceMock
+            .GetAllUsersAsync(Arg.Any<PaginationProperties>(), Arg.Any<IFilter<ApplicationUser>>())
+            .Returns(x => GetTestPage((PaginationProperties)x[0]));
+    }
+
     [Test]
     [TestCaseSource(nameof(GetMethods))]
     public async Task GetMethods_AdministratorRole_SucceedAndReturnValidType(string method)
@@ -58,6 +88,68 @@ public class UsersControllerTests : ControllersTest
         result.EnsureSuccessStatusCode();
         var users = await result.Content.ReadFromJsonAsync<Page<UserViewDto>>();
         Assert.That(users, Is.Not.Null);
+    }
+
+    [Test]
+    [TestCaseSource(nameof(GetMethods))]
+    public async Task GetMethods_PaginationQueryParams_SucceedAndApplyPagination(string method)
+    {
+        // Arrange
+        using var client = CreateAdministratorClient();
+        const int page = 2, pageSize = 25;
+
+        // Act
+        var result = await client.GetAsync($"{method}?page={page}&pageSize={pageSize}");
+
+        // Assert
+        result.EnsureSuccessStatusCode();
+        var usersPage = await result.Content.ReadFromJsonAsync<Page<UserViewDto>>();
+        Assert.That(usersPage, Is.Not.Null);
+        Assert.Multiple(() =>
+        {
+            Assert.That(usersPage.PageNumber, Is.EqualTo(page));
+            Assert.That(usersPage.PageSize, Is.EqualTo(pageSize));
+            Assert.That(usersPage.Items.Count(), Is.LessThanOrEqualTo(pageSize));
+        });
+    }
+
+    [Test]
+    public async Task GetAllUsers_FilterQueryParams_SucceedsAndAppliesFilter()
+    {
+        // Arrange
+        using var client = CreateAdministratorClient();
+
+        // Act
+        var result = await client.GetAsync($"/api/users?{TestFilterQuery}");
+
+        // Assert
+        result.EnsureSuccessStatusCode();
+        var usersPage = await result.Content.ReadFromJsonAsync<Page<UserViewDto>>();
+        Assert.That(usersPage, Is.Not.Null);
+        await WebApplicationFactory.UsersServiceMock
+            .Received()
+            .GetAllUsersAsync(Arg.Any<PaginationProperties>(),
+            Arg.Is<UsersFilter>(f => f.Properties == TestFilterProperties));
+    }
+
+    [Test]
+    [TestCaseSource(nameof(RolesGetMethods))]
+    public async Task GetUsersInRoleMethods_FilterQueryParams_SucceedAndApplyFilter(string method)
+    {
+        // Arrange
+        using var client = CreateAdministratorClient();
+
+        // Act
+        var result = await client.GetAsync($"{method}?{TestFilterQuery}");
+
+        // Assert
+        result.EnsureSuccessStatusCode();
+        var usersPage = await result.Content.ReadFromJsonAsync<Page<UserViewDto>>();
+        Assert.That(usersPage, Is.Not.Null);
+        await WebApplicationFactory.UsersServiceMock
+            .Received()
+            .GetUsersInRoleAsync(Arg.Any<string>(), Arg.Any<PaginationProperties>(),
+            Arg.Is<UsersFilter>(f => f.Properties == TestFilterProperties));
     }
 
     [Test]
