@@ -1,6 +1,5 @@
 ﻿using EUniversity.Core.Dtos.University.Grades;
 using EUniversity.Core.Filters;
-using EUniversity.Core.Models.University;
 using EUniversity.Core.Models.University.Grades;
 
 namespace EUniversity.IntegrationTests.Controllers.University.Grades;

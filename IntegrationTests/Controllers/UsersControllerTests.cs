@@ -1,14 +1,11 @@
-﻿using Duende.IdentityServer.Test;
-using EUniversity.Core.Dtos.Auth;
+﻿using EUniversity.Core.Dtos.Auth;
 using EUniversity.Core.Dtos.Users;
 using EUniversity.Core.Filters;
 using EUniversity.Core.Models;
 using EUniversity.Core.Pagination;
 using EUniversity.Core.Policy;
 using EUniversity.Core.Services.Auth;
-using IdentityModel;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using NSubstitute;
 using NSubstitute.ReceivedExtensions;
 using System.Net;

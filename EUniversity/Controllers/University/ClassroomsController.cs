@@ -43,7 +43,7 @@ public class ClassroomsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> GetClassroomsPageAsync(
-        [FromQuery] PaginationProperties properties, 
+        [FromQuery] PaginationProperties properties,
         [FromQuery] string? name)
     {
         NameFilter<Classroom>? filter = name != null ? new(name) : null;

@@ -1,5 +1,4 @@
-﻿using Bogus.DataSets;
-using EUniversity.Core.Dtos.University;
+﻿using EUniversity.Core.Dtos.University;
 using EUniversity.Core.Filters;
 using EUniversity.Core.Models.University;
 using EUniversity.Core.Pagination;
