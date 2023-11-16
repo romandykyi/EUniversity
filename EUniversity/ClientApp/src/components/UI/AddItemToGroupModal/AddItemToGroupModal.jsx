@@ -13,6 +13,8 @@ const AddItemToGroupModal = ({
     const [inputValue, setInputValue] = useState("");
     const [foundUsers, setFoundUsers] = useState([]);
     const [chosenUsers, setChosenUsers] = useState([]);
+    const [isResponsePossible, setIsResponsePossible] = useState(true);
+    const [timeoutId, setTimeoutId] = useState(null);
 
     const handleClickOnBg = () => {
         setIsVisible(false);
@@ -21,25 +23,37 @@ const AddItemToGroupModal = ({
 
     const searchItem = async e => {
         setInputValue(e.target.value);
-        if (e.target.value.length) {
-            setTimeout(async () => {
+    
+        if (e.target.value.length && isResponsePossible) {
+            if (timeoutId) {
+                clearTimeout(timeoutId);
+            }
+    
+            const newTimeoutId = setTimeout(async () => {
+                setIsResponsePossible(false);
                 try {
                     const response = await fetch(`/api/users/students?Page=1&PageSize=20&FullName=${inputValue}`);
+                    
                     if (response.ok) {
                         const data = await response.json();
                         setFoundUsers(data.items);
-                      } else {
+                    } else {
                         console.log('error');
-                      }
-                    } catch (error) {
-                      console.log(error);
+                    }
+                } catch (error) {
+                    console.log(error);
+                } finally {
+                    setIsResponsePossible(true);
                 }
             }, 500);
-        }
-        else {
+    
+            setTimeoutId(newTimeoutId);
+        } else {
             setFoundUsers([]);
+            setIsResponsePossible(true);
         }
     };
+    
 
     const postNewUsersToGroup = async () => {
         const postStudents = chosenUsers.map(user => user.id);
