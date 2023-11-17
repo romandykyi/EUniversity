@@ -89,7 +89,7 @@ const NavMenu = () => {
       <header className="py-3 shadow-md bg-white">
         <div className="container max-w-[1100px] flex items-center gap-4 justify-between">
           <Link className="text-2xl font-bold" to="/">EUniversity</Link>
-            <nav className={`shadow-lg flex flex-col justify-center px-4 bg-white w-[300px] h-full fixed transition-all top-0 duration-300 ${collapsed ? "right-0" : "right-[-100%]"}`}>
+            <nav className={`z-10 shadow-lg flex flex-col justify-center px-4 bg-white w-[300px] h-full fixed transition-all top-0 duration-300 ${collapsed ? "right-0" : "right-[-100%]"}`}>
                 {
                 isAuthenticated
                     ? isAdmin
