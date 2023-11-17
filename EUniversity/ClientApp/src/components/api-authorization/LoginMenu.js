@@ -5,7 +5,7 @@ import { ApplicationPaths } from './ApiAuthorizationConstants';
 
 const LoginMenu = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [userName, setUserName] = useState(null);
+  const [fullName, setFullName] = useState("");
 
   useEffect(() => {
     const subscription = authService.subscribe(() => populateState());
@@ -21,20 +21,23 @@ const LoginMenu = () => {
       authService.isAuthenticated(),
       authService.getUser()
     ]);
+    console.log(`user: ${user}`);
+    if (user) {
+      setFullName(`${user.family_name} ${user.given_name}`);
+    }
 
     setIsAuthenticated(authStatus);
-    setUserName(user && user.name);
   };
 
-  const authenticatedView = (userName, profilePath, logoutPath, logoutState) => (
+  const authenticatedView = (userName, logoutPath, logoutState) => (
     <ul className="flex items-center gap-3">
       <li>
-        <Link className="text-black font-medium" to={profilePath}>
-          Hello {userName}
+        <Link className="text-black font-medium relative z-40 lg:z-0" to="/profile">
+          {userName}
         </Link>
       </li>
       <li>
-        <Link replace className="text-black font-medium" to={logoutPath} state={logoutState}>
+        <Link replace className="text-black font-medium relative z-40 lg:z-0" to={logoutPath} state={logoutState}>
           Logout
         </Link>
       </li>
@@ -51,10 +54,10 @@ const LoginMenu = () => {
     </ul>
   );
 
-  const { Register, Login, Profile, LogOut } = ApplicationPaths;
+  const { Register, Login, LogOut } = ApplicationPaths;
 
   return isAuthenticated
-    ? authenticatedView(userName, Profile, LogOut, { local: true })
+    ? authenticatedView(fullName, LogOut, { local: true })
     : anonymousView(Register, Login);
 };
 
