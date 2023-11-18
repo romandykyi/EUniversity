@@ -104,7 +104,7 @@ public class GroupsServiceTests :
         return studentGroup;
     }
 
-    // Checks exactly one StudentGroup exists
+    // Checks if exactly one StudentGroup exists
     private async Task<bool> CheckStudentGroupExistenceAsync(string studentId, int groupId)
     {
         return await DbContext.StudentGroups.SingleOrDefaultAsync(
