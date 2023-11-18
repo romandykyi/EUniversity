@@ -38,5 +38,11 @@ public class ApplicationDbContext : ApiAuthorizationDbContext<ApplicationUser>
             .HasMany<Group>()
             .WithMany(g => g.Students)
             .UsingEntity<StudentGroup>();
+
+        // ApplicationUser(Student)->Semesters
+        builder.Entity<ApplicationUser>()
+            .HasMany<Semester>()
+            .WithMany(s => s.Students)
+            .UsingEntity<StudentSemester>();
     }
 }
