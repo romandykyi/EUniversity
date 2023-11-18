@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EUniversity.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20231118130018_AddSemesters")]
-    partial class AddSemesters
+    [Migration("20231118134750_AddSemestersEntities")]
+    partial class AddSemestersEntities
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -389,7 +389,7 @@ namespace EUniversity.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Semester");
+                    b.ToTable("Semesters");
                 });
 
             modelBuilder.Entity("EUniversity.Core.Models.University.StudentGroup", b =>
@@ -424,7 +424,7 @@ namespace EUniversity.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTimeOffset>("EnrolmentDate")
+                    b.Property<DateTimeOffset>("EnrollmentDate")
                         .HasColumnType("datetimeoffset");
 
                     b.Property<int>("SemesterId")
@@ -440,7 +440,7 @@ namespace EUniversity.Infrastructure.Migrations
 
                     b.HasIndex("StudentId");
 
-                    b.ToTable("StudentSemester");
+                    b.ToTable("StudentSemesters");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>

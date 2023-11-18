@@ -14,7 +14,7 @@ public class StudentSemester : IEntity<int>
     /// <summary>
     /// Date when student was added to the semester.
     /// </summary>
-    public DateTimeOffset EnrolmentDate { get; set; }
+    public DateTimeOffset EnrollmentDate { get; set; }
 
     /// <summary>
     /// Foreign key of the associated student.

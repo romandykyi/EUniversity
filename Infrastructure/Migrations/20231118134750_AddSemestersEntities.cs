@@ -6,13 +6,13 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace EUniversity.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class AddSemesters : Migration
+    public partial class AddSemestersEntities : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Semester",
+                name: "Semesters",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -22,44 +22,44 @@ namespace EUniversity.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Semester", x => x.Id);
+                    table.PrimaryKey("PK_Semesters", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "StudentSemester",
+                name: "StudentSemesters",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    EnrolmentDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
+                    EnrollmentDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
                     StudentId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     SemesterId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_StudentSemester", x => x.Id);
+                    table.PrimaryKey("PK_StudentSemesters", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_StudentSemester_AspNetUsers_StudentId",
+                        name: "FK_StudentSemesters_AspNetUsers_StudentId",
                         column: x => x.StudentId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_StudentSemester_Semester_SemesterId",
+                        name: "FK_StudentSemesters_Semesters_SemesterId",
                         column: x => x.SemesterId,
-                        principalTable: "Semester",
+                        principalTable: "Semesters",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_StudentSemester_SemesterId",
-                table: "StudentSemester",
+                name: "IX_StudentSemesters_SemesterId",
+                table: "StudentSemesters",
                 column: "SemesterId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_StudentSemester_StudentId",
-                table: "StudentSemester",
+                name: "IX_StudentSemesters_StudentId",
+                table: "StudentSemesters",
                 column: "StudentId");
         }
 
@@ -67,10 +67,10 @@ namespace EUniversity.Infrastructure.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "StudentSemester");
+                name: "StudentSemesters");
 
             migrationBuilder.DropTable(
-                name: "Semester");
+                name: "Semesters");
         }
     }
 }
