@@ -170,7 +170,7 @@ public class GroupsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> AddStudentToGroupAsync(
-        [FromRoute] int groupId, [FromBody] StudentGroupCreateDto dto)
+        [FromRoute] int groupId, [FromBody] AssignStudentDto dto)
     {
         if (!await _existenceChecker.ExistsAsync<Group, int>(groupId))
         {

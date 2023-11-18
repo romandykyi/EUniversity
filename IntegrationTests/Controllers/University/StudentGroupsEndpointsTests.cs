@@ -16,7 +16,7 @@ public class StudentGroupsEndpointsTests : ControllersTest
     public readonly string DeleteStudentRoute =
         $"api/groups/{TestGroupId}/students/{TestStudentId}";
 
-    public readonly StudentGroupCreateDto TestDto = new(TestStudentId);
+    public readonly AssignStudentDto TestDto = new(TestStudentId);
 
     [SetUp]
     public void SetUp()
@@ -83,7 +83,7 @@ public class StudentGroupsEndpointsTests : ControllersTest
         WebApplicationFactory.GroupsServiceMock
             .AddStudentAsync(Arg.Any<string>(), Arg.Any<int>())
             .Throws<InvalidOperationException>();
-        StudentGroupCreateDto dto = new(string.Empty);
+        AssignStudentDto dto = new(string.Empty);
 
         // Act
         var result = await client.PostAsJsonAsync(AddStudentRoute, dto);
