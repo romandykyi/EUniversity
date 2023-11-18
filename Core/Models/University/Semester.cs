@@ -1,9 +1,19 @@
 ﻿namespace EUniversity.Core.Models.University;
 
-public class Semester : IEntity<int>
+/// <summary>
+/// An entity that represents a semester.
+/// </summary>
+public class Semester : IEntity<int>, IHasName
 {
+    public const int MaxNameLength = 100;
+
     [Key]
     public int Id { get; set; }
+    /// <summary>
+    /// Name of the semester.
+    /// </summary>
+    [StringLength(MaxNameLength)]
+    public string Name { get; set; } = null!;
     /// <summary>
     /// Date when the semester starts.
     /// </summary>
