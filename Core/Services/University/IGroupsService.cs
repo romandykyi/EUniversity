@@ -20,8 +20,7 @@ public interface IGroupsService :
     Task<bool> AddStudentAsync(string studentId, int groupId);
 
     /// <summary>
-    /// Removes a student from a group based on the information provided in the
-    /// <see cref="StudentGroupCreateDto" /> asynchronously.
+    /// Removes a student from a group based on the information.
     /// </summary>
     /// <param name="studentId">ID of the student to remove from the group.</param>
     /// <param name="groupId">ID of the group from which the user will be removed.</param>
