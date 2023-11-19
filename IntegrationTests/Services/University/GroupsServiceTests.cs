@@ -4,13 +4,25 @@ using EUniversity.Core.Models.University;
 using EUniversity.Core.Policy;
 using EUniversity.Core.Services.University;
 using Mapster;
-using Microsoft.EntityFrameworkCore;
 
 namespace EUniversity.IntegrationTests.Services.University;
 
 public class GroupsServiceTests :
     CrudServicesTest<IGroupsService, Group, int, GroupPreviewDto, GroupViewDto, GroupCreateDto, GroupCreateDto>
 {
+    internal static Group GetTestGroup(Course testCourse, ApplicationUser testTeacher)
+    {
+        return new Group()
+        {
+            Name = "100-A",
+            CourseId = testCourse.Id,
+            Course = testCourse,
+            TeacherId = testTeacher.Id,
+            Teacher = testTeacher,
+            Students = new List<ApplicationUser>()
+        };
+    }
+
     private Course _testCourse;
     private ApplicationUser _testTeacher;
 
@@ -34,15 +46,7 @@ public class GroupsServiceTests :
     /// <inheritdoc />
     protected override Group GetTestEntity()
     {
-        return new Group()
-        {
-            Name = "100-A",
-            CourseId = _testCourse.Id,
-            Course = _testCourse,
-            TeacherId = _testTeacher.Id,
-            Teacher = _testTeacher,
-            Students = new List<ApplicationUser>()
-        };
+        return GetTestGroup(_testCourse, _testTeacher);
     }
 
     /// <inheritdoc />
@@ -64,7 +68,7 @@ public class GroupsServiceTests :
         DbContext.Add(_testCourse);
         await DbContext.SaveChangesAsync();
 
-        _testTeacher = await RegisterTestUser(Roles.Teacher);
+        _testTeacher = await RegisterTestUserAsync(Roles.Teacher);
     }
 
     [Test]
@@ -87,90 +91,5 @@ public class GroupsServiceTests :
             Assert.That(result.Course, Is.EqualTo(expectedResult.Course));
             Assert.That(result.Students, Is.EquivalentTo(expectedResult.Students));
         });
-    }
-
-    // Creates a test group, a test student and assigns the student to the group
-    private async Task<StudentGroup> CreateTestStudentGroupAsync()
-    {
-        var group = await CreateTestEntityAsync();
-        var student = await RegisterTestUser(Roles.Student);
-        StudentGroup studentGroup = new()
-        {
-            GroupId = group.Id,
-            StudentId = student.Id
-        };
-        DbContext.Add(studentGroup);
-        await DbContext.SaveChangesAsync();
-        return studentGroup;
-    }
-
-    // Checks if exactly one StudentGroup exists
-    private async Task<bool> CheckStudentGroupExistenceAsync(string studentId, int groupId)
-    {
-        return await DbContext.StudentGroups.SingleOrDefaultAsync(
-                sg => sg.StudentId == studentId && sg.GroupId == groupId
-            ) != null;
-    }
-
-    [Test]
-    public virtual async Task AddStudent_StudentIsNotInGroup_AddsStudentAndReturnsTrue()
-    {
-        // Arrange
-        var student = await RegisterTestUser(Roles.Student);
-        var group = await CreateTestEntityAsync();
-
-        // Act
-        bool result = await Service.AddStudentAsync(student.Id, group.Id);
-
-        // Assert
-        Assert.That(result, Is.True);
-        // Assert that student is added to the group
-        bool exists = await CheckStudentGroupExistenceAsync(student.Id, group.Id);
-        Assert.That(exists, "Student wasn't added to the group");
-    }
-
-    [Test]
-    public virtual async Task AddStudent_StudentIsAlreadyInGroup_ReturnsFalse()
-    {
-        // Arrange
-        var studentGroup = await CreateTestStudentGroupAsync();
-
-        // Act
-        bool result = await Service.AddStudentAsync(studentGroup.StudentId, studentGroup.GroupId);
-
-        // Assert
-        Assert.That(result, Is.False);
-    }
-
-    [Test]
-    public virtual async Task RemoveStudent_StudentIsInGroup_RemovesStudentAndReturnsTrue()
-    {
-        // Arrange
-        var studentGroup = await CreateTestStudentGroupAsync();
-        string studentId = studentGroup.StudentId;
-        int groupId = studentGroup.GroupId;
-
-        // Act
-        bool result = await Service.RemoveStudentAsync(studentId, groupId);
-
-        // Assert
-        Assert.That(result, Is.True);
-        // Assert that student was removed
-        bool exists = await CheckStudentGroupExistenceAsync(studentId, groupId);
-        Assert.That(exists, Is.False, "Student wasn't removed from the group");
-    }
-
-    [Test]
-    public virtual async Task RemoveStudent_StudentIsNotInGroup_ReturnsFalse()
-    {
-        // Arrange
-        var student = await RegisterTestUser(Roles.Student);
-        var group = await CreateTestEntityAsync();
-
-        // Act
-        bool result = await Service.RemoveStudentAsync(student.Id, group.Id);
-
-        // Assert
-        Assert.That(result, Is.False);
     }
 }

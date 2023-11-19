@@ -19,7 +19,7 @@ public class UsersServiceTests : ServicesTest
         string[] result = new string[count];
         for (int i = 0; i < count; i++)
         {
-            result[i] = (await RegisterTestUser(roles)).Id;
+            result[i] = (await RegisterTestUserAsync(roles)).Id;
         }
         return result;
     }

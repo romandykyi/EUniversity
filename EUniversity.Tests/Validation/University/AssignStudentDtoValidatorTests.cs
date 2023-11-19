@@ -5,9 +5,9 @@ using FluentValidation.TestHelper;
 
 namespace EUniversity.Tests.Validation.University;
 
-public class StudentGroupCreateDtoValidatorTests : UsersValidatorTests
+public class AssignStudentDtoValidatorTests : UsersValidatorTests
 {
-    private StudentGroupCreateDtoValidator _validator;
+    private AssignStudentDtoValidator _validator;
 
     [OneTimeSetUp]
     public void OneTimeSetUp()
@@ -19,7 +19,7 @@ public class StudentGroupCreateDtoValidatorTests : UsersValidatorTests
     public async Task Dto_Valid_Succeeds()
     {
         // Arrange
-        StudentGroupCreateDto dto = new(TestStudentId);
+        AssignStudentDto dto = new(TestStudentId);
 
         // Act
         var result = await _validator.TestValidateAsync(dto);
@@ -35,7 +35,7 @@ public class StudentGroupCreateDtoValidatorTests : UsersValidatorTests
     public async Task StudentId_Empty_FailsWithPropertyRequiredError(string studentId)
     {
         // Arrange
-        StudentGroupCreateDto dto = new(studentId);
+        AssignStudentDto dto = new(studentId);
 
         // Act
         var result = await _validator.TestValidateAsync(dto);
@@ -49,7 +49,7 @@ public class StudentGroupCreateDtoValidatorTests : UsersValidatorTests
     public async Task StudentId_UserDoesNotExist_FailsWithInvalidForeignKeyError()
     {
         // Arrange
-        StudentGroupCreateDto dto = new(NonExistentUserId);
+        AssignStudentDto dto = new(NonExistentUserId);
 
         // Act
         var result = await _validator.TestValidateAsync(dto);
@@ -65,7 +65,7 @@ public class StudentGroupCreateDtoValidatorTests : UsersValidatorTests
     public async Task StudentId_UserWithoutStudentRole_FailsWithUserIsNotInRoleError(string userId)
     {
         // Arrange
-        StudentGroupCreateDto dto = new(userId);
+        AssignStudentDto dto = new(userId);
 
         // Act
         var result = await _validator.TestValidateAsync(dto);

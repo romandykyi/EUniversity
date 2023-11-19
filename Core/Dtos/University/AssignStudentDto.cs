@@ -3,4 +3,4 @@
 namespace EUniversity.Core.Dtos.University;
 
 [ValidateNever] // Remove data annotations validation
-public record StudentGroupCreateDto(string StudentId);
+public record AssignStudentDto(string StudentId);

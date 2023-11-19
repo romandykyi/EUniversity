@@ -7,9 +7,9 @@ using Microsoft.AspNetCore.Identity;
 
 namespace EUniversity.Core.Validation.University;
 
-public class StudentGroupCreateDtoValidator : AbstractValidator<StudentGroupCreateDto>
+public class AssignStudentDtoValidator : AbstractValidator<AssignStudentDto>
 {
-    public StudentGroupCreateDtoValidator(UserManager<ApplicationUser> userManager)
+    public AssignStudentDtoValidator(UserManager<ApplicationUser> userManager)
     {
         RuleFor(sg => sg.StudentId)
             .NotEmpty()
