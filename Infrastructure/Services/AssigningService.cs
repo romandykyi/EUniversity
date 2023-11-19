@@ -33,7 +33,7 @@ public abstract class AssigningService<TAssigningEntity, TId1, TId2> : IAssignin
     /// <returns>
     /// A new assigning entity which assigns the first entity to the second.
     /// </returns>
-    public abstract TAssigningEntity CreateAssigningEntity(TId1 id1, TId2 id2);
+    protected abstract TAssigningEntity CreateAssigningEntity(TId1 id1, TId2 id2);
 
     /// <summary>
     /// When implemented, gets a predicate that can be used for finding

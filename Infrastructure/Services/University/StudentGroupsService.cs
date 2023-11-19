@@ -21,7 +21,7 @@ public class StudentGroupsService :
         return sg => sg.StudentId == studentId && sg.GroupId == groupId;
     }
 
-    public override StudentGroup CreateAssigningEntity(int groupId, string studentId)
+    protected override StudentGroup CreateAssigningEntity(int groupId, string studentId)
     {
         return new()
         {

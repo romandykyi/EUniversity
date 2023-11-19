@@ -17,7 +17,7 @@ public class StudentSemestersService :
         return ss => ss.SemesterId == semesterId && ss.StudentId == studentId;
     }
 
-    public override StudentSemester CreateAssigningEntity(int semesterId, string studentId)
+    protected override StudentSemester CreateAssigningEntity(int semesterId, string studentId)
     {
         return new StudentSemester()
         {
