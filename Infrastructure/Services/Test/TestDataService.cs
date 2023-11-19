@@ -196,7 +196,7 @@ public class TestDataService
         await CreateFakeEntitiesAsync(groupsFaker, count);
 
         // Get all groups
-        var groupsIds = _dbContext.Groups
+        var groupsIds = _dbContext.Semesters
             .Select(g => g.Id)
             .ToArray();
 
@@ -225,4 +225,57 @@ public class TestDataService
             await CreateFakeEntitiesAsync(studentGroupFaker, studentsCount, false);
         }
     }
+
+    /// <summary>
+    /// Creates many fake semesters.
+    /// </summary>
+    /// <param name="count">Number of semesters to be created.</param>
+    /// <param name="minStudentsInSemester">Minimum number of students in one semester.</param>
+    /// <param name="maxStudentsInSemester">Maximum number of students in one semester.</param>
+    public async Task CreateFakeSemestersAsync(int count = 8,
+        int minStudentsInSemester = 20, int maxStudentsInSemester = 40)
+    {
+        Faker faker = new();
+
+        // Generate semesters
+        int number = 1;
+        DateTime minDate = DateTime.Now - TimeSpan.FromDays(180);
+        DateTime maxDate = DateTime.Now + TimeSpan.FromDays(180);
+        var semestersFaker = new Faker<Semester>()
+            .RuleFor(s => s.DateFrom, f => f.Date.Between(minDate, maxDate))
+            .RuleFor(s => s.DateTo, (f, s) => f.Date.Between(s.DateFrom.DateTime,
+            s.DateFrom.DateTime + TimeSpan.FromDays(180)))
+            .RuleFor(s => s.Name, (f, s) => $"Semester {number++} {s.DateFrom:yyyy-MM-dd}-{s.DateTo:yyyy-MM-dd}");
+        await CreateFakeEntitiesAsync(semestersFaker, count);
+
+        // Get all semesters
+        var semestersIds = _dbContext.Semesters
+            .Select(s => s.Id)
+            .ToArray();
+
+        // Assign random students to semesters
+        var studentsIds = (await _userManager.GetUsersInRoleAsync(Roles.Student))
+            .Select(u => u.Id)
+            .ToArray();
+        foreach (var semesterId in semestersIds)
+        {
+            // Do not assign students if semester has at least one assigned students
+            if (await _dbContext.StudentSemesters.AnyAsync(sg => sg.SemesterId == semesterId) ||
+                faker.Random.Bool(0.1f))
+            {
+                continue;
+            }
+
+            var shuffledStudentsIds = faker.Random
+                .Shuffle(studentsIds)
+                .ToArray();
+            int i = 0;
+            var studentSemesterFaker = new Faker<StudentSemester>()
+                .RuleFor(s => s.SemesterId, _ => semesterId)
+                .RuleFor(s => s.StudentId, _ => shuffledStudentsIds[i++]);
+            int studentsCount = faker.Random.Int(minStudentsInSemester, maxStudentsInSemester);
+            await CreateFakeEntitiesAsync(studentSemesterFaker, studentsCount, false);
+        }
+    }
+
 }
