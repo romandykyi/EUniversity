@@ -24,12 +24,7 @@ public class SemestersServiceTests :
 
     protected override Semester GetTestEntity()
     {
-        return new Semester()
-        {
-            Name = "Semester I",
-            DateFrom = DateTimeOffset.MinValue,
-            DateTo = DateTimeOffset.MaxValue
-        };
+        return GetTestSemester();
     }
 
     protected override SemesterCreateDto GetValidCreateDto()
@@ -40,5 +35,15 @@ public class SemestersServiceTests :
     protected override SemesterCreateDto GetValidUpdateDto()
     {
         return new SemesterCreateDto("Semester III", DateTimeOffset.Now, DateTimeOffset.Now + TimeSpan.FromDays(10));
+    }
+
+    internal static Semester GetTestSemester()
+    {
+        return new Semester()
+        {
+            Name = "Semester I",
+            DateFrom = DateTimeOffset.MinValue,
+            DateTo = DateTimeOffset.MaxValue
+        };
     }
 }
