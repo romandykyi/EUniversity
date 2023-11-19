@@ -10,23 +10,23 @@ namespace EUniversity.Infrastructure.Services.University;
 /// the 'Students->Groups' many-to-many relationship.
 /// </summary>
 public class StudentGroupsService :
-    AssigningService<StudentGroup, string, int>, IStudentGroupsService
+    AssigningService<StudentGroup, int, string>, IStudentGroupsService
 {
     public StudentGroupsService(ApplicationDbContext dbContext) : base(dbContext)
     {
     }
 
-    public override Expression<Func<StudentGroup, bool>> AssigningEntityPredicate(string studentId, int groupId)
+    public override Expression<Func<StudentGroup, bool>> AssigningEntityPredicate(int groupId, string studentId)
     {
         return sg => sg.StudentId == studentId && sg.GroupId == groupId;
     }
 
-    public override StudentGroup CreateAssigningEntity(string studentId, int groupId)
+    public override StudentGroup CreateAssigningEntity(int groupId, string studentId)
     {
         return new()
         {
-            StudentId = studentId,
-            GroupId = groupId
+            GroupId = groupId,
+            StudentId = studentId
         };
     }
 }

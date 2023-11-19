@@ -5,15 +5,9 @@ using EUniversity.Core.Services.University;
 namespace EUniversity.IntegrationTests.Services.University;
 
 public class StudentGroupsServiceTests :
-    AssigningServiceTests<IStudentGroupsService, StudentGroup, string, int>
+    AssigningServiceTests<IStudentGroupsService, StudentGroup, int, string>
 {
-    protected override async Task<string> GetIdOfExistingEntity1Async()
-    {
-        var student = await RegisterTestUserAsync(Roles.Student);
-        return student.Id;
-    }
-
-    protected override async Task<int> GetIdOfExistingEntity2Async()
+    protected override async Task<int> GetIdOfExistingEntity1Async()
     {
         var teacher = await RegisterTestUserAsync();
         var course = CoursesServiceTests.CreateTestCourse();
@@ -26,12 +20,18 @@ public class StudentGroupsServiceTests :
         return group.Id;
     }
 
-    protected override StudentGroup GetTestAssigningEntity(string studentId, int groupId)
+    protected override async Task<string> GetIdOfExistingEntity2Async()
+    {
+        var student = await RegisterTestUserAsync(Roles.Student);
+        return student.Id;
+    }
+
+    protected override StudentGroup GetTestAssigningEntity(int groupId, string studentId)
     {
         return new()
         {
-            StudentId = studentId,
-            GroupId = groupId
+            GroupId = groupId,
+            StudentId = studentId
         };
     }
 }

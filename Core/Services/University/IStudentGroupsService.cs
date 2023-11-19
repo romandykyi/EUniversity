@@ -6,6 +6,6 @@ namespace EUniversity.Core.Services.University;
 /// Represents an interface of the service which configures
 /// the 'Students->Groups' many-to-many relationship.
 /// </summary>
-public interface IStudentGroupsService : IAssigningService<StudentGroup, string, int>
+public interface IStudentGroupsService : IAssigningService<StudentGroup, int, string>
 {
 }
