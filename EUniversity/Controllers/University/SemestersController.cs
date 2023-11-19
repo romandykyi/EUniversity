@@ -10,76 +10,75 @@ using Mapster;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Attributes;
-using System.Diagnostics;
 
 namespace EUniversity.Controllers.University;
 
 /// <summary>
-/// Groups controller.
+/// Semesters controller.
 /// </summary>
 [ApiController]
-[Route("api/groups")]
+[Route("api/semesters")]
 [FluentValidationAutoValidation]
-public class GroupsController : ControllerBase
+public class SemestersController : ControllerBase
 {
-    private readonly IGroupsService _groupsService;
-    private readonly IStudentGroupsService _studentGroupsService;
+    private readonly ISemestersService _semestersService;
+    private readonly IStudentSemestersService _studentSemestersService;
     private readonly IEntityExistenceChecker _existenceChecker;
 
-    public GroupsController(IGroupsService groupsService,
-        IStudentGroupsService studentGroupsService,
+    public SemestersController(ISemestersService semestersService,
+        IStudentSemestersService studentSemestersService,
         IEntityExistenceChecker existenceChecker)
     {
-        _groupsService = groupsService;
-        _studentGroupsService = studentGroupsService;
+        _semestersService = semestersService;
+        _studentSemestersService = studentSemestersService;
         _existenceChecker = existenceChecker;
     }
 
     /// <summary>
-    /// Gets a page with groups.
+    /// Gets a page with semesters.
     /// </summary>
     /// <remarks>
     /// If there is no items in the requested page, then empty page will be returned.
     /// </remarks>
     /// <param name="properties">Pagination properties.</param>
-    /// <param name="name">An optional name to filter groups by.</param>
-    /// <response code="200">Returns requested page with groups.</response>
+    /// <param name="name">An optional name to filter semesters by.</param>
+    /// <response code="200">Returns requested page with semesters.</response>
     /// <response code="400">Bad request</response>
     /// <response code="401">Unauthorized user call</response>
     [HttpGet]
     [Authorize(Policies.Default)]
-    [ProducesResponseType(typeof(Page<GroupViewDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(Page<SemesterViewDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    public async Task<IActionResult> GetGroupsPageAsync(
+    public async Task<IActionResult> GetSemestersPageAsync(
         [FromQuery] PaginationProperties properties,
         [FromQuery] string? name)
     {
-        NameFilter<Group>? filter = name != null ? new(name) : null;
-        return Ok(await _groupsService.GetPageAsync(properties, filter));
+        NameFilter<Semester>? filter = name != null ? new(name) : null;
+        return Ok(await _semestersService.GetPageAsync(properties, filter));
     }
 
     /// <summary>
-    /// Gets a group by its ID.
+    /// Gets a semester by its ID.
     /// </summary>
-    /// <response code="200">Returns requested group</response>
+    /// <response code="200">Returns requested semester</response>
     /// <response code="400">Bad request</response>
     /// <response code="401">Unauthorized user call</response>
-    /// <response code="404">Group does not exist</response>
-    [HttpGet("{id:int}", Name = nameof(GetGroupByIdAsync))]
+    /// <response code="404">Semester does not exist</response>
+    [HttpGet("{id:int}", Name = nameof(GetSemesterByIdAsync))]
     [Authorize(Policies.Default)]
-    [ProducesResponseType(typeof(GroupViewDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(SemesterViewDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> GetGroupByIdAsync([FromRoute] int id)
+    public async Task<IActionResult> GetSemesterByIdAsync([FromRoute] int id)
     {
-        var group = await _groupsService.GetByIdAsync(id);
-        return group != null ? Ok(group) : NotFound();
+        var semester = await _semestersService.GetByIdAsync(id);
+        return semester != null ? Ok(semester) : NotFound();
     }
 
     /// <summary>
-    /// Creates a new group.
+    /// Creates a new semester.
     /// </summary>
     /// <response code="201">Successfully created</response>
     /// <response code="400">Malformed/invalid input</response>
@@ -87,26 +86,26 @@ public class GroupsController : ControllerBase
     /// <response code="403">User lacks 'Administrator' role</response>
     [HttpPost]
     [Authorize(Policies.HasAdministratorPermission)]
-    [ProducesResponseType(typeof(GroupViewDto), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(SemesterViewDto), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
-    public async Task<IActionResult> CreateGroupAsync([FromBody] GroupCreateDto dto)
+    public async Task<IActionResult> CreateSemesterAsync([FromBody] SemesterCreateDto dto)
     {
-        var group = await _groupsService.CreateAsync(dto);
-        var routeValues = new { id = group.Id };
-        var body = group.Adapt<GroupViewDto>();
-        return CreatedAtRoute(nameof(GetGroupByIdAsync), routeValues, body);
+        var semester = await _semestersService.CreateAsync(dto);
+        var routeValues = new { id = semester.Id };
+        var body = semester.Adapt<SemesterViewDto>();
+        return CreatedAtRoute(nameof(GetSemesterByIdAsync), routeValues, body);
     }
 
     /// <summary>
-    /// Edits a group by its ID.
+    /// Edits a semester by its ID.
     /// </summary>
     /// <response code="204">Success</response>
     /// <response code="400">Malformed/invalid input</response>
     /// <response code="401">Unauthorized user call</response>
     /// <response code="403">User lacks 'Administrator' role</response>
-    /// <response code="404">Group does not exist</response>
+    /// <response code="404">Semester does not exist</response>
     [HttpPut]
     [Route("{id:int}")]
     [Authorize(Policies.HasAdministratorPermission)]
@@ -115,20 +114,20 @@ public class GroupsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> UpdateGroupAsync([FromRoute] int id,
-        [FromBody] GroupCreateDto dto)
+    public async Task<IActionResult> UpdateSemesterAsync([FromRoute] int id,
+        [FromBody] SemesterCreateDto dto)
     {
-        var result = await _groupsService.UpdateAsync(id, dto);
+        var result = await _semestersService.UpdateAsync(id, dto);
         return result ? NoContent() : NotFound();
     }
 
     /// <summary>
-    /// Deletes a group by its ID.
+    /// Deletes a semester by its ID.
     /// </summary>
     /// <response code="204">Success</response>
     /// <response code="401">Unauthorized user call</response>
     /// <response code="403">User lacks 'Administrator' role</response>
-    /// <response code="404">Group does not exist</response>
+    /// <response code="404">Semester does not exist</response>
     [HttpDelete]
     [Route("{id:int}")]
     [Authorize(Policies.HasAdministratorPermission)]
@@ -136,23 +135,23 @@ public class GroupsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> DeleteGroupAsync([FromRoute] int id)
+    public async Task<IActionResult> DeleteSemesterAsync([FromRoute] int id)
     {
-        var result = await _groupsService.DeleteAsync(id);
+        var result = await _semestersService.DeleteAsync(id);
         return result ? NoContent() : NotFound();
     }
 
     /// <summary>
-    /// Adds a student to a group.
+    /// Adds a student to a semester.
     /// </summary>
-    /// <response code="200">Success(user is already part of the group)</response>
-    /// <response code="201">Success(user was added to the group)</response>
+    /// <response code="200">Success(user is already part of the semester)</response>
+    /// <response code="201">Success(user was added to the semester)</response>
     /// <response code="400">Malformed input, or invalid user ID, or user is not a student</response>
     /// <response code="401">Unauthorized user call</response>
     /// <response code="403">User lacks 'Administrator' role</response>
-    /// <response code="404">Group does not exist</response>
+    /// <response code="404">Semester does not exist</response>
     [HttpPost]
-    [Route("{groupId:int}/students")]
+    [Route("{semesterId:int}/students")]
     [Authorize(Policies.HasAdministratorPermission)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status201Created)]
@@ -160,49 +159,49 @@ public class GroupsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> AddStudentToGroupAsync(
-        [FromRoute] int groupId, [FromBody] AssignStudentDto dto)
+    public async Task<IActionResult> AddStudentToSemesterAsync(
+        [FromRoute] int semesterId, [FromBody] AssignStudentDto dto)
     {
-        if (!await _existenceChecker.ExistsAsync<Group, int>(groupId))
+        if (!await _existenceChecker.ExistsAsync<Semester, int>(semesterId))
         {
             return NotFound(
-                CustomResponses.NotFound("The group with the specified ID does not exist.",
+                CustomResponses.NotFound("The semester with the specified ID does not exist.",
                 HttpContext));
         }
-        bool created = await _studentGroupsService.AssignAsync(groupId, dto.StudentId);
+        bool created = await _studentSemestersService.AssignAsync(semesterId, dto.StudentId);
 
         if (created)
         {
-            var routeValues = new { groupId, studentId = dto.StudentId };
-            return CreatedAtRoute(nameof(DeleteStudentFromGroupAsync), routeValues, null);
+            var routeValues = new { semesterId, studentId = dto.StudentId };
+            return CreatedAtRoute(nameof(DeleteStudentFromSemesterAsync), routeValues, null);
         }
-        return Ok(new { message = "The student is already part of the group" });
+        return Ok(new { message = "The student is already part of the semester" });
 
     }
 
     /// <summary>
-    /// Deletes a student from a group.
+    /// Deletes a student from a semester.
     /// </summary>
-    /// <response code="204">Success(user was removed from the group)</response>
+    /// <response code="204">Success(user was removed from the semester)</response>
     /// <response code="400">Malformed/invalid input</response>
     /// <response code="401">Unauthorized user call</response>
     /// <response code="403">User lacks 'Administrator' role</response>
-    /// <response code="404">Group/Student does not exist or student is not part of the group</response>
+    /// <response code="404">Semester/Student does not exist or student is not part of the semester</response>
     [HttpDelete]
-    [Route("{groupId:int}/students/{studentId}")]
+    [Route("{semesterId:int}/students/{studentId}")]
     [Authorize(Policies.HasAdministratorPermission)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> DeleteStudentFromGroupAsync(
-        [FromRoute] int groupId, [FromRoute] string studentId)
+    public async Task<IActionResult> DeleteStudentFromSemesterAsync(
+        [FromRoute] int semesterId, [FromRoute] string studentId)
     {
-        if (!await _existenceChecker.ExistsAsync<Group, int>(groupId))
+        if (!await _existenceChecker.ExistsAsync<Semester, int>(semesterId))
         {
             return NotFound(
-                CustomResponses.NotFound("The group with the specified ID does not exist.",
+                CustomResponses.NotFound("The semester with the specified ID does not exist.",
                 HttpContext));
         }
         if (!await _existenceChecker.ExistsAsync<ApplicationUser, string>(studentId))
@@ -212,13 +211,13 @@ public class GroupsController : ControllerBase
                 HttpContext));
         }
 
-        bool removed = await _studentGroupsService.UnassignAsync(groupId, studentId);
+        bool removed = await _studentSemestersService.UnassignAsync(semesterId, studentId);
         if (removed)
         {
             return NoContent();
         }
         return NotFound(
-                CustomResponses.NotFound("The user is not part of the group.",
+                CustomResponses.NotFound("The user is not part of the semester.",
                 HttpContext));
     }
 }

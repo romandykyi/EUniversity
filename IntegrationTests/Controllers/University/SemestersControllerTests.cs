@@ -10,13 +10,13 @@ public class SemestersControllerTests :
 {
     public override string GetPageRoute => "api/semesters";
 
-    public override string GetPageFilter => "?name=testfilter";
+    public override string GetPageFilter => "name=testfilter";
 
     public override string GetByIdRoute => $"api/semesters/{DefaultId}";
 
     public override string PostRoute => "api/semesters";
 
-    public override string PutRoute => "api/semesters";
+    public override string PutRoute => $"api/semesters/{DefaultId}";
 
     public override string DeleteRoute => $"api/semesters/{DefaultId}";
 
@@ -41,7 +41,7 @@ public class SemestersControllerTests :
 
     protected override bool AssertThatFilterWasApplied(IFilter<Semester> filter)
     {
-        return filter is NameFilter<Group> nameFilter && nameFilter.Name == "testfilter";
+        return filter is NameFilter<Semester> nameFilter && nameFilter.Name == "testfilter";
     }
 
     protected override SemesterCreateDto GetInvalidCreateDto()

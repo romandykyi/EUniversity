@@ -54,6 +54,9 @@ app.MapControllerRoute(
 app.MapControllerRoute(
     name: nameof(GroupsController.DeleteStudentFromGroupAsync),
     pattern: "api/groups/{groupId:int}/students/{studentId}");
+app.MapControllerRoute(
+    name: nameof(SemestersController.DeleteStudentFromSemesterAsync),
+    pattern: "api/semesters/{semesterId:int}/students/{studentId}");
 
 app.MapFallbackToFile("index.html");
 
