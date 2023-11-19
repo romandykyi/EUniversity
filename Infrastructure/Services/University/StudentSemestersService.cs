@@ -22,7 +22,8 @@ public class StudentSemestersService :
         return new StudentSemester()
         {
             SemesterId = semesterId,
-            StudentId = studentId
+            StudentId = studentId,
+            EnrollmentDate = DateTimeOffset.Now
         };
     }
 }
