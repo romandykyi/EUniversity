@@ -1,6 +1,7 @@
 ﻿using EUniversity.Core.Dtos.University;
 using EUniversity.Core.Models.University;
 using EUniversity.Core.Services.University;
+using Mapster;
 
 namespace EUniversity.IntegrationTests.Services.University;
 
@@ -43,7 +44,31 @@ public class SemestersServiceTests :
         {
             Name = "Semester I",
             DateFrom = DateTimeOffset.MinValue,
-            DateTo = DateTimeOffset.MaxValue
+            DateTo = DateTimeOffset.MaxValue,
+            StudentEnrollments = new List<StudentSemester>()
         };
+    }
+
+
+    [Test]
+    public override async Task GetById_ElementExists_ReturnsValidElement()
+    {
+        // Arrange
+        var semester = await CreateTestEntityAsync();
+        var expectedResult = semester.Adapt<SemesterViewDto>();
+
+        // Act
+        var result = await Service.GetByIdAsync(semester.Id);
+
+        // Assert
+        Assert.That(result, Is.Not.Null);
+        Assert.Multiple(() =>
+        {
+            Assert.That(result.Id, Is.EqualTo(expectedResult.Id));
+            Assert.That(result.Name, Is.EqualTo(expectedResult.Name));
+            Assert.That(result.DateFrom, Is.EqualTo(expectedResult.DateFrom));
+            Assert.That(result.DateTo, Is.EqualTo(expectedResult.DateTo));
+            Assert.That(result.StudentEnrollments, Is.EquivalentTo(expectedResult.StudentEnrollments));
+        });
     }
 }
