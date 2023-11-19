@@ -23,12 +23,15 @@ namespace EUniversity.Controllers.University;
 public class GroupsController : ControllerBase
 {
     private readonly IGroupsService _groupsService;
+    private readonly IStudentGroupsService _studentGroupsService;
     private readonly IEntityExistenceChecker _existenceChecker;
 
     public GroupsController(IGroupsService groupsService,
+        IStudentGroupsService studentGroupsService,
         IEntityExistenceChecker existenceChecker)
     {
         _groupsService = groupsService;
+        _studentGroupsService = studentGroupsService;
         _existenceChecker = existenceChecker;
     }
 
@@ -176,7 +179,7 @@ public class GroupsController : ControllerBase
         {
             return CustomNotFound("The group with the specified ID does not exist.");
         }
-        bool created = await _groupsService.AddStudentAsync(dto.StudentId, groupId);
+        bool created = await _studentGroupsService.AssignAsync(groupId, dto.StudentId);
 
         if (created)
         {
@@ -215,7 +218,7 @@ public class GroupsController : ControllerBase
             return CustomNotFound("The user with the specified ID does not exist.");
         }
 
-        bool removed = await _groupsService.RemoveStudentAsync(studentId, groupId);
+        bool removed = await _studentGroupsService.UnassignAsync(groupId, studentId);
         if (removed)
         {
             return NoContent();
