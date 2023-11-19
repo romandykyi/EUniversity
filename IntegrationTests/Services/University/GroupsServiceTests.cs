@@ -11,6 +11,19 @@ namespace EUniversity.IntegrationTests.Services.University;
 public class GroupsServiceTests :
     CrudServicesTest<IGroupsService, Group, int, GroupPreviewDto, GroupViewDto, GroupCreateDto, GroupCreateDto>
 {
+    internal static Group GetTestGroup(Course testCourse, ApplicationUser testTeacher)
+    {
+        return new Group()
+        {
+            Name = "100-A",
+            CourseId = testCourse.Id,
+            Course = testCourse,
+            TeacherId = testTeacher.Id,
+            Teacher = testTeacher,
+            Students = new List<ApplicationUser>()
+        };
+    }
+
     private Course _testCourse;
     private ApplicationUser _testTeacher;
 
@@ -34,15 +47,7 @@ public class GroupsServiceTests :
     /// <inheritdoc />
     protected override Group GetTestEntity()
     {
-        return new Group()
-        {
-            Name = "100-A",
-            CourseId = _testCourse.Id,
-            Course = _testCourse,
-            TeacherId = _testTeacher.Id,
-            Teacher = _testTeacher,
-            Students = new List<ApplicationUser>()
-        };
+        return GetTestGroup(_testCourse, _testTeacher);
     }
 
     /// <inheritdoc />
@@ -64,7 +69,7 @@ public class GroupsServiceTests :
         DbContext.Add(_testCourse);
         await DbContext.SaveChangesAsync();
 
-        _testTeacher = await RegisterTestUser(Roles.Teacher);
+        _testTeacher = await RegisterTestUserAsync(Roles.Teacher);
     }
 
     [Test]
@@ -93,7 +98,7 @@ public class GroupsServiceTests :
     private async Task<StudentGroup> CreateTestStudentGroupAsync()
     {
         var group = await CreateTestEntityAsync();
-        var student = await RegisterTestUser(Roles.Student);
+        var student = await RegisterTestUserAsync(Roles.Student);
         StudentGroup studentGroup = new()
         {
             GroupId = group.Id,
@@ -116,7 +121,7 @@ public class GroupsServiceTests :
     public virtual async Task AddStudent_StudentIsNotInGroup_AddsStudentAndReturnsTrue()
     {
         // Arrange
-        var student = await RegisterTestUser(Roles.Student);
+        var student = await RegisterTestUserAsync(Roles.Student);
         var group = await CreateTestEntityAsync();
 
         // Act
@@ -164,7 +169,7 @@ public class GroupsServiceTests :
     public virtual async Task RemoveStudent_StudentIsNotInGroup_ReturnsFalse()
     {
         // Arrange
-        var student = await RegisterTestUser(Roles.Student);
+        var student = await RegisterTestUserAsync(Roles.Student);
         var group = await CreateTestEntityAsync();
 
         // Act

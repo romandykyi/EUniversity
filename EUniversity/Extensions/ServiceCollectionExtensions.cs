@@ -160,7 +160,8 @@ public static class ServiceCollectionExtensions
             .AddScoped<IClassroomsService, ClassroomsService>()
             .AddScoped<IGradesService, GradesService>()
             .AddScoped<ICoursesService, CoursesService>()
-            .AddScoped<IGroupsService, GroupsService>();
+            .AddScoped<IGroupsService, GroupsService>()
+            .AddScoped<IStudentGroupsService, StudentGroupsService>();
     }
 
     public static IMvcBuilder ConfigureControllers(this IServiceCollection builder)

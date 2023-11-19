@@ -38,7 +38,7 @@ public abstract class ServicesTest : IntegrationTest<ProgramWebApplicationFactor
     /// <returns>
     /// <see cref="ApplicationUser"/> that exists in the test database.
     /// </returns>
-    protected async Task<ApplicationUser> RegisterTestUser(params string[] roles)
+    protected async Task<ApplicationUser> RegisterTestUserAsync(params string[] roles)
     {
         string userName = Guid.NewGuid().ToString();
         ApplicationUser user = new()
