@@ -10,7 +10,6 @@ using Mapster;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Attributes;
-using System.Diagnostics;
 
 namespace EUniversity.Controllers.University;
 

@@ -40,7 +40,7 @@ public class UsersController : ControllerBase
         [FromQuery] PaginationProperties paginationProperties,
         [FromQuery] UsersFilterProperties usersFilter)
     {
-        return Ok(await _usersService.GetAllUsersAsync(paginationProperties, 
+        return Ok(await _usersService.GetAllUsersAsync(paginationProperties,
             new UsersFilter(usersFilter)));
     }
 
@@ -59,7 +59,7 @@ public class UsersController : ControllerBase
         [FromQuery] PaginationProperties paginationProperties,
         [FromQuery] UsersFilterProperties usersFilter)
     {
-        return Ok(await _usersService.GetUsersInRoleAsync(Roles.Student, 
+        return Ok(await _usersService.GetUsersInRoleAsync(Roles.Student,
             paginationProperties, new UsersFilter(usersFilter)));
     }
 
@@ -78,7 +78,7 @@ public class UsersController : ControllerBase
         [FromQuery] PaginationProperties paginationProperties,
         [FromQuery] UsersFilterProperties usersFilter)
     {
-        return Ok(await _usersService.GetUsersInRoleAsync(Roles.Teacher, 
+        return Ok(await _usersService.GetUsersInRoleAsync(Roles.Teacher,
             paginationProperties, new UsersFilter(usersFilter)));
     }
     #endregion

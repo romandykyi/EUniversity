@@ -19,7 +19,7 @@ public interface IUsersService
     /// <returns>
     /// Page with all users with the role.
     /// </returns>
-    Task<Page<UserViewDto>> GetUsersInRoleAsync(string role, PaginationProperties? properties = null, 
+    Task<Page<UserViewDto>> GetUsersInRoleAsync(string role, PaginationProperties? properties = null,
         IFilter<ApplicationUser>? filter = null);
 
     /// <summary>

@@ -1,7 +1,7 @@
 ﻿using EUniversity.Core.Dtos.University;
 using EUniversity.Core.Models.University;
-using EUniversity.Core.Validation.University;
 using EUniversity.Core.Validation;
+using EUniversity.Core.Validation.University;
 using FluentValidation.TestHelper;
 
 namespace EUniversity.Tests.Validation.University;
