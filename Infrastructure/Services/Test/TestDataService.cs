@@ -161,9 +161,16 @@ public class TestDataService
     /// <param name="count">Number of courses to be created.</param>
     public async Task CreateFakeCoursesAsync(int count = 50)
     {
+        // IDs of semesters
+        var teachersIds = await _dbContext.Semesters
+            .Select(c => c.Id)
+            .ToArrayAsync();
+
         var coursesFaker = new Faker<Course>()
             .RuleFor(c => c.Name, f => f.Company.CatchPhrase())
-            .RuleFor(c => c.Description, f => f.Lorem.Sentences(f.Random.Number(1, 3), " "));
+            .RuleFor(c => c.Description, f => f.Lorem.Sentences(f.Random.Number(1, 3), " "))
+            // Random teacher ID(90% probabilty) or null
+            .RuleFor(c => c.SemesterId, f => f.Random.Bool(0.9f) ? f.Random.CollectionItem(teachersIds) : null);
 
         await CreateFakeEntitiesAsync(coursesFaker, count);
     }
@@ -278,5 +285,4 @@ public class TestDataService
             await CreateFakeEntitiesAsync(studentSemesterFaker, studentsCount, false);
         }
     }
-
 }

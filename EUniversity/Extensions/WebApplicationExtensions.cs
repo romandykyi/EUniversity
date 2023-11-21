@@ -74,10 +74,10 @@ public static class WebApplicationExtensions
 
         testDataService.CreateFakeUsersAsync().Wait();
         testDataService.CreateFakeClassroomsAsync().Wait();
+        testDataService.CreateFakeSemestersAsync().Wait();
         testDataService.CreateFakeGradesAsync().Wait();
         testDataService.CreateFakeCoursesAsync().Wait();
         testDataService.CreateFakeGroupsAsync().Wait();
-        testDataService.CreateFakeSemestersAsync().Wait();
 
         return app;
     }

@@ -1,6 +1,7 @@
 ﻿using EUniversity.Core.Dtos.University;
 using EUniversity.Core.Filters;
 using EUniversity.Core.Models.University;
+using EUniversity.Core.Services.University;
 
 namespace EUniversity.IntegrationTests.Controllers.University;
 
@@ -24,6 +25,8 @@ public class CoursesControllerTests :
     public override void SetUpService()
     {
         ServiceMock = WebApplicationFactory.CoursesServiceMock;
+        Assert.That(ServiceMock, Is.InstanceOf<ICoursesService>());
+        SetUpValidationMocks();
     }
 
     protected override bool AssertThatFilterWasApplied(IFilter<Course> filter)
@@ -33,31 +36,34 @@ public class CoursesControllerTests :
 
     protected override CourseCreateDto GetInvalidCreateDto()
     {
-        return new(string.Empty, null);
+        return new(string.Empty, null, null);
     }
 
     protected override CourseCreateDto GetInvalidUpdateDto()
     {
-        return new(string.Empty, null);
+        return GetInvalidCreateDto();
     }
 
     protected override CourseViewDto GetTestDetailsDto()
     {
-        return new(DefaultId, "Test", null);
+        SemesterPreviewDto semester = new(4, "Test semester",
+            DateTimeOffset.MinValue, DateTimeOffset.MaxValue);
+        return new(DefaultId, "Test", null, semester);
     }
 
     protected override CoursePreviewDto GetTestPreviewDto()
     {
-        return new(DefaultId, "Test");
+        SemesterMinimalViewDto semester = new(4, "Test semester");
+        return new(DefaultId, "Test", semester);
     }
 
     protected override CourseCreateDto GetValidCreateDto()
     {
-        return new("Test", "test");
+        return new("Test", "test", null);
     }
 
     protected override CourseCreateDto GetValidUpdateDto()
     {
-        return new("Test", "test2");
+        return new("Test", "test2", 5);
     }
 }
