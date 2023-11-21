@@ -1,12 +1,13 @@
 ﻿using EUniversity.Core.Dtos.University;
 using EUniversity.Core.Models.University;
+using EUniversity.Core.Services;
 using FluentValidation;
 
 namespace EUniversity.Core.Validation.University;
 
 public class CourseCreateDtoValidator : AbstractValidator<CourseCreateDto>
 {
-    public CourseCreateDtoValidator()
+    public CourseCreateDtoValidator(IEntityExistenceChecker existenceChecker)
     {
         RuleFor(x => x.Name)
             .NotEmpty()
