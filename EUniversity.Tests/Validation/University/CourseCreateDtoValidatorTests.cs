@@ -111,7 +111,7 @@ public class CourseCreateDtoValidatorTests : UsersValidatorTests
         var result = await _validator.TestValidateAsync(dto);
 
         // Assert
-        result.ShouldHaveValidationErrorFor(dto => dto.SemesterId);
+        result.ShouldNotHaveValidationErrorFor(dto => dto.SemesterId);
     }
 
     [Test]
