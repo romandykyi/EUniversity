@@ -31,4 +31,8 @@ public class Semester : IEntity<int>, IHasName
     /// Navigation property to the student enrollments of this semester.
     /// </summary>
     public ICollection<StudentSemester> StudentEnrollments { get; set; } = null!;
+    /// <summary>
+    /// Navigation property to the courses of this semester.
+    /// </summary>
+    public ICollection<Course> Courses { get; set; } = null!;
 }
