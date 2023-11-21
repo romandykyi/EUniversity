@@ -9,6 +9,16 @@ public class CoursesService :
     BaseCrudService<Course, int, CoursePreviewDto, CourseViewDto, CourseCreateDto, CourseCreateDto>,
     ICoursesService
 {
+    protected override IQueryable<Course> GetByIdQuery => 
+        Entities
+        .Include(e => e.Semester)
+        .AsNoTracking();
+
+    protected override IQueryable<Course> GetPageQuery =>
+        Entities
+        .Include(e => e.Semester)
+        .AsNoTracking();
+
     public CoursesService(ApplicationDbContext dbContext) : base(dbContext)
     {
     }
