@@ -100,7 +100,11 @@ const AdminGroup = () => {
                             setFoundItems={setFoundGroups}
                             link="/api/groups?name="
                         />
-                        <Button onClick={() => setIsAddVisible(true)}>Add new group</Button>
+                        {
+                            isAdmin
+                            ? <Button onClick={() => setIsAddVisible(true)}>Add new group</Button>
+                            : ""
+                        }
                     </>
                 )}
                 tableHead = {(

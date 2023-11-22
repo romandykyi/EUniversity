@@ -129,7 +129,11 @@ const AdminClassrooms = () => {
                             setFoundItems={setFoundClassrooms}
                             link="/api/classrooms?name="
                         />
-                        <Button onClick={() => setIsAddVisible(true)}>Add classrooms</Button>
+                        {
+                            isAdmin 
+                            ? <Button onClick={() => setIsAddVisible(true)}>Add classrooms</Button>
+                            : ""
+                        }
                     </>
                   }
             />   

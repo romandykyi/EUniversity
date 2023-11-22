@@ -19,9 +19,25 @@ const NavMenu = () => {
             to: "/change-password",
             title: "Change password"
         },
+        {
+            to: "/groups",
+            title: "Groups"
+        },
+        {
+            to: "/courses",
+            title: "Courses"
+        },
+        {
+            to: "/classrooms",
+            title: "Classrooms"
+        },
     ];
 
     const adminNavList = [
+        {
+            to: "/change-password",
+            title: "Change password"
+        },
         {
             to: "/users",
             title: "Users"
@@ -42,8 +58,8 @@ const NavMenu = () => {
 
     const AuthNav = () => {
         return (
-            <ul>
-                <li onClick = {() => setCollapsed(false)} className="bg-sky-blue px-3 py-1 rounded-lg">
+            <ul className =" flex flex-col justify-end gap-3">
+                <li onClick = {() => setCollapsed(false)} className="bg-theme px-3 py-1 rounded-lg w-full inline">
                     <Link className="text-white text-2xl font-medium w-full block"  to="/">Home</Link>
                 </li>
                 {

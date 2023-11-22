@@ -21,7 +21,6 @@ const LoginMenu = () => {
       authService.isAuthenticated(),
       authService.getUser()
     ]);
-    console.log(`user: ${user}`);
     if (user) {
       setFullName(`${user.family_name} ${user.given_name}`);
     }
