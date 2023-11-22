@@ -2,10 +2,11 @@ import React from 'react';
 import PageOfItems from '../PageOfItems';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import DeleteModal from '../UI/DeleteModal/DeleteModal';
+import DeleteModal from '../UI/DeleteModal';
 import { useAppSelector } from '../../store/store';
-import Button from '../UI/Button/Button';
-import AddClassroomModal from '../UI/AddClassroomModal/AddClassroomModal';
+import Button from '../UI/Button';
+import AddClassroomModal from '../UI/AddClassroomModal';
+import Search from '../Search';
 
 const AdminClassrooms = () => {
 
@@ -15,6 +16,8 @@ const AdminClassrooms = () => {
     const [totalItems, setTotalItems] = useState(0);
     const [isDeleteVisible, setIsDeleteVisible] = useState(false);
     const [isAddVisible, setIsAddVisible] = useState(false);
+    const [inputValue, setInputValue] = useState("");
+    const [foundClassrooms, setFoundClassrooms] = useState([]);
     const [deletedClassroom, setDeletedClassroom] = useState({
         id: '',
         name: ''
@@ -98,7 +101,7 @@ const AdminClassrooms = () => {
                     </tr>
                 )}
                 tableBody = {(
-                    classrooms.map((item) => (
+                    (inputValue.length ? foundClassrooms : classrooms).map((item) => (
                         <tr 
                             onClick={() => {
                                 navigate(`${item.id}`);
@@ -120,6 +123,12 @@ const AdminClassrooms = () => {
                 )}
                 additionalItems={
                     <>
+                        <Search
+                            inputValue={inputValue}
+                            setInputValue={setInputValue}
+                            setFoundItems={setFoundClassrooms}
+                            link="/api/classrooms?name="
+                        />
                         <Button onClick={() => setIsAddVisible(true)}>Add classrooms</Button>
                     </>
                   }

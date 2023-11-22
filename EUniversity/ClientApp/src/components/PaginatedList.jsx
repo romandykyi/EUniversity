@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
-import Loader from "./UI/Loader/Loader";
-import Button from "./UI/Button/Button"
+import Loader from "./UI/Loader";
+import Button from "./UI/Button"
 
 const PaginatedList =
     ({

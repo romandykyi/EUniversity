@@ -1,18 +1,8 @@
 .table {
-  //& td {
-  //  display: flex;
-  //  align-items: center;
-  //  justify-content: space-between;
-  //  flex-direction: column;
-  //}
-  //& tr {
-  //  display: flex;
-  //  width:100%;
-  //}
   & input {
     border:none;
     padding: 5px 10px;
-  }
+  } 
   & input::placeholder {
     font-style: italic;
   }

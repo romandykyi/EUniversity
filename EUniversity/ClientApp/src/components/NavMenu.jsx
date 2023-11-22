@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import LoginMenu from "./api-authorization/LoginMenu.js";
-import '../styles/NavMenu.css';
 import authService from "./api-authorization/AuthorizeService";
 import {ADMINISTRATOR_ROLE} from "./api-authorization/Roles";
 import { useAppDispatch, useAppSelector } from '../store/store';
@@ -56,7 +55,7 @@ const NavMenu = () => {
     const AdminNav = () => {
         return (
             <ul className =" flex flex-col justify-end gap-3">
-                <li onClick = {() => setCollapsed(false)} className="bg-sky-500 px-3 py-1 rounded-lg w-full inline">
+                <li onClick = {() => setCollapsed(false)} className="bg-theme px-3 py-1 rounded-lg w-full inline">
                     <Link className="text-white text-2xl font-medium w-full block"  to="/">Home</Link>
                 </li>
                 {
@@ -104,7 +103,7 @@ const NavMenu = () => {
                 isAuthenticated
                     ? <div className="flex items-center justify-between w-10 h-6 flex-col cursor-pointer z-20 " onClick={toggleNavbar}>
                         <div className="w-full h-1 bg-black rounded-full"></div>
-                        <div className="w-full h-1 bg-sky-500 rounded-full"></div>
+                        <div className="w-full h-1 bg-theme rounded-full"></div>
                         <div className="w-full h-1 bg-black rounded-full"></div>
                       </div>
                 : ""

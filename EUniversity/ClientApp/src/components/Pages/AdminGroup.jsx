@@ -1,9 +1,9 @@
 import {React, useEffect, useState} from 'react';
 import { useLocation } from 'react-router-dom';
 import { useAppSelector } from '../../store/store';
-import Button from "../UI/Button/Button";
-import DeleteModal from '../UI/DeleteModal/DeleteModal';
-import AddItemToGroupModal from '../UI/AddItemToGroupModal/AddItemToGroupModal';
+import Button from "../UI/Button";
+import DeleteModal from '../UI/DeleteModal';
+import AddItemToGroupModal from '../UI/AddItemToGroupModal';
 
 const AdminGroup = () => {
 

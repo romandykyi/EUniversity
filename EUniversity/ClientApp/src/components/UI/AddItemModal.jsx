@@ -1,6 +1,6 @@
 import { useState } from "react";
-import Table from "../Table/Table";
-import Button from "../Button/Button";
+import Table from "./Table/Table";
+import Button from "./Button";
 
 const AddItemModal = ({
     isVisible,
@@ -84,7 +84,7 @@ const AddItemModal = ({
     return (
         <div 
             onClick={handleClickOnBg}
-            className={`${isVisible ? "absolute" : "hidden"} top-0 bottom-0 left-0 right-0 bg-black bg-opacity-50 z-30 flex items-center justify-center px-4`}
+            className={`${isVisible ? "fixed" : "hidden"} top-0 bottom-0 left-0 right-0 bg-black bg-opacity-50 z-30 flex items-center justify-center px-4`}
         >
             <div 
                 className=" container max-w-[1100px] pt-10 bg-white p-10 rounded-lg" 

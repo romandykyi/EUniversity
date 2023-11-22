@@ -1,3 +1,5 @@
+$theme: #0ea5e9;
+
 * {
     box-sizing:border-box;
     margin: 0;
@@ -99,7 +101,7 @@
         border-radius: 10px;
         border:none;
         outline:none;
-        background: #ffffff;
+        background: white;
         color: black;
     }
     &__main {
@@ -123,7 +125,7 @@
         }
     }
     &__chosen {
-        background: #0ea5e9;
+        background: $theme;
         border-radius: 10px;
         color: white;
     }

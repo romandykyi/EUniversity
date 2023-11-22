@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import PageOfItems from '../PageOfItems';
 import { useAppSelector } from '../../store/store';
-import Button from '../UI/Button/Button';
-import AddItemModal from "../UI/AddItemModal/AddItemModal";
+import Button from '../UI/Button';
+import AddItemModal from "../UI/AddItemModal";
+import Search from '../Search';
 
 const AdminUsers = () => {
   const [users, setUsers] = useState([]);
@@ -11,6 +12,8 @@ const AdminUsers = () => {
   const [totalItems, setTotalItems] = useState(0);
   const [usersType, setUsersType] = useState('students');
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [inputValue, setInputValue] = useState("");
+  const [foundUsers, setFoundUsers] = useState([]);
   const isAdmin = useAppSelector((state) => state.isAdmin.isAdmin);
 
   useEffect(() => {
@@ -85,7 +88,7 @@ const AdminUsers = () => {
           </tr>
         }
         tableBody={
-          users.map((item) => (
+          (inputValue.length ? foundUsers : users).map((item) => (
             <tr key={item.id}>
               <td>{item.email}</td>
               <td>{item.firstName}</td>
@@ -103,6 +106,12 @@ const AdminUsers = () => {
                 <option value="students">Students</option>
                 <option value="teachers">Teachers</option>
             </select>
+            <Search
+              inputValue={inputValue}
+              setInputValue={setInputValue}
+              setFoundItems={setFoundUsers}
+              link="/api/users?FullName="
+            />
             {isAdmin && (
               <div>
                 <Button onClick={() => setIsModalVisible(true)}>Register new user</Button>

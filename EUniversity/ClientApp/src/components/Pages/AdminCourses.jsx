@@ -2,9 +2,10 @@ import React from 'react';
 import PageOfItems from '../PageOfItems';
 import { useState } from 'react';
 import { useAppSelector } from '../../store/store';
-import Button from '../UI/Button/Button';
-import DeleteModal from '../UI/DeleteModal/DeleteModal';
-import AddClassroomModal from '../UI/AddClassroomModal/AddClassroomModal';
+import Button from '../UI/Button';
+import DeleteModal from '../UI/DeleteModal';
+import AddClassroomModal from '../UI/AddClassroomModal';
+import Search from '../Search';
 
 const AdminCourse = () => {
 
@@ -14,6 +15,8 @@ const AdminCourse = () => {
     const [totalItems, setTotalItems] = useState(0);
     const [isDeleteVisible, setIsDeleteVisible] = useState(false);
     const [isAddVisible, setIsAddVisible] = useState(false);
+    const [inputValue, setInputValue] = useState("");
+    const [foundCourses, setFoundCourses] = useState([]);
     const [deletedCourse, setDeletedCourse] = useState({
         id: '',
         name: ''
@@ -93,7 +96,7 @@ const AdminCourse = () => {
                     </tr>
                 )}
                 tableBody = {(
-                    courses.map((item) => (
+                    (inputValue.length ? foundCourses : courses).map((item) => (
                         <tr 
                             key={item.id}
                         >
@@ -112,6 +115,12 @@ const AdminCourse = () => {
                 )}
                 additionalItems={
                     <>
+                        <Search
+                            inputValue={inputValue}
+                            setInputValue={setInputValue}
+                            setFoundItems={setFoundCourses}
+                            link="/api/courses?name="
+                        />
                         <Button onClick={() => setIsAddVisible(true)}>Add courses</Button>
                     </>
                   }

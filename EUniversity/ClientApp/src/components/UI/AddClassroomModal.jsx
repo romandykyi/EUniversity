@@ -1,6 +1,6 @@
 import { useState } from "react";
-import Table from "../Table/Table";
-import Button from "../Button/Button";
+import Table from "./Table/Table";
+import Button from "./Button";
 
 const AddClassroomModal = ({
     isVisible,

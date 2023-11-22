@@ -1,5 +1,5 @@
 import { useState } from "react"
-import Button from "../UI/Button/Button";
+import Button from "../UI/Button";
 import authorizeService from "../api-authorization/AuthorizeService";
 
 import {useNavigate} from "react-router-dom";

@@ -1,5 +1,5 @@
 import React from 'react';
-import Button from '../Button/Button';
+import Button from './Button';
 import { useState } from 'react';
 
 const AddItemToGroupModal = ({
@@ -15,11 +15,6 @@ const AddItemToGroupModal = ({
     const [chosenUsers, setChosenUsers] = useState([]);
     const [isResponsePossible, setIsResponsePossible] = useState(true);
     const [timeoutId, setTimeoutId] = useState(null);
-
-    const handleClickOnBg = () => {
-        setIsVisible(false);
-        document.body.style.overflow = 'auto';
-    };
 
     const searchItem = async e => {
         setInputValue(e.target.value);
@@ -91,6 +86,11 @@ const AddItemToGroupModal = ({
 
     const deleteUserFromChosen = (user) => {
         setChosenUsers(chosenUsers.filter(userFiltered => userFiltered !== user));
+    };
+
+    const handleClickOnBg = () => {
+        setIsVisible(false);
+        document.body.style.overflow = 'auto';
     };
 
     return (

@@ -1,10 +1,7 @@
 import { useState } from "react"
-import Button from "../UI/Button/Button";
+import Button from "../UI/Button";
 
 import {useNavigate} from "react-router-dom";
-
-// TT DO:
-// do a show password button
 
 const ChangePassword = () => {
 

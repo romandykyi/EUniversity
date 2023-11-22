@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from "./Table.module.css";
-import Button from "../Button/Button";
+import Button from "../Button";
 
 const Table = ({ 
     items, 
@@ -24,16 +24,16 @@ const Table = ({
 
     return (
         <>
-            <div className={`${styles.tableDiv} table-container`}>
-            <table className={`table ${styles.table}`}>
-                <thead>
-                    {tableHead}
-                </thead>
-                <tbody>
-                    {tableBody}
-                </tbody>
-            </table>
-        </div>
+            <div className={`${styles.tableDiv} table-container table-class`}>
+                <table className={`table ${styles.table}`}>
+                    <thead>
+                        {tableHead}
+                    </thead>
+                    <tbody>
+                        {tableBody}
+                    </tbody>
+                </table>
+            </div>
             <Button onClick={handleAddUserClick}>Add new {title}</Button>
         </>
     );
