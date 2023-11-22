@@ -1,4 +1,6 @@
-﻿namespace EUniversity.Core.Models.University;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace EUniversity.Core.Models.University;
 
 /// <summary>
 /// Represents a course entity.
@@ -11,6 +13,11 @@ public class Course : IEntity<int>, IHasName
     [Key]
     public int Id { get; set; }
     /// <summary>
+    /// Foreign key of the semester associated with this course(may be null).
+    /// </summary>
+    [ForeignKey(nameof(Semester))]
+    public int? SemesterId { get; set; }
+    /// <summary>
     /// Name of the course.
     /// </summary>
     [StringLength(MaxNameLength)]
@@ -20,4 +27,9 @@ public class Course : IEntity<int>, IHasName
     /// </summary>
     [StringLength(MaxDescriptionLength)]
     public string? Description { get; set; }
+
+    /// <summary>
+    /// Navigation property of the semester associated with this course(may be null).
+    /// </summary>
+    public Semester? Semester { get; set; }
 }

@@ -10,7 +10,7 @@ public class GroupsControllerTests :
     AdminCrudControllersTest<Group, int, GroupPreviewDto, GroupViewDto, GroupCreateDto, GroupCreateDto>
 {
     public readonly TeacherPreviewDto TeacherPreviewDto = new(Guid.NewGuid().ToString(), "test-teacher", "Teacher1", "Teacher2", null);
-    public readonly CoursePreviewDto CoursePreviewDto = new(5, "Some Course");
+    public readonly CoursePreviewDto CoursePreviewDto = new(5, "Some Course", null);
 
     public override string GetPageRoute => "api/groups";
 

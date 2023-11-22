@@ -1,5 +1,6 @@
 ﻿using EUniversity.Core.Dtos.University;
 using EUniversity.Core.Models.University;
+using EUniversity.Core.Policy;
 using EUniversity.Core.Services.University;
 
 namespace EUniversity.IntegrationTests.Services.University;
@@ -7,12 +8,16 @@ namespace EUniversity.IntegrationTests.Services.University;
 public class CoursesServiceTests :
     CrudServicesTest<ICoursesService, Course, int, CoursePreviewDto, CourseViewDto, CourseCreateDto, CourseCreateDto>
 {
-    public static Course CreateTestCourse()
+    private Semester _testSemester;
+
+    public static Course CreateTestCourse(Semester? testSemester = null)
     {
         return new()
         {
             Name = "Chemistry",
-            Description = "Walter's White cooking course"
+            Description = "Walter's White cooking course",
+            Semester = testSemester,
+            SemesterId = testSemester?.Id
         };
     }
 
@@ -23,6 +28,7 @@ public class CoursesServiceTests :
         {
             Assert.That(actualEntity.Name, Is.EqualTo(updateDto.Name));
             Assert.That(actualEntity.Description, Is.EqualTo(updateDto.Description));
+            Assert.That(actualEntity.SemesterId, Is.EqualTo(updateDto.SemesterId));
         });
     }
 
@@ -41,12 +47,20 @@ public class CoursesServiceTests :
     /// <inheritdoc />
     protected override CourseCreateDto GetValidCreateDto()
     {
-        return new("Physics", "g/(pi^2) = 1");
+        return new("Physics", "g/(pi^2) = 1", _testSemester.Id);
     }
 
     /// <inheritdoc />
     protected override CourseCreateDto GetValidUpdateDto()
     {
-        return new("Math", "Not to be confused with meth");
+        return new("Math", "Not to be confused with meth", null);
+    }
+
+    [SetUp]
+    public async Task SetUpDependencies()
+    {
+        _testSemester = SemestersServiceTests.GetTestSemester();
+        DbContext.Add(_testSemester);
+        await DbContext.SaveChangesAsync();
     }
 }
