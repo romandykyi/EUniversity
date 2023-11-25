@@ -8,7 +8,8 @@ const Home = () => {
     useEffect(() => {
         const getRole = async() => {
             const user = await authService.getUser();
-            setRole(user.role);
+            if (user !== null) setRole(user.role);
+            else setRole('user');
         };
 
         getRole();
