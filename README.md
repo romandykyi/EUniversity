@@ -13,6 +13,7 @@ An e-university Web Application built with ASP.NET and React.
 * Duende Identity Server
 * Mapster
 * FluentValidation
+* SharpGrip FluentValidation AutoValidation
 * AnyAscii
 * Swashbuckle
 
