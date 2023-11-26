@@ -3,7 +3,7 @@
 /// <summary>
 /// Represents an available grade entity that can be assigned to students.
 /// </summary>
-public class Grade : IEntity<int>, IHasName
+public class Grade : IEntity<int>, IHasName, IHasCreationDate, IHasUpdateDate
 {
     public const int MaxNameLength = 50;
 
@@ -18,6 +18,15 @@ public class Grade : IEntity<int>, IHasName
     /// Numeric value of the grade.
     /// </summary>
     public int Score { get; set; }
+
+    /// <summary>
+    /// Date when the grade was created.
+    /// </summary>
+    public DateTimeOffset CreationDate { get; set; }
+    /// <summary>
+    /// Date when the grade was last updated.
+    /// </summary>
+    public DateTimeOffset UpdateDate { get; set; }
 
     /// <summary>
     /// Navigation property: 

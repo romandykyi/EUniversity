@@ -3,7 +3,7 @@
 /// <summary>
 /// An entity that represents a semester.
 /// </summary>
-public class Semester : IEntity<int>, IHasName
+public class Semester : IEntity<int>, IHasName, IHasCreationDate, IHasUpdateDate
 {
     public const int MaxNameLength = 100;
 
@@ -22,6 +22,15 @@ public class Semester : IEntity<int>, IHasName
     /// Date when the semester ends.
     /// </summary>
     public DateTimeOffset DateTo { get; set; }
+
+    /// <summary>
+    /// Date when the semester was created.
+    /// </summary>
+    public DateTimeOffset CreationDate { get; set; }
+    /// <summary>
+    /// Date when the semester was last updated.
+    /// </summary>
+    public DateTimeOffset UpdateDate { get; set; }
 
     /// <summary>
     /// Navigation property to the students which are part of this semester.

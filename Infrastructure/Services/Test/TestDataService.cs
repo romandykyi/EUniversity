@@ -6,6 +6,7 @@ using EUniversity.Core.Models.University.Grades;
 using EUniversity.Core.Policy;
 using EUniversity.Core.Services.Auth;
 using EUniversity.Infrastructure.Data;
+using EUniversity.Infrastructure.Extensions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 
@@ -96,7 +97,7 @@ public class TestDataService
         await _authService.RegisterManyAsync(usersFaker.GenerateLazy(teachers), Roles.Teacher)
             .ToListAsync();
         // Register students
-        _logger.LogInformation("Generating {students} teachers", students);
+        _logger.LogInformation("Generating {students} students", students);
         await _authService.RegisterManyAsync(usersFaker.GenerateLazy(students), Roles.Student)
             .ToListAsync();
 
@@ -137,7 +138,8 @@ public class TestDataService
         var classroomsFaker = new Faker<Classroom>()
             .RuleFor(c => c.Name, f =>
                 new string(f.Random.Chars('A', 'Z', f.Random.Number(0, 3))) +
-                new string(f.Random.Chars('0', '9', 5)));
+                new string(f.Random.Chars('0', '9', 5)))
+            .RuleForDates();
 
         await CreateFakeEntitiesAsync(classroomsFaker, count);
     }
@@ -150,7 +152,8 @@ public class TestDataService
         int grade = 1;
         var gradesFaker = new Faker<Grade>()
             .RuleFor(g => g.Score, f => grade++)
-            .RuleFor(g => g.Name, (f, g) => g.Score.ToString());
+            .RuleFor(g => g.Name, (f, g) => g.Score.ToString())
+            .RuleForDates();
 
         await CreateFakeEntitiesAsync(gradesFaker, count);
     }
@@ -170,7 +173,8 @@ public class TestDataService
             .RuleFor(c => c.Name, f => f.Company.CatchPhrase())
             .RuleFor(c => c.Description, f => f.Lorem.Sentences(f.Random.Number(1, 3), " "))
             // Random teacher ID(90% probabilty) or null
-            .RuleFor(c => c.SemesterId, f => f.Random.Bool(0.9f) ? f.Random.CollectionItem(teachersIds) : null);
+            .RuleFor(c => c.SemesterId, f => f.Random.Bool(0.9f) ? f.Random.CollectionItem(teachersIds) : null)
+            .RuleForDates();
 
         await CreateFakeEntitiesAsync(coursesFaker, count);
     }
@@ -199,11 +203,12 @@ public class TestDataService
         var groupsFaker = new Faker<Group>()
             .RuleFor(g => g.Name, f => f.Random.AlphaNumeric(6))
             .RuleFor(g => g.CourseId, f => f.Random.CollectionItem(coursesIds))
-            .RuleFor(g => g.TeacherId, f => f.Random.CollectionItem(teachersIds));
+            .RuleFor(g => g.TeacherId, f => f.Random.CollectionItem(teachersIds))
+            .RuleForDates();
         await CreateFakeEntitiesAsync(groupsFaker, count);
 
         // Get all groups
-        var groupsIds = _dbContext.Semesters
+        var groupsIds = _dbContext.Groups
             .Select(g => g.Id)
             .ToArray();
 
@@ -253,7 +258,8 @@ public class TestDataService
             .RuleFor(s => s.DateFrom, f => f.Date.Between(minDate, maxDate))
             .RuleFor(s => s.DateTo, (f, s) => f.Date.Between(s.DateFrom.DateTime,
             s.DateFrom.DateTime + TimeSpan.FromDays(180)))
-            .RuleFor(s => s.Name, (f, s) => $"Semester {number++} {s.DateFrom:yyyy-MM-dd}-{s.DateTo:yyyy-MM-dd}");
+            .RuleFor(s => s.Name, (f, s) => $"Semester {number++} {s.DateFrom:yyyy-MM-dd}-{s.DateTo:yyyy-MM-dd}")
+            .RuleForDates();
         await CreateFakeEntitiesAsync(semestersFaker, count);
 
         // Get all semesters
