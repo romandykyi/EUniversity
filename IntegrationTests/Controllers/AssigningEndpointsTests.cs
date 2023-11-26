@@ -109,7 +109,7 @@ public abstract class AssigningEndpointsTests<TService, TAssigningEntity, TEntit
         const int page = 2, pageSize = 25;
         ServiceMock
             .GetAssigningEntitiesPageAsync<TViewDto>(Arg.Any<TId1>(), Arg.Any<PaginationProperties>(), Arg.Any<IFilter<TAssigningEntity>>())
-            .Returns(x => Task.FromResult(GetTestPreviewDtos((PaginationProperties)x[0])));
+            .Returns(x => Task.FromResult(GetTestPreviewDtos((PaginationProperties)x[1])));
 
         // Act
         var result = await client.GetAsync($"{GetPageRoute}?page={page}&pageSize={pageSize}");
