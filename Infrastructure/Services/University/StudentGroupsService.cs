@@ -26,7 +26,8 @@ public class StudentGroupsService :
         return new()
         {
             GroupId = groupId,
-            StudentId = studentId
+            StudentId = studentId,
+            EnrollmentDate = DateTimeOffset.Now
         };
     }
 }

@@ -12,6 +12,11 @@ public class StudentGroup : IEntity<int>
     public int Id { get; set; }
 
     /// <summary>
+    /// Date when student was added to the group.
+    /// </summary>
+    public DateTimeOffset EnrollmentDate { get; set; }
+
+    /// <summary>
     /// Foreign key of the associated student.
     /// </summary>
     [ForeignKey(nameof(Student))]
