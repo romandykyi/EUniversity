@@ -10,6 +10,7 @@ using Mapster;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Attributes;
+using System.Text.RegularExpressions;
 
 namespace EUniversity.Controllers.University;
 
@@ -139,6 +140,36 @@ public class SemestersController : ControllerBase
     {
         var result = await _semestersService.DeleteAsync(id);
         return result ? NoContent() : NotFound();
+    }
+
+    /// <summary>
+    /// Gets a page with all students related to the semester with the given ID.
+    /// </summary>
+    /// <remarks>
+    /// If there is no items in the requested page, then empty page will be returned.
+    /// </remarks>
+    /// <response code="200">Returns requested page with students related to the semester.</response>
+    /// <response code="400">Bad request</response>
+    /// <response code="401">Unauthorized user call</response>
+    [HttpGet]
+    [Route("{semesterId:int}/students")]
+    [Authorize(Policies.Default)]
+    [ProducesResponseType(typeof(Page<StudentSemesterViewDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetStudentsInSemesterAsync(
+        [FromRoute] int semesterId,
+        [FromQuery] PaginationProperties properties)
+    {
+        if (!await _existenceChecker.ExistsAsync<Semester, int>(semesterId))
+        {
+            return NotFound(
+                CustomResponses.NotFound("The semester with the specified ID does not exist.",
+                HttpContext));
+        }
+        return Ok(await _studentSemestersService
+            .GetAssigningEntitiesPageAsync<StudentSemesterViewDto>(semesterId, properties));
     }
 
     /// <summary>

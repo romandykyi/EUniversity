@@ -102,6 +102,25 @@ public abstract class AssigningEndpointsTests<TService, TAssigningEntity, TEntit
     protected abstract object GetAssignDto();
 
     [Test]
+    public virtual async Task GetPage_Entity1DoesNotExist_Returns404NotFound()
+    {
+        // Arrange
+        using var client = CreateStudentClient();
+        ServiceMock
+            .GetAssigningEntitiesPageAsync<TViewDto>(Arg.Any<TId1>(), Arg.Any<PaginationProperties>(), Arg.Any<IFilter<TAssigningEntity>>())
+            .Throws<InvalidOperationException>();
+        WebApplicationFactory.ExistenceCheckerMock
+            .ExistsAsync<TEntity1, TId1>(TestId1)
+            .Returns(false);
+
+        // Act
+        var result = await client.GetAsync(GetPageRoute);
+
+        // Assert
+        Assert.That(result.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
+    }
+
+    [Test]
     public virtual async Task GetPage_NoFilter_SucceedsAndReturnsValidDto()
     {
         // Arrange
