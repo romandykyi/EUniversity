@@ -1,4 +1,6 @@
-﻿using System.Linq.Expressions;
+﻿using EUniversity.Core.Filters;
+using EUniversity.Core.Pagination;
+using System.Linq.Expressions;
 
 namespace EUniversity.Core.Services;
 
@@ -24,6 +26,18 @@ public interface IAssigningService<TAssigningEntity, TId1, TId2>
     /// an instance of assigning entity in the database.
     /// </returns>
     public Expression<Func<TAssigningEntity, bool>> AssigningEntityPredicate(TId1 id1, TId2 id2);
+
+    /// <summary>
+    /// Retrieves a page with assigning entities DTOs asynchronously.
+    /// </summary>
+    /// <param name="properties"><see cref="PaginationProperties"/> object specifying pagination parameters.</param>
+    /// <param name="filter">An optional filter to apply.</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation, containing 
+    /// the page with assigning entities DTOs asynchronously.
+    /// </returns>
+    /// <typeparam name="TViewDto">A type of the DTO to which entities will be mapped.</typeparam>
+    public Task<Page<TViewDto>> GetAssigningEntitiesPageAsync<TViewDto>(PaginationProperties properties, IFilter<TAssigningEntity>? filter = null);
 
     /// <summary>
     /// Adds the first entity to the second based on their IDs.

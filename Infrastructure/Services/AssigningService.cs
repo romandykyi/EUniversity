@@ -1,4 +1,6 @@
-﻿using EUniversity.Core.Services;
+﻿using EUniversity.Core.Filters;
+using EUniversity.Core.Pagination;
+using EUniversity.Core.Services;
 using EUniversity.Infrastructure.Data;
 using System.Linq.Expressions;
 
@@ -46,6 +48,12 @@ public abstract class AssigningService<TAssigningEntity, TId1, TId2> : IAssignin
     /// an instance of assigning entity in the database.
     /// </returns>
     public abstract Expression<Func<TAssigningEntity, bool>> AssigningEntityPredicate(TId1 id1, TId2 id2);
+
+    /// <inheritdoc />
+    public virtual Task<Page<TViewDto>> GetAssigningEntitiesPageAsync<TViewDto>(PaginationProperties properties, IFilter<TAssigningEntity>? filter = null)
+    {
+        throw new NotImplementedException();
+    }
 
     /// <inheritdoc />
     public virtual async Task<bool> AssignAsync(TId1 entity1Id, TId2 entity2Id)
