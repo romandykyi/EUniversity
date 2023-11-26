@@ -185,8 +185,20 @@ public abstract class CrudServicesTest<TService, TEntity, TId, TPreviewDto, TDet
         // Act
         TEntity entity = await Service.CreateAsync(dto);
 
-        // Assert(check if element is actually created)
+        // Assert that entity is actually created)
         Assert.That(await EntityExistsAsync(entity.Id), "Entity doesn't exist");
+        // Assert that creation date was set
+        if (entity is IHasCreationDate entityWithCreationDate)
+        {
+            Assert.That(DateTimeOffset.Now - entityWithCreationDate.CreationDate,
+                Is.LessThan(TimeSpan.FromHours(1)));
+        }
+        // Assert that update date was set
+        if (entity is IHasUpdateDate entityWithUpdateDate)
+        {
+            Assert.That(DateTimeOffset.Now - entityWithUpdateDate.UpdateDate,
+                Is.LessThan(TimeSpan.FromHours(1)));
+        }
     }
 
     [Test]
@@ -194,6 +206,8 @@ public abstract class CrudServicesTest<TService, TEntity, TId, TPreviewDto, TDet
     {
         // Arrange
         var entity = await CreateTestEntityAsync();
+        DateTimeOffset? lastUpdateDate = 
+            entity is IHasUpdateDate entityWithUpdateDate ? entityWithUpdateDate.UpdateDate : null;
         TUpdateDto dto = GetValidUpdateDto();
         var expectedClassroom = dto.Adapt<Classroom>();
 
@@ -207,6 +221,14 @@ public abstract class CrudServicesTest<TService, TEntity, TId, TPreviewDto, TDet
         // Check if element was updated
         Assert.That(actualEntity, Is.Not.Null);
         AssertThatWasUpdated(actualEntity, dto);
+        // Assert that update date was set
+        if (actualEntity is IHasUpdateDate actualEntityWithUpdateDate)
+        {
+            Assert.That(DateTimeOffset.Now - actualEntityWithUpdateDate.UpdateDate, 
+                Is.LessThan(TimeSpan.FromHours(1)));
+            Assert.That(actualEntityWithUpdateDate.UpdateDate, 
+                Is.GreaterThan(lastUpdateDate));
+        }
     }
 
     [Test]

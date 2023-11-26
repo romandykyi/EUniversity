@@ -48,6 +48,16 @@ public abstract class BaseCrudService<TEntity, TId, TPreviewDto, TDetailsDto, TC
     public virtual async Task<TEntity> CreateAsync(TCreateDto dto)
     {
         TEntity entity = dto.Adapt<TEntity>();
+        // Set a creation date(if possible)
+        if (entity is IHasCreationDate entityWithCreationDate)
+        {
+            entityWithCreationDate.CreationDate = DateTimeOffset.Now;
+        }
+        // Set an update date(if possible)
+        if (entity is IHasUpdateDate entityWithUpdateDate)
+        {
+            entityWithUpdateDate.UpdateDate = DateTimeOffset.Now;
+        }
         DbContext.Set<TEntity>().Add(entity);
         await DbContext.SaveChangesAsync();
 
@@ -98,6 +108,11 @@ public abstract class BaseCrudService<TEntity, TId, TPreviewDto, TDetailsDto, TC
 
         // Update the entity
         dto.Adapt(entity);
+        // Set an update date(if possible)
+        if (entity is IHasUpdateDate entityWithUpdateDate)
+        {
+            entityWithUpdateDate.UpdateDate = DateTimeOffset.Now;
+        }
         DbContext.Update(entity);
         await DbContext.SaveChangesAsync();
 
