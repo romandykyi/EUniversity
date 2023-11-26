@@ -26,4 +26,10 @@ public class StudentSemestersService :
             EnrollmentDate = DateTimeOffset.Now
         };
     }
+
+    /// <inheritdoc />
+    protected override IQueryable<StudentSemester> GetPageQuery(int id1)
+    {
+        return AssigningEntities.AsNoTracking().Where(sm => sm.SemesterId == id1);
+    }
 }

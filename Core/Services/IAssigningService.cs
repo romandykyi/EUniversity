@@ -30,6 +30,7 @@ public interface IAssigningService<TAssigningEntity, TId1, TId2>
     /// <summary>
     /// Retrieves a page with assigning entities DTOs asynchronously.
     /// </summary>
+    /// <param name="id1">ID of the entity for which assigned entities should be returned.</param>
     /// <param name="properties"><see cref="PaginationProperties"/> object specifying pagination parameters.</param>
     /// <param name="filter">An optional filter to apply.</param>
     /// <returns>
@@ -37,7 +38,7 @@ public interface IAssigningService<TAssigningEntity, TId1, TId2>
     /// the page with assigning entities DTOs asynchronously.
     /// </returns>
     /// <typeparam name="TViewDto">A type of the DTO to which entities will be mapped.</typeparam>
-    public Task<Page<TViewDto>> GetAssigningEntitiesPageAsync<TViewDto>(PaginationProperties properties, IFilter<TAssigningEntity>? filter = null);
+    public Task<Page<TViewDto>> GetAssigningEntitiesPageAsync<TViewDto>(TId1 id1, PaginationProperties properties, IFilter<TAssigningEntity>? filter = null);
 
     /// <summary>
     /// Adds the first entity to the second based on their IDs.

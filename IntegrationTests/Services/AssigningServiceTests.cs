@@ -94,6 +94,7 @@ public abstract class AssigningServiceTests<TService, TAssigningEntity, TAssigni
     public virtual async Task GetPage_AppliesFilter()
     {
         // Arrange
+        TId1 id1 = await GetIdOfExistingEntity1Async();
         var filter = Substitute.For<IFilter<TAssigningEntity>>();
         filter
             .Apply(Arg.Any<IQueryable<TAssigningEntity>>())
@@ -101,7 +102,7 @@ public abstract class AssigningServiceTests<TService, TAssigningEntity, TAssigni
         PaginationProperties properties = new(1, 20);
 
         // Act
-        await Service.GetAssigningEntitiesPageAsync<TViewDto>(properties, filter);
+        await Service.GetAssigningEntitiesPageAsync<TViewDto>(id1, properties, filter);
 
         // Assert
         filter.Received(1)
@@ -112,10 +113,11 @@ public abstract class AssigningServiceTests<TService, TAssigningEntity, TAssigni
     public virtual async Task GetPage_ReceivesPaginationProperties()
     {
         // Arrange
+        TId1 id1 = await GetIdOfExistingEntity1Async();
         PaginationProperties properties = new(3, PaginationProperties.MinPageSize);
 
         // Act
-        var result = await Service.GetAssigningEntitiesPageAsync<TViewDto>(properties);
+        var result = await Service.GetAssigningEntitiesPageAsync<TViewDto>(id1, properties);
 
         // Assert
         Assert.Multiple(() =>
@@ -144,7 +146,7 @@ public abstract class AssigningServiceTests<TService, TAssigningEntity, TAssigni
         PaginationProperties properties = new(1, 20);
 
         // Act
-        var result = await Service.GetAssigningEntitiesPageAsync<TViewDto>(properties, filter);
+        var result = await Service.GetAssigningEntitiesPageAsync<TViewDto>(id1, properties, filter);
 
         // Assert
         Assert.That(result.TotalItemsCount, Is.EqualTo(expectedCount));
