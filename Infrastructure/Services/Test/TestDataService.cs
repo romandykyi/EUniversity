@@ -227,7 +227,8 @@ public class TestDataService
             int i = 0;
             var studentGroupFaker = new Faker<StudentGroup>()
                 .RuleFor(s => s.GroupId, _ => groupId)
-                .RuleFor(s => s.StudentId, _ => shuffledStudentsIds[i++]);
+                .RuleFor(s => s.StudentId, _ => shuffledStudentsIds[i++])
+                .RuleFor(s => s.EnrollmentDate, f => f.Date.Recent(180));
             int studentsCount = faker.Random.Int(minStudentsInGroup, maxStudentsInGroup);
             await CreateFakeEntitiesAsync(studentGroupFaker, studentsCount, false);
         }
