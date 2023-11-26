@@ -1,5 +1,8 @@
-﻿using EUniversity.Core.Services;
+﻿using EUniversity.Core.Filters;
+using EUniversity.Core.Pagination;
+using EUniversity.Core.Services;
 using EUniversity.Infrastructure.Data;
+using EUniversity.Infrastructure.Pagination;
 using System.Linq.Expressions;
 
 namespace EUniversity.Infrastructure.Services;
@@ -18,6 +21,12 @@ public abstract class AssigningService<TAssigningEntity, TId1, TId2> : IAssignin
 {
     protected ApplicationDbContext DbContext { get; init; }
     protected DbSet<TAssigningEntity> AssigningEntities => DbContext.Set<TAssigningEntity>();
+
+    /// <summary>
+    /// When implemented, gets a query used for obtaining a page with assigning entities.
+    /// </summary>    
+    /// <param name="id1">ID of the entity for which assigned entities should be returned.</param>
+    protected abstract IQueryable<TAssigningEntity> GetPageQuery(TId1 id1);
 
     public AssigningService(ApplicationDbContext dbContext)
     {
@@ -46,6 +55,15 @@ public abstract class AssigningService<TAssigningEntity, TId1, TId2> : IAssignin
     /// an instance of assigning entity in the database.
     /// </returns>
     public abstract Expression<Func<TAssigningEntity, bool>> AssigningEntityPredicate(TId1 id1, TId2 id2);
+
+    /// <inheritdoc />
+    public virtual async Task<Page<TViewDto>> GetAssigningEntitiesPageAsync<TViewDto>(TId1 id1, PaginationProperties properties, IFilter<TAssigningEntity>? filter = null)
+    {
+        var query = GetPageQuery(id1);
+        if (filter != null) query = filter.Apply(query);
+
+        return await query.ToPageAsync<TAssigningEntity, TViewDto>(properties);
+    }
 
     /// <inheritdoc />
     public virtual async Task<bool> AssignAsync(TId1 entity1Id, TId2 entity2Id)

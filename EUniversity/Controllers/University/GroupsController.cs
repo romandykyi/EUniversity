@@ -6,6 +6,7 @@ using EUniversity.Core.Pagination;
 using EUniversity.Core.Policy;
 using EUniversity.Core.Services;
 using EUniversity.Core.Services.University;
+using EUniversity.Infrastructure.Services.University;
 using Mapster;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -139,6 +140,37 @@ public class GroupsController : ControllerBase
     {
         var result = await _groupsService.DeleteAsync(id);
         return result ? NoContent() : NotFound();
+    }
+
+    /// <summary>
+    /// Gets a page with all students that are part of the group with the given ID.
+    /// </summary>
+    /// <remarks>
+    /// If there is no items in the requested page, then empty page will be returned.
+    /// </remarks>
+    /// <response code="200">Returns requested page with students that are part of the group.</response>
+    /// <response code="400">Bad request</response>
+    /// <response code="401">Unauthorized user call</response>
+    /// <response code="404">Group does not exist</response>
+    [HttpGet]
+    [Route("{groupId:int}/students")]
+    [Authorize(Policies.Default)]
+    [ProducesResponseType(typeof(Page<StudentGroupViewDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetStudentsInGroupAsync(
+        [FromRoute] int groupId,
+        [FromQuery] PaginationProperties properties)
+    {
+        if (!await _existenceChecker.ExistsAsync<Group, int>(groupId))
+        {
+            return NotFound(
+                CustomResponses.NotFound("The group with the specified ID does not exist.",
+                HttpContext));
+        }
+        return Ok(await _studentGroupsService
+            .GetAssigningEntitiesPageAsync<StudentGroupViewDto>(groupId, properties));
     }
 
     /// <summary>

@@ -1,6 +1,9 @@
 ﻿using EUniversity.Core.Dtos.University;
+using EUniversity.Core.Filters;
 using EUniversity.Core.Models;
+using EUniversity.Core.Pagination;
 using EUniversity.Core.Services;
+using IdentityModel;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
 using System.Net;
@@ -17,7 +20,8 @@ namespace EUniversity.IntegrationTests.Controllers;
 /// <typeparam name="TId1">A type of the ID of the first entity.</typeparam>
 /// <typeparam name="TEntity2">A type of the second entity.</typeparam>
 /// <typeparam name="TId2">A type of the ID of the second entity.</typeparam>
-public abstract class AssigningEndpointsTests<TService, TAssigningEntity, TEntity1, TId1, TEntity2, TId2> : ControllersTest
+/// <typeparam name="TViewDto">A type of a view DTO.</typeparam>
+public abstract class AssigningEndpointsTests<TService, TAssigningEntity, TEntity1, TId1, TEntity2, TId2, TViewDto> : ControllersTest
     where TService : class, IAssigningService<TAssigningEntity, TId1, TId2>
     where TAssigningEntity : class
     where TEntity1 : class, IEntity<TId1>
@@ -43,6 +47,28 @@ public abstract class AssigningEndpointsTests<TService, TAssigningEntity, TEntit
     }
 
     /// <summary>
+    /// When implemented, gets test <typeparamref name="TViewDto"/>.
+    /// </summary>
+    /// <returns>
+    /// Test <typeparamref name="TViewDto"/>.
+    /// </returns>
+    protected abstract TViewDto GetTestPreviewDto();
+
+    /// <summary>
+    /// Returns a test page with <typeparamref name="TViewDto"/>s. 
+    /// </summary>
+    /// <param name="properties">Pagination properties used for the page.</param>
+    /// <returns>
+    /// A test page with <typeparamref name="TViewDto"/>s. 
+    /// </returns>
+    protected virtual Page<TViewDto> GetTestPreviewDtos(PaginationProperties properties)
+    {
+        IEnumerable<TViewDto> testEnumerable =
+            Enumerable.Repeat(GetTestPreviewDto(), 10);
+        return new(testEnumerable, properties, 100);
+    }
+
+    /// <summary>
     /// Test ID of the first entity.
     /// </summary>
     public abstract TId1 TestId1 { get; }
@@ -51,6 +77,11 @@ public abstract class AssigningEndpointsTests<TService, TAssigningEntity, TEntit
     /// </summary>
     public abstract TId2 TestId2 { get; }
 
+    /// <summary>
+    /// Route used for getting a page of assigning entities.
+    /// E.g.: "api/entities/[TestId1]/subentities/".
+    /// </summary>
+    public abstract string GetPageRoute { get; }
     /// <summary>
     /// Route used for assigning an entity.
     /// E.g.: "api/entities/[TestId1]/subentities/".
@@ -69,6 +100,66 @@ public abstract class AssigningEndpointsTests<TService, TAssigningEntity, TEntit
     /// A DTO which is passed to the assigning route.
     /// </returns>
     protected abstract object GetAssignDto();
+
+    [Test]
+    public virtual async Task GetPage_Entity1DoesNotExist_Returns404NotFound()
+    {
+        // Arrange
+        using var client = CreateStudentClient();
+        ServiceMock
+            .GetAssigningEntitiesPageAsync<TViewDto>(Arg.Any<TId1>(), Arg.Any<PaginationProperties>(), Arg.Any<IFilter<TAssigningEntity>>())
+            .Throws<InvalidOperationException>();
+        WebApplicationFactory.ExistenceCheckerMock
+            .ExistsAsync<TEntity1, TId1>(TestId1)
+            .Returns(false);
+
+        // Act
+        var result = await client.GetAsync(GetPageRoute);
+
+        // Assert
+        Assert.That(result.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
+    }
+
+    [Test]
+    public virtual async Task GetPage_NoFilter_SucceedsAndReturnsValidDto()
+    {
+        // Arrange
+        using var client = CreateStudentClient();
+        const int page = 2, pageSize = 25;
+        ServiceMock
+            .GetAssigningEntitiesPageAsync<TViewDto>(Arg.Any<TId1>(), Arg.Any<PaginationProperties>(), Arg.Any<IFilter<TAssigningEntity>>())
+            .Returns(x => Task.FromResult(GetTestPreviewDtos((PaginationProperties)x[1])));
+
+        // Act
+        var result = await client.GetAsync($"{GetPageRoute}?page={page}&pageSize={pageSize}");
+
+        // Assert
+        result.EnsureSuccessStatusCode();
+        var resultPage = await result.Content.ReadFromJsonAsync<Page<TViewDto>>();
+        Assert.That(resultPage, Is.Not.Null);
+        Assert.Multiple(() =>
+        {
+            Assert.That(resultPage.PageNumber, Is.EqualTo(page));
+            Assert.That(resultPage.PageSize, Is.EqualTo(pageSize));
+            Assert.That(resultPage.Items.Count(), Is.LessThanOrEqualTo(pageSize));
+        });
+    }
+
+    [Test]
+    public virtual async Task GetPage_InvalidInput_Returns400BadRequest()
+    {
+        // Arrange
+        using var client = CreateStudentClient();
+        ServiceMock
+            .GetAssigningEntitiesPageAsync<TViewDto>(Arg.Any<TId1>(), Arg.Any<PaginationProperties>(), Arg.Any<IFilter<TAssigningEntity>>())
+            .Throws<InvalidOperationException>();
+
+        // Act
+        var result = await client.GetAsync($"{GetPageRoute}?page=-1");
+
+        // Assert
+        Assert.That(result.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
+    }
 
     [Test]
     public async Task Assign_UnauthenticatedUser_Returns401Unauthorized()
