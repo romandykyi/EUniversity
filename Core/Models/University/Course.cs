@@ -5,7 +5,7 @@ namespace EUniversity.Core.Models.University;
 /// <summary>
 /// Represents a course entity.
 /// </summary>
-public class Course : IEntity<int>, IHasName
+public class Course : IEntity<int>, IHasName, IHasCreationDate, IHasUpdateDate
 {
     public const int MaxNameLength = 200;
     public const int MaxDescriptionLength = 1000;
@@ -27,6 +27,15 @@ public class Course : IEntity<int>, IHasName
     /// </summary>
     [StringLength(MaxDescriptionLength)]
     public string? Description { get; set; }
+
+    /// <summary>
+    /// Date when the course was created.
+    /// </summary>
+    public DateTimeOffset CreationDate { get; set; }
+    /// <summary>
+    /// Date when the course was last updated.
+    /// </summary>
+    public DateTimeOffset UpdateDate { get; set; }
 
     /// <summary>
     /// Navigation property of the semester associated with this course(may be null).

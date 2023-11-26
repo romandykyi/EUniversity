@@ -6,7 +6,7 @@ namespace EUniversity.Core.Models.University;
 /// Represents a group entity, 
 /// which contains students with its own teacher and course.
 /// </summary>
-public class Group : IEntity<int>, IHasName
+public class Group : IEntity<int>, IHasName, IHasCreationDate, IHasUpdateDate
 {
     public const int MaxNameLength = 50;
 
@@ -27,6 +27,15 @@ public class Group : IEntity<int>, IHasName
     /// </summary>
     [ForeignKey(nameof(Teacher))]
     public string? TeacherId { get; set; }
+
+    /// <summary>
+    /// Date when the group was created.
+    /// </summary>
+    public DateTimeOffset CreationDate { get; set; }
+    /// <summary>
+    /// Date when the group was last updated.
+    /// </summary>
+    public DateTimeOffset UpdateDate { get; set; }
 
     /// <summary>
     /// Navigation property to the course associated with this group.
