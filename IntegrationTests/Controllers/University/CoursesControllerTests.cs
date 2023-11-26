@@ -47,14 +47,15 @@ public class CoursesControllerTests :
     protected override CourseViewDto GetTestDetailsDto()
     {
         SemesterPreviewDto semester = new(4, "Test semester",
-            DateTimeOffset.MinValue, DateTimeOffset.MaxValue);
-        return new(DefaultId, "Test", null, semester);
+            DateTimeOffset.MinValue, DateTimeOffset.MaxValue, 
+            DateTimeOffset.Now, DateTimeOffset.Now);
+        return new(DefaultId, "Test", null, DateTimeOffset.Now, DateTimeOffset.Now, semester);
     }
 
     protected override CoursePreviewDto GetTestPreviewDto()
     {
         SemesterMinimalViewDto semester = new(4, "Test semester");
-        return new(DefaultId, "Test", semester);
+        return new(DefaultId, "Test", DateTimeOffset.Now, DateTimeOffset.Now, semester);
     }
 
     protected override CourseCreateDto GetValidCreateDto()
