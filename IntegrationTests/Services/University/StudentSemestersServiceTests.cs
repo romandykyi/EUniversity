@@ -1,11 +1,12 @@
-﻿using EUniversity.Core.Models.University;
+﻿using EUniversity.Core.Dtos.University;
+using EUniversity.Core.Models.University;
 using EUniversity.Core.Policy;
 using EUniversity.Core.Services.University;
 
 namespace EUniversity.IntegrationTests.Services.University;
 
 public class StudentSemestersServiceTests :
-    AssigningServiceTests<IStudentSemestersService, StudentSemester, int, string>
+    AssigningServiceTests<IStudentSemestersService, StudentSemester, int, StudentSemesterViewDto, int, string>
 {
     protected override async Task<int> GetIdOfExistingEntity1Async()
     {

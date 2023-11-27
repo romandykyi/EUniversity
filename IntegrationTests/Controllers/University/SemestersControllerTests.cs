@@ -61,12 +61,16 @@ public class SemestersControllerTests :
         {
             new(student, DateTimeOffset.Now)
         };
-        return new(DefaultId, "Test semester", DateTimeOffset.MinValue, DateTimeOffset.MaxValue, enrollments);
+        return new(DefaultId, "Test semester",
+           DateTimeOffset.Now, DateTimeOffset.Now,
+            DateTimeOffset.MinValue, DateTimeOffset.MaxValue, enrollments);
     }
 
     protected override SemesterPreviewDto GetTestPreviewDto()
     {
-        return new(DefaultId, "Test semester", DateTimeOffset.MinValue, DateTimeOffset.MaxValue);
+        return new(DefaultId, "Test semester",
+            DateTimeOffset.Now, DateTimeOffset.Now,
+            DateTimeOffset.MinValue, DateTimeOffset.MaxValue);
     }
 
     protected override SemesterCreateDto GetValidCreateDto()

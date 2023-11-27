@@ -28,12 +28,12 @@ public class ClassroomsControllerTests :
 
     protected override ClassroomViewDto GetTestPreviewDto()
     {
-        return new(1, "Test");
+        return new(1, "Test", DateTimeOffset.Now, DateTimeOffset.Now);
     }
 
     protected override ClassroomViewDto GetTestDetailsDto()
     {
-        return new(2, "Test classroom");
+        return new(2, "Test classroom", DateTimeOffset.Now, DateTimeOffset.Now);
     }
 
     protected override ClassroomCreateDto GetInvalidCreateDto()

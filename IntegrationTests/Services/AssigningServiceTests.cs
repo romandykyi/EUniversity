@@ -1,6 +1,10 @@
-﻿using EUniversity.Core.Services;
+﻿using EUniversity.Core.Filters;
+using EUniversity.Core.Models;
+using EUniversity.Core.Pagination;
+using EUniversity.Core.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using NSubstitute;
 
 namespace EUniversity.IntegrationTests.Services;
 
@@ -9,11 +13,14 @@ namespace EUniversity.IntegrationTests.Services;
 /// </summary>
 /// <typeparam name="TService">A type of the <typeparamref name="TService"/> service that is being tested.</typeparam>
 /// <typeparam name="TAssigningEntity">A type of entity that configures a many-to-many relationship.</typeparam>
+/// <typeparam name="TAssigningEntityId">A type of assigning entity ID.</typeparam>
+/// <typeparam name="TViewDto">A type of a view DTO.</typeparam>
 /// <typeparam name="TId1">A type of the ID of the first entity.</typeparam>
 /// <typeparam name="TId2">A type of the ID of the second entity.</typeparam>
-public abstract class AssigningServiceTests<TService, TAssigningEntity, TId1, TId2> : ServicesTest
+public abstract class AssigningServiceTests<TService, TAssigningEntity, TAssigningEntityId, TViewDto, TId1, TId2> : ServicesTest
     where TService : IAssigningService<TAssigningEntity, TId1, TId2>
-    where TAssigningEntity : class
+    where TAssigningEntity : class, IEntity<TAssigningEntityId>
+    where TAssigningEntityId : IEquatable<TAssigningEntityId>
     where TId1 : IEquatable<TId1>
     where TId2 : IEquatable<TId2>
 {
@@ -81,6 +88,68 @@ public abstract class AssigningServiceTests<TService, TAssigningEntity, TId1, TI
         DbContext.Add(entity);
         await DbContext.SaveChangesAsync();
         return entity;
+    }
+
+    [Test]
+    public virtual async Task GetPage_AppliesFilter()
+    {
+        // Arrange
+        TId1 id1 = await GetIdOfExistingEntity1Async();
+        var filter = Substitute.For<IFilter<TAssigningEntity>>();
+        filter
+            .Apply(Arg.Any<IQueryable<TAssigningEntity>>())
+            .Returns(x => x[0]);
+        PaginationProperties properties = new(1, 20);
+
+        // Act
+        await Service.GetAssigningEntitiesPageAsync<TViewDto>(id1, properties, filter);
+
+        // Assert
+        filter.Received(1)
+            .Apply(Arg.Any<IQueryable<TAssigningEntity>>());
+    }
+
+    [Test]
+    public virtual async Task GetPage_ReceivesPaginationProperties()
+    {
+        // Arrange
+        TId1 id1 = await GetIdOfExistingEntity1Async();
+        PaginationProperties properties = new(3, PaginationProperties.MinPageSize);
+
+        // Act
+        var result = await Service.GetAssigningEntitiesPageAsync<TViewDto>(id1, properties);
+
+        // Assert
+        Assert.Multiple(() =>
+        {
+            Assert.That(result.PageNumber, Is.EqualTo(properties.Page));
+            Assert.That(result.PageSize, Is.EqualTo(properties.PageSize));
+        });
+    }
+
+    [Test]
+    public virtual async Task GetPage_ReturnsCorrectTotalItemsCount()
+    {
+        // Arrange
+        TId1 id1 = await GetIdOfExistingEntity1Async();
+        TId2 id2 = await GetIdOfExistingEntity2Async();
+        var testEntity = await CreateTestAssigningEntityAsync(id1, id2);
+        int expectedCount = 1;
+
+        var filter = Substitute.For<IFilter<TAssigningEntity>>();
+        filter.Apply(Arg.Any<IQueryable<TAssigningEntity>>())
+            .Returns(x =>
+            {
+                var query = (IQueryable<TAssigningEntity>)x[0];
+                return query.Where(e => e.Id.Equals(testEntity.Id));
+            });
+        PaginationProperties properties = new(1, 20);
+
+        // Act
+        var result = await Service.GetAssigningEntitiesPageAsync<TViewDto>(id1, properties, filter);
+
+        // Assert
+        Assert.That(result.TotalItemsCount, Is.EqualTo(expectedCount));
     }
 
     [Test]

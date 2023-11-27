@@ -28,12 +28,12 @@ public class GradesControllerTestsAdminCrudControllersTest :
 
     protected override GradeViewDto GetTestPreviewDto()
     {
-        return new(1, "100", 100);
+        return new(1, "100", 100, DateTimeOffset.Now, DateTimeOffset.Now);
     }
 
     protected override GradeViewDto GetTestDetailsDto()
     {
-        return new(2, "100", 100);
+        return new(2, "100", 100, DateTimeOffset.Now, DateTimeOffset.Now);
     }
 
     protected override GradeCreateDto GetInvalidCreateDto()
