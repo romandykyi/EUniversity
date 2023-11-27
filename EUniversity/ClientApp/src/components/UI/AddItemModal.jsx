@@ -11,7 +11,7 @@ const AddClassroomModal = ({
     fetchItems
 }) => {
 
-    const [error,setError] = useState('');
+    const [errors,setErrors] = useState([]);
     const [items, setItems] = useState([]);
     const [itemParams, setItemParams] = useState({});
     const [tableHead, setTableHead] = useState();
@@ -138,7 +138,7 @@ const AddClassroomModal = ({
                     )));
                 setItemParams({
                     name: '',
-                    course: '',
+                    course: 0,
                     teacher: ''
                 });
                 break;
@@ -188,12 +188,21 @@ const AddClassroomModal = ({
             if (response.ok) {
                 setIsVisible(false);
                 document.body.style.overflow = 'auto';
-            } else {
-                console.error(response);
-                setError(`${response.status} ${response.statusText}`);
+            } 
+            else {
+                const responseBody = await response.json();
+                    const errors = responseBody.errors;
+                    let errorsArray = [];
+                    for (let key in errors) {
+                        const value = errors[key];
+                        for (let er of value) {
+                            errorsArray.push(er);
+                        }
+                    }
+                    setErrors(errorsArray);
             }
         } catch (error) {
-            setError('An error occurred while adding new user.');
+            setErrors([`An error occurred while adding new ${title}.`]);
         }
     };
 
@@ -247,23 +256,29 @@ const AddClassroomModal = ({
                         headers: {
                             "Content-Type": "application/json",
                         },
-                        body: `${JSON.stringify(postItem)}`,
+                        body: `${JSON.stringify(postItem)}`
                     });
-                    console.log(response);
                     if (response.ok) {
                         setIsVisible(false);
                         document.body.style.overflow = 'auto';
                         setItems([]);
-                        setError('');
+                        setErrors([]);
                         await fetchItems();
                     } 
                     else {
-                        console.error("Error:", response.status, response.statusText);
-                        setError(`${response.status} ${response.statusText}`);
+                        const responseBody = await response.json();
+                        const errors = responseBody.errors;
+                        let errorsArray = [];
+                        for (let key in errors) {
+                            const value = errors[key];
+                            for (let er of value) {
+                                errorsArray.push(er);
+                            }
+                        }
+                        setErrors(errorsArray);
                     }
                 } catch (error) {
-                    console.error("An error occurred:", error);
-                    setError('An error occurred while adding new classroom.');
+                    setErrors([`An error occurred while adding new ${title}.`]);
                 }
             }
         }
@@ -308,7 +323,9 @@ const AddClassroomModal = ({
                             tableBody={tableBody}
                         />
                         <div className="newUser__error form__error">
-                            {error}
+                            {
+                                errors.map(error => <><p>{error}</p></>)
+                            }
                         </div>
                     <Button type="submit">Register new {title}</Button>
                 </form>

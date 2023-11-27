@@ -18,7 +18,6 @@ const Table = ({
             id:Date.now(),
             ...itemParams
         };
-        console.log(newItem);
         setItems([...items, newItem]);
     }
 
