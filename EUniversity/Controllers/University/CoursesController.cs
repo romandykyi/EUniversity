@@ -1,9 +1,9 @@
 ﻿using EUniversity.Core.Dtos.University;
-using EUniversity.Core.Filters;
 using EUniversity.Core.Models.University;
 using EUniversity.Core.Pagination;
 using EUniversity.Core.Policy;
 using EUniversity.Core.Services.University;
+using EUniversity.Infrastructure.Filters;
 using Mapster;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

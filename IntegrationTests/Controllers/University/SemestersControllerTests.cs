@@ -2,6 +2,7 @@
 using EUniversity.Core.Dtos.Users;
 using EUniversity.Core.Filters;
 using EUniversity.Core.Models.University;
+using EUniversity.Infrastructure.Filters;
 
 namespace EUniversity.IntegrationTests.Controllers.University;
 

@@ -1,6 +1,7 @@
 ﻿using EUniversity.Core.Dtos.University;
 using EUniversity.Core.Filters;
 using EUniversity.Core.Models.University;
+using EUniversity.Infrastructure.Filters;
 
 namespace EUniversity.IntegrationTests.Controllers.University;
 

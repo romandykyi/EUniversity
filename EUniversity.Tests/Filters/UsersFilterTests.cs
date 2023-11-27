@@ -1,5 +1,5 @@
-﻿using EUniversity.Core.Filters;
-using EUniversity.Core.Models;
+﻿using EUniversity.Core.Models;
+using EUniversity.Infrastructure.Filters;
 
 namespace EUniversity.Tests.Filters;
 

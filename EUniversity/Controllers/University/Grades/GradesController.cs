@@ -1,8 +1,8 @@
 ﻿using EUniversity.Core.Dtos.University.Grades;
-using EUniversity.Core.Filters;
 using EUniversity.Core.Models.University.Grades;
 using EUniversity.Core.Pagination;
 using EUniversity.Core.Policy;
+using EUniversity.Infrastructure.Filters;
 using EUniversity.Infrastructure.Services.University;
 using Mapster;
 using Microsoft.AspNetCore.Authorization;

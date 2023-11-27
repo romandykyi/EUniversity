@@ -5,6 +5,7 @@ using EUniversity.Core.Models;
 using EUniversity.Core.Pagination;
 using EUniversity.Core.Policy;
 using EUniversity.Core.Services.Auth;
+using EUniversity.Infrastructure.Filters;
 using Microsoft.AspNetCore.Identity;
 using NSubstitute;
 using NSubstitute.ReceivedExtensions;

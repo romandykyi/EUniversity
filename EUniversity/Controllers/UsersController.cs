@@ -1,9 +1,9 @@
 ﻿using EUniversity.Core.Dtos.Users;
-using EUniversity.Core.Filters;
 using EUniversity.Core.Pagination;
 using EUniversity.Core.Policy;
 using EUniversity.Core.Services.Auth;
 using EUniversity.Core.Services.Users;
+using EUniversity.Infrastructure.Filters;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Attributes;

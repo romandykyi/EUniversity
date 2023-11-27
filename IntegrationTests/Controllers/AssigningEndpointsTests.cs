@@ -3,7 +3,6 @@ using EUniversity.Core.Filters;
 using EUniversity.Core.Models;
 using EUniversity.Core.Pagination;
 using EUniversity.Core.Services;
-using IdentityModel;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
 using System.Net;

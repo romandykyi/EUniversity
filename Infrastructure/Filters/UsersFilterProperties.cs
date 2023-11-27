@@ -1,4 +1,4 @@
-﻿namespace EUniversity.Core.Filters;
+﻿namespace EUniversity.Infrastructure.Filters;
 
 /// <summary>
 /// Represents properties for filtering users.

@@ -2,6 +2,7 @@
 using EUniversity.Core.Filters;
 using EUniversity.Core.Models.University;
 using EUniversity.Core.Services.University;
+using EUniversity.Infrastructure.Filters;
 
 namespace EUniversity.IntegrationTests.Controllers.University;
 
@@ -47,7 +48,7 @@ public class CoursesControllerTests :
     protected override CourseViewDto GetTestDetailsDto()
     {
         SemesterPreviewDto semester = new(4, "Test semester",
-            DateTimeOffset.MinValue, DateTimeOffset.MaxValue, 
+            DateTimeOffset.MinValue, DateTimeOffset.MaxValue,
             DateTimeOffset.Now, DateTimeOffset.Now);
         return new(DefaultId, "Test", null, DateTimeOffset.Now, DateTimeOffset.Now, semester);
     }

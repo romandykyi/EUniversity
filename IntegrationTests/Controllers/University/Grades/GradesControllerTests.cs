@@ -1,6 +1,7 @@
 ﻿using EUniversity.Core.Dtos.University.Grades;
 using EUniversity.Core.Filters;
 using EUniversity.Core.Models.University.Grades;
+using EUniversity.Infrastructure.Filters;
 
 namespace EUniversity.IntegrationTests.Controllers.University.Grades;
 
@@ -59,6 +60,5 @@ public class GradesControllerTestsAdminCrudControllersTest :
     protected override bool AssertThatFilterWasApplied(IFilter<Grade> filter)
     {
         return filter is NameFilter<Grade> nameFilter && nameFilter.Name == "testfilter";
-
     }
 }

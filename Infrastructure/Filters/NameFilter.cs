@@ -1,6 +1,7 @@
-﻿using EUniversity.Core.Models;
+﻿using EUniversity.Core.Filters;
+using EUniversity.Core.Models;
 
-namespace EUniversity.Core.Filters;
+namespace EUniversity.Infrastructure.Filters;
 
 /// <summary>
 /// Filter that filters entities by their names.

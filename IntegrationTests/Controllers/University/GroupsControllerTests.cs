@@ -3,6 +3,7 @@ using EUniversity.Core.Dtos.Users;
 using EUniversity.Core.Filters;
 using EUniversity.Core.Models.University;
 using EUniversity.Core.Services.University;
+using EUniversity.Infrastructure.Filters;
 
 namespace EUniversity.IntegrationTests.Controllers.University;
 
@@ -69,8 +70,8 @@ public class GroupsControllerTests :
 
     protected override GroupPreviewDto GetTestPreviewDto()
     {
-        return new(DefaultId, "Group", 
-            DateTimeOffset.Now, DateTimeOffset.Now, 
+        return new(DefaultId, "Group",
+            DateTimeOffset.Now, DateTimeOffset.Now,
             TeacherPreviewDto, CoursePreviewDto);
     }
 

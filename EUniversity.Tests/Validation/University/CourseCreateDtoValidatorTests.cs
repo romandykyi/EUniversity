@@ -48,7 +48,7 @@ public class CourseCreateDtoValidatorTests : UsersValidatorTests
     public async Task Name_TooLarge_FailsWithPropertyTooLargeError()
     {
         // Arrange
-        CourseCreateDto dto = new(new string('0', Course.MaxNameLength + 1), DefaultDescription,TestSemesterId);
+        CourseCreateDto dto = new(new string('0', Course.MaxNameLength + 1), DefaultDescription, TestSemesterId);
 
         // Act
         var result = await _validator.TestValidateAsync(dto);
