@@ -3,7 +3,6 @@ import PaginatedList from './PaginatedList';
 
 const PageOfItems = ({
     title,
-    fetchFunction,
     isLoading,
     itemsPerPage,
     setItemsPerPage,
@@ -11,7 +10,8 @@ const PageOfItems = ({
     tableHead,
     tableBody,
     additionalItems,
-    usersType
+    currentPage,
+    setCurrentPage
 }) => {
     return (
         <div className="students container max-w-[1100px] pt-10">
@@ -24,10 +24,10 @@ const PageOfItems = ({
                 setItemsPerPage={setItemsPerPage}
                 isLoading={isLoading}
                 totalItems={totalItems}
-                fetchItems={fetchFunction}
                 tableHead={tableHead}
                 tableBody={tableBody}
-                usersType = {usersType}
+                currentPage={currentPage}
+                setCurrentPage={setCurrentPage}
             />
         </div>
 

@@ -10,25 +10,16 @@ const PaginatedList =
          setItemsPerPage,
          tableBody,
          tableHead,
-         fetchItems,
-         usersType,
-         additionalItems
+         additionalItems,
+         currentPage,
+         setCurrentPage
     }) => {
 
     const [totalPages, setTotalPages] = useState(Math.ceil(totalItems / itemsPerPage));
-    const [currentPage, setCurrentPage] = useState(1);
     const [windowSize, setWindowSize] = useState({
         width: window.innerWidth,
         height: window.innerHeight,
     });
-
-    useEffect(() => {
-        fetchItems(1,10);
-    }, []);
-
-    useEffect(() => {
-        fetchItems(currentPage, itemsPerPage, usersType);
-    }, [currentPage, itemsPerPage, usersType]);
 
     useEffect(() => {
         const handleResize = () => {
@@ -113,7 +104,7 @@ const PaginatedList =
 
     return (
         <>
-            <div className="select__container flex gap-3">
+            <div className="select__container flex gap-3 flex-wrap">
                 <select
                     className="form-select"
                     id="floatingSelect"

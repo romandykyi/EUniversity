@@ -70,7 +70,7 @@ const AdminGroup = () => {
                 isVisible={isDeleteVisible}
                 itemType="student"
                 deleteFunction={deleteUserFromGroup}
-                deletedUser={deletedUser}
+                deletedItem={deletedUser}
             />
             <AddItemToGroupModal
                 isVisible={isAddStudentVisible}

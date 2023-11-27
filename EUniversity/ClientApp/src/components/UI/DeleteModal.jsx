@@ -6,7 +6,7 @@ const DeleteModal = ({
     setIsVisible,
     itemType,
     deleteFunction,
-    deletedUser
+    deletedItem
 }) => {
 
     const handleClickOnBg = () => {
@@ -24,10 +24,10 @@ const DeleteModal = ({
                 onClick={(e) => e.stopPropagation()}
             >
                 <h1 className="newUser__title form__title font-medium">
-                    Delete {itemType}: {deletedUser.name}?
+                    Delete {itemType}: {deletedItem.name}?
                 </h1>
                 <div className="flex items-center gap-5">
-                    <Button onClick={() => deleteFunction(deletedUser.id)} className="bg-red-500 px-3 py-2 font-medium text-white text-xl rounded-lg outline-none border-none transition-transform duration-200 cursor-pointer hover:bg-red-600 active:transform-active disabled:bg-gray-500 disabled:cursor-not-allowed disabled:active:transform-none">Delete</Button>
+                    <Button onClick={() => deleteFunction(deletedItem.id)} className="bg-red-500 px-3 py-2 font-medium text-white text-xl rounded-lg outline-none border-none transition-transform duration-200 cursor-pointer hover:bg-red-600 active:transform-active disabled:bg-gray-500 disabled:cursor-not-allowed disabled:active:transform-none">Delete</Button>
                     <Button onClick={() => setIsVisible(false)}>Cancel</Button>
                 </div>
             </div>
