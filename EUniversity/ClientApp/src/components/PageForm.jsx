@@ -44,10 +44,11 @@ const PageForm = ({
     
       const fetchItems = async (page = 1, pageSize = 10) => {
         if (inputValue && isResponsePossible) {
+          setIsLoading(true);
           if (timeoutId) {
             clearTimeout(timeoutId);
           }
-    
+          
           const newTimeoutId = setTimeout(async () => {
               setIsResponsePossible(false);
               try {
@@ -100,7 +101,7 @@ const PageForm = ({
            />
             {additionalComponents}
             <PageOfItems
-                title={`All ${usersType ? usersType : registerTitle} (${totalItems})`}
+                title={`${inputValue ? "Found" : "All"} ${usersType ? usersType : registerTitle} (${totalItems})`}
                 fetchFunction={fetchItems}
                 isLoading={isLoading}
                 itemsPerPage={itemsPerPage}

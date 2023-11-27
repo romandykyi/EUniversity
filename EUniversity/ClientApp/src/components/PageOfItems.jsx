@@ -11,7 +11,7 @@ const PageOfItems = ({
     tableBody,
     additionalItems,
     currentPage,
-    setCurrentPage
+    setCurrentPage,
 }) => {
     return (
         <div className="students container max-w-[1100px] pt-10">

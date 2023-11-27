@@ -186,15 +186,13 @@ const AddClassroomModal = ({
             });
 
             if (response.ok) {
-                console.log('ok');
                 setIsVisible(false);
                 document.body.style.overflow = 'auto';
             } else {
-                console.error("Error:", response.status, response.statusText);
+                console.error(response);
                 setError(`${response.status} ${response.statusText}`);
             }
         } catch (error) {
-            console.error("An error occurred:", error);
             setError('An error occurred while adding new user.');
         }
     };
@@ -236,11 +234,9 @@ const AddClassroomModal = ({
             }));
         }
         else {
-            console.log(items);
             postItems = items.map(item => ({
                 name: item.name
             }));
-            console.log(postItems);
         }
 
         if (title !== "users") {
@@ -253,9 +249,8 @@ const AddClassroomModal = ({
                         },
                         body: `${JSON.stringify(postItem)}`,
                     });
-        
+                    console.log(response);
                     if (response.ok) {
-                        console.log('ok');
                         setIsVisible(false);
                         document.body.style.overflow = 'auto';
                         setItems([]);
