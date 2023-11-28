@@ -5,6 +5,7 @@ import PageOfItems from './PageOfItems';
 import Button from './UI/Button';
 import Search from './Search';
 import SortSelect from './UI/SortSelect';
+import AddSingleItemModal from './UI/AddSingleItemModal';
 
 const PageForm = ({
     usersType,
@@ -95,13 +96,13 @@ const PageForm = ({
 
     return (
         <>
-           <AddItemModal
-            isVisible={isModalVisible}
-            setIsVisible={setIsModalVisible}
-            title={registerTitle}
-            responseTitle={registerTitle}
-            fetchItems={fetchItems}
-           />
+            <AddItemModal
+              isVisible={isModalVisible}
+              setIsVisible={setIsModalVisible}
+              title={registerTitle}
+              responseTitle={registerTitle}
+              fetchItems={fetchItems}
+            />
             {additionalComponents}
             <PageOfItems
                 title={`${inputValue ? "Found" : "All"} ${usersType ? usersType : registerTitle} (${totalItems})`}

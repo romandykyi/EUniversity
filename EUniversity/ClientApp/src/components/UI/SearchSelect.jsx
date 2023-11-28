@@ -67,7 +67,7 @@ const SearchSelect = ({
     return (
         <>
             <input 
-                className="form-control mb-4 w-full text-xl font-medium"
+                className="form-control mb-4 w-full text-xl font-medium min-w-[200px]"
                 type="text" 
                 value = {inputValue}
                 onChange={searchItem}

@@ -8,7 +8,8 @@ const Table = ({
     tableHead, 
     tableBody, 
     title,
-    itemParams
+    itemParams,
+    isAddMoreDisable
 }) => {
 
 
@@ -33,7 +34,13 @@ const Table = ({
                     </tbody>
                 </table>
             </div>
-            <Button onClick={handleAddUserClick}>Add new {title}</Button>
+            {
+                isAddMoreDisable
+                ? <Button onClick={handleAddUserClick}>Add new {title}</Button>
+                : items.length < 1
+                    ? <Button onClick={handleAddUserClick}>Add new {title}</Button>
+                    : ""
+            }
         </>
     );
 };
