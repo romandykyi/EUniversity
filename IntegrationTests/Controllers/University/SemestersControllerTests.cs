@@ -1,5 +1,4 @@
-﻿using AutoMapper.Configuration.Conventions;
-using EUniversity.Core.Dtos.University;
+﻿using EUniversity.Core.Dtos.University;
 using EUniversity.Core.Dtos.Users;
 using EUniversity.Core.Filters;
 using EUniversity.Core.Models.University;

@@ -59,7 +59,7 @@ public class GradesControllerTestsAdminCrudControllersTest :
 
     protected override bool AssertThatFilterWasApplied(IFilter<Grade> filter)
     {
-        return filter is DefaultFilter<Grade> defaultFilter && 
+        return filter is DefaultFilter<Grade> defaultFilter &&
             defaultFilter.Name == "testfilter" &&
             defaultFilter.SortingMode == DefaultFilterSortingMode.Name;
     }

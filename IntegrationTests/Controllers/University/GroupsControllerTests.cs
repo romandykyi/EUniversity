@@ -87,7 +87,7 @@ public class GroupsControllerTests :
 
     protected override bool AssertThatFilterWasApplied(IFilter<Group> filter)
     {
-        return filter is DefaultFilter<Group> defaultFilter && 
+        return filter is DefaultFilter<Group> defaultFilter &&
             defaultFilter.Name == "testfilter" &&
             defaultFilter.SortingMode == DefaultFilterSortingMode.Name;
     }

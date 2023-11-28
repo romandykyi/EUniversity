@@ -1,6 +1,5 @@
 ﻿using EUniversity.Core.Models;
 using EUniversity.Infrastructure.Filters;
-using IdentityModel;
 
 namespace EUniversity.Tests.Filters;
 
