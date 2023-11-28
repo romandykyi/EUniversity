@@ -1,6 +1,7 @@
 ﻿using EUniversity.Core.Dtos.University;
 using EUniversity.Core.Filters;
 using EUniversity.Core.Models.University;
+using EUniversity.Infrastructure.Filters;
 
 namespace EUniversity.IntegrationTests.Controllers.University;
 
@@ -19,7 +20,7 @@ public class ClassroomsControllerTests :
 
     public override int DefaultId => 1;
 
-    public override string GetPageFilter => "name=testfilter";
+    public override string GetPageFilter => "name=testfilter&sortingMode=name";
 
     public override void SetUpService()
     {
@@ -58,6 +59,8 @@ public class ClassroomsControllerTests :
 
     protected override bool AssertThatFilterWasApplied(IFilter<Classroom> filter)
     {
-        return filter is NameFilter<Classroom> nameFilter && nameFilter.Name == "testfilter";
+        return filter is DefaultFilter<Classroom> defaultFilter &&
+            defaultFilter.Name == "testfilter" &&
+            defaultFilter.SortingMode == DefaultFilterSortingMode.Name;
     }
 }

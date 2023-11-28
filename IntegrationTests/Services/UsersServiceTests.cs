@@ -3,6 +3,7 @@ using EUniversity.Core.Models;
 using EUniversity.Core.Pagination;
 using EUniversity.Core.Policy;
 using EUniversity.Core.Services.Users;
+using EUniversity.Infrastructure.Filters;
 using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
 

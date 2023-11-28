@@ -206,7 +206,7 @@ public abstract class CrudServicesTest<TService, TEntity, TId, TPreviewDto, TDet
     {
         // Arrange
         var entity = await CreateTestEntityAsync();
-        DateTimeOffset? lastUpdateDate = 
+        DateTimeOffset? lastUpdateDate =
             entity is IHasUpdateDate entityWithUpdateDate ? entityWithUpdateDate.UpdateDate : null;
         TUpdateDto dto = GetValidUpdateDto();
         var expectedClassroom = dto.Adapt<Classroom>();
@@ -224,9 +224,9 @@ public abstract class CrudServicesTest<TService, TEntity, TId, TPreviewDto, TDet
         // Assert that update date was set
         if (actualEntity is IHasUpdateDate actualEntityWithUpdateDate)
         {
-            Assert.That(DateTimeOffset.Now - actualEntityWithUpdateDate.UpdateDate, 
+            Assert.That(DateTimeOffset.Now - actualEntityWithUpdateDate.UpdateDate,
                 Is.LessThan(TimeSpan.FromHours(1)));
-            Assert.That(actualEntityWithUpdateDate.UpdateDate, 
+            Assert.That(actualEntityWithUpdateDate.UpdateDate,
                 Is.GreaterThan(lastUpdateDate));
         }
     }

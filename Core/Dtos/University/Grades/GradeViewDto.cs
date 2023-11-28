@@ -1,4 +1,4 @@
 ﻿namespace EUniversity.Core.Dtos.University.Grades;
 
-public record GradeViewDto(int Id, string Name, int Score, 
+public record GradeViewDto(int Id, string Name, int Score,
     DateTimeOffset CreationDate, DateTimeOffset UpdateDate);

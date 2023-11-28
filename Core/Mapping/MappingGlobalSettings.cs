@@ -1,6 +1,6 @@
 ﻿using EUniversity.Core.Dtos.University;
-using Mapster;
 using EUniversity.Core.Models.University;
+using Mapster;
 
 namespace EUniversity.Core.Mapping;
 

@@ -9,7 +9,7 @@ public class CoursesService :
     BaseCrudService<Course, int, CoursePreviewDto, CourseViewDto, CourseCreateDto, CourseCreateDto>,
     ICoursesService
 {
-    protected override IQueryable<Course> GetByIdQuery => 
+    protected override IQueryable<Course> GetByIdQuery =>
         Entities
         .Include(e => e.Semester)
         .AsNoTracking();

@@ -3,6 +3,7 @@ using EUniversity.Core.Dtos.Users;
 using EUniversity.Core.Filters;
 using EUniversity.Core.Models.University;
 using EUniversity.Core.Services.University;
+using EUniversity.Infrastructure.Filters;
 
 namespace EUniversity.IntegrationTests.Controllers.University;
 
@@ -24,7 +25,7 @@ public class GroupsControllerTests :
 
     public override int DefaultId => 1;
 
-    public override string GetPageFilter => "name=testfilter";
+    public override string GetPageFilter => "name=testfilter&sortingMode=name";
 
     protected override void AssertThatViewDtosAreEqual(GroupViewDto expected, GroupViewDto actual)
     {
@@ -69,8 +70,8 @@ public class GroupsControllerTests :
 
     protected override GroupPreviewDto GetTestPreviewDto()
     {
-        return new(DefaultId, "Group", 
-            DateTimeOffset.Now, DateTimeOffset.Now, 
+        return new(DefaultId, "Group",
+            DateTimeOffset.Now, DateTimeOffset.Now,
             TeacherPreviewDto, CoursePreviewDto);
     }
 
@@ -86,6 +87,8 @@ public class GroupsControllerTests :
 
     protected override bool AssertThatFilterWasApplied(IFilter<Group> filter)
     {
-        return filter is NameFilter<Group> nameFilter && nameFilter.Name == "testfilter";
+        return filter is DefaultFilter<Group> defaultFilter &&
+            defaultFilter.Name == "testfilter" &&
+            defaultFilter.SortingMode == DefaultFilterSortingMode.Name;
     }
 }

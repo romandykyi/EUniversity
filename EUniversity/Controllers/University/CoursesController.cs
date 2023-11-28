@@ -1,9 +1,9 @@
 ﻿using EUniversity.Core.Dtos.University;
-using EUniversity.Core.Filters;
 using EUniversity.Core.Models.University;
 using EUniversity.Core.Pagination;
 using EUniversity.Core.Policy;
 using EUniversity.Core.Services.University;
+using EUniversity.Infrastructure.Filters;
 using Mapster;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -34,6 +34,19 @@ public class CoursesController : ControllerBase
     /// </remarks>
     /// <param name="properties">Pagination properties.</param>
     /// <param name="name">An optional name to filter courses by.</param>
+    /// <param name="sortingMode">
+    /// An optional sorting mode.
+    /// <para>
+    /// Possible values:
+    /// </para>
+    /// <ul>
+    /// <li>default(or 0) - no sorting will be applied;</li>
+    /// <li>name(or 1) - courses will be sorted by their name(from a to z), this mode is applied by default;</li>
+    /// <li>nameDescending(or 2) - courses will be sorted by their name in descending order(from z to a);</li>
+    /// <li>newest(or 3) - courses will be sorted by their creation date in descending order;</li>
+    /// <li>oldest(or 4) - courses will be sorted by their creation date in ascending order.</li>
+    /// </ul>
+    /// </param>
     /// <response code="200">Returns requested page with courses.</response>
     /// <response code="400">Bad request</response>
     /// <response code="401">Unauthorized user call</response>
@@ -44,9 +57,10 @@ public class CoursesController : ControllerBase
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> GetCoursesPageAsync(
         [FromQuery] PaginationProperties properties,
-        [FromQuery] string? name)
+        [FromQuery] string? name,
+        [FromQuery] DefaultFilterSortingMode sortingMode = DefaultFilterSortingMode.Name)
     {
-        NameFilter<Course>? filter = name != null ? new(name) : null;
+        DefaultFilter<Course> filter = new(name ?? string.Empty, sortingMode);
         return Ok(await _coursesService.GetPageAsync(properties, filter));
     }
 

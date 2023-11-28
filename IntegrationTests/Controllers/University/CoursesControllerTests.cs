@@ -2,6 +2,7 @@
 using EUniversity.Core.Filters;
 using EUniversity.Core.Models.University;
 using EUniversity.Core.Services.University;
+using EUniversity.Infrastructure.Filters;
 
 namespace EUniversity.IntegrationTests.Controllers.University;
 
@@ -20,7 +21,7 @@ public class CoursesControllerTests :
 
     public override int DefaultId => 1;
 
-    public override string GetPageFilter => "name=testfilter";
+    public override string GetPageFilter => "name=testfilter&sortingMode=name";
 
     public override void SetUpService()
     {
@@ -31,7 +32,9 @@ public class CoursesControllerTests :
 
     protected override bool AssertThatFilterWasApplied(IFilter<Course> filter)
     {
-        return filter is NameFilter<Course> nameFilter && nameFilter.Name == "testfilter";
+        return filter is DefaultFilter<Course> defaultFilter &&
+            defaultFilter.Name == "testfilter" &&
+            defaultFilter.SortingMode == DefaultFilterSortingMode.Name;
     }
 
     protected override CourseCreateDto GetInvalidCreateDto()
@@ -47,7 +50,7 @@ public class CoursesControllerTests :
     protected override CourseViewDto GetTestDetailsDto()
     {
         SemesterPreviewDto semester = new(4, "Test semester",
-            DateTimeOffset.MinValue, DateTimeOffset.MaxValue, 
+            DateTimeOffset.MinValue, DateTimeOffset.MaxValue,
             DateTimeOffset.Now, DateTimeOffset.Now);
         return new(DefaultId, "Test", null, DateTimeOffset.Now, DateTimeOffset.Now, semester);
     }

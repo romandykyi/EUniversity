@@ -2,6 +2,7 @@
 using EUniversity.Core.Dtos.Users;
 using EUniversity.Core.Filters;
 using EUniversity.Core.Models.University;
+using EUniversity.Infrastructure.Filters;
 
 namespace EUniversity.IntegrationTests.Controllers.University;
 
@@ -10,7 +11,7 @@ public class SemestersControllerTests :
 {
     public override string GetPageRoute => "api/semesters";
 
-    public override string GetPageFilter => "name=testfilter";
+    public override string GetPageFilter => "name=testfilter&sortingMode=name";
 
     public override string GetByIdRoute => $"api/semesters/{DefaultId}";
 
@@ -41,7 +42,9 @@ public class SemestersControllerTests :
 
     protected override bool AssertThatFilterWasApplied(IFilter<Semester> filter)
     {
-        return filter is NameFilter<Semester> nameFilter && nameFilter.Name == "testfilter";
+        return filter is DefaultFilter<Semester> defaultFilter &&
+            defaultFilter.Name == "testfilter" &&
+            defaultFilter.SortingMode == DefaultFilterSortingMode.Name;
     }
 
     protected override SemesterCreateDto GetInvalidCreateDto()
