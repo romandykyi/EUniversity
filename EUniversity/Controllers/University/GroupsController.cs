@@ -54,7 +54,7 @@ public class GroupsController : ControllerBase
         [FromQuery] PaginationProperties properties,
         [FromQuery] string? name)
     {
-        NameFilter<Group>? filter = name != null ? new(name) : null;
+        DefaultFilter<Group>? filter = name != null ? new(name) : null;
         return Ok(await _groupsService.GetPageAsync(properties, filter));
     }
 

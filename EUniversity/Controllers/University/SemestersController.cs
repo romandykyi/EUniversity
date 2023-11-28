@@ -54,7 +54,7 @@ public class SemestersController : ControllerBase
         [FromQuery] PaginationProperties properties,
         [FromQuery] string? name)
     {
-        NameFilter<Semester>? filter = name != null ? new(name) : null;
+        DefaultFilter<Semester>? filter = name != null ? new(name) : null;
         return Ok(await _semestersService.GetPageAsync(properties, filter));
     }
 

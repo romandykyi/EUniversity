@@ -46,7 +46,7 @@ public class ClassroomsController : ControllerBase
         [FromQuery] PaginationProperties properties,
         [FromQuery] string? name)
     {
-        NameFilter<Classroom>? filter = name != null ? new(name) : null;
+        DefaultFilter<Classroom>? filter = name != null ? new(name) : null;
         return Ok(await _classroomsService.GetPageAsync(properties, filter));
     }
 

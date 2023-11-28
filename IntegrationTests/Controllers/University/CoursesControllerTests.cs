@@ -32,7 +32,7 @@ public class CoursesControllerTests :
 
     protected override bool AssertThatFilterWasApplied(IFilter<Course> filter)
     {
-        return filter is NameFilter<Course> nameFilter && nameFilter.Name == "testfilter";
+        return filter is DefaultFilter<Course> nameFilter && nameFilter.Name == "testfilter";
     }
 
     protected override CourseCreateDto GetInvalidCreateDto()

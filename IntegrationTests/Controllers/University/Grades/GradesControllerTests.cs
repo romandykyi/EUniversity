@@ -59,6 +59,6 @@ public class GradesControllerTestsAdminCrudControllersTest :
 
     protected override bool AssertThatFilterWasApplied(IFilter<Grade> filter)
     {
-        return filter is NameFilter<Grade> nameFilter && nameFilter.Name == "testfilter";
+        return filter is DefaultFilter<Grade> nameFilter && nameFilter.Name == "testfilter";
     }
 }

@@ -59,6 +59,6 @@ public class ClassroomsControllerTests :
 
     protected override bool AssertThatFilterWasApplied(IFilter<Classroom> filter)
     {
-        return filter is NameFilter<Classroom> nameFilter && nameFilter.Name == "testfilter";
+        return filter is DefaultFilter<Classroom> nameFilter && nameFilter.Name == "testfilter";
     }
 }
