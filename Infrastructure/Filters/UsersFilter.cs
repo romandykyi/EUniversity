@@ -1,5 +1,6 @@
 ﻿using EUniversity.Core.Filters;
 using EUniversity.Core.Models;
+using System.Linq.Expressions;
 
 namespace EUniversity.Infrastructure.Filters;
 
@@ -9,6 +10,9 @@ namespace EUniversity.Infrastructure.Filters;
 public class UsersFilter : IFilter<ApplicationUser>
 {
     public UsersFilterProperties Properties { get; }
+
+    private Expression<Func<ApplicationUser, string>> FullNameKeySelector =
+        u => u.FirstName + ' ' + (u.MiddleName != null ? u.MiddleName + ' ' : "") + u.LastName;
 
     /// <summary>
     /// Initializes a new instance of the class with the specified properties.
@@ -28,6 +32,7 @@ public class UsersFilter : IFilter<ApplicationUser>
     /// </returns>
     public IQueryable<ApplicationUser> Apply(IQueryable<ApplicationUser> query)
     {
+        // Filtering
         if (Properties.FullName != null)
         {
             query = query.Where(
@@ -43,6 +48,24 @@ public class UsersFilter : IFilter<ApplicationUser>
         {
             query = query.Where(u => u.UserName != null && u.UserName.Contains(Properties.UserName));
         }
+
+        // Sorting
+        switch (Properties.SortingMode)
+        {
+            case UsersSortingMode.FullName:
+                query = query.OrderBy(FullNameKeySelector);
+                break;
+            case UsersSortingMode.FullNameDescending:
+                query = query.OrderByDescending(FullNameKeySelector);
+                break;
+            case UsersSortingMode.UserName:
+                query = query.OrderBy(u => u.UserName);
+                break;
+            case UsersSortingMode.UserNameDescending:
+                query = query.OrderByDescending(u => u.UserName);
+                break;
+        }
+
         return query;
     }
 }

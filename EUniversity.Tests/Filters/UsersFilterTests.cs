@@ -90,4 +90,68 @@ public class UsersFilterTests
         // Assert
         Assert.That(result.Select(u => u.Id), Is.EquivalentTo(expectedUsersIds));
     }
+
+    private readonly ApplicationUser[] testArray =
+    {
+            new ApplicationUser() { Id = "2", UserName="jock666", FirstName = "John", LastName = "Doe"},
+            new ApplicationUser() { Id = "3", UserName="shy_girl", FirstName = "Alice", MiddleName = "Diana", LastName = "Johnson"},
+            new ApplicationUser() { Id = "1", UserName="nerd777", FirstName = "Bob", MiddleName = "Walter", LastName = "Black"},
+            new ApplicationUser() { Id = "4", UserName="cat", FirstName = "Adam", LastName = "Doe"}
+    };
+
+    [Test]
+    public void NameSortingMode_ReturnsSortedByFirstNameQuery()
+    {
+        // Arrange
+        UsersFilterProperties properties = new(SortingMode: UsersSortingMode.FullName);
+        UsersFilter filter = new(properties);
+
+        // Act
+        var result = filter.Apply(testArray.AsQueryable());
+
+        // Assert
+        Assert.That(result, Is.Ordered.Ascending.By("FirstName"));
+    }
+
+    [Test]
+    public void NameDescendingSortingMode_ReturnsSortedDescendingByFirstNameQuery()
+    {
+        // Arrange
+        UsersFilterProperties properties = new(SortingMode: UsersSortingMode.FullNameDescending);
+        UsersFilter filter = new(properties);
+
+        // Act
+        var result = filter.Apply(testArray.AsQueryable());
+
+        // Assert
+        Assert.That(result, Is.Ordered.Descending.By("FirstName"));
+    }
+
+    [Test]
+    public void UserNameDescendingSortingMode_ReturnsSortedByUserNameQuery()
+    {
+        // Arrange
+        UsersFilterProperties properties = new(SortingMode: UsersSortingMode.UserName);
+        UsersFilter filter = new(properties);
+
+        // Act
+        var result = filter.Apply(testArray.AsQueryable());
+
+        // Assert
+        Assert.That(result, Is.Ordered.Ascending.By("UserName"));
+    }
+
+    [Test]
+    public void UserNameDescendingSortingMode_ReturnsSortedDescendingByUserNameQuery()
+    {
+        // Arrange
+        UsersFilterProperties properties = new(SortingMode: UsersSortingMode.UserNameDescending);
+        UsersFilter filter = new(properties);
+
+        // Act
+        var result = filter.Apply(testArray.AsQueryable());
+
+        // Assert
+        Assert.That(result, Is.Ordered.Descending.By("UserName"));
+    }
 }

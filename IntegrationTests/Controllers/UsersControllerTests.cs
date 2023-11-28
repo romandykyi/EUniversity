@@ -31,8 +31,8 @@ public class UsersControllerTests : ControllersTest
         new("2", "mail2@example.com", "user2", "First2", "Last2", "Middle2")
     };
 
-    public UsersFilterProperties TestFilterProperties = new("Joe Doe", "joedoe777", "mail@example.com");
-    public const string TestFilterQuery = "fullName=Joe%20Doe&userName=joedoe777&email=mail@example.com";
+    public UsersFilterProperties TestFilterProperties = new("Joe Doe", "joedoe777", "mail@example.com", UsersSortingMode.UserName);
+    public const string TestFilterQuery = "fullName=Joe%20Doe&userName=joedoe777&email=mail@example.com&sortingMode=username";
 
     public static readonly string[] GetMethods =
     {
