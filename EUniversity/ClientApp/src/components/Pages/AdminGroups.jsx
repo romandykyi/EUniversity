@@ -13,6 +13,7 @@ const AdminGroup = () => {
     const [page, setPage] = useState(1);
     const [isDeleteVisible, setIsDeleteVisible] = useState(false);
     const [inputValue, setInputValue] = useState("");
+    const [sortingMethod, setSortingMethod] = useState(0);
     const [deletedGroup, setDeletedGroup] = useState({
         id: '',
         name: ''
@@ -42,7 +43,6 @@ const AdminGroup = () => {
     };
 
     return (
-        <>
          <PageForm
                 setItems={setGroups}
                 additionalComponents={
@@ -114,8 +114,8 @@ const AdminGroup = () => {
                         }
                     </tr>
                 )}
-                searchLink={`/api/groups?Page=${page}&PageSize=${pageSize}&name=${inputValue}`}
-                fetchLink={`/api/groups?Page=${page}&PageSize=${pageSize}`}
+                searchLink={`/api/groups?Page=${page}&PageSize=${pageSize}&name=${inputValue}&sortingMode=${sortingMethod}`}
+                fetchLink={`/api/groups?Page=${page}&PageSize=${pageSize}&sortingMode=${sortingMethod}`}
                 currentPage={page}
                 setCurrentPage={setPage}
                 itemsPerPage={pageSize}
@@ -123,8 +123,9 @@ const AdminGroup = () => {
                 inputValue={inputValue}
                 setInputValue={setInputValue}
                 isDeleteVisible={isDeleteVisible}
-            />    
-        </>
+                setSortingMethod={setSortingMethod}
+                sortingMethod={sortingMethod}
+            />      
     );
 };
 

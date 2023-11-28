@@ -21,7 +21,9 @@ const PageForm = ({
     setItemsPerPage,
     inputValue,
     setInputValue,
-    isDeleteVisible
+    isDeleteVisible,
+    sortingMethod,
+    setSortingMethod
 }) => {
     const [timeoutId, setTimeoutId] = useState(null);
     const [isResponsePossible, setIsResponsePossible] = useState(true);
@@ -40,7 +42,7 @@ const PageForm = ({
     
       useEffect(() => {
         fetchItems(currentPage, itemsPerPage);
-      }, [currentPage, itemsPerPage, usersType, inputValue, totalItems]);
+      }, [currentPage, itemsPerPage, usersType, inputValue, totalItems, sortingMethod]);
     
       const fetchItems = async (page = 1, pageSize = 10) => {
         if (inputValue && isResponsePossible) {
@@ -115,6 +117,17 @@ const PageForm = ({
                 additionalItems={
                 <>
                     {additionalItems}
+                    {
+                      registerTitle === "users" // remove when users sorting will be added
+                      ? ""
+                      : <select className="form-select" onChange={e => setSortingMethod(parseInt(e.target.value))}>
+                          <option value="0">Default</option>
+                          <option value="1">By name</option>
+                          <option value="2">By Descending</option>
+                          <option value="3">Newest</option>
+                          <option value="4">Oldest</option>
+                        </select>
+                    }
                     <Search
                     setInputValue={setInputValue}
                     search={fetchItems}

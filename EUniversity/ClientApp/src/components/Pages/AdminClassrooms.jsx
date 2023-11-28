@@ -13,6 +13,7 @@ const AdminClassrooms = () => {
     const [page, setPage] = useState(1);
     const [isDeleteVisible, setIsDeleteVisible] = useState(false);
     const [inputValue, setInputValue] = useState("");
+    const [sortingMethod, setSortingMethod] = useState(0);
     const [deletedClassroom, setDeletedClassroom] = useState({
         id: '',
         name: ''
@@ -86,8 +87,8 @@ const AdminClassrooms = () => {
                     }
                 </tr>
                 )}
-                searchLink={`/api/classrooms?Page=${page}&PageSize=${pageSize}&name=${inputValue}`}
-                fetchLink={`/api/classrooms?Page=${page}&PageSize=${pageSize}`}
+                searchLink={`/api/classrooms?Page=${page}&PageSize=${pageSize}&name=${inputValue}&sortingMode=${sortingMethod}`}
+                fetchLink={`/api/classrooms?Page=${page}&PageSize=${pageSize}&sortingMode=${sortingMethod}`}
                 currentPage={page}
                 setCurrentPage={setPage}
                 itemsPerPage={pageSize}
@@ -95,6 +96,8 @@ const AdminClassrooms = () => {
                 inputValue={inputValue}
                 setInputValue={setInputValue}
                 isDeleteVisible={isDeleteVisible}
+                setSortingMethod={setSortingMethod}
+                sortingMethod={sortingMethod}
             /> 
     );
 };
