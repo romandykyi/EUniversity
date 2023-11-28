@@ -71,6 +71,24 @@ public class DefaultFilter<T> : IFilter<T>
     /// </returns>
     public IQueryable<T> Apply(IQueryable<T> query)
     {
+        // Apply sorting mode
+        switch (SortingMode)
+        {
+            case DefaultFilterSortingMode.Name:
+                query = query.OrderBy(x => x.Name);
+                break;
+            case DefaultFilterSortingMode.NameDescending:
+                query = query.OrderByDescending(x => x.Name);
+                break;
+            case DefaultFilterSortingMode.Newest:
+                query = query.OrderByDescending(x => x.CreationDate);
+                break;
+            case DefaultFilterSortingMode.Oldest:
+                query = query.OrderBy(x => x.CreationDate);
+                break;
+        }
+
+        // Filter by name
         return query.Where(x => x.Name.Contains(Name));
     }
 }
