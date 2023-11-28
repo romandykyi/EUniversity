@@ -71,6 +71,9 @@ public class DefaultFilter<T> : IFilter<T>
     /// </returns>
     public IQueryable<T> Apply(IQueryable<T> query)
     {
+        // Filter by name
+        query = query.Where(x => x.Name.Contains(Name));
+
         // Apply sorting mode
         switch (SortingMode)
         {
@@ -87,8 +90,6 @@ public class DefaultFilter<T> : IFilter<T>
                 query = query.OrderBy(x => x.CreationDate);
                 break;
         }
-
-        // Filter by name
-        return query.Where(x => x.Name.Contains(Name));
+        return query;
     }
 }

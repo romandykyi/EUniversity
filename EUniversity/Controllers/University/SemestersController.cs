@@ -42,6 +42,19 @@ public class SemestersController : ControllerBase
     /// </remarks>
     /// <param name="properties">Pagination properties.</param>
     /// <param name="name">An optional name to filter semesters by.</param>
+    /// <param name="sortingMode">
+    /// An optional sorting mode.
+    /// <para>
+    /// Possible values:
+    /// </para>
+    /// <ul>
+    /// <li>default(or 0) - no sorting will be applied;</li>
+    /// <li>name(or 1) - semesters will be sorted by their name(from a to z), this mode is applied by default;</li>
+    /// <li>nameDescending(or 2) - semesters will be sorted by their name in descending order(from z to a);</li>
+    /// <li>newest(or 3) - semesters will be sorted by their creation date in descending order;</li>
+    /// <li>oldest(or 4) - semesters will be sorted by their creation date in ascending order.</li>
+    /// </ul>
+    /// </param>
     /// <response code="200">Returns requested page with semesters.</response>
     /// <response code="400">Bad request</response>
     /// <response code="401">Unauthorized user call</response>
@@ -52,9 +65,10 @@ public class SemestersController : ControllerBase
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> GetSemestersPageAsync(
         [FromQuery] PaginationProperties properties,
-        [FromQuery] string? name)
+        [FromQuery] string? name,
+        [FromQuery] DefaultFilterSortingMode sortingMode = DefaultFilterSortingMode.Name)
     {
-        DefaultFilter<Semester>? filter = name != null ? new(name) : null;
+        DefaultFilter<Semester> filter = new(name ?? string.Empty, sortingMode);
         return Ok(await _semestersService.GetPageAsync(properties, filter));
     }
 
