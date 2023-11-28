@@ -20,7 +20,7 @@ public class GradesControllerTestsAdminCrudControllersTest :
 
     public override int DefaultId => 1;
 
-    public override string GetPageFilter => "name=testfilter";
+    public override string GetPageFilter => "name=testfilter&sortingMode=name";
 
     public override void SetUpService()
     {
@@ -59,6 +59,8 @@ public class GradesControllerTestsAdminCrudControllersTest :
 
     protected override bool AssertThatFilterWasApplied(IFilter<Grade> filter)
     {
-        return filter is DefaultFilter<Grade> nameFilter && nameFilter.Name == "testfilter";
+        return filter is DefaultFilter<Grade> defaultFilter && 
+            defaultFilter.Name == "testfilter" &&
+            defaultFilter.SortingMode == DefaultFilterSortingMode.Name;
     }
 }
