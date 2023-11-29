@@ -160,6 +160,15 @@ public class GroupsController : ControllerBase
     /// </summary>
     /// <remarks>
     /// If there is no items in the requested page, then empty page will be returned.
+    /// <br />
+    /// 'sortingMode' is an optional query param that accepts one of these values
+    /// <ul>
+    /// <li>default(or 0) - no sorting will be applied;</li>
+    /// <li>fullName(or 1) - enrollments will be sorted by student's full name(from a to z), this mode is applied by default;</li>
+    /// <li>fullNameDescending(or 2) - enrollments will be sorted by student's full name in descending order(from z to a);</li>
+    /// <li>newest(or 3) - enrollments will be sorted by their date in descending order;</li>
+    /// <li>oldest(or 4) - enrollments will be sorted by their date in ascending order.</li>
+    /// </ul>
     /// </remarks>
     /// <response code="200">Returns requested page with students that are part of the group.</response>
     /// <response code="400">Bad request</response>
@@ -174,7 +183,8 @@ public class GroupsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetStudentsInGroupAsync(
         [FromRoute] int groupId,
-        [FromQuery] PaginationProperties properties)
+        [FromQuery] PaginationProperties properties,
+        [FromQuery] StudentEnrollmentsFilterProperties filterProperties)
     {
         if (!await _existenceChecker.ExistsAsync<Group, int>(groupId))
         {
@@ -182,8 +192,9 @@ public class GroupsController : ControllerBase
                 CustomResponses.NotFound("The group with the specified ID does not exist.",
                 HttpContext));
         }
+        StudentEnrollmentsFilter<StudentGroup> filter = new(filterProperties);
         return Ok(await _studentGroupsService
-            .GetAssigningEntitiesPageAsync<StudentGroupViewDto>(groupId, properties));
+            .GetAssigningEntitiesPageAsync<StudentGroupViewDto>(groupId, properties, filter));
     }
 
     /// <summary>
