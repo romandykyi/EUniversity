@@ -91,7 +91,7 @@ public class UsersFilterTests
         Assert.That(result.Select(u => u.Id), Is.EquivalentTo(expectedUsersIds));
     }
 
-    private readonly ApplicationUser[] testArray =
+    private readonly ApplicationUser[] TestArray =
     {
             new ApplicationUser() { Id = "2", UserName="jock666", FirstName = "John", LastName = "Doe"},
             new ApplicationUser() { Id = "3", UserName="shy_girl", FirstName = "Alice", MiddleName = "Diana", LastName = "Johnson"},
@@ -107,9 +107,10 @@ public class UsersFilterTests
         UsersFilter filter = new(properties);
 
         // Act
-        var result = filter.Apply(testArray.AsQueryable());
+        var result = filter.Apply(TestArray.AsQueryable());
 
         // Assert
+        Assert.That(result, Is.EquivalentTo(TestArray));
         Assert.That(result, Is.Ordered.Ascending.By("FirstName"));
     }
 
@@ -121,9 +122,10 @@ public class UsersFilterTests
         UsersFilter filter = new(properties);
 
         // Act
-        var result = filter.Apply(testArray.AsQueryable());
+        var result = filter.Apply(TestArray.AsQueryable());
 
         // Assert
+        Assert.That(result, Is.EquivalentTo(TestArray));
         Assert.That(result, Is.Ordered.Descending.By("FirstName"));
     }
 
@@ -135,9 +137,10 @@ public class UsersFilterTests
         UsersFilter filter = new(properties);
 
         // Act
-        var result = filter.Apply(testArray.AsQueryable());
+        var result = filter.Apply(TestArray.AsQueryable());
 
         // Assert
+        Assert.That(result, Is.EquivalentTo(TestArray));
         Assert.That(result, Is.Ordered.Ascending.By("UserName"));
     }
 
@@ -149,9 +152,10 @@ public class UsersFilterTests
         UsersFilter filter = new(properties);
 
         // Act
-        var result = filter.Apply(testArray.AsQueryable());
+        var result = filter.Apply(TestArray.AsQueryable());
 
         // Assert
+        Assert.That(result, Is.EquivalentTo(TestArray));
         Assert.That(result, Is.Ordered.Descending.By("UserName"));
     }
 }

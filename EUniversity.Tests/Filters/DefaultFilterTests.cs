@@ -111,7 +111,7 @@ public class DefaultFilterTests
         Assert.That(result, Is.Empty);
     }
 
-    private readonly TestEntity[] testArray =
+    private readonly TestEntity[] TestArray =
         {
             new("John", new(0, TimeSpan.Zero)),
             new("Alice", new(2, TimeSpan.Zero)),
@@ -126,9 +126,10 @@ public class DefaultFilterTests
         DefaultFilter<TestEntity> filter = new(string.Empty, DefaultFilterSortingMode.Name);
 
         // Act
-        var result = filter.Apply(testArray.AsQueryable());
+        var result = filter.Apply(TestArray.AsQueryable());
 
         // Assert
+        Assert.That(result, Is.EquivalentTo(TestArray));
         Assert.That(result, Is.Ordered.Ascending.By("Name"));
     }
 
@@ -139,9 +140,10 @@ public class DefaultFilterTests
         DefaultFilter<TestEntity> filter = new(string.Empty, DefaultFilterSortingMode.NameDescending);
 
         // Act
-        var result = filter.Apply(testArray.AsQueryable());
+        var result = filter.Apply(TestArray.AsQueryable());
 
         // Assert
+        Assert.That(result, Is.EquivalentTo(TestArray));
         Assert.That(result, Is.Ordered.Descending.By("Name"));
     }
 
@@ -152,9 +154,10 @@ public class DefaultFilterTests
         DefaultFilter<TestEntity> filter = new(string.Empty, DefaultFilterSortingMode.Newest);
 
         // Act
-        var result = filter.Apply(testArray.AsQueryable());
+        var result = filter.Apply(TestArray.AsQueryable());
 
         // Assert
+        Assert.That(result, Is.EquivalentTo(TestArray));
         Assert.That(result, Is.Ordered.Descending.By("CreationDate"));
     }
 
@@ -165,9 +168,10 @@ public class DefaultFilterTests
         DefaultFilter<TestEntity> filter = new(string.Empty, DefaultFilterSortingMode.Oldest);
 
         // Act
-        var result = filter.Apply(testArray.AsQueryable());
+        var result = filter.Apply(TestArray.AsQueryable());
 
         // Assert
+        Assert.That(result, Is.EquivalentTo(TestArray));
         Assert.That(result, Is.Ordered.Ascending.By("CreationDate"));
     }
 }
