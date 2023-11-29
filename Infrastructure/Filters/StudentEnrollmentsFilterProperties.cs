@@ -34,5 +34,5 @@ public enum StudentEnrollmentsSortingMode
 /// <param name="SortingMode">
 /// Optional sorting mode, <see cref="StudentEnrollmentsSortingMode.FullName"/> by default.
 /// </param>
-public record StudentEnrollmentsFilterProperties(string? FullName = null, 
+public record StudentEnrollmentsFilterProperties(string? FullName = null,
     StudentEnrollmentsSortingMode SortingMode = StudentEnrollmentsSortingMode.FullName);

@@ -36,6 +36,6 @@ public enum UsersSortingMode
 /// <param name="SortingMode">
 /// Optional sorting mode, <see cref="UsersSortingMode.FullName"/> by default.
 /// </param>
-public record UsersFilterProperties(string? FullName = null, 
+public record UsersFilterProperties(string? FullName = null,
     string? UserName = null, string? Email = null,
     UsersSortingMode SortingMode = UsersSortingMode.FullName);
