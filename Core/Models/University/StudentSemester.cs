@@ -6,7 +6,7 @@ namespace EUniversity.Core.Models.University;
 /// Represents the entity used for configuring many-to-many relationship
 /// between students and semesters.
 /// </summary>
-public class StudentSemester : IEntity<int>
+public class StudentSemester : IEntity<int>, IStudentEnrollment
 {
     [Key]
     public int Id { get; set; }
