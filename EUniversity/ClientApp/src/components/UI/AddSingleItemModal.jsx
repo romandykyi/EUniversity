@@ -310,11 +310,11 @@ const AddClassroomModal = ({
                 className=" container max-w-[1100px] pt-10 bg-white p-10 rounded-lg z-50" 
                 onClick={(e) => e.stopPropagation()}
             >
-               <div className="flex justify-between items-center mb-20"> 
-               <h1 className="newUser__title form__title m-0">
-                    Register new {title}
-                </h1>
-                <Button addStyles="bg-danger" onClick={() => setIsVisible(false)}>Close</Button>
+               <div className="flex justify-between items-center h-min mb-20">
+                    <h1 className="newUser__title form__title m-0">
+                        Register new {title}
+                    </h1>
+                    <Button onClick={() => setIsVisible(false)} addStyles="bg-danger inline-block h-min">Close</Button>
                </div>
                 <form onSubmit={handleSubmit} className="newUser form__form">
                         <Table
@@ -324,7 +324,6 @@ const AddClassroomModal = ({
                             itemParams={itemParams}
                             tableHead={tableHead}
                             tableBody={tableBody}
-                            isAddMoreDisable={title === "users" ? true : false}
                         />
                         <div className="newUser__error form__error">
                             {

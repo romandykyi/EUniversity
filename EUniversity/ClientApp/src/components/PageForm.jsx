@@ -4,6 +4,8 @@ import AddItemModal from './UI/AddItemModal';
 import PageOfItems from './PageOfItems';
 import Button from './UI/Button';
 import Search from './Search';
+import SortSelect from './UI/SortSelect';
+import AddSingleItemModal from './UI/AddSingleItemModal';
 
 const PageForm = ({
     usersType,
@@ -94,13 +96,13 @@ const PageForm = ({
 
     return (
         <>
-           <AddItemModal
-            isVisible={isModalVisible}
-            setIsVisible={setIsModalVisible}
-            title={registerTitle}
-            responseTitle={registerTitle}
-            fetchItems={fetchItems}
-           />
+            <AddItemModal
+              isVisible={isModalVisible}
+              setIsVisible={setIsModalVisible}
+              title={registerTitle}
+              responseTitle={registerTitle}
+              fetchItems={fetchItems}
+            />
             {additionalComponents}
             <PageOfItems
                 title={`${inputValue ? "Found" : "All"} ${usersType ? usersType : registerTitle} (${totalItems})`}
@@ -117,28 +119,18 @@ const PageForm = ({
                 additionalItems={
                 <>
                     {additionalItems}
-                    {
-                      registerTitle === "users" // remove when users sorting will be added
-                      ? ""
-                      : <select className="form-select" onChange={e => setSortingMethod(parseInt(e.target.value))}>
-                          <option value="0">Default</option>
-                          <option value="1">By name</option>
-                          <option value="2">By Descending</option>
-                          <option value="3">Newest</option>
-                          <option value="4">Oldest</option>
-                        </select>
-                    }
+                    <SortSelect
+                      setSortingMethod={setSortingMethod}
+                    />
                     <Search
-                    setInputValue={setInputValue}
-                    search={fetchItems}
+                      setInputValue={setInputValue}
+                      search={fetchItems}
                     />
                     {isAdmin && (
-                    <div>
-                        <Button onClick={() => {
-                          setIsModalVisible(true);
-                          document.body.style.overflow = 'hidden';
-                        }}>Register new {registerTitle}</Button>
-                    </div>
+                      <Button onClick={() => {
+                        setIsModalVisible(true);
+                        document.body.style.overflow = 'hidden';
+                      }}>Register new {registerTitle}</Button>
                     )}
                 </>
                 }

@@ -7,6 +7,7 @@ const AdminUsers = () => {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [inputValue, setInputValue] = useState("");
+  const [sortingMethod, setSortingMethod] = useState(0);
 
   // const deleteUser = async (userId) => {
   //   try {
@@ -45,8 +46,8 @@ const AdminUsers = () => {
       setInputValue={setInputValue}
       setItemsPerPage={setPageSize}
       registerTitle="users"
-      searchLink={`/api/users?Page=${page}&PageSize=${pageSize}&FullName=${inputValue}`}
-      fetchLink={`/api/users/${usersType}?Page=${page}&PageSize=${pageSize}`}
+      searchLink={`/api/users?Page=${page}&PageSize=${pageSize}&FullName=${inputValue}&sortingMode=${sortingMethod}`}
+      fetchLink={`/api/users/${usersType}?Page=${page}&PageSize=${pageSize}&sortingMode=${sortingMethod}`}
       tableHead={
         <tr>
               <th>Email</th>
@@ -70,11 +71,14 @@ const AdminUsers = () => {
       additionalItems = {
         <>
           <select className="form-select students__select mb-0" onChange={changeUsersType}>
+                <option defaultValue disabled>Users type:</option>
                 <option value="students">Students</option>
                 <option value="teachers">Teachers</option>
             </select>
         </>
       }
+      setSortingMethod={setSortingMethod}
+      sortingMethod={sortingMethod}
     />
   );
 };
