@@ -22,7 +22,7 @@ public class StudentEnrollmentsFilterTests
     {
         // Arrange
         StudentEnrollmentsFilterProperties properties = new();
-        StudentEnrollmentsFilter filter = new(properties);
+        StudentEnrollmentsFilter<TestEnrollment> filter = new(properties);
 
         // Act
         var result = filter.Apply(TestEnrollments.AsQueryable());
@@ -36,7 +36,7 @@ public class StudentEnrollmentsFilterTests
     {
         // Arrange
         StudentEnrollmentsFilterProperties properties = new(FullName: "Mar");
-        StudentEnrollmentsFilter filter = new(properties);
+        StudentEnrollmentsFilter<TestEnrollment> filter = new(properties);
         string[] expectedNames = { "Mark", "Marc" };
 
         // Act
@@ -51,7 +51,7 @@ public class StudentEnrollmentsFilterTests
     {
         // Arrange
         StudentEnrollmentsFilterProperties properties = new(SortingMode: StudentEnrollmentsSortingMode.FullName);
-        StudentEnrollmentsFilter filter = new(properties);
+        StudentEnrollmentsFilter<TestEnrollment> filter = new(properties);
 
         // Act
         var result = filter.Apply(TestEnrollments.AsQueryable());
@@ -66,7 +66,7 @@ public class StudentEnrollmentsFilterTests
     {
         // Arrange
         StudentEnrollmentsFilterProperties properties = new(SortingMode: StudentEnrollmentsSortingMode.FullNameDescending);
-        StudentEnrollmentsFilter filter = new(properties);
+        StudentEnrollmentsFilter<TestEnrollment> filter = new(properties);
 
         // Act
         var result = filter.Apply(TestEnrollments.AsQueryable());
@@ -81,7 +81,7 @@ public class StudentEnrollmentsFilterTests
     {
         // Arrange
         StudentEnrollmentsFilterProperties properties = new(SortingMode: StudentEnrollmentsSortingMode.Newest);
-        StudentEnrollmentsFilter filter = new(properties);
+        StudentEnrollmentsFilter<TestEnrollment> filter = new(properties);
 
         // Act
         var result = filter.Apply(TestEnrollments.AsQueryable());
@@ -96,7 +96,7 @@ public class StudentEnrollmentsFilterTests
     {
         // Arrange
         StudentEnrollmentsFilterProperties properties = new(SortingMode: StudentEnrollmentsSortingMode.Oldest);
-        StudentEnrollmentsFilter filter = new(properties);
+        StudentEnrollmentsFilter<TestEnrollment> filter = new(properties);
 
         // Act
         var result = filter.Apply(TestEnrollments.AsQueryable());

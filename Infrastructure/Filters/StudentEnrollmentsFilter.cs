@@ -7,9 +7,10 @@ namespace EUniversity.Infrastructure.Filters;
 /// <summary>
 /// Filter for student enrollments.
 /// </summary>
-public class StudentEnrollmentsFilter : IFilter<IStudentEnrollment>
+public class StudentEnrollmentsFilter<T> : IFilter<T>
+    where T : IStudentEnrollment
 {
-    private readonly Expression<Func<IStudentEnrollment, string>> FullNameKeySelector =
+    private readonly Expression<Func<T, string>> FullNameKeySelector =
         e => e.Student!.FirstName + ' ' + (e.Student.MiddleName != null ? e.Student.MiddleName + ' ' : "") + e.Student.LastName;
 
     public StudentEnrollmentsFilterProperties Properties { get; set; }
@@ -23,7 +24,7 @@ public class StudentEnrollmentsFilter : IFilter<IStudentEnrollment>
         Properties = properties;
     }
 
-    public IQueryable<IStudentEnrollment> Apply(IQueryable<IStudentEnrollment> query)
+    public IQueryable<T> Apply(IQueryable<T> query)
     {
         if (Properties.FullName != null)
         {
