@@ -34,6 +34,9 @@ public class StudentGroupsService :
     /// <inheritdoc />
     protected override IQueryable<StudentGroup> GetPageQuery(int id1)
     {
-        return AssigningEntities.AsNoTracking().Where(sg => sg.GroupId == id1);
+        return AssigningEntities
+            .Include(sg => sg.Student)
+            .AsNoTracking()
+            .Where(sg => sg.GroupId == id1);
     }
 }

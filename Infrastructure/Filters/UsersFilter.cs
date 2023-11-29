@@ -11,7 +11,7 @@ public class UsersFilter : IFilter<ApplicationUser>
 {
     public UsersFilterProperties Properties { get; }
 
-    private Expression<Func<ApplicationUser, string>> FullNameKeySelector =
+    private readonly Expression<Func<ApplicationUser, string>> FullNameKeySelector =
         u => u.FirstName + ' ' + (u.MiddleName != null ? u.MiddleName + ' ' : "") + u.LastName;
 
     /// <summary>

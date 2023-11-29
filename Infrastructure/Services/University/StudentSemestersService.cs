@@ -30,6 +30,9 @@ public class StudentSemestersService :
     /// <inheritdoc />
     protected override IQueryable<StudentSemester> GetPageQuery(int id1)
     {
-        return AssigningEntities.AsNoTracking().Where(sm => sm.SemesterId == id1);
+        return AssigningEntities
+            .Include(sm => sm.Student)
+            .AsNoTracking()
+            .Where(sm => sm.SemesterId == id1);
     }
 }
