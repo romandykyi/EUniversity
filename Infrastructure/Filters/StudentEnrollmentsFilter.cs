@@ -1,5 +1,6 @@
 ﻿using EUniversity.Core.Filters;
 using EUniversity.Core.Models;
+using System.Linq.Expressions;
 
 namespace EUniversity.Infrastructure.Filters;
 
@@ -8,6 +9,9 @@ namespace EUniversity.Infrastructure.Filters;
 /// </summary>
 public class StudentEnrollmentsFilter : IFilter<IStudentEnrollment>
 {
+    private readonly Expression<Func<IStudentEnrollment, string>> FullNameKeySelector =
+        e => e.Student!.FirstName + ' ' + (e.Student.MiddleName != null ? e.Student.MiddleName + ' ' : "") + e.Student.LastName;
+
     public StudentEnrollmentsFilterProperties Properties { get; set; }
 
     /// <summary>
@@ -21,6 +25,30 @@ public class StudentEnrollmentsFilter : IFilter<IStudentEnrollment>
 
     public IQueryable<IStudentEnrollment> Apply(IQueryable<IStudentEnrollment> query)
     {
-        throw new NotImplementedException();
+        if (Properties.FullName != null)
+        {
+            query = query.Where(
+                e => (e.Student!.FirstName + ' ' +
+                (e.Student.MiddleName != null ? e.Student!.MiddleName + ' ' : "") + e.Student.LastName)
+                .Contains(Properties.FullName)
+                );
+        }
+        switch (Properties.SortingMode)
+        {
+            case StudentEnrollmentsSortingMode.FullName:
+                query = query.OrderBy(FullNameKeySelector);
+                break;
+            case StudentEnrollmentsSortingMode.FullNameDescending:
+                query = query.OrderByDescending(FullNameKeySelector);
+                break;
+            case StudentEnrollmentsSortingMode.Newest:
+                query = query.OrderByDescending(e => e.EnrollmentDate);
+                break;
+            case StudentEnrollmentsSortingMode.Oldest:
+                query = query.OrderBy(e => e.EnrollmentDate);
+                break;
+        }
+
+        return query;
     }
 }
