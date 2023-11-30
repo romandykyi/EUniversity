@@ -2,7 +2,7 @@ import React from 'react';
 import { useState } from 'react';
 import { useAppSelector } from '../../store/store';
 import Button from '../UI/Button';
-import DeleteModal from '../UI/DeleteModal';
+import DeleteModal from '../DeleteModal';
 import PageForm from '../PageForm';
 
 const AdminCourse = () => {

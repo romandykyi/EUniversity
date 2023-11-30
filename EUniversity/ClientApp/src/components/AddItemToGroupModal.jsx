@@ -1,5 +1,5 @@
 import React from 'react';
-import Button from './Button';
+import Button from './UI/Button';
 import { useState } from 'react';
 
 const AddItemToGroupModal = ({
@@ -7,7 +7,8 @@ const AddItemToGroupModal = ({
     setIsVisible,
     title,
     groupId,
-    fetchItems
+    fetchItems,
+    fetchTitle
 }) => {
 
     const [inputValue, setInputValue] = useState("");
@@ -55,7 +56,7 @@ const AddItemToGroupModal = ({
 
         for (let student of postStudents) {
             try {
-                const response = await fetch(`/api/groups/${groupId}/students`, {
+                const response = await fetch(`/api/${fetchTitle}/${groupId}/students`, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
@@ -80,6 +81,7 @@ const AddItemToGroupModal = ({
 
     const addUserToChosen = (user) => {
         if (!chosenUsers.includes(user)) {
+            setInputValue("");
             setChosenUsers([...chosenUsers, user]);
         }
     };
@@ -90,13 +92,16 @@ const AddItemToGroupModal = ({
 
     const handleClickOnBg = () => {
         setIsVisible(false);
+        setFoundUsers([]);
+        setInputValue("");
+        setChosenUsers([]);
         document.body.style.overflow = 'auto';
     };
 
     return (
         <div 
             onClick={handleClickOnBg}
-            className={`${isVisible ? "absolute" : "hidden"} top-0 bottom-0 left-0 right-0 bg-black bg-opacity-50 z-30 flex items-center justify-center px-4`}
+            className={`${isVisible ? "fixed" : "hidden"} top-0 bottom-0 left-0 right-0 bg-black bg-opacity-50 z-30 flex items-center justify-center px-4`}
         >
             <div 
                 className=" container max-w-[500px] pt-10 bg-white p-10 rounded-lg" 

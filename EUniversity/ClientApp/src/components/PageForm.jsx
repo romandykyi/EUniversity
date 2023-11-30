@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useAppSelector } from '../store/store';
-import AddItemModal from './UI/AddItemModal';
+import AddItemModal from './AddItemModal';
 import PageOfItems from './PageOfItems';
 import Button from './UI/Button';
 import Search from './Search';
 import SortSelect from './UI/SortSelect';
-import AddSingleItemModal from './UI/AddSingleItemModal';
 
 const PageForm = ({
     usersType,
@@ -60,6 +59,7 @@ const PageForm = ({
                   
                   if (response.ok) {
                       const data = await response.json();
+                      console.log(data);
                       setItems(data.items);
                       setItemsPerPage(data.pageSize);
                       setTotalItems(data.totalItemsCount);
@@ -99,7 +99,7 @@ const PageForm = ({
             <AddItemModal
               isVisible={isModalVisible}
               setIsVisible={setIsModalVisible}
-              title={registerTitle}
+              title={registerTitle === "users" ? registerTitle : registerTitle.slice(0, -1)}
               responseTitle={registerTitle}
               fetchItems={fetchItems}
             />
@@ -130,7 +130,7 @@ const PageForm = ({
                       <Button onClick={() => {
                         setIsModalVisible(true);
                         document.body.style.overflow = 'hidden';
-                      }}>Register new {registerTitle}</Button>
+                      }}>Register new {registerTitle === "users" ? registerTitle : registerTitle.slice(0, -1)}</Button>
                     )}
                 </>
                 }

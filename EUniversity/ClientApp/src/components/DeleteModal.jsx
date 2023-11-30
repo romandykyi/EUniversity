@@ -1,5 +1,5 @@
 import React from 'react';
-import Button from './Button';
+import Button from './UI/Button';
 
 const DeleteModal = ({ 
     isVisible, 
@@ -17,7 +17,7 @@ const DeleteModal = ({
     return (
         <div 
         onClick={handleClickOnBg}
-        className={`${isVisible ? "absolute" : "hidden"} top-0 bottom-0 left-0 right-0 bg-black bg-opacity-50 z-30 flex items-center justify-center px-4`}
+        className={`${isVisible ? "fixed" : "hidden"} top-0 bottom-0 left-0 right-0 bg-black bg-opacity-50 z-30 flex items-center justify-center px-4`}
         >
             <div 
                 className=" container max-w-[500px] bg-white p-4 rounded-lg flex items-center justify-center flex-col text-center" 

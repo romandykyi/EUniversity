@@ -9,6 +9,8 @@ import AdminCourses from "./components/Pages/AdminCourses";
 import AdminClassrooms from './components/Pages/AdminClassrooms';
 import AdminClassroom from './components/Pages/AdminClassroom';
 import ProfilePage from './components/Pages/ProfilePage';
+import AdminSemesters from './components/Pages/AdminSemesters';
+import AdminSemester from "./components/Pages/AdminSemester";
 
 const AppRoutes = [
   {
@@ -53,6 +55,16 @@ const AppRoutes = [
     path: '/classrooms/:id',
     requireAuth: true,
     element: <AdminClassroom/>,
+  },
+  {
+    path: '/semesters',
+    requireAuth: true,
+    element: <AdminSemesters/>,
+  },
+  {
+    path: '/semesters/:id',
+    requireAuth: true,
+    element: <AdminSemester/>,
   },
   {
     path: '/profile',

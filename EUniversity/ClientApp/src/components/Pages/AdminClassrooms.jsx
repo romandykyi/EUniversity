@@ -1,7 +1,7 @@
 import React from 'react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import DeleteModal from '../UI/DeleteModal';
+import DeleteModal from '../DeleteModal';
 import { useAppSelector } from '../../store/store';
 import Button from '../UI/Button';
 import PageForm from '../PageForm';

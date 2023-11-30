@@ -31,6 +31,10 @@ const NavMenu = () => {
             to: "/classrooms",
             title: "Classrooms"
         },
+        {
+            to: "/semesters",
+            title: "Semesters"
+        },
     ];
 
     const adminNavList = [
@@ -53,6 +57,10 @@ const NavMenu = () => {
         {
             to: "/classrooms",
             title: "Classrooms"
+        },
+        {
+            to: "/semesters",
+            title: "Semesters"
         },
     ];
 

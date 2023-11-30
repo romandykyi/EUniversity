@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import Table from "./Table/Table";
-import Button from "./Button";
-import SearchSelect from "./SearchSelect"
+import Table from "./UI/Table/Table";
+import Button from "./UI/Button";
+import SearchSelect from "./UI/SearchSelect"
 
 const AddClassroomModal = ({
     isVisible,
@@ -18,7 +18,7 @@ const AddClassroomModal = ({
     const [tableBody, setTableBody] = useState();
 
     useEffect(() => {
-        switch(title) {
+        switch(responseTitle) {
             case "users":
                 setTableHead((
                         <tr>
@@ -98,7 +98,6 @@ const AddClassroomModal = ({
                             <th>Name</th>
                             <th>Teacher</th>
                             <th>Course</th>
-                            <th>Delete</th>
                         </tr>
                     ));
                     setTableBody(items.map((row) => (
@@ -128,11 +127,48 @@ const AddClassroomModal = ({
                                     title="courses"
                                 />
                             </td>
+                        </tr>
+                    )));
+                setItemParams({
+                    name: '',
+                    course: 0,
+                    teacher: ''
+                });
+                break;
+            case "semesters":
+                setTableHead((
+                        <tr>
+                            <th>Name</th>
+                            <th>From</th>
+                            <th>To</th>
+                        </tr>
+                    ));
+                    setTableBody(items.map((row) => (
+                        <tr key={row.id}>
                             <td>
-                                <Button onClick = {e => {
-                                    e.preventDefault();
-                                    deleteItem(row.id);
-                                }}>Delete</Button>
+                                <input
+                                    type="text"
+                                    placeholder="search"
+                                    value={row.name}
+                                    onChange={(e) => handleInputChange(row.id, 'name', e.target.value)}
+                                />
+    
+                            </td>
+                            <td>
+                                <input
+                                    type="date"
+                                    placeholder="from"
+                                    value={row.dateFrom}
+                                    onChange={(e) => handleInputChange(row.id, 'dateFrom', e.target.value)}
+                                />
+                            </td>
+                            <td>
+                            <input
+                                    type="date"
+                                    placeholder="to"
+                                    value={row.dateTo}
+                                    onChange={(e) => handleInputChange(row.id, 'dateTo', e.target.value)}
+                                />
                             </td>
                         </tr>
                     )));
@@ -142,11 +178,11 @@ const AddClassroomModal = ({
                     teacher: ''
                 });
                 break;
+            
             default:
                 setTableHead((
                         <tr>
                             <th>Name</th>
-                            <th>Delete</th>
                         </tr>
                     ));
                     setTableBody(items.map((row) => (
@@ -160,12 +196,6 @@ const AddClassroomModal = ({
                                     />
     
                             </td>
-                            <td>
-                               <Button onClick = {e => {
-                                   e.preventDefault();
-                                   deleteItem(row.id);
-                               }}>Delete</Button>
-                            </td>
                         </tr>
                     )));
                 setItemParams({
@@ -174,6 +204,29 @@ const AddClassroomModal = ({
                 break;
         }
     }, [items]);
+
+    const getCurrentDateTime = () => {
+        const currentDate = new Date();
+      
+        const year = currentDate.getFullYear();
+        const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+        const day = String(currentDate.getDate()).padStart(2, '0');
+      
+        const hours = String(currentDate.getHours()).padStart(2, '0');
+        const minutes = String(currentDate.getMinutes()).padStart(2, '0');
+        const seconds = String(currentDate.getSeconds()).padStart(2, '0');
+      
+        const milliseconds = String(currentDate.getMilliseconds()).padStart(7, '0');
+      
+        const timezoneOffset = -currentDate.getTimezoneOffset();
+        const timezoneOffsetHours = Math.floor(Math.abs(timezoneOffset) / 60).toString().padStart(2, '0');
+        const timezoneOffsetMinutes = (Math.abs(timezoneOffset) % 60).toString().padStart(2, '0');
+        const timezoneOffsetSign = timezoneOffset >= 0 ? '+' : '-';
+      
+        const formattedDate = `${year}-${month}-${day}T${hours}:${minutes}:${seconds}.${milliseconds}${timezoneOffsetSign}${timezoneOffsetHours}:${timezoneOffsetMinutes}`;
+      
+        return formattedDate;
+      }
 
     const getResponseForUsers = async(usersType, usersList) => {
         try {
@@ -210,7 +263,7 @@ const AddClassroomModal = ({
         e.preventDefault();
         let postItems = [];
 
-        if (title === "users") {
+        if (responseTitle === "users") {
             const students = [...items.filter(user => user.role === "student"), ...items.filter(user => !user.role)];
             const teachers = items.filter(user => user.role === "teacher");
 
@@ -235,11 +288,21 @@ const AddClassroomModal = ({
             setItems([]);
             await fetchItems();
         } 
-        else if (title === "groups") {
+        else if (responseTitle === "groups") {
             postItems = items.map(item => ({
                 name: item.name,
                 courseId: item.course,
                 teacherId: item.teacher
+            }));
+        }
+        else if (responseTitle === "semesters") {
+            postItems = items.map(item => ({
+                name: item.name,
+                creationDate: getCurrentDateTime(),
+                updateDate: getCurrentDateTime(),
+                dateFrom: item.dateFrom,
+                dateTo: item.dateTo,
+                
             }));
         }
         else {
@@ -248,7 +311,7 @@ const AddClassroomModal = ({
             }));
         }
 
-        if (title !== "users") {
+        if (responseTitle !== "users") {
             for (let postItem of postItems) {
                 try {
                     const response = await fetch(`/api/${responseTitle}`, {
@@ -310,11 +373,11 @@ const AddClassroomModal = ({
                 className=" container max-w-[1100px] pt-10 bg-white p-10 rounded-lg z-50" 
                 onClick={(e) => e.stopPropagation()}
             >
-               <div className="flex justify-between items-center h-min mb-20">
-                    <h1 className="newUser__title form__title m-0">
-                        Register new {title}
-                    </h1>
-                    <Button onClick={() => setIsVisible(false)} addStyles="bg-danger inline-block h-min">Close</Button>
+               <div className="flex justify-between items-center mb-20"> 
+               <h1 className="newUser__title form__title m-0">
+                    Register new {title}
+                </h1>
+                <Button addStyles="bg-danger" onClick={() => setIsVisible(false)}>Close</Button>
                </div>
                 <form onSubmit={handleSubmit} className="newUser form__form">
                         <Table
@@ -324,6 +387,7 @@ const AddClassroomModal = ({
                             itemParams={itemParams}
                             tableHead={tableHead}
                             tableBody={tableBody}
+                            isAddMoreDisable={responseTitle === "users" ? true : false}
                         />
                         <div className="newUser__error form__error">
                             {

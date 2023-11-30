@@ -6,15 +6,15 @@ import { useAppSelector } from '../../store/store';
 import DeleteModal from '../DeleteModal';
 import PageForm from '../PageForm';
 
-const AdminGroup = () => {
+const AdminSemesters = () => {
 
-    const [groups, setGroups] = useState([]);
+    const [semesters, setSemesters] = useState([]);
     const [pageSize, setPageSize] = useState(10);
     const [page, setPage] = useState(1);
     const [isDeleteVisible, setIsDeleteVisible] = useState(false);
     const [inputValue, setInputValue] = useState("");
     const [sortingMethod, setSortingMethod] = useState(0);
-    const [deletedGroup, setDeletedGroup] = useState({
+    const [deletedSemester, setDeletedSemester] = useState({
         id: '',
         name: ''
     });
@@ -24,9 +24,9 @@ const AdminGroup = () => {
     
 
 
-    const deleteGroup = async(groupId) => {
+    const deleteSemester = async(semesterId) => {
         try {
-            const response = await fetch(`/api/groups/${groupId}`, {
+            const response = await fetch(`/api/semesters/${semesterId}`, {
                 method: "DELETE",
                 headers: {
                     "Content-Type": "application/json",
@@ -44,19 +44,19 @@ const AdminGroup = () => {
 
     return (
          <PageForm
-                setItems={setGroups}
+                setItems={setSemesters}
                 additionalComponents={
                     <DeleteModal
                         isVisible={isDeleteVisible}
                         setIsVisible={setIsDeleteVisible}
-                        itemType = "group"
-                        deleteFunction = {deleteGroup}
-                        deletedItem = {deletedGroup}
+                        itemType = "semester"
+                        deleteFunction = {deleteSemester}
+                        deletedItem = {deletedSemester}
                     />
                 }
-                registerTitle="groups"
+                registerTitle="semesters"
                 tableBody={(
-                    groups.map((item) => (
+                    semesters.map((item) => (
                         <tr 
                             onClick={() => {
                                 navigate(`${item.id}`);
@@ -64,9 +64,8 @@ const AdminGroup = () => {
                             key={item.id} className="cursor-pointer"
                         >
                             <td>{item.name}</td>
-                            <td>{item.course.name}</td>
-                            <td>{item.teacher.firstName} {item.teacher.lastName}</td>
-                            <td>{item.teacher.userName}</td>
+                           <td>{item.dateFrom}</td>
+                           <td>{item.dateTo}</td>
                             {
                             isAdmin
                                 ? <>
@@ -90,8 +89,8 @@ const AdminGroup = () => {
                                     <th><Button onClick = {e => {
                                         e.stopPropagation();
                                         setIsDeleteVisible(true);
-                                        setDeletedGroup({id: item.id, name: item.name});
-                                    }}>Delete Group</Button></th>
+                                        setDeletedSemester({id: item.id, name: item.name});
+                                    }}>Delete Semester</Button></th>
                                   </>
                                 : ""
                         }
@@ -101,9 +100,8 @@ const AdminGroup = () => {
                 tableHead={(
                     <tr>
                         <th>Name</th>
-                        <th>Course</th>
-                        <th>Teacher</th>
-                        <th>Teacher username</th>
+                        <th>From</th>
+                        <th>To</th>
                         {
                             isAdmin
                                 ? <>
@@ -114,8 +112,8 @@ const AdminGroup = () => {
                         }
                     </tr>
                 )}
-                searchLink={`/api/groups?Page=${page}&PageSize=${pageSize}&name=${inputValue}&sortingMode=${sortingMethod}`}
-                fetchLink={`/api/groups?Page=${page}&PageSize=${pageSize}&sortingMode=${sortingMethod}`}
+                searchLink={`/api/semesters?Page=${page}&PageSize=${pageSize}&name=${inputValue}&sortingMode=${sortingMethod}`}
+                fetchLink={`/api/semesters?Page=${page}&PageSize=${pageSize}&sortingMode=${sortingMethod}`}
                 currentPage={page}
                 setCurrentPage={setPage}
                 itemsPerPage={pageSize}
@@ -129,4 +127,4 @@ const AdminGroup = () => {
     );
 };
 
-export default AdminGroup;
+export default AdminSemesters;
