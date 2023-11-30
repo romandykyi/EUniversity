@@ -36,28 +36,34 @@ const AdminClassroom = () => {
             <h1 className="students__title form__title">
                 Classroom #{classroomNumber} - {name}
             </h1>
-            <div className="table-container">
-                <table className="table students__table">
-                   <thead>
-                    <tr>
-                            <th>First name</th>
-                            <th>Last name</th>
-                            <th>username</th>
-                        </tr>
-                   </thead>
-                   <tbody>
-                   {
-                        students.map((item) => (
-                            <tr key={item.id}>
-                                <td>{item.firstName}</td>
-                                <td>{item.lastName}</td>
-                                <td>{item.userName}</td>
-                            </tr>
-                        ))
-                    }
-                   </tbody>
-                </table>
-            </div>
+            {
+                students.length
+                ?   <>
+                        <div className="table-container">
+                            <table className="table students__table">
+                            <thead>
+                                <tr>
+                                        <th>First name</th>
+                                        <th>Last name</th>
+                                        <th>username</th>
+                                    </tr>
+                            </thead>
+                            <tbody>
+                            {
+                                    students.map((item) => (
+                                        <tr key={item.id}>
+                                            <td>{item.firstName}</td>
+                                            <td>{item.lastName}</td>
+                                            <td>{item.userName}</td>
+                                        </tr>
+                                    ))
+                                }
+                            </tbody>
+                            </table>
+                        </div>
+                    </>
+                : <p className="text-gray-400 text-5xl text-center mt-[200px] fw-bold">No students in this classroom</p>
+            }
         </div>
 
     );

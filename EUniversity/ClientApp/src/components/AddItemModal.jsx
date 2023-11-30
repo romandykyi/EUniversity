@@ -377,7 +377,7 @@ const AddClassroomModal = ({
                <h1 className="newUser__title form__title m-0">
                     Register new {title}
                 </h1>
-                <Button addStyles="bg-danger" onClick={() => setIsVisible(false)}>Close</Button>
+                <Button addStyles="bg-danger" onClick={handleClickOnBg}>Close</Button>
                </div>
                 <form onSubmit={handleSubmit} className="newUser form__form">
                         <Table

@@ -106,41 +106,47 @@ const AdminGroup = () => {
                     ?   <Button onClick={() => setIsAddStudentVisible(true)}>Add student to semester</Button>
                     :   ""
                 }
-                <div className="table-container mt-5">
-                    <table className="table students__table">
-                    <thead>
-                        <tr>
-                                <th>First name</th>
-                                <th>Last name</th>
-                                <th>Username</th>
+                {
+                    students.length
+                    ?   <>
+                            <div className="table-container mt-5">
+                                <table className="table students__table">
+                                <thead>
+                                    <tr>
+                                            <th>First name</th>
+                                            <th>Last name</th>
+                                            <th>Username</th>
+                                            {
+                                                isAdmin 
+                                                    ? <th>Delete</th>
+                                                    : ""
+                                            }
+                                        </tr>
+                                </thead>
+                                <tbody>
                                 {
-                                    isAdmin 
-                                        ? <th>Delete</th>
-                                        : ""
-                                }
-                            </tr>
-                    </thead>
-                    <tbody>
-                    {
-                            students.map((item) => (
-                                <tr key={item.student.id}>
-                                    <td>{item.student.firstName}</td>
-                                    <td>{item.student.lastName}</td>
-                                    <td>{item.student.userName}</td>
-                                    {
-                                    isAdmin 
-                                        ? <th><Button onClick={() => {
-                                            setIsDeleteVisible(true);
-                                            setDeletedUser({id: item.student.id, name: `${item.student.firstName} ${item.student.lastName}`});
-                                        }}>Delete student</Button></th>
-                                        : ""
+                                        students.map((item) => (
+                                            <tr key={item.student.id}>
+                                                <td>{item.student.firstName}</td>
+                                                <td>{item.student.lastName}</td>
+                                                <td>{item.student.userName}</td>
+                                                {
+                                                isAdmin 
+                                                    ? <th><Button onClick={() => {
+                                                        setIsDeleteVisible(true);
+                                                        setDeletedUser({id: item.student.id, name: `${item.student.firstName} ${item.student.lastName}`});
+                                                    }}>Delete student</Button></th>
+                                                    : ""
+                                                }
+                                            </tr>
+                                        ))
                                     }
-                                </tr>
-                            ))
-                        }
-                    </tbody>
-                    </table>
-                </div>
+                                </tbody>
+                                </table>
+                            </div>
+                        </>
+                    :   <p className="text-gray-400 text-5xl text-center mt-[200px] fw-bold">No students in this semester</p>
+                }
             </div>
         </>
     );

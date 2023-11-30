@@ -131,7 +131,7 @@ const AdminGroup = () => {
                                 </table>
                             </div>
                         </>
-                    : <p className="text-gray-400 text-5xl text-center mt-[200px] fw-bold">No student in this group</p>
+                    : <p className="text-gray-400 text-5xl text-center mt-[200px] fw-bold">No students in this group</p>
                 }
             </div>
         </>
