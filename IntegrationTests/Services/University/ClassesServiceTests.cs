@@ -3,6 +3,7 @@ using EUniversity.Core.Models;
 using EUniversity.Core.Models.University;
 using EUniversity.Core.Policy;
 using EUniversity.Core.Services.University;
+using IdentityModel;
 
 namespace EUniversity.IntegrationTests.Services.University;
 
@@ -49,7 +50,7 @@ public class ClassesServiceTests :
     protected override ClassCreateDto GetValidCreateDto()
     {
         return new(_testClassroom.Id, _testGroup.Id, _testSubstituteTeacher.Id,
-            DateTimeOffset.Now, TimeSpan.FromHours(1));
+            DateTimeOffset.Now, TimeSpan.FromHours(1), null, null);
     }
 
     /// <inheritdoc />
@@ -77,5 +78,37 @@ public class ClassesServiceTests :
         await DbContext.SaveChangesAsync();
 
         _testSubstituteTeacher = await RegisterTestUserAsync(Roles.Teacher);
+    }
+
+    [Test]
+    public virtual async Task Create_RepeatsSpecified_CreatesManyClasses()
+    {
+        // Arrange
+        const int repeats = 3;
+        const int repeatsDelayDays = 7;
+        TimeSpan duration = TimeSpan.FromHours(1);
+        DateTimeOffset startDate = DateTimeOffset.Now;
+        ClassCreateDto dto = new(_testClassroom.Id, _testGroup.Id, _testSubstituteTeacher.Id,
+            startDate, duration, repeats, repeatsDelayDays);
+
+        // Act
+        Class @class = await Service.CreateAsync(dto);
+
+        // Assert
+        // Created classes
+        var classes = DbContext.Classes
+            .Where(c => c.ClassroomId == _testClassroom.Id && 
+                c.GroupId == _testGroup.Id &&
+                c.SubstituteTeacherId == _testSubstituteTeacher.Id &&
+                c.Duration == duration)
+            .OrderBy(c => c.StartDate)
+            .ToArray();
+
+        Assert.That(classes, Has.Length.EqualTo(repeats));
+        for (int i = 1; i < classes.Length; i++) 
+        {
+            DateTimeOffset expectedDate = classes[i].StartDate.AddDays(-repeatsDelayDays * i);
+            Assert.That(expectedDate, Is.EqualTo(startDate));
+        }
     }
 }
