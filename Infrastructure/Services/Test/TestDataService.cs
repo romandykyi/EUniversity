@@ -292,4 +292,52 @@ public class TestDataService
             await CreateFakeEntitiesAsync(studentSemesterFaker, studentsCount, false);
         }
     }
+
+    /// <summary>
+    /// Creates many fake classes.
+    /// </summary>
+    /// <param name="count">Number of classes to be created.</param>
+    public async Task CreateFakeClassesAsync(int count = 200)
+    {
+        Faker faker = new();
+
+        // All possible classes durations
+        TimeSpan[] durations =
+        {
+            TimeSpan.FromMinutes(45),
+            TimeSpan.FromHours(1.0),
+            TimeSpan.FromHours(1.5),
+            TimeSpan.FromHours(2)
+        };
+        // All possible start minutes of classes(without date)
+        int[] startMinutes = { 0, 15, 30, 45 };
+
+        // IDs of teachers
+        var teachersIds = (await _userManager.GetUsersInRoleAsync(Roles.Teacher))
+            .Select(u => u.Id)
+            .ToArray();
+        // IDs of classrooms
+        var classroomsIds = _dbContext.Classrooms
+            .Select(c => c.Id)
+            .ToArray();
+        // IDs of groups
+        var groupsIds = _dbContext.Groups
+            .Select(c => c.Id)
+            .ToArray();
+
+        // Generate classes
+        var classesFaker = new Faker<Class>()
+            .RuleFor(g => g.ClassroomId, f => f.Random.CollectionItem(classroomsIds))
+            .RuleFor(g => g.GroupId, f => f.Random.CollectionItem(groupsIds))
+            // Set a substitute teacher with 5% probability
+            .RuleFor(g => g.SubstituteTeacherId,
+                f => f.Random.Bool(0.05f) ? f.Random.CollectionItem(teachersIds) : null)
+            .RuleFor(g => g.Duration, f => f.Random.CollectionItem(durations))
+            .RuleFor(g => g.StartDate, f =>
+                f.Date.SoonOffset(180) +
+                TimeSpan.FromHours(f.Random.Number(8, 18)) +
+                TimeSpan.FromMinutes(f.Random.CollectionItem(startMinutes)))
+            .RuleForDates();
+        await CreateFakeEntitiesAsync(classesFaker, count);
+    }
 }

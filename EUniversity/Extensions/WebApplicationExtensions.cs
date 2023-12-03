@@ -78,6 +78,7 @@ public static class WebApplicationExtensions
         testDataService.CreateFakeGradesAsync().Wait();
         testDataService.CreateFakeCoursesAsync().Wait();
         testDataService.CreateFakeGroupsAsync().Wait();
+        testDataService.CreateFakeClassesAsync().Wait();
 
         return app;
     }
