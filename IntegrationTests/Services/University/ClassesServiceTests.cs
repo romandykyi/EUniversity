@@ -21,7 +21,7 @@ public class ClassesServiceTests :
             Assert.That(actualEntity.ClassroomId, Is.EqualTo(updateDto.ClassroomId));
             Assert.That(actualEntity.GroupId, Is.EqualTo(updateDto.GroupId));
             Assert.That(actualEntity.SubstituteTeacherId, Is.EqualTo(updateDto.SubstituteTeacherId));
-            Assert.That(actualEntity.DurationTicks, Is.EqualTo(updateDto.DurationTicks));
+            Assert.That(actualEntity.Duration, Is.EqualTo(updateDto.Duration));
             Assert.That(actualEntity.StartDate, Is.EqualTo(updateDto.StartDate));
         });
     }
@@ -37,7 +37,7 @@ public class ClassesServiceTests :
     {
         return new()
         {
-            DurationTicks = 36_000_000_000L,
+            Duration = TimeSpan.FromHours(1),
             ClassroomId = _testClassroom.Id,
             GroupId = _testGroup.Id,
             SubstituteTeacherId = _testSubstituteTeacher.Id,
@@ -49,14 +49,14 @@ public class ClassesServiceTests :
     protected override ClassCreateDto GetValidCreateDto()
     {
         return new(_testClassroom.Id, _testGroup.Id, _testSubstituteTeacher.Id,
-            DateTimeOffset.Now, 36_000_000_000L);
+            DateTimeOffset.Now, TimeSpan.FromHours(1));
     }
 
     /// <inheritdoc />
     protected override ClassUpdateDto GetValidUpdateDto()
     {
         return new(_testClassroom.Id, _testGroup.Id, null,
-            DateTimeOffset.Now, 72_000_000_000L);
+            DateTimeOffset.Now, TimeSpan.FromHours(1));
     }
 
     [SetUp]

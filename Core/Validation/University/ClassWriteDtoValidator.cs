@@ -30,9 +30,9 @@ public abstract class ClassWriteDtoValidator<T> : AbstractValidator<T>
             .IsIdOfValidUserInRole(userManager, Roles.Teacher)
             .When(c => !string.IsNullOrWhiteSpace(c.SubstituteTeacherId));
 
-        RuleFor(c => c.DurationTicks)
-            .GreaterThan(0)
+        RuleFor(c => c.Duration)
+            .GreaterThan(TimeSpan.Zero)
             .WithErrorCode(ValidationErrorCodes.InvalidRange)
-            .WithMessage("DurationTicks must be a positive number");
+            .WithMessage("Duration cannot be negative or zero");
     }
 }

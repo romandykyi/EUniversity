@@ -14,11 +14,10 @@ public abstract class ClassWriteDtoValidatorTests<TDto> : UsersValidatorTests
 
     protected const int TestIntId = 5;
     protected const int NonExistentIntId = 4;
-    protected const long DefaultDurationTicks = 36_000_000_000L;
 
     protected abstract TDto CreateDto(int classroomId = TestIntId, int groupId = TestIntId,
         string? substituteSubstituteTeacherId = TestTeacherId, DateTimeOffset? startDate = null, 
-        long durationTicks = DefaultDurationTicks);
+        TimeSpan? duration = null);
 
     protected abstract ClassWriteDtoValidator<TDto> CreateValidator(IEntityExistenceChecker existenceChecker);
 
@@ -130,16 +129,16 @@ public abstract class ClassWriteDtoValidatorTests<TDto> : UsersValidatorTests
     }
 
     [Test]
-    public async Task DurationTicks_Negative_FailsWithInvalidRangeError()
+    public async Task Duration_Negative_FailsWithInvalidRangeError()
     {
         // Arrange
-        TDto dto = CreateDto(durationTicks: -1L);
+        TDto dto = CreateDto(duration: TimeSpan.FromHours(-1));
 
         // Act
         var result = await Validator.TestValidateAsync(dto);
 
         // Assert
-        result.ShouldHaveValidationErrorFor(dto => dto.DurationTicks)
+        result.ShouldHaveValidationErrorFor(dto => dto.Duration)
             .WithErrorCode(ValidationErrorCodes.InvalidRange);
     }
 }

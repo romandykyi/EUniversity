@@ -33,17 +33,9 @@ public class Class : IEntity<int>, IHasCreationDate, IHasUpdateDate
     public DateTimeOffset StartDate { get; set; }
 
     /// <summary>
-    /// Duration of this class in ticks.
-    /// </summary>
-    public long DurationTicks { get; set; }
-    /// <summary>
     /// Duration of this class.
     /// </summary>
-    public TimeSpan Duration
-    {
-        get => new(DurationTicks);
-        set => DurationTicks = value.Ticks;
-    }
+    public TimeSpan Duration { get; set; }
 
     /// <summary>
     /// Date when the class was created.

@@ -9,9 +9,9 @@ public class ClassCreateDtoValidatorTests : ClassWriteDtoValidatorTests<ClassCre
     protected override ClassCreateDto CreateDto(
         int classroomId = TestIntId, int groupId = TestIntId, 
         string? substituteSubstituteTeacherId = TestTeacherId, 
-        DateTimeOffset? startDate = null, long durationTicks = DefaultDurationTicks)
+        DateTimeOffset? startDate = null, TimeSpan? duration = null)
     {
-        return new(classroomId, groupId, substituteSubstituteTeacherId, startDate ?? DateTimeOffset.Now, durationTicks);
+        return new(classroomId, groupId, substituteSubstituteTeacherId, startDate ?? DateTimeOffset.Now, duration ?? TimeSpan.FromHours(1));
     }
 
     protected override ClassWriteDtoValidator<ClassCreateDto> CreateValidator(IEntityExistenceChecker existenceChecker)

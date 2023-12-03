@@ -8,5 +8,5 @@ public interface IClassWriteDto
 
     public DateTimeOffset StartDate { get; }
 
-    public long DurationTicks { get; }
+    public TimeSpan Duration { get; }
 }
