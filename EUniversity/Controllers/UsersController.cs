@@ -141,7 +141,12 @@ public class UsersController : ControllerBase
     /// <summary>
     /// Registers students.
     /// </summary>
-    /// <response code="201">Returns status of students</response>
+    /// <response code="201">
+    /// Student accounts were attempted to be registered. 
+    /// Successfully registered students have the 'success' property is set to 
+    /// true and their credentials are returned. If a student could not be registered,
+    /// then the 'success' property is set to false and an array of error messages is returned.
+    /// </response>
     /// <response code="400">Invalid input</response>
     /// <response code="401">Unauthorized user call</response>
     /// <response code="403">User lacks 'Administrator' role</response>
@@ -159,7 +164,12 @@ public class UsersController : ControllerBase
     /// <summary>
     /// Registers teachers.
     /// </summary>
-    /// <response code="201">Returns status of teachers</response>
+    /// <response code="201">
+    /// Teacher accounts were attempted to be registered. 
+    /// Successfully registered teachers have the 'success' property is set to 
+    /// true and their credentials are returned. If a teacher could not be registered,
+    /// then the 'success' property is set to false and an array of error messages is returned.
+    /// </response>
     /// <response code="400">Invalid input</response>
     /// <response code="401">Unauthorized user call</response>
     /// <response code="403">User lacks 'Administrator' role</response>
