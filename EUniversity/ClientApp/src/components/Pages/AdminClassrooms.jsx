@@ -5,6 +5,7 @@ import DeleteModal from '../DeleteModal';
 import { useAppSelector } from '../../store/store';
 import Button from '../UI/Button';
 import PageForm from '../PageForm';
+import EditFormModal from '../EditFormModal';
 
 const AdminClassrooms = () => {
 
@@ -14,6 +15,8 @@ const AdminClassrooms = () => {
     const [isDeleteVisible, setIsDeleteVisible] = useState(false);
     const [inputValue, setInputValue] = useState("");
     const [sortingMethod, setSortingMethod] = useState(0);
+    const [isEditable, setIsEditable] = useState(false);
+    const [editableItem, setEditableItem] = useState(null);
     const [deletedClassroom, setDeletedClassroom] = useState({
         id: '',
         name: ''
@@ -47,13 +50,26 @@ const AdminClassrooms = () => {
             <PageForm
                 setItems={setClassrooms}
                 additionalComponents={
-                    <DeleteModal
-                        isVisible={isDeleteVisible}
-                        setIsVisible={setIsDeleteVisible}
-                        itemType = "classroom"
-                        deleteFunction = {deleteClassroom}
-                        deletedItem = {deletedClassroom}
-                    />
+                    <>
+                        <DeleteModal
+                            isVisible={isDeleteVisible}
+                            setIsVisible={setIsDeleteVisible}
+                            itemType = "classroom"
+                            deleteFunction = {deleteClassroom}
+                            deletedItem = {deletedClassroom}
+                        />
+                       {
+                        editableItem
+                        ?    <EditFormModal
+                                item={editableItem}
+                                isEditable={isEditable}
+                                setIsEditable={setIsEditable}
+                                itemType="classroom"
+                                responseTitle="classrooms"
+                            />
+                        : ""
+                       }
+                    </>
                 }
                 registerTitle="classrooms"
                 tableBody={(
@@ -67,12 +83,27 @@ const AdminClassrooms = () => {
                         <td>{item.name}</td>
                         {
                             isAdmin 
-                                ? <th><Button onClick = {e => {
-                                    e.stopPropagation();
-                                    setIsDeleteVisible(true);
-                                    setDeletedClassroom({id: item.id, name: item.name});
-                                }}>Delete Classroom</Button></th>
-                                : ""
+                                ?   <>
+                                        <td>
+                                            <Button onClick = {e => 
+                                                {
+                                                    e.stopPropagation();
+                                                    setIsDeleteVisible(true);
+                                                    setDeletedClassroom({id: item.id, name: item.name});
+                                                }}
+                                            >Delete Classroom</Button>
+                                        </td>
+                                        <td>
+                                            <Button onClick = {e => 
+                                                {
+                                                    e.stopPropagation();
+                                                    setIsEditable(true);
+                                                    setEditableItem(item);
+                                                }}
+                                            >Edit Classroom</Button>
+                                        </td>
+                                    </>
+                                :   ""
                         }
                         </tr>
                     ))
@@ -82,9 +113,13 @@ const AdminClassrooms = () => {
                     <th>Name</th>
                     {
                         isAdmin 
-                        ? <th>Delete</th>
-                        : ""
+                        ?   <>
+                                <th>Delete</th>
+                                <th>Edit</th>
+                            </>
+                        :   ""
                     }
+                    
                 </tr>
                 )}
                 searchLink={`/api/classrooms?Page=${page}&PageSize=${pageSize}&name=${inputValue}&sortingMode=${sortingMethod}`}
@@ -98,6 +133,7 @@ const AdminClassrooms = () => {
                 isDeleteVisible={isDeleteVisible}
                 setSortingMethod={setSortingMethod}
                 sortingMethod={sortingMethod}
+                isEditVisible={isEditable}
             /> 
     );
 };

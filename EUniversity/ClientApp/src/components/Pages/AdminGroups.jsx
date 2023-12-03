@@ -5,6 +5,7 @@ import Button from '../UI/Button';
 import { useAppSelector } from '../../store/store';
 import DeleteModal from '../DeleteModal';
 import PageForm from '../PageForm';
+import EditFormModal from '../EditFormModal';
 
 const AdminGroup = () => {
 
@@ -14,15 +15,14 @@ const AdminGroup = () => {
     const [isDeleteVisible, setIsDeleteVisible] = useState(false);
     const [inputValue, setInputValue] = useState("");
     const [sortingMethod, setSortingMethod] = useState(0);
+    const [isEditable, setIsEditable] = useState(false);
+    const [editedItem, setEditedItem] = useState(null);
     const [deletedGroup, setDeletedGroup] = useState({
         id: '',
         name: ''
     });
     const navigate = useNavigate();
     const isAdmin = useAppSelector(state => state.isAdmin.isAdmin);
-
-    
-
 
     const deleteGroup = async(groupId) => {
         try {
@@ -46,13 +46,25 @@ const AdminGroup = () => {
          <PageForm
                 setItems={setGroups}
                 additionalComponents={
-                    <DeleteModal
-                        isVisible={isDeleteVisible}
-                        setIsVisible={setIsDeleteVisible}
-                        itemType = "group"
-                        deleteFunction = {deleteGroup}
-                        deletedItem = {deletedGroup}
-                    />
+                    <>
+                        <DeleteModal
+                            isVisible={isDeleteVisible}
+                            setIsVisible={setIsDeleteVisible}
+                            itemType = "group"
+                            deleteFunction = {deleteGroup}
+                            deletedItem = {deletedGroup}    
+                        />
+                        {
+                            editedItem
+                            ?    <EditFormModal
+                                    item={editedItem}
+                                    isEditable={isEditable}
+                                    setIsEditable={setIsEditable}
+                                    responseTitle="groups"
+                                />
+                            : ""
+                        }
+                    </>
                 }
                 registerTitle="groups"
                 tableBody={(
@@ -70,28 +82,22 @@ const AdminGroup = () => {
                             {
                             isAdmin
                                 ? <>
-                                    {/* {
-                                        isEditable
-                                        ? <th className="flex gap-2 items-center">
-                                            <Button onClick = {e => {
-                                                e.stopPropagation();
-                                                setIsEditable(false);
-                                            }}>Save</Button>
-                                            <Button onClick = {e => {
-                                                e.stopPropagation();                //add when it will be search teachers by id method
-                                                setIsEditable(false);
-                                            }}>Cancel</Button>
-                                          </th>
-                                        : <th><Button onClick = {e => {
+                                    <td><Button onClick = {e => 
+                                        {
                                             e.stopPropagation();
-                                            setIsEditable(true);
-                                        }}>Edit</Button></th>
-                                    } */}
-                                    <th><Button onClick = {e => {
-                                        e.stopPropagation();
-                                        setIsDeleteVisible(true);
-                                        setDeletedGroup({id: item.id, name: item.name});
-                                    }}>Delete Group</Button></th>
+                                            setIsDeleteVisible(true);
+                                            setDeletedGroup({id: item.id, name: item.name});
+                                        }}
+                                        >Delete Group</Button></td>
+                                    <td>
+                                        <Button onClick = {e => 
+                                            {
+                                                e.stopPropagation();
+                                                setIsEditable(true);
+                                                setEditedItem(item);
+                                            }}
+                                        >Edit Group</Button>
+                                    </td>
                                   </>
                                 : ""
                         }
@@ -106,10 +112,10 @@ const AdminGroup = () => {
                         <th>Teacher username</th>
                         {
                             isAdmin
-                                ? <>
-                                    {/* <th>Edit</th> */}
-                                    <th>Delete</th>
-                                </>
+                                ?   <>
+                                        <th>Delete</th>
+                                        <th>Edit</th>
+                                    </>
                                 : ""
                         }
                     </tr>
@@ -125,6 +131,7 @@ const AdminGroup = () => {
                 isDeleteVisible={isDeleteVisible}
                 setSortingMethod={setSortingMethod}
                 sortingMethod={sortingMethod}
+                isEditVisible={isEditable}
             />      
     );
 };

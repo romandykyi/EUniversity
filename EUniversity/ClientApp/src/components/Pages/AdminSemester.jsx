@@ -26,26 +26,24 @@ const AdminGroup = () => {
         fetchGroup();
     }, []);
 
-    const formatDate = (inputDate) => {
-        const dateObject = new Date(inputDate);
-      
-        const day = String(dateObject.getDate()).padStart(2, '0');
-        const month = String(dateObject.getMonth() + 1).padStart(2, '0');
-        const year = dateObject.getFullYear();
-      
+    const convertTimeFormat = inputTime => {
+        const date = new Date(inputTime);
+        const day = date.getDate().toString().padStart(2, '0');
+        const month = (date.getMonth() + 1).toString().padStart(2, '0');
+        const year = date.getFullYear();
+
         return `${day}.${month}.${year}`;
-      }
+    };
 
     const fetchGroup = async(page = 1, pageSize = 10) => {
         try {
             const response = await fetch(`/api/semesters/${semesterNumber}`);
             if (response.ok) {
                 const data = await response.json();
-                console.log(data.studentEnrollments);
                 setStudents(data.studentEnrollments);
                 setDate({
-                    from: formatDate(data.dateFrom),
-                    to: formatDate(data.dateTo)
+                    from: convertTimeFormat(data.dateFrom),
+                    to: convertTimeFormat(data.dateTo)
                 });
                 setIsLoading(false);
 

@@ -1,29 +1,46 @@
-import { React, useState } from 'react';
+import { React, useEffect, useState } from 'react';
 
 const SearchSelect = ({
     handleInputChange,
     itemId,
     link,
-    title
+    title,
+    givenValue
 }) => {
 
     const [isResponsePossible, setIsResponsePossible] = useState(true);
     const [timeoutId, setTimeoutId] = useState(null);
-    const [inputValue, setInputValue] = useState("");
+    const [inputValue, setInputValue] = useState('');
     const [foundItems, setFoundItems] = useState([]);
     const [chosenItem, setChosenItem] = useState({});
     const [isUser, setIsUser] = useState(false);
+    const [inputChangeCount, setInputChangeCount] = useState(0);
+
+    useEffect(() => {
+        setInputChangeCount(0);
+    }, [])
+    
+    useEffect(() => {
+        if (!inputChangeCount) setInputValue(givenValue);
+        setFoundItems([]);
+    }, [givenValue]);
+
+    useEffect(() => {
+        setInputValue(givenValue);
+    }, [itemId]);
     
 
     const setItemLikeChosen = (item) => {
         setChosenItem(item);
         const id = item.id;
         if (item.firstName) {
+            setInputChangeCount(inputChangeCount + 1);
             setInputValue(`${item.firstName} ${item.lastName}`);
             setFoundItems([]);
             handleInputChange(itemId, 'teacher', id);
         }
         else if (item.name) {
+            setInputChangeCount(inputChangeCount + 1);
             setInputValue(`${item.name}`);
             setFoundItems([]);
             handleInputChange(itemId, 'course', id);
@@ -77,7 +94,7 @@ const SearchSelect = ({
                 inputValue === (isUser ? `${chosenItem.firstName} ${chosenItem.lastName}` : `${chosenItem.name}`)
                 ?   ""
                 :   <div className="flex flex-col gap-1 z-40 max-h-24 bottom-6 overflow-y-auto scrollbar-hide relative bg-white rounded-lg text-white shadow-lg p-2">
-                        {inputValue.length
+                        {inputValue
                             ? (
                                 foundItems.map((item, index) => (
                                     <button 
@@ -94,7 +111,7 @@ const SearchSelect = ({
                                 ))
                             ) 
                             : (
-                                <p className="text-gray-500 text-xl font-medium">no users found</p>
+                                <p className="text-gray-500 text-xl font-medium">no items found</p>
                             )
                         }
                     </div>   

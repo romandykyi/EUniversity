@@ -5,6 +5,7 @@ import Button from '../UI/Button';
 import { useAppSelector } from '../../store/store';
 import DeleteModal from '../DeleteModal';
 import PageForm from '../PageForm';
+import EditFormModal from '../EditFormModal';
 
 const AdminSemesters = () => {
 
@@ -14,6 +15,8 @@ const AdminSemesters = () => {
     const [isDeleteVisible, setIsDeleteVisible] = useState(false);
     const [inputValue, setInputValue] = useState("");
     const [sortingMethod, setSortingMethod] = useState(0);
+    const [isEditable, setIsEditable] = useState(false);
+    const [editedItem, setEditedItem] = useState(null);
     const [deletedSemester, setDeletedSemester] = useState({
         id: '',
         name: ''
@@ -42,17 +45,37 @@ const AdminSemesters = () => {
         }
     };
 
+    const convertTimeFormat = inputTime => {
+        const date = new Date(inputTime);
+        const day = date.getDate().toString().padStart(2, '0');
+        const month = (date.getMonth() + 1).toString().padStart(2, '0');
+        const year = date.getFullYear();
+        return `${day}.${month}.${year}`;
+    };
+
     return (
          <PageForm
                 setItems={setSemesters}
                 additionalComponents={
-                    <DeleteModal
-                        isVisible={isDeleteVisible}
-                        setIsVisible={setIsDeleteVisible}
-                        itemType = "semester"
-                        deleteFunction = {deleteSemester}
-                        deletedItem = {deletedSemester}
-                    />
+                    <>
+                        <DeleteModal
+                            isVisible={isDeleteVisible}
+                            setIsVisible={setIsDeleteVisible}
+                            itemType = "semester"
+                            deleteFunction = {deleteSemester}
+                            deletedItem = {deletedSemester}
+                        />
+                        {
+                            editedItem
+                            ?    <EditFormModal
+                                    item={editedItem}
+                                    isEditable={isEditable}
+                                    setIsEditable={setIsEditable}
+                                    responseTitle="semesters"
+                                />
+                            : ""
+                        }
+                    </>
                 }
                 registerTitle="semesters"
                 tableBody={(
@@ -64,34 +87,31 @@ const AdminSemesters = () => {
                             key={item.id} className="cursor-pointer"
                         >
                             <td>{item.name}</td>
-                           <td>{item.dateFrom}</td>
-                           <td>{item.dateTo}</td>
+                           <td>{convertTimeFormat(item.dateFrom)}</td>
+                           <td>{convertTimeFormat(item.dateTo)}</td>
                             {
                             isAdmin
                                 ? <>
-                                    {/* {
-                                        isEditable
-                                        ? <th className="flex gap-2 items-center">
-                                            <Button onClick = {e => {
+                                    <td>
+                                        <Button onClick = {e => 
+                                            {
                                                 e.stopPropagation();
-                                                setIsEditable(false);
-                                            }}>Save</Button>
-                                            <Button onClick = {e => {
-                                                e.stopPropagation();                //add when it will be search teachers by id method
-                                                setIsEditable(false);
-                                            }}>Cancel</Button>
-                                          </th>
-                                        : <th><Button onClick = {e => {
-                                            e.stopPropagation();
-                                            setIsEditable(true);
-                                        }}>Edit</Button></th>
-                                    } */}
-                                    <th><Button onClick = {e => {
-                                        e.stopPropagation();
-                                        setIsDeleteVisible(true);
-                                        setDeletedSemester({id: item.id, name: item.name});
-                                    }}>Delete Semester</Button></th>
+                                                setIsDeleteVisible(true);
+                                                setDeletedSemester({id: item.id, name: item.name});
+                                            }}
+                                        >Delete Semester</Button>
+                                    </td>
+                                     <td>
+                                        <Button onClick = {e => 
+                                            {
+                                                e.stopPropagation();
+                                                setIsEditable(true);
+                                                setEditedItem(item);
+                                            }}
+                                        >Edit Semester</Button>
+                                    </td>
                                   </>
+                                  
                                 : ""
                         }
                         </tr>
@@ -123,6 +143,7 @@ const AdminSemesters = () => {
                 isDeleteVisible={isDeleteVisible}
                 setSortingMethod={setSortingMethod}
                 sortingMethod={sortingMethod}
+                isEditVisible={isEditable}
             />      
     );
 };

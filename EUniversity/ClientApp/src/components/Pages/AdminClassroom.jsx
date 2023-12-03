@@ -62,7 +62,7 @@ const AdminClassroom = () => {
                             </table>
                         </div>
                     </>
-                : <p className="text-gray-400 text-5xl text-center mt-[200px] fw-bold">No students in this classroom</p>
+                : <p className="text-gray-400 text-5xl text-center mt-[200px] fw-bold">This classroom is empty</p>
             }
         </div>
 

@@ -4,6 +4,7 @@ import { useAppSelector } from '../../store/store';
 import Button from '../UI/Button';
 import DeleteModal from '../DeleteModal';
 import PageForm from '../PageForm';
+import EditFormModal from '../EditFormModal';
 
 const AdminCourse = () => {
 
@@ -13,6 +14,8 @@ const AdminCourse = () => {
     const [pageSize, setPageSize] = useState(10);
     const [page, setPage] = useState(1);
     const [sortingMethod, setSortingMethod] = useState(0);
+    const [isEditable, setIsEditable] = useState(false);
+    const [editableItem, setEditableItem] = useState(null);
     const [deletedCourse, setDeletedCourse] = useState({
         id: '',
         name: ''
@@ -41,13 +44,26 @@ const AdminCourse = () => {
          <PageForm
                 setItems={setCourses}
                 additionalComponents={
-                    <DeleteModal
-                        isVisible={isDeleteVisible}
-                        setIsVisible={setIsDeleteVisible}
-                        itemType = "course"
-                        deleteFunction = {deleteCourse}
-                        deletedItem = {deletedCourse}
-                    />
+                   <>
+                        <DeleteModal
+                            isVisible={isDeleteVisible}
+                            setIsVisible={setIsDeleteVisible}
+                            itemType = "course"
+                            deleteFunction = {deleteCourse}
+                            deletedItem = {deletedCourse}
+                        />
+                        {
+                            editableItem
+                            ?    <EditFormModal
+                                    item={editableItem}
+                                    isEditable={isEditable}
+                                    setIsEditable={setIsEditable}
+                                    itemType="course"
+                                    responseTitle="courses"
+                                />
+                            : ""
+                        }
+                   </>
                 }
                 registerTitle="courses"
                 tableBody={(
@@ -58,10 +74,25 @@ const AdminCourse = () => {
                             <td>{item.name}</td>
                             {
                                 isAdmin 
-                                    ? <th><Button onClick = {() => {
-                                        setIsDeleteVisible(true);
-                                        setDeletedCourse({id: item.id, name: item.name});
-                                    }}>Delete Course</Button></th>
+                                    ?   <>
+                                            <td>
+                                                <Button onClick = {() => 
+                                                    {
+                                                        setIsDeleteVisible(true);
+                                                        setDeletedCourse({id: item.id, name: item.name});
+                                                    }}
+                                                >Delete Course</Button>
+                                            </td>
+                                            <td>
+                                                <Button onClick = {e => 
+                                                    {
+                                                        e.stopPropagation();
+                                                        setIsEditable(true);
+                                                        setEditableItem(item);
+                                                    }}
+                                                >Edit Course</Button>
+                                            </td>
+                                        </>
                                     : ""
                             }
 
@@ -73,7 +104,10 @@ const AdminCourse = () => {
                         <th>Name of the course</th>
                         {
                             isAdmin 
-                            ? <th>Delete</th>
+                            ?   <>
+                                    <th>Delete</th>
+                                    <th>Edit</th>
+                                </>
                             : ""
                         }
                     </tr>
@@ -89,6 +123,7 @@ const AdminCourse = () => {
                 isDeleteVisible={isDeleteVisible}
                 setSortingMethod={setSortingMethod}
                 sortingMethod={sortingMethod}
+                isEditVisible={isEditable}
             /> 
     );
 };

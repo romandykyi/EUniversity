@@ -24,7 +24,9 @@ const PageForm = ({
     setInputValue,
     isDeleteVisible,
     sortingMethod,
-    setSortingMethod
+    setSortingMethod,
+    isEditVisible
+
 }) => {
     const [timeoutId, setTimeoutId] = useState(null);
     const [isResponsePossible, setIsResponsePossible] = useState(true);
@@ -38,8 +40,10 @@ const PageForm = ({
     }, []);
 
     useEffect(() => {
-      if (!isDeleteVisible) fetchItems(currentPage, itemsPerPage);
-    }, [isDeleteVisible])
+      if (!isDeleteVisible || !isEditVisible) {
+        fetchItems(currentPage, itemsPerPage);
+      };
+    }, [isDeleteVisible, isEditVisible])
     
       useEffect(() => {
         fetchItems(currentPage, itemsPerPage);
@@ -59,7 +63,6 @@ const PageForm = ({
                   
                   if (response.ok) {
                       const data = await response.json();
-                      console.log(data);
                       setItems(data.items);
                       setItemsPerPage(data.pageSize);
                       setTotalItems(data.totalItemsCount);
@@ -103,6 +106,7 @@ const PageForm = ({
               responseTitle={registerTitle}
               fetchItems={fetchItems}
             />
+            
             {additionalComponents}
             <PageOfItems
                 title={`${inputValue ? "Found" : "All"} ${usersType ? usersType : registerTitle} (${totalItems})`}

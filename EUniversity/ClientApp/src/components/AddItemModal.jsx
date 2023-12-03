@@ -105,7 +105,7 @@ const AddClassroomModal = ({
                             <td>
                                 <input
                                     type="text"
-                                    placeholder="search"
+                                    placeholder="name"
                                     value={row.name}
                                     onChange={(e) => handleInputChange(row.id, 'name', e.target.value)}
                                 />
@@ -148,7 +148,7 @@ const AddClassroomModal = ({
                             <td>
                                 <input
                                     type="text"
-                                    placeholder="search"
+                                    placeholder="name"
                                     value={row.name}
                                     onChange={(e) => handleInputChange(row.id, 'name', e.target.value)}
                                 />
