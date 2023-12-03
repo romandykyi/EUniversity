@@ -124,50 +124,56 @@ const PaginatedList =
                 {additionalItems}
             </div>
             {
-                isLoading
-                ? <Loader/>
-                :  <div className="table-container">
-                    <table className="table students__table">
-                        <thead>
-                            {tableHead}
-                        </thead>
-                       <tbody>
-                            {tableBody}
-                       </tbody>
-                    </table>
-                    </div>
+                totalItems
+                ?   <>
+                        {
+                            isLoading
+                            ?   <Loader/>
+                            :   <div className="table-container">
+                                    <table className="table students__table">
+                                        <thead>
+                                            {tableHead}
+                                        </thead>
+                                    <tbody>
+                                            {tableBody}
+                                    </tbody>
+                                    </table>
+                                </div>
+                        }
+                        <div className="pagination__panel">
+                            <div className="pagination__main">
+                                {
+                                    windowSize.width < 450
+                                    ? <>
+                                            <div className="pagination">
+                                                {renderPageNumbers()}
+                                            </div>
+                                            <div className="pagination__buttons">
+                                                <Button onClick={handlePrev} disabled={currentPage === 1}>
+                                                    Prev
+                                                </Button>
+                                                <Button onClick={handleNext} disabled={currentPage === totalPages}>
+                                                    Next
+                                                </Button>
+                                            </div>
+                                        </>
+                                    : <>
+                                            <Button onClick={handlePrev} disabled={currentPage === 1}>
+                                                Prev
+                                            </Button>
+                                            <div className="pagination">
+                                                {renderPageNumbers()}
+                                            </div>
+                                            <Button onClick={handleNext} disabled={currentPage === totalPages}>
+                                                Next
+                                            </Button>
+                                    </>
+                                }
+                            </div>
+                        </div>
+                    </>
+                : <p className="text-gray-400 text-5xl text-center mt-[200px] fw-bold">No items found</p>
             }
-            <div className="pagination__panel">
-                <div className="pagination__main">
-                    {
-                        windowSize.width < 450
-                        ? <>
-                                <div className="pagination">
-                                    {renderPageNumbers()}
-                                </div>
-                                <div className="pagination__buttons">
-                                    <Button onClick={handlePrev} disabled={currentPage === 1}>
-                                        Prev
-                                    </Button>
-                                    <Button onClick={handleNext} disabled={currentPage === totalPages}>
-                                        Next
-                                    </Button>
-                                </div>
-                            </>
-                        : <>
-                                <Button onClick={handlePrev} disabled={currentPage === 1}>
-                                    Prev
-                                </Button>
-                                <div className="pagination">
-                                    {renderPageNumbers()}
-                                </div>
-                                <Button onClick={handleNext} disabled={currentPage === totalPages}>
-                                    Next
-                                </Button>
-                          </>
-                    }
-                </div>
-            </div>
         </>
     );
 };
