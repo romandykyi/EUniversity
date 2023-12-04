@@ -86,7 +86,7 @@ const Login = () => {
                     <input
                         type="text"
                         value={formData.username}
-                        className="login__input form__input form-control"
+                        className="login__input form__input form-control text-text focus:text-text bg-background focus:bg-background"
                         placeholder="your login"
                         onChange={handleInputChange}
                         name="username"
@@ -94,7 +94,7 @@ const Login = () => {
                     <input
                         type={isPasswordShowed ? "text" : "password"}
                         value={formData.password}
-                        className="login__input form__input form-control"
+                        className="login__input form__input form-control text-text focus:text-text bg-background focus:bg-background"
                         placeholder="your password"
                         onChange={handleInputChange}
                         name="password"

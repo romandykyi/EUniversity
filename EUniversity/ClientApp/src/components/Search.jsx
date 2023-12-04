@@ -11,7 +11,7 @@ const Search = ({
 
     return (
         <input 
-            className="form-control max-w-[250px]" 
+            className="form-control max-w-[250px] text-text bg-background focus:bg-background focus:text-text" 
             type="text" 
             placeholder="search . . ." 
             onChange={e => {

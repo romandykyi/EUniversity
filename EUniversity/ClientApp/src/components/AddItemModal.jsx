@@ -34,6 +34,7 @@ const AddClassroomModal = ({
                         <tr key={row.id}>
                             <td>
                                     <input
+                                    className="bg-background text-text"
                                         type="text"
                                         placeholder="email"
                                         value={row.email}
@@ -43,6 +44,7 @@ const AddClassroomModal = ({
                             </td>
                             <td>
                                     <input
+                                    className="bg-background text-text"
                                         type="text"
                                         placeholder="first name"
                                         value={row.firstName}
@@ -52,6 +54,7 @@ const AddClassroomModal = ({
                             </td>
                             <td>
                                     <input
+                                    className="bg-background text-text"
                                         type="text"
                                         value={row.lastName}
                                         placeholder="last name"
@@ -61,6 +64,7 @@ const AddClassroomModal = ({
                             </td>
                             <td>
                                     <input
+                                    className="bg-background text-text"
                                         type="text"
                                         placeholder="middle name"
                                         value={row.middleName}
@@ -70,7 +74,7 @@ const AddClassroomModal = ({
                             </td>
                             <td> 
                                 <select 
-                                    className="form-select w-40" 
+                                    className="form-select w-40 bg-background text-text" 
                                     onChange={(e) => handleInputChange(row.id, 'role', e.target.value)}
                                 >
                                     <option value="student">student</option>
@@ -104,6 +108,7 @@ const AddClassroomModal = ({
                         <tr key={row.id}>
                             <td>
                                 <input
+                                className="bg-background text-text"
                                     type="text"
                                     placeholder="name"
                                     value={row.name}
@@ -147,6 +152,7 @@ const AddClassroomModal = ({
                         <tr key={row.id}>
                             <td>
                                 <input
+                                className="bg-background text-text"
                                     type="text"
                                     placeholder="name"
                                     value={row.name}
@@ -156,6 +162,7 @@ const AddClassroomModal = ({
                             </td>
                             <td>
                                 <input
+                                className="bg-background text-text"
                                     type="date"
                                     placeholder="from"
                                     value={row.dateFrom}
@@ -164,6 +171,7 @@ const AddClassroomModal = ({
                             </td>
                             <td>
                             <input
+                            className="bg-background text-text"
                                     type="date"
                                     placeholder="to"
                                     value={row.dateTo}
@@ -189,6 +197,7 @@ const AddClassroomModal = ({
                         <tr key={row.id}>
                             <td>
                                     <input
+                                    className="bg-background text-text"
                                         type="text"
                                         placeholder="name"
                                         value={row.name}
@@ -370,7 +379,7 @@ const AddClassroomModal = ({
             className={`${isVisible ? "fixed" : "hidden"} top-0 bottom-0 left-0 right-0 bg-black bg-opacity-50 z-40 flex items-center justify-center px-4 overflow-auto`}
         >
             <div 
-                className=" container max-w-[1100px] pt-10 bg-white p-10 rounded-lg z-50" 
+                className=" container max-w-[1100px] pt-10 bg-background p-10 rounded-lg z-50" 
                 onClick={(e) => e.stopPropagation()}
             >
                <div className="flex justify-between items-center mb-20"> 

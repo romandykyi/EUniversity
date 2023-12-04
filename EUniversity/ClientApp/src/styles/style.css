@@ -1,1 +1,178 @@
-*{box-sizing:border-box;margin:0;padding:0}.table-container{overflow-x:auto}.form__title{font-size:40px;margin-bottom:60px}.form__form{margin-top:30px}.form__form button{margin-top:5px}.form__inputs{max-width:400px;display:flex;flex-direction:column}.form__input{margin-bottom:20px}.form__checkboxDiv{display:flex;align-items:center;gap:5px}.form__error{font-size:16px;color:#ff4c4c;margin-top:10px}.changePassword__error{margin:0}.changePassword__checkboxDiv{margin-bottom:20px;display:flex;align-items:center;gap:5px}.changePassword__input{margin-bottom:4px}.newUser__success{position:absolute;left:15px;padding:20px 30px;background:#dcdcdc;border-radius:10px;transition:.5s ease all}.newUser__visible{bottom:15px}.newUser__hidden{bottom:-100%}.noPage{display:flex;align-items:center;position:absolute;top:60px;bottom:0;right:0;left:0;justify-content:center}.noPage p{color:#ff4c4c;font-size:40px}.pagination{display:flex;gap:10px;margin:0 10px;width:100%;align-items:center;justify-content:center;max-width:400px}.pagination__panelbutton{cursor:pointer;padding:5px 10px;border-radius:10px;border:none;outline:none;background:#fff;color:#000}.pagination__main{display:flex;align-items:center}.pagination__panel{display:flex;width:100%;justify-content:center;margin-top:20px;align-items:center;margin-bottom:30px}.pagination__panel button:focus{border:5px solid #c2dbfe}.pagination__panel select{width:auto;margin-left:10px}.pagination__chosen{background:#0ea5e9;border-radius:10px;color:#fff}.select__container{margin-bottom:15px}.select__container select{max-width:140px}@media(max-width: 400px){.pagination__main{width:100%;justify-content:space-between}.pagination__panel{flex-direction:column;gap:20px}.pagination__panel select{margin:0}}@media(max-width: 450px){.pagination{width:100%;justify-content:space-between}.pagination button{font-size:18px}.pagination__main{display:flex;flex-direction:column;width:100%}.pagination__buttons{margin-top:30px;width:100%;display:flex;justify-content:space-between;padding:0 20px}}@media(max-width: 320px){.pagination{gap:0px}}.students__select{width:140px;margin-bottom:20px}
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+.table-container {
+  overflow-x: auto;
+}
+
+.form__title {
+  font-size: 40px;
+  margin-bottom: 60px;
+}
+.form__form {
+  margin-top: 30px;
+}
+.form__form button {
+  margin-top: 5px;
+}
+.form__inputs {
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+}
+.form__input {
+  margin-bottom: 20px;
+}
+.form__checkboxDiv {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.form__error {
+  font-size: 16px;
+  color: #ff4c4c;
+  margin-top: 10px;
+}
+
+.changePassword__error {
+  margin: 0;
+}
+.changePassword__checkboxDiv {
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.changePassword__input {
+  margin-bottom: 4px;
+}
+
+.newUser__success {
+  position: absolute;
+  left: 15px;
+  padding: 20px 30px;
+  background: #dcdcdc;
+  border-radius: 10px;
+  transition: 0.5s ease all;
+}
+.newUser__visible {
+  bottom: 15px;
+}
+.newUser__hidden {
+  bottom: -100%;
+}
+
+.noPage {
+  display: flex;
+  align-items: center;
+  position: absolute;
+  top: 60px;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  justify-content: center;
+}
+.noPage p {
+  color: #ff4c4c;
+  font-size: 40px;
+}
+
+.pagination {
+  display: flex;
+  gap: 10px;
+  margin: 0 10px;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  max-width: 400px;
+}
+.pagination__panelbutton {
+  cursor: pointer;
+  padding: 5px 10px;
+  border-radius: 10px;
+  border: none;
+  outline: none;
+  background: var(--background);
+  color: var(--text);
+}
+.pagination__main {
+  display: flex;
+  align-items: center;
+}
+.pagination__panel {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  margin-top: 20px;
+  align-items: center;
+  margin-bottom: 30px;
+}
+.pagination__panel button:focus {
+  border: 5px solid #c2dbfe;
+}
+.pagination__panel select {
+  width: auto;
+  margin-left: 10px;
+}
+.pagination__chosen {
+  background: var(--theme);
+  border-radius: 10px;
+  color: white;
+}
+
+.select__container {
+  margin-bottom: 15px;
+}
+.select__container select {
+  max-width: 140px;
+}
+
+@media (max-width: 400px) {
+  .pagination__main {
+    width: 100%;
+    justify-content: space-between;
+  }
+  .pagination__panel {
+    flex-direction: column;
+    gap: 20px;
+  }
+  .pagination__panel select {
+    margin: 0;
+  }
+}
+@media (max-width: 450px) {
+  .pagination {
+    width: 100%;
+    justify-content: space-between;
+  }
+  .pagination button {
+    font-size: 18px;
+  }
+  .pagination__main {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+  .pagination__buttons {
+    margin-top: 30px;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 20px;
+  }
+}
+@media (max-width: 320px) {
+  .pagination {
+    gap: 0px;
+  }
+}
+.students__select {
+  width: 140px;
+  margin-bottom: 20px;
+}
+.students__table {
+  background-color: var(--background);
+}

@@ -70,7 +70,7 @@ const AdminUsers = () => {
       ))}
       additionalItems = {
         <>
-          <select className="form-select students__select mb-0" onChange={changeUsersType}>
+          <select className="form-select students__select mb-0 text-text bg-background" onChange={changeUsersType}>
                 <option defaultValue disabled>Users type:</option>
                 <option value="students">Students</option>
                 <option value="teachers">Teachers</option>

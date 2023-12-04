@@ -21,8 +21,8 @@ const ProfilePage = () => {
             {user.family_name} {user.given_name}
             </h1>
             <ul className="flex flex-col gap-2">
-                <li className="text-black text-xl">Email: {user.email}</li>
-                <li className="text-black text-xl">Role: {user.role}</li>
+                <li className="text-text text-xl">Email: {user.email}</li>
+                <li className="text-text text-xl">Role: {user.role}</li>
             </ul>
         </div>
     );

@@ -104,7 +104,7 @@ const AddItemToGroupModal = ({
             className={`${isVisible ? "fixed" : "hidden"} top-0 bottom-0 left-0 right-0 bg-black bg-opacity-50 z-30 flex items-center justify-center px-4`}
         >
             <div 
-                className=" container max-w-[500px] pt-10 bg-white p-10 rounded-lg" 
+                className=" container max-w-[500px] pt-10 bg-background p-10 rounded-lg" 
                 onClick={(e) => e.stopPropagation()}
             >
                 <h1 className="newUser__title form__title">
@@ -118,7 +118,7 @@ const AddItemToGroupModal = ({
                         onChange={searchItem}
                         placeholder="search student. . ."
                     />
-                    <div className="flex flex-col gap-1 z-40 max-h-24 bottom-6 overflow-y-auto scrollbar-hide relative bg-white rounded-lg text-white shadow-lg p-2">
+                    <div className="flex flex-col gap-1 z-40 max-h-24 bottom-6 overflow-y-auto scrollbar-hide relative bg-background rounded-lg text-text shadow-lg p-2">
                         {inputValue.length 
                             ? (
                                 foundUsers.map((user, index) => (
@@ -145,7 +145,7 @@ const AddItemToGroupModal = ({
                                     className="flex gap-2 items-center bg-gray-400 px-3 py-1 rounded-full"
                                 >
                                     <p className="text-gray-100 font-medium">{user.firstName} {user.lastName}</p>
-                                    <button className="text-[8px] bg-gray-100 rounded-full p-0.5 text-white">✖</button>
+                                    <button className="text-[8px] bg-gray-100 rounded-full p-0.5 text-text">✖</button>
                                 </div>  
                             )
                         }

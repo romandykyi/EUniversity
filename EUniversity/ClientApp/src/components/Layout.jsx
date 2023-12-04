@@ -1,12 +1,12 @@
 import React from 'react';
 import { Container } from 'reactstrap';
-import NavMenu from './NavMenu';
+import Header from "./Header";
 
 
 const Layout = (props) => {
     return (
         <div>
-            <NavMenu />
+            <Header />
             <Container tag="main">
                 {props.children}
             </Container>

@@ -101,8 +101,8 @@ $theme: #0ea5e9;
         border-radius: 10px;
         border:none;
         outline:none;
-        background: white;
-        color: black;
+        background: var(--background);
+        color: var(--text);
     }
     &__main {
         display: flex;
@@ -125,7 +125,7 @@ $theme: #0ea5e9;
         }
     }
     &__chosen {
-        background: $theme;
+        background: var(--theme);
         border-radius: 10px;
         color: white;
     }
@@ -185,5 +185,8 @@ $theme: #0ea5e9;
     &__select {
         width: 140px;
         margin-bottom: 20px;
+    }
+    &__table {
+        background-color: var(--background);
     }
 }

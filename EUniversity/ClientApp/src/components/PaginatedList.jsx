@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import Loader from "./UI/Loader";
-import Button from "./UI/Button"
+import Button from "./UI/Button";
+import { useAppDispatch, useAppSelector } from '../store/store.js';
 
 const PaginatedList =
     ({
@@ -15,7 +16,9 @@ const PaginatedList =
          setCurrentPage
     }) => {
 
+
     const [totalPages, setTotalPages] = useState(Math.ceil(totalItems / itemsPerPage));
+    const isThemeDark = useAppSelector(state => state.theme.isThemeDark);
     const [windowSize, setWindowSize] = useState({
         width: window.innerWidth,
         height: window.innerHeight,
@@ -106,7 +109,7 @@ const PaginatedList =
         <>
             <div className="select__container flex gap-3 flex-wrap">
                 <select
-                    className="form-select"
+                    className="form-select bg-background text-text"
                     id="floatingSelect"
                     value = {itemsPerPage}
                     onChange={e => {
@@ -130,7 +133,7 @@ const PaginatedList =
                             isLoading
                             ?   <Loader/>
                             :   <div className="table-container">
-                                    <table className="table students__table">
+                                    <table className={`table table-hover ${isThemeDark ? 'table-dark' : ''}`}>
                                         <thead>
                                             {tableHead}
                                         </thead>

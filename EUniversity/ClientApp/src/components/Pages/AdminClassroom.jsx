@@ -1,5 +1,6 @@
 import {React, useEffect, useState} from 'react';
 import { useLocation } from 'react-router-dom';
+import { useAppSelector } from '../../store/store';
 
 const AdminClassroom = () => {
 
@@ -7,6 +8,7 @@ const AdminClassroom = () => {
     const [students, setStudents] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const location = useLocation();
+    const isThemeDark = useAppSelector(state => state.theme.isThemeDark);
     const regex = /\/classrooms\/(\d+)/;
     const classroomNumber = location.pathname.match(regex)[1];
 
@@ -40,7 +42,7 @@ const AdminClassroom = () => {
                 students.length
                 ?   <>
                         <div className="table-container">
-                            <table className="table students__table">
+                            <table className={`table table-hover ${isThemeDark ? 'table-dark' : ''}`}>
                             <thead>
                                 <tr>
                                         <th>First name</th>

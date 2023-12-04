@@ -1,6 +1,7 @@
 import React from 'react';
 import styles from "./Table.module.css";
 import Button from "../Button";
+import { useAppSelector } from '../../../store/store';
 
 const Table = ({ 
     items, 
@@ -11,6 +12,8 @@ const Table = ({
     itemParams,
     isAddMoreDisable
 }) => {
+
+    const isThemeDark = useAppSelector(state => state.theme.isThemeDark);
 
 
     const handleAddUserClick = e => {
@@ -24,8 +27,8 @@ const Table = ({
 
     return (
         <>
-            <div className={`${styles.tableDiv} table-container table-class`}>
-                <table className={`table ${styles.table}`}>
+            <div className={`${styles.tableDiv} table-container table-class bg-background text-text`}>
+                <table className={`table ${styles.table} bg-background text-text ${isThemeDark ? 'table-dark' : ''}`}>
                     <thead>
                         {tableHead}
                     </thead>

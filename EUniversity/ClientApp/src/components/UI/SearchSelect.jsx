@@ -84,7 +84,7 @@ const SearchSelect = ({
     return (
         <>
             <input 
-                className="form-control mb-4 w-full text-xl font-medium min-w-[200px]"
+                className="form-control mb-4 w-full text-xl font-medium min-w-[200px] bg-background text-text focus:bg-background focus:text-text placeholder:text-text"
                 type="text" 
                 value = {inputValue}
                 onChange={searchItem}
@@ -93,13 +93,13 @@ const SearchSelect = ({
             {
                 inputValue === (isUser ? `${chosenItem.firstName} ${chosenItem.lastName}` : `${chosenItem.name}`)
                 ?   ""
-                :   <div className="flex flex-col gap-1 z-40 max-h-24 bottom-6 overflow-y-auto scrollbar-hide relative bg-white rounded-lg text-white shadow-lg p-2">
+                :   <div className="flex flex-col gap-1 z-40 max-h-24 bottom-6 overflow-y-auto scrollbar-hide relative bg-background rounded-lg text-text shadow-lg p-2">
                         {inputValue
                             ? (
                                 foundItems.map((item, index) => (
                                     <button 
                                         key={item.id} 
-                                        className="text-black text-xl font-medium text-left" 
+                                        className="text-text text-xl font-medium text-left" 
                                         onClick={() => setItemLikeChosen(item)}
                                     >
                                         {

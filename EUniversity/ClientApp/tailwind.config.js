@@ -16,8 +16,10 @@ module.exports = {
         '8px': '8px',
       },
       colors: {
-        'theme': '#0ea5e9' 
-      }
+        'text': 'var(--text)',
+        'background': 'var(--background)',
+        'theme': 'var(--theme)',
+       },
     },
   },
   plugins: [],

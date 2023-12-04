@@ -13,6 +13,7 @@ const AdminGroup = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [isDeleteVisible, setIsDeleteVisible] = useState(false);
     const [isAddStudentVisible, setIsAddStudentVisible] = useState(false);
+    const isThemeDark = useAppSelector(state => state.theme.isThemeDark);
     const [deletedUser, setDeletedUser] = useState({
         id: '',
         name: ''
@@ -108,7 +109,7 @@ const AdminGroup = () => {
                     students.length
                     ?   <>
                             <div className="table-container mt-5">
-                                <table className="table students__table">
+                                <table className={`table table-hover ${isThemeDark ? 'table-dark' : ''}`}>
                                 <thead>
                                     <tr>
                                             <th>First name</th>
