@@ -23,6 +23,7 @@ An e-university Web Application built with ASP.NET and React.
 * Yarn
 * TailwindCSS
 * Redux
+* Framer motion
 
 ## Architecture
 
