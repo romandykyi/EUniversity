@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styles from "./Table.module.css";
 import Button from "../Button";
 import { useAppSelector } from '../../../store/store';
@@ -15,9 +15,11 @@ const Table = ({
 
     const isThemeDark = useAppSelector(state => state.theme.isThemeDark);
 
+    useEffect(() => {
+        handleAddUserClick();
+    }, []);
 
-    const handleAddUserClick = e => {
-        e.preventDefault();
+    const handleAddUserClick = () => {
         const newItem = {
             id:Date.now(),
             ...itemParams

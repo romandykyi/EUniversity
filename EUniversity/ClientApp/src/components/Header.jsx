@@ -153,27 +153,27 @@ const Header = () => {
           <Link className="text-2xl font-bold" to="/">EUniversity</Link>
             <nav className={`z-10 shadow-lg flex flex-col justify-center px-4 bg-background w-[300px] h-full fixed transition-all top-0 duration-300 ${collapsed ? "right-0" : "right-[-100%]"}`}>
                 {
-                isAuthenticated
-                    ? isAdmin
-                        ? <AdminNav />
-                        : <AuthNav />
-                    : ""
+                    isAuthenticated
+                        ? isAdmin
+                            ? <AdminNav />
+                            : <AuthNav />
+                        : ""
                 }
             </nav>
             <div className="flex items-center gap-4">
-            <div className={`bg-text flex rounded-full items-center p-2 cursor-pointer w-[60px] h-9 ${isThemeDark ? 'justify-end' : 'justify-start'}`} data-isOn={isThemeDark} onClick={changeTheme}>
-                <motion.div className="bg-background h-6 w-6 rounded-full" layout transition={spring} />
-            </div>
-            <LoginMenu />
-            {
-                isAuthenticated
-                    ? <div className="flex items-center justify-between w-10 h-6 flex-col cursor-pointer z-20 " onClick={toggleNavbar}>
-                        <div className="w-full h-1 bg-text rounded-full"></div>
-                        <div className="w-full h-1 bg-theme rounded-full"></div>
-                        <div className="w-full h-1 bg-text rounded-full"></div>
-                      </div>
-                : ""
-            }
+                <div className={`bg-text flex rounded-full items-center p-2 cursor-pointer w-[60px] h-9 ${isThemeDark ? 'justify-end' : 'justify-start'}`} data-isOn={isThemeDark} onClick={changeTheme}>
+                    <motion.div className="bg-background h-6 w-6 rounded-full" layout transition={spring} />
+                </div>
+                <LoginMenu />
+                {
+                    isAuthenticated
+                        ? <div className="flex items-center justify-between w-10 h-6 flex-col cursor-pointer z-20 " onClick={toggleNavbar}>
+                            <div className="w-full h-1 bg-text rounded-full"></div>
+                            <div className="w-full h-1 bg-theme rounded-full"></div>
+                            <div className="w-full h-1 bg-text rounded-full"></div>
+                        </div>
+                    : ""
+                }
           </div>
         </div>
       </header>
