@@ -9,20 +9,23 @@ namespace EUniversity.Tests.Validation.University;
 public class ClassCreateDtoValidatorTests : ClassWriteDtoValidatorTests<ClassCreateDto>
 {
     protected override ClassCreateDto CreateDto(
+        int classTypeId = TestIntId,
         int classroomId = TestIntId, int groupId = TestIntId, 
         string? substituteSubstituteTeacherId = TestTeacherId, 
         DateTimeOffset? startDate = null, TimeSpan? duration = null)
     {
-        return CreateDto(classroomId, groupId, substituteSubstituteTeacherId, startDate, duration);
+        return CreateDto(classTypeId, classroomId, groupId,
+            substituteSubstituteTeacherId, startDate, duration);
     }
 
     protected ClassCreateDto CreateDto(
+        int classTypeId = TestIntId,
         int classroomId = TestIntId, int groupId = TestIntId, 
         string? substituteSubstituteTeacherId = TestTeacherId, 
         DateTimeOffset? startDate = null, TimeSpan? duration = null,
         int? repeats = null, int? repeatsDelayDays = null)
     {
-        return new(classroomId, groupId, 
+        return new(classTypeId, classroomId, groupId, 
             substituteSubstituteTeacherId, startDate ?? DateTimeOffset.Now, 
             duration ?? TimeSpan.FromHours(1),
             repeats, repeatsDelayDays);

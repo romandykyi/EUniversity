@@ -15,7 +15,8 @@ public abstract class ClassWriteDtoValidatorTests<TDto> : UsersValidatorTests
     protected const int TestIntId = 5;
     protected const int NonExistentIntId = 4;
 
-    protected abstract TDto CreateDto(int classroomId = TestIntId, int groupId = TestIntId,
+    protected abstract TDto CreateDto(int classTypeId = TestIntId,
+        int classroomId = TestIntId, int groupId = TestIntId,
         string? substituteSubstituteTeacherId = TestTeacherId, DateTimeOffset? startDate = null, 
         TimeSpan? duration = null);
 

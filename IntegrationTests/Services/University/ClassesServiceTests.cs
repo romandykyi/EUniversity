@@ -10,6 +10,7 @@ namespace EUniversity.IntegrationTests.Services.University;
 public class ClassesServiceTests :
     CrudServicesTest<IClassesService, Class, int, ClassViewDto, ClassViewDto, ClassCreateDto, ClassUpdateDto>
 {
+    private ClassType _testClassType;
     private Classroom _testClassroom;
     private Group _testGroup;
     private ApplicationUser _testSubstituteTeacher;
@@ -19,6 +20,7 @@ public class ClassesServiceTests :
     {
         Assert.Multiple(() =>
         {
+            Assert.That(actualEntity.ClassTypeId, Is.EqualTo(updateDto.ClassTypeId));
             Assert.That(actualEntity.ClassroomId, Is.EqualTo(updateDto.ClassroomId));
             Assert.That(actualEntity.GroupId, Is.EqualTo(updateDto.GroupId));
             Assert.That(actualEntity.SubstituteTeacherId, Is.EqualTo(updateDto.SubstituteTeacherId));
@@ -39,6 +41,7 @@ public class ClassesServiceTests :
         return new()
         {
             Duration = TimeSpan.FromHours(1),
+            ClassTypeId = _testClassType.Id,
             ClassroomId = _testClassroom.Id,
             GroupId = _testGroup.Id,
             SubstituteTeacherId = _testSubstituteTeacher.Id,
@@ -49,20 +52,26 @@ public class ClassesServiceTests :
     /// <inheritdoc />
     protected override ClassCreateDto GetValidCreateDto()
     {
-        return new(_testClassroom.Id, _testGroup.Id, _testSubstituteTeacher.Id,
-            DateTimeOffset.Now, TimeSpan.FromHours(1), null, null);
+        return new(_testClassType.Id, _testClassroom.Id, _testGroup.Id,
+            _testSubstituteTeacher.Id,  DateTimeOffset.Now,
+            TimeSpan.FromHours(1), null, null);
     }
 
     /// <inheritdoc />
     protected override ClassUpdateDto GetValidUpdateDto()
     {
-        return new(_testClassroom.Id, _testGroup.Id, null,
-            DateTimeOffset.Now, TimeSpan.FromHours(1));
+        return new(_testClassType.Id, _testClassroom.Id, _testGroup.Id,
+            _testSubstituteTeacher.Id, DateTimeOffset.Now,
+            TimeSpan.FromHours(1));
     }
 
     [SetUp]
     public async Task SetUpDependencies()
     {
+        _testClassType = new() { Name = "Test" };
+        DbContext.Add(_testClassType);
+        await DbContext.SaveChangesAsync();
+
         _testClassroom = ClassroomsServiceTests.CreateTestClassroom();
         DbContext.Add(_testClassroom);
         await DbContext.SaveChangesAsync();
@@ -88,7 +97,8 @@ public class ClassesServiceTests :
         const int repeatsDelayDays = 7;
         TimeSpan duration = TimeSpan.FromHours(1);
         DateTimeOffset startDate = DateTimeOffset.Now;
-        ClassCreateDto dto = new(_testClassroom.Id, _testGroup.Id, _testSubstituteTeacher.Id,
+        ClassCreateDto dto = new(_testClassType.Id, 
+            _testClassroom.Id, _testGroup.Id, _testSubstituteTeacher.Id,
             startDate, duration, repeats, repeatsDelayDays);
 
         // Act
