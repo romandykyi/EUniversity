@@ -112,7 +112,7 @@ const AddItemToGroupModal = ({
                 </h1>
                 <div className="w-full mb-4">
                     <input 
-                        className="form-control mb-4 w-full text-xl font-medium"
+                        className="form-control mb-4 w-full text-xl font-medium bg-background text-text focus:bg-background focus:text-text placeholder:text-text"
                         type="text" 
                         value = {inputValue}
                         onChange={searchItem}
@@ -124,7 +124,7 @@ const AddItemToGroupModal = ({
                                 foundUsers.map((user, index) => (
                                     <button 
                                         key={user.id} 
-                                        className="text-black text-xl font-medium text-left" 
+                                        className="text-text text-xl font-medium text-left" 
                                         onClick={() => addUserToChosen(user)}
                                     >
                                         {index + 1}. {user.firstName} {user.lastName} {user.middleName}
@@ -142,7 +142,7 @@ const AddItemToGroupModal = ({
                                 <div 
                                     onClick={() => deleteUserFromChosen(user)}
                                     key={user.id}
-                                    className="flex gap-2 items-center bg-gray-400 px-3 py-1 rounded-full"
+                                    className="flex gap-2 items-center bg-gray-400 px-3 py-1 rounded-full cursor-pointer"
                                 >
                                     <p className="text-gray-100 font-medium">{user.firstName} {user.lastName}</p>
                                     <button className="text-[8px] bg-gray-100 rounded-full p-0.5 text-text">✖</button>
