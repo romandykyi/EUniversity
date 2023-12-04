@@ -116,16 +116,16 @@ const ChangePassword = () => {
                     <input
                         type={checkBoxes.checkbox1 ? "text" : "password"}
                         value={formData.currentPassword}
-                        className="changePassword__input form__input form-control"
-                        placeholder="current password"
+                        className="changePassword__input form__input form-control placeholder:text-text text-text focus:text-text bg-background focus:bg-background"
+                        placeholder="Current password"
                         onChange={handleInputChange}
                         name="currentPassword"
                     />
-                    <div className="changePassword__checkboxDiv">
+                    <div className="changePassword__checkboxDiv mt-1">
                         <input
                             type="checkbox"
                             checked={checkBoxes.checkbox1}
-                            className="changePassword__checkbox form__checkbox form-check-input"
+                            className="changePassword__checkbox form__checkbox form-check-input bg-background m-0"
                             onChange={handleCheckboxChanges}
                             name="checkbox1"
                             id="showPassword1"
@@ -135,16 +135,16 @@ const ChangePassword = () => {
                     <input
                         type={checkBoxes.checkbox2 ? "text" : "password"}
                         value={formData.newPassword}
-                        className="changePassword__input form__input form-control"
-                        placeholder="new password"
+                        className="changePassword__input form__input form-control placeholder:text-text text-text focus:text-text bg-background focus:bg-background"
+                        placeholder="New password"
                         onChange={handleInputChange}
                         name="newPassword"
                     />
-                    <div className="changePassword__checkboxDiv">
+                    <div className="changePassword__checkboxDiv mt-1">
                         <input
                             type="checkbox"
                             checked={checkBoxes.checkbox2}
-                            className="changePassword__checkbox form__checkbox form-check-input"
+                            className="changePassword__checkbox form__checkbox form-check-input bg-background m-0"
                             onChange={handleCheckboxChanges}
                             name="checkbox2"
                             id="showPassword2"

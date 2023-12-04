@@ -106,7 +106,7 @@ const Login = () => {
                         <input
                             type="checkbox"
                             checked={isPasswordShowed}
-                            className="login__checkbox form__checkbox form-check-input"
+                            className="login__checkbox form__checkbox form-check-input bg-background"
                             onChange={handleCheckboxChanges}
                             name="showPassword"
                             id="showPassword"
@@ -117,7 +117,7 @@ const Login = () => {
                         <input
                             type="checkbox"
                             checked={formData.rememberMe}
-                            className="login__checkbox form__checkbox form-check-input"
+                            className="login__checkbox form__checkbox form-check-input bg-background"
                             onChange={handleCheckboxChanges}
                             name="rememberMe"
                             id="rememberMe"
