@@ -12,6 +12,11 @@ public class Class : IEntity<int>, IHasCreationDate, IHasUpdateDate
     public int Id { get; set; }
 
     /// <summary>
+    /// Foreign key of the type of this class.
+    /// </summary>
+    [ForeignKey(nameof(ClassType))]
+    public int ClassTypeId { get; set; }
+    /// <summary>
     /// Foreign key of the classroom associated with this class.
     /// </summary>
     [ForeignKey(nameof(Classroom))]
@@ -46,6 +51,10 @@ public class Class : IEntity<int>, IHasCreationDate, IHasUpdateDate
     /// </summary>
     public DateTimeOffset UpdateDate { get; set; }
 
+    /// <summary>
+    /// Navigation property for the type of this class.
+    /// </summary>
+    public ClassType? ClassType { get; set; }
     /// <summary>
     /// Navigation property for the classroom associated with this class.
     /// </summary>
