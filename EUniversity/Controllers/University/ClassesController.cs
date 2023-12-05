@@ -52,9 +52,9 @@ public class ClassesController : ControllerBase
     }
 
     /// <summary>
-    /// Gets a @class by its ID.
+    /// Gets a class by its ID.
     /// </summary>
-    /// <response code="200">Returns requested @class</response>
+    /// <response code="200">Returns requested class</response>
     /// <response code="400">Bad request</response>
     /// <response code="401">Unauthorized user call</response>
     /// <response code="404">Class does not exist</response>
@@ -92,7 +92,7 @@ public class ClassesController : ControllerBase
     }
 
     /// <summary>
-    /// Edits a @class by its ID.
+    /// Edits a class by its ID.
     /// </summary>
     /// <response code="204">Success</response>
     /// <response code="400">Malformed/invalid input</response>
@@ -115,7 +115,7 @@ public class ClassesController : ControllerBase
     }
 
     /// <summary>
-    /// Deletes a @class by its ID.
+    /// Deletes a class by its ID.
     /// </summary>
     /// <response code="204">Success</response>
     /// <response code="401">Unauthorized user call</response>
