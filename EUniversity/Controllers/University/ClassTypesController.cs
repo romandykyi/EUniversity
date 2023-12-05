@@ -4,6 +4,7 @@ using EUniversity.Core.Pagination;
 using EUniversity.Core.Policy;
 using EUniversity.Core.Services.University;
 using EUniversity.Infrastructure.Filters;
+using EUniversity.Infrastructure.Services.University;
 using Mapster;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

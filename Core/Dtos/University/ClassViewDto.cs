@@ -8,7 +8,7 @@ public record ClassViewDto(int Id,
     ClassGroupViewDto Group,
     TeacherPreviewDto? SubstituteTeacher);
 
-public record ClassGroupViewDto(int Id, string Name,
+public record ClassGroupViewDto(int Id, string Name, 
     TeacherPreviewDto? Teacher, ClassCourseViewDto Course);
 
 public record ClassCourseViewDto(int Id, string Name, SemesterMinimalViewDto? Semester);

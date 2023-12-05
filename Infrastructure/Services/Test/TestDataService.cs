@@ -8,6 +8,7 @@ using EUniversity.Core.Services.Auth;
 using EUniversity.Infrastructure.Data;
 using EUniversity.Infrastructure.Extensions;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Logging;
 
 namespace EUniversity.Infrastructure.Services.Test;

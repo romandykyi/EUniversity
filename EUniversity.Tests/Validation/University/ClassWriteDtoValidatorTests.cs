@@ -17,7 +17,7 @@ public abstract class ClassWriteDtoValidatorTests<TDto> : UsersValidatorTests
 
     protected abstract TDto CreateDto(int classTypeId = TestIntId,
         int classroomId = TestIntId, int groupId = TestIntId,
-        string? substituteSubstituteTeacherId = TestTeacherId, DateTimeOffset? startDate = null,
+        string? substituteSubstituteTeacherId = TestTeacherId, DateTimeOffset? startDate = null, 
         TimeSpan? duration = null);
 
     protected abstract ClassWriteDtoValidator<TDto> CreateValidator(IEntityExistenceChecker existenceChecker);
