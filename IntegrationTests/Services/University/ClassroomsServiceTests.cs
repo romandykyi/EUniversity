@@ -1,6 +1,6 @@
 ﻿using EUniversity.Core.Dtos.University;
 using EUniversity.Core.Models.University;
-using EUniversity.Infrastructure.Services.University;
+using EUniversity.Core.Services.University;
 
 namespace EUniversity.IntegrationTests.Services.University;
 
