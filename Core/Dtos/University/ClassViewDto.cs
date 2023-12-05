@@ -3,7 +3,7 @@
 namespace EUniversity.Core.Dtos.University;
 
 public record ClassViewDto(int Id,
-    DateTimeOffset StartDate, long DurationTicks,
+    DateTimeOffset StartDate, TimeSpan Duration,
     DateTimeOffset CreationDate, DateTimeOffset UpdateDate,
     ClassGroupViewDto Group,
     TeacherPreviewDto? SubstituteTeacher);

@@ -35,6 +35,7 @@ public class MockedProgramWebApplicationFactory : WebApplicationFactory<Program>
     public IGradesService GradesServiceMock { get; private set; } = null!;
     public ICoursesService CoursesServiceMock { get; private set; } = null!;
     public IGroupsService GroupsServiceMock { get; private set; } = null!;
+    public IClassesService ClassesServiceMock { get; private set; } = null!;
     public IStudentGroupsService StudentGroupsServiceMock { get; private set; } = null!;
     public ISemestersService SemestersServiceMock { get; private set; } = null!;
     public IStudentSemestersService StudentSemestersServiceMock { get; private set; } = null!;
@@ -56,6 +57,7 @@ public class MockedProgramWebApplicationFactory : WebApplicationFactory<Program>
         GradesServiceMock = Substitute.For<IGradesService>();
         CoursesServiceMock = Substitute.For<ICoursesService>();
         GroupsServiceMock = Substitute.For<IGroupsService>();
+        ClassesServiceMock = Substitute.For<IClassesService>();
         StudentGroupsServiceMock = Substitute.For<IStudentGroupsService>();
         SemestersServiceMock = Substitute.For<ISemestersService>();
         StudentSemestersServiceMock = Substitute.For<IStudentSemestersService>();
@@ -86,6 +88,7 @@ public class MockedProgramWebApplicationFactory : WebApplicationFactory<Program>
             services.AddScoped(_ => GradesServiceMock);
             services.AddScoped(_ => CoursesServiceMock);
             services.AddScoped(_ => GroupsServiceMock);
+            services.AddScoped(_ => ClassesServiceMock);
             services.AddScoped(_ => StudentGroupsServiceMock);
             services.AddScoped(_ => SemestersServiceMock);
             services.AddScoped(_ => StudentSemestersServiceMock);
