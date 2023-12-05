@@ -8,6 +8,7 @@ using EUniversity.Core.Services.Auth;
 using EUniversity.Infrastructure.Data;
 using EUniversity.Infrastructure.Extensions;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Logging;
 
 namespace EUniversity.Infrastructure.Services.Test;
@@ -291,5 +292,92 @@ public class TestDataService
             int studentsCount = faker.Random.Int(minStudentsInSemester, maxStudentsInSemester);
             await CreateFakeEntitiesAsync(studentSemesterFaker, studentsCount, false);
         }
+    }
+
+    /// <summary>
+    /// Creates test classes types.
+    /// </summary>
+    /// <param name="count">Number of classes to be created.</param>
+    public async Task CreateTestClassesTypesAsync()
+    {
+        // Names of class types
+        string[] names =
+        {
+            "Lecture", "Practical", "Laboratory", "Tutorial",
+            "Seminar", "Workshop"
+        };
+
+        int entitiesCount = await _dbContext.ClassTypes.CountAsync();
+        if (entitiesCount >= names.Length)
+        {
+            _logger.LogInformation("Generation of 'ClassType' entities was skipped:" +
+                " There are {entitiesCount} entities of this type already",
+                entitiesCount);
+            return;
+        }
+
+        // Some random date to fill creation and update dates of entities
+        DateTimeOffset date = new(2005, 3, 4, 12, 49, 12, 696, 3, TimeSpan.FromHours(2));
+        foreach (string name in names)
+        {
+            _dbContext.Add(new ClassType { Name = name, CreationDate = date, UpdateDate = date });
+        }
+        await _dbContext.SaveChangesAsync();
+
+        _logger.LogInformation("{count} entities of type 'ClassType' have been added",
+            names.Length);
+    }
+
+    /// <summary>
+    /// Creates many fake classes.
+    /// </summary>
+    /// <param name="count">Number of classes to be created.</param>
+    public async Task CreateFakeClassesAsync(int count = 200)
+    {
+        Faker faker = new();
+
+        // All possible classes durations
+        TimeSpan[] durations =
+        {
+            TimeSpan.FromMinutes(45),
+            TimeSpan.FromHours(1.0),
+            TimeSpan.FromHours(1.5),
+            TimeSpan.FromHours(2)
+        };
+        // All possible start minutes of classes(without date)
+        int[] startMinutes = { 0, 15, 30, 45 };
+
+        // IDs of classes types
+        var classTypesIds = _dbContext.ClassTypes
+            .Select(c => c.Id)
+            .ToArray();
+        // IDs of teachers
+        var teachersIds = (await _userManager.GetUsersInRoleAsync(Roles.Teacher))
+            .Select(u => u.Id)
+            .ToArray();
+        // IDs of classrooms
+        var classroomsIds = _dbContext.Classrooms
+            .Select(c => c.Id)
+            .ToArray();
+        // IDs of groups
+        var groupsIds = _dbContext.Groups
+            .Select(c => c.Id)
+            .ToArray();
+
+        // Generate classes
+        var classesFaker = new Faker<Class>()
+            .RuleFor(g => g.ClassTypeId, f => f.Random.CollectionItem(classTypesIds))
+            .RuleFor(g => g.ClassroomId, f => f.Random.CollectionItem(classroomsIds))
+            .RuleFor(g => g.GroupId, f => f.Random.CollectionItem(groupsIds))
+            // Set a substitute teacher with 5% probability
+            .RuleFor(g => g.SubstituteTeacherId,
+                f => f.Random.Bool(0.05f) ? f.Random.CollectionItem(teachersIds) : null)
+            .RuleFor(g => g.Duration, f => f.Random.CollectionItem(durations))
+            .RuleFor(g => g.StartDate, f =>
+                f.Date.SoonOffset(180) +
+                TimeSpan.FromHours(f.Random.Number(8, 18)) +
+                TimeSpan.FromMinutes(f.Random.CollectionItem(startMinutes)))
+            .RuleForDates();
+        await CreateFakeEntitiesAsync(classesFaker, count);
     }
 }

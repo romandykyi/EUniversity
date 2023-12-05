@@ -7,6 +7,14 @@ namespace EUniversity.IntegrationTests.Services.University;
 public class ClassroomsServiceTests : CrudServicesTest
     <IClassroomsService, Classroom, int, ClassroomViewDto, ClassroomViewDto, ClassroomCreateDto, ClassroomCreateDto>
 {
+    public static Classroom CreateTestClassroom()
+    {
+        return new()
+        {
+            Name = "#100"
+        };
+    }
+
     /// <inheritdoc />
     protected override void AssertThatWasUpdated(Classroom actualEntity, ClassroomCreateDto updateDto)
     {
@@ -19,10 +27,7 @@ public class ClassroomsServiceTests : CrudServicesTest
     /// <inheritdoc />
     protected override Classroom GetTestEntity()
     {
-        return new()
-        {
-            Name = "#100"
-        };
+        return CreateTestClassroom();
     }
 
     /// <inheritdoc />

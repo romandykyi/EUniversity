@@ -4,6 +4,7 @@ using EUniversity.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EUniversity.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231202160414_AddClasses")]
+    partial class AddClasses
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -250,9 +253,6 @@ namespace EUniversity.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("ClassTypeId")
-                        .HasColumnType("int");
-
                     b.Property<int>("ClassroomId")
                         .HasColumnType("int");
 
@@ -261,6 +261,9 @@ namespace EUniversity.Infrastructure.Migrations
 
                     b.Property<TimeSpan>("Duration")
                         .HasColumnType("time");
+
+                    b.Property<long>("DurationTicks")
+                        .HasColumnType("bigint");
 
                     b.Property<int>("GroupId")
                         .HasColumnType("int");
@@ -276,8 +279,6 @@ namespace EUniversity.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ClassTypeId");
-
                     b.HasIndex("ClassroomId");
 
                     b.HasIndex("GroupId");
@@ -285,30 +286,6 @@ namespace EUniversity.Infrastructure.Migrations
                     b.HasIndex("SubstituteTeacherId");
 
                     b.ToTable("Classes");
-                });
-
-            modelBuilder.Entity("EUniversity.Core.Models.University.ClassType", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTimeOffset>("CreationDate")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<DateTimeOffset>("UpdateDate")
-                        .HasColumnType("datetimeoffset");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ClassTypes");
                 });
 
             modelBuilder.Entity("EUniversity.Core.Models.University.Classroom", b =>
@@ -691,12 +668,6 @@ namespace EUniversity.Infrastructure.Migrations
 
             modelBuilder.Entity("EUniversity.Core.Models.University.Class", b =>
                 {
-                    b.HasOne("EUniversity.Core.Models.University.ClassType", "ClassType")
-                        .WithMany()
-                        .HasForeignKey("ClassTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("EUniversity.Core.Models.University.Classroom", "Classroom")
                         .WithMany()
                         .HasForeignKey("ClassroomId")
@@ -712,8 +683,6 @@ namespace EUniversity.Infrastructure.Migrations
                     b.HasOne("EUniversity.Core.Models.ApplicationUser", "SubstituteTeacher")
                         .WithMany()
                         .HasForeignKey("SubstituteTeacherId");
-
-                    b.Navigation("ClassType");
 
                     b.Navigation("Classroom");
 

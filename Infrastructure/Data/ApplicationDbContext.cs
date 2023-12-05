@@ -11,6 +11,8 @@ public class ApplicationDbContext : ApiAuthorizationDbContext<ApplicationUser>
 {
     public DbSet<Classroom> Classrooms { get; set; }
     public DbSet<Course> Courses { get; set; }
+    public DbSet<Class> Classes { get; set; }
+    public DbSet<ClassType> ClassTypes { get; set; }
     public DbSet<Group> Groups { get; set; }
     public DbSet<StudentGroup> StudentGroups { get; set; }
     public DbSet<Grade> Grades { get; set; }
