@@ -3,7 +3,6 @@ using EUniversity.Core.Models;
 using EUniversity.Core.Models.University;
 using EUniversity.Core.Policy;
 using EUniversity.Core.Services.University;
-using IdentityModel;
 
 namespace EUniversity.IntegrationTests.Services.University;
 
@@ -53,7 +52,7 @@ public class ClassesServiceTests :
     protected override ClassCreateDto GetValidCreateDto()
     {
         return new(_testClassType.Id, _testClassroom.Id, _testGroup.Id,
-            _testSubstituteTeacher.Id,  DateTimeOffset.Now,
+            _testSubstituteTeacher.Id, DateTimeOffset.Now,
             TimeSpan.FromHours(1), null, null);
     }
 
@@ -97,7 +96,7 @@ public class ClassesServiceTests :
         const int repeatsDelayDays = 7;
         TimeSpan duration = TimeSpan.FromHours(1);
         DateTimeOffset startDate = DateTimeOffset.Now;
-        ClassCreateDto dto = new(_testClassType.Id, 
+        ClassCreateDto dto = new(_testClassType.Id,
             _testClassroom.Id, _testGroup.Id, _testSubstituteTeacher.Id,
             startDate, duration, repeats, repeatsDelayDays);
 
@@ -107,7 +106,7 @@ public class ClassesServiceTests :
         // Assert
         // Created classes
         var classes = DbContext.Classes
-            .Where(c => c.ClassroomId == _testClassroom.Id && 
+            .Where(c => c.ClassroomId == _testClassroom.Id &&
                 c.GroupId == _testGroup.Id &&
                 c.SubstituteTeacherId == _testSubstituteTeacher.Id &&
                 c.Duration == duration)
@@ -115,7 +114,7 @@ public class ClassesServiceTests :
             .ToArray();
 
         Assert.That(classes, Has.Length.EqualTo(repeats));
-        for (int i = 1; i < classes.Length; i++) 
+        for (int i = 1; i < classes.Length; i++)
         {
             DateTimeOffset expectedDate = classes[i].StartDate.AddDays(-repeatsDelayDays * i);
             Assert.That(expectedDate, Is.EqualTo(startDate));

@@ -10,8 +10,8 @@ public class ClassCreateDtoValidatorTests : ClassWriteDtoValidatorTests<ClassCre
 {
     protected override ClassCreateDto CreateDto(
         int classTypeId = TestIntId,
-        int classroomId = TestIntId, int groupId = TestIntId, 
-        string? substituteSubstituteTeacherId = TestTeacherId, 
+        int classroomId = TestIntId, int groupId = TestIntId,
+        string? substituteSubstituteTeacherId = TestTeacherId,
         DateTimeOffset? startDate = null, TimeSpan? duration = null)
     {
         return CreateDto(classTypeId, classroomId, groupId,
@@ -20,13 +20,13 @@ public class ClassCreateDtoValidatorTests : ClassWriteDtoValidatorTests<ClassCre
 
     protected ClassCreateDto CreateDto(
         int classTypeId = TestIntId,
-        int classroomId = TestIntId, int groupId = TestIntId, 
-        string? substituteSubstituteTeacherId = TestTeacherId, 
+        int classroomId = TestIntId, int groupId = TestIntId,
+        string? substituteSubstituteTeacherId = TestTeacherId,
         DateTimeOffset? startDate = null, TimeSpan? duration = null,
         int? repeats = null, int? repeatsDelayDays = null)
     {
-        return new(classTypeId, classroomId, groupId, 
-            substituteSubstituteTeacherId, startDate ?? DateTimeOffset.Now, 
+        return new(classTypeId, classroomId, groupId,
+            substituteSubstituteTeacherId, startDate ?? DateTimeOffset.Now,
             duration ?? TimeSpan.FromHours(1),
             repeats, repeatsDelayDays);
     }

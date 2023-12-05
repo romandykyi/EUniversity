@@ -164,8 +164,7 @@ public static class ServiceCollectionExtensions
             .AddScoped<IStudentGroupsService, StudentGroupsService>()
             .AddScoped<ISemestersService, SemestersService>()
             .AddScoped<IStudentSemestersService, StudentSemestersService>()
-            .AddScoped<IClassesService, ClassesService>()
-            .AddScoped<IClassTypesService, ClassTypesService>();
+            .AddScoped<IClassesService, ClassesService>();
     }
 
     public static IMvcBuilder ConfigureControllers(this IServiceCollection builder)

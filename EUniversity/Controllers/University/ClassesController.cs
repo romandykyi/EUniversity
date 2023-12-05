@@ -1,10 +1,8 @@
 ﻿using EUniversity.Core.Dtos.University;
-using EUniversity.Core.Models.University;
 using EUniversity.Core.Pagination;
 using EUniversity.Core.Policy;
 using EUniversity.Core.Services.University;
 using EUniversity.Infrastructure.Filters;
-using EUniversity.Infrastructure.Services.University;
 using Mapster;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -52,9 +50,9 @@ public class ClassesController : ControllerBase
     }
 
     /// <summary>
-    /// Gets a @class by its ID.
+    /// Gets a class by its ID.
     /// </summary>
-    /// <response code="200">Returns requested @class</response>
+    /// <response code="200">Returns requested class</response>
     /// <response code="400">Bad request</response>
     /// <response code="401">Unauthorized user call</response>
     /// <response code="404">Class does not exist</response>
@@ -71,7 +69,7 @@ public class ClassesController : ControllerBase
     }
 
     /// <summary>
-    /// Creates a new @class.
+    /// Creates a new class.
     /// </summary>
     /// <response code="201">Successfully created</response>
     /// <response code="400">Malformed/invalid input</response>
@@ -92,7 +90,7 @@ public class ClassesController : ControllerBase
     }
 
     /// <summary>
-    /// Edits a @class by its ID.
+    /// Edits a class by its ID.
     /// </summary>
     /// <response code="204">Success</response>
     /// <response code="400">Malformed/invalid input</response>
@@ -115,7 +113,7 @@ public class ClassesController : ControllerBase
     }
 
     /// <summary>
-    /// Deletes a @class by its ID.
+    /// Deletes a class by its ID.
     /// </summary>
     /// <response code="204">Success</response>
     /// <response code="401">Unauthorized user call</response>
