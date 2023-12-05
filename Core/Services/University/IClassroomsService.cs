@@ -1,8 +1,7 @@
 ﻿using EUniversity.Core.Dtos.University;
 using EUniversity.Core.Models.University;
-using EUniversity.Core.Services;
 
-namespace EUniversity.Infrastructure.Services.University;
+namespace EUniversity.Core.Services.University;
 
 /// <summary>
 /// Service for classrooms.
