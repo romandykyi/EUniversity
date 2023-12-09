@@ -16,7 +16,6 @@ public class ApplicationDbContext : ApiAuthorizationDbContext<ApplicationUser>
     public DbSet<Group> Groups { get; set; }
     public DbSet<StudentGroup> StudentGroups { get; set; }
     public DbSet<Grade> Grades { get; set; }
-    public DbSet<CourseGrade> CourseGrades { get; set; }
     public DbSet<Semester> Semesters { get; set; }
     public DbSet<StudentSemester> StudentSemesters { get; set; }
 
@@ -30,12 +29,12 @@ public class ApplicationDbContext : ApiAuthorizationDbContext<ApplicationUser>
     {
         base.OnModelCreating(builder);
 
-        // CourseGrade->Grade
-        builder.Entity<CourseGrade>()
-            .HasOne(c => c.Grade)
-            .WithMany(g => g.CourseGrades)
-            .HasForeignKey(c => c.GradeId)
-            .OnDelete(DeleteBehavior.ClientCascade);
+        // AssignedGrade->Grade
+        //builder.Entity<AssignedGrade>()
+        //    .HasOne(c => c.Grade)
+        //    .WithMany()
+        //    .HasForeignKey(c => c.GradeId)
+        //    .OnDelete(DeleteBehavior.ClientCascade);
 
         // ApplicationUser(Student)->Groups
         builder.Entity<ApplicationUser>()
