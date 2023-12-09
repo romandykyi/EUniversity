@@ -48,7 +48,7 @@ public class ClassesControllerTests :
         ClassCourseViewDto course = new(DefaultId, "Name", semester);
         ClassGroupViewDto group = new(DefaultId, "Group", teacher, course);
         return new ClassViewDto(
-            DefaultId, DateTimeOffset.Now, TimeSpan.FromHours(1), 
+            DefaultId, DateTimeOffset.Now, TimeSpan.FromHours(1),
             DateTimeOffset.Now, DateTimeOffset.Now, group, null);
     }
 
