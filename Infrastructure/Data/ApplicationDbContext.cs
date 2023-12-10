@@ -18,6 +18,7 @@ public class ApplicationDbContext : ApiAuthorizationDbContext<ApplicationUser>
     public DbSet<Grade> Grades { get; set; }
     public DbSet<Semester> Semesters { get; set; }
     public DbSet<StudentSemester> StudentSemesters { get; set; }
+    public DbSet<ActivityType> ActivityTypes { get; set; }
 
     public ApplicationDbContext(DbContextOptions options, IOptions<OperationalStoreOptions> operationalStoreOptions)
         : base(options, operationalStoreOptions)
