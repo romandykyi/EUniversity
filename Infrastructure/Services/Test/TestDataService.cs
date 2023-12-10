@@ -296,7 +296,6 @@ public class TestDataService
     /// <summary>
     /// Creates test classes types.
     /// </summary>
-    /// <param name="count">Number of classes to be created.</param>
     public async Task CreateTestClassesTypesAsync()
     {
         // Names of class types
@@ -324,6 +323,38 @@ public class TestDataService
         await _dbContext.SaveChangesAsync();
 
         _logger.LogInformation("{count} entities of type 'ClassType' have been added",
+            names.Length);
+    }
+
+    /// <summary>
+    /// Creates test activity types.
+    /// </summary>
+    public async Task CreateTestActivityTypesAsync()
+    {
+        // Names of class types
+        string[] names =
+        {
+            "Test", "Exam", "Presentation", "Activity", "Project"
+        };
+
+        int entitiesCount = await _dbContext.ActivityTypes.CountAsync();
+        if (entitiesCount >= names.Length)
+        {
+            _logger.LogInformation("Generation of 'ActivityType' entities was skipped:" +
+                " There are {entitiesCount} entities of this type already",
+                entitiesCount);
+            return;
+        }
+
+        // Some random date to fill creation and update dates of entities
+        DateTimeOffset date = new(2005, 3, 4, 12, 49, 12, 696, 3, TimeSpan.FromHours(2));
+        foreach (string name in names)
+        {
+            _dbContext.Add(new ActivityType { Name = name, CreationDate = date, UpdateDate = date });
+        }
+        await _dbContext.SaveChangesAsync();
+
+        _logger.LogInformation("{count} entities of type 'ActivityType' have been added",
             names.Length);
     }
 
