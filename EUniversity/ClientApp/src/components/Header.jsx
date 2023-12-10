@@ -44,6 +44,10 @@ const Header = () => {
             to: "/semesters",
             title: "Semesters"
         },
+        {
+            to: "/classes",
+            title: "Classes"
+        },
     ];
 
     const adminNavList = [
@@ -70,6 +74,10 @@ const Header = () => {
         {
             to: "/semesters",
             title: "Semesters"
+        },
+        {
+            to: "/classes",
+            title: "Classes"
         },
     ];
 
@@ -151,7 +159,7 @@ const Header = () => {
       <header className="py-3 shadow-md bg-background">
         <div className="container max-w-[1100px] flex items-center gap-4 justify-between">
           <Link className="text-2xl font-bold" to="/">EUniversity</Link>
-            <nav className={`z-10 shadow-lg flex flex-col justify-center px-4 bg-background w-[300px] h-full fixed transition-all top-0 duration-300 ${collapsed ? "right-0" : "right-[-100%]"}`}>
+            <nav className={`z-20 shadow-lg flex flex-col justify-center px-4 bg-background w-[300px] h-full fixed transition-all top-0 duration-300 ${collapsed ? "right-0" : "right-[-100%]"}`}>
                 {
                     isAuthenticated
                         ? isAdmin
@@ -169,7 +177,7 @@ const Header = () => {
                     isAuthenticated
                         ? <div className="flex items-center justify-between w-10 h-6 flex-col cursor-pointer z-20 " onClick={toggleNavbar}>
                             <div className="w-full h-1 bg-text rounded-full"></div>
-                            <div className="w-full h-1 bg-theme rounded-full"></div>
+                            <div className="w-full h-1 bg-text rounded-full"></div>
                             <div className="w-full h-1 bg-text rounded-full"></div>
                         </div>
                     : ""

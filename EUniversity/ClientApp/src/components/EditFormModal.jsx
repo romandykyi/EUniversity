@@ -3,6 +3,7 @@ import Button from './UI/Button';
 import { useState, useEffect } from 'react';
 import SearchSelect from './UI/SearchSelect';
 import { useAppSelector } from '../store/store';
+import SearchSelectForClasses from './UI/SearchSelectForClasses';
 
 const EditFormModal = ({ 
     item, 
@@ -164,7 +165,7 @@ const EditFormModal = ({
                                 className="text-text bg-background form-control focus:text-text focus:bg-background"
                                     type="date"
                                     placeholder="from"
-                                    value={convertTimeFormat(editedItem.dateFrom)}
+                                    value={convertTimeFormat(editedItem.dateFrom, "date")}
                                     onChange={(e) => handleInputChange(editedItem.id,'dateFrom', e.target.value)}
                                 />
                             </td>
@@ -173,7 +174,7 @@ const EditFormModal = ({
                             className="text-text bg-background form-control focus:text-text focus:bg-background"
                                     type="date"
                                     placeholder="to"
-                                    value={convertTimeFormat(editedItem.dateTo)}
+                                    value={convertTimeFormat(editedItem.dateTo, "date")}
                                     onChange={(e) => handleInputChange(editedItem.id,'dateTo', e.target.value)}
                                 />
                             </td>
@@ -185,7 +186,94 @@ const EditFormModal = ({
                     dateTo: ''
                 });
                 break;
-            
+                case "classes":
+                    setTableHead((
+                            <tr>
+                                <th>Class type</th>
+                                <th>Classroom</th>
+                                <th>Group</th>
+                                <th>Start date</th>
+                                <th>Start time</th>
+                                <th>Duration</th>
+                                <th>Repeats</th>
+                                <th>Repeat delay (in days)</th>
+                            </tr>
+                        ));
+                        setTableBody(
+                            <tr>
+                                <td>
+                                    <SearchSelectForClasses
+                                        handleInputChange={handleInputChange}
+                                        itemId={editedItem.id}
+                                        link="/api/classTypes?name="
+                                        title="classType"
+                                    />
+                                </td>
+                                <td>
+                                    <SearchSelectForClasses
+                                        handleInputChange={handleInputChange}
+                                        itemId={editedItem.id}
+                                        link="/api/classrooms?name="
+                                        title="classroom"
+                                    />
+                                </td>
+                                <td>
+                                    <SearchSelectForClasses
+                                        handleInputChange={handleInputChange}
+                                        itemId={editedItem.id}
+                                        link="/api/groups?name="
+                                        title="group"
+                                        givenValue={editedItem.group.name}
+                                    />
+                                </td>
+                                <td>
+                                    <input
+                                        className="bg-background text-text"
+                                        type="date"
+                                        placeholder="from"
+                                        value={convertTimeFormat(editedItem.startDate, "date")}
+                                        onChange={(e) => handleInputChange(editedItem.id, 'startDate', e.target.value)}
+                                    />
+                                </td>
+                                <td>
+                                    <input 
+                                        type="time"
+                                        onChange={(e) => handleInputChange(editedItem.id, 'startTime', e.target.value)}
+                                        value={convertTimeFormat(editedItem.startDate, "time")}
+                                    />
+                                </td>
+                                <td>
+                                    <input 
+                                        className="bg-background" 
+                                        type="text" 
+                                        pattern="[0-2][0-9]:[0-5][0-9]:[0-5][0-9]"
+                                        onChange={(e) => handleInputChange(editedItem.id, 'duration', e.target.value)} 
+                                        placeholder="example: 01:45"
+                                        value={editedItem.duration.slice(0,-3)}
+                                    />
+                                </td>
+                                <td>
+                                    <input 
+                                        type="number" 
+                                        onChange={(e) => handleInputChange(editedItem.id, 'repeats', e.target.value)}
+                                        placeholder="provide a number"
+                                        
+                                    />
+                                </td>
+                                
+                                <td>
+                                    <input 
+                                        type="number" 
+                                        onChange={(e) => handleInputChange(editedItem.id, 'repeatsDelayDays', e.target.value)}
+                                        placeholder="provide a number"
+                                    />
+                                </td>
+                            </tr>
+                        );
+                    setItemParams({
+                        name: ''
+                    });
+                    break;
             default:
                 setTableHead((
                         <tr>
@@ -230,6 +318,15 @@ const EditFormModal = ({
                 dateTo: editedItem.dateTo,
             };
         }
+        else if (responseTitle === "classes") {
+            postItem = {
+                classTypeId: editedItem.classType,
+                classroomId: editedItem.classroom,
+                groupId: editedItem.group,
+                startDate: convertToISOString(`${editedItem.startTime} ${editedItem.startDate}`),
+                duration: `${editedItem.duration}:00`
+            };
+        }
         else {
             postItem = {
                 name: editedItem.name
@@ -264,6 +361,20 @@ const EditFormModal = ({
             console.log(e);
         }
     };
+
+    const convertToISOString = input => {
+        const [time, date] = input.split(' ');
+        const [hours, minutes] = time.split(':');
+        const inputDate = new Date(`${date}T${hours}:${minutes}:00Z`);
+        const year = inputDate.getUTCFullYear();
+        const month = String(inputDate.getUTCMonth() + 1).padStart(2, '0');
+        const day = String(inputDate.getUTCDate()).padStart(2, '0');
+        const hoursUTC = String(inputDate.getUTCHours()).padStart(2, '0');
+        const minutesUTC = String(inputDate.getUTCMinutes()).padStart(2, '0');
+        const secondsUTC = String(inputDate.getUTCSeconds()).padStart(2, '0');
+        const milliseconds = String(inputDate.getUTCMilliseconds()).padStart(3, '0');
+        return `${year}-${month}-${day}T${hoursUTC}:${minutesUTC}:${secondsUTC}.${milliseconds}Z`;
+    };
     
     const handleClickOnBg = () => {
         setIsEditable(false);
@@ -277,14 +388,19 @@ const EditFormModal = ({
         setEditedItem(changedItem);
     };
 
-    const convertTimeFormat = inputTime => {
+    const convertTimeFormat = (inputTime, type) => {
         const date = new Date(inputTime);
         const day = date.getDate().toString().padStart(2, '0');
         const month = (date.getMonth() + 1).toString().padStart(2, '0');
         const year = date.getFullYear();
+        const hours = date.getHours().toString().padStart(2, '0');
+        const minutes = date.getMinutes().toString().padStart(2, '0');
 
-        return `${year}-${month}-${day}`;
+
+        if (type === "date") return `${year}-${month}-${day}`;
+        return `${hours}:${minutes}`;
     };
+
     return (
         <div 
             onClick={handleClickOnBg}

@@ -11,6 +11,7 @@ import AdminClassroom from './components/Pages/AdminClassroom';
 import ProfilePage from './components/Pages/ProfilePage';
 import AdminSemesters from './components/Pages/AdminSemesters';
 import AdminSemester from "./components/Pages/AdminSemester";
+import AdminClasses from './components/Pages/AdminClasses';
 
 const AppRoutes = [
   {
@@ -70,6 +71,11 @@ const AppRoutes = [
     path: '/profile',
     requireAuth: true,
     element: <ProfilePage/>,
+  },
+  {
+    path: '/classes',
+    requireAuth: true,
+    element: <AdminClasses/>,
   },
   ...ApiAuthorzationRoutes
 ];

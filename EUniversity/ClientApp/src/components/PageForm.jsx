@@ -25,7 +25,7 @@ const PageForm = ({
     isDeleteVisible,
     sortingMethod,
     setSortingMethod,
-    isEditVisible
+    isEditVisible,
 
 }) => {
     const [timeoutId, setTimeoutId] = useState(null);
@@ -47,7 +47,7 @@ const PageForm = ({
     
       useEffect(() => {
         fetchItems(currentPage, itemsPerPage);
-      }, [currentPage, itemsPerPage, usersType, inputValue, totalItems, sortingMethod]);
+      }, [currentPage, usersType, inputValue, totalItems, sortingMethod, fetchLink]);
     
       const fetchItems = async (page = 1, pageSize = 10) => {
         if (inputValue && isResponsePossible) {
@@ -102,7 +102,7 @@ const PageForm = ({
             <AddItemModal
               isVisible={isModalVisible}
               setIsVisible={setIsModalVisible}
-              title={registerTitle === "users" ? registerTitle : registerTitle.slice(0, -1)}
+              title={registerTitle === "users" ? registerTitle : registerTitle === "classes" ? registerTitle.slice(0, -2) : registerTitle.slice(0, -1)}
               responseTitle={registerTitle}
               fetchItems={fetchItems}
             />
@@ -134,7 +134,7 @@ const PageForm = ({
                       <Button onClick={() => {
                         setIsModalVisible(true);
                         document.body.style.overflow = 'hidden';
-                      }}>Register new {registerTitle === "users" ? registerTitle : registerTitle.slice(0, -1)}</Button>
+                      }}>Register new {registerTitle === "users" ? registerTitle : registerTitle === "classes" ? registerTitle.slice(0, -2) : registerTitle.slice(0, -1)}</Button>
                     )}
                 </>
                 }
