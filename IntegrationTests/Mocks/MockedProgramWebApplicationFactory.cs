@@ -40,6 +40,7 @@ public class MockedProgramWebApplicationFactory : WebApplicationFactory<Program>
     public IStudentGroupsService StudentGroupsServiceMock { get; private set; } = null!;
     public ISemestersService SemestersServiceMock { get; private set; } = null!;
     public IStudentSemestersService StudentSemestersServiceMock { get; private set; } = null!;
+    public IActivityTypesService ActivityTypesServiceMock { get; private set; } = null!;
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
@@ -63,6 +64,7 @@ public class MockedProgramWebApplicationFactory : WebApplicationFactory<Program>
         StudentGroupsServiceMock = Substitute.For<IStudentGroupsService>();
         SemestersServiceMock = Substitute.For<ISemestersService>();
         StudentSemestersServiceMock = Substitute.For<IStudentSemestersService>();
+        ActivityTypesServiceMock = Substitute.For<IActivityTypesService>();
 
         builder.ConfigureTestServices(services =>
         {
@@ -95,6 +97,7 @@ public class MockedProgramWebApplicationFactory : WebApplicationFactory<Program>
             services.AddScoped(_ => StudentGroupsServiceMock);
             services.AddScoped(_ => SemestersServiceMock);
             services.AddScoped(_ => StudentSemestersServiceMock);
+            services.AddScoped(_ => ActivityTypesServiceMock);
         });
     }
 
