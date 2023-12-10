@@ -47,9 +47,12 @@ public class ClassesControllerTests :
         SemesterMinimalViewDto semester = new(3, "Semester");
         ClassCourseViewDto course = new(DefaultId, "Name", semester);
         ClassGroupViewDto group = new(DefaultId, "Group", teacher, course);
+        ClassClassroomViewDto classroom = new(DefaultId, "Classroom");
+        ClassClassTypeViewDto classType = new(DefaultId, "Class type");
         return new ClassViewDto(
-            DefaultId, DateTimeOffset.Now, TimeSpan.FromHours(1), 
-            DateTimeOffset.Now, DateTimeOffset.Now, group, null);
+            DefaultId, DateTimeOffset.Now, TimeSpan.FromHours(1),
+            DateTimeOffset.Now, DateTimeOffset.Now, group,
+            classroom, classType, null);
     }
 
     protected override ClassViewDto GetTestPreviewDto()
