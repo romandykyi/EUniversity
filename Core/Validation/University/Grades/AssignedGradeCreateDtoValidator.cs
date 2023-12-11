@@ -10,7 +10,8 @@ using Microsoft.AspNetCore.Identity;
 
 namespace EUniversity.Core.Validation.University.Grades;
 
-public class AssignedGradeCreateDtoValidator : AbstractValidator<AssignedGradeCreateDto>
+public class AssignedGradeCreateDtoValidator<T> : AbstractValidator<T>
+    where T : AssignedGradeCreateDto
 {
     public AssignedGradeCreateDtoValidator(IEntityExistenceChecker existenceChecker,
         UserManager<ApplicationUser> userManager)

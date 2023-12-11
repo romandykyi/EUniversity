@@ -10,7 +10,7 @@ namespace EUniversity.Tests.Validation.University.Grades;
 
 public class AssignedGradeCreateDtoValidatorTests : UsersValidatorTests
 {
-    private AssignedGradeCreateDtoValidator _validator;
+    private AssignedGradeCreateDtoValidator<AssignedGradeCreateDto> _validator;
 
     private const string TestNotes = "Good job!";
     private const int TestGradeId = 1;
