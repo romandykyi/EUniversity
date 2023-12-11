@@ -77,6 +77,6 @@ public class ClassGradeCreateDtoValidatorDto : UsersValidatorTests
         var result = await _validator.TestValidateAsync(dto);
 
         // Assert
-        result.ShouldHaveAnyValidationError();
+        result.ShouldNotHaveAnyValidationErrors();
     }
 }
