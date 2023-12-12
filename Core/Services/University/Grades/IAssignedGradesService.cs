@@ -1,8 +1,6 @@
 ﻿using EUniversity.Core.Filters;
-using EUniversity.Core.Models;
 using EUniversity.Core.Models.University.Grades;
 using EUniversity.Core.Pagination;
-using System.Security.Cryptography;
 
 namespace EUniversity.Core.Services.University.Grades;
 
@@ -48,6 +46,7 @@ public interface IAssignedGradesService<TGrade, TAssignDto, TReassignDto>
     /// Reassignes a grade to a student based on the information provided in the
     /// <see cref="dto" /> asynchronously.
     /// </summary>
+    /// <param name="id">The unique identifier of the grade to reassign.</param>
     /// <param name="dto">The DTO containing data for reassigning the grade.</param>
     /// <param name="RessignerId">ID of the user who reassigns the grade.</param>
     /// <returns>
@@ -56,7 +55,7 @@ public interface IAssignedGradesService<TGrade, TAssignDto, TReassignDto>
     /// If the grade to reassign was not not found, 
     /// it returns <see langword="false" />.
     /// </returns>
-    Task<bool> RessignAsync(TReassignDto dto, string ReassignerId);
+    Task<bool> RessignAsync(int id, TReassignDto dto, string ReassignerId);
 
     /// <summary>
     /// Deletes a grade identified by its unique identifier asynchronously.
