@@ -10,7 +10,7 @@ const SearchSelectForClasses = ({
 
     const [isResponsePossible, setIsResponsePossible] = useState(true);
     const [timeoutId, setTimeoutId] = useState(null);
-    const [inputValue, setInputValue] = useState('');
+    const [inputValue, setInputValue] = useState(givenValue);
     const [foundItems, setFoundItems] = useState([]);
     const [chosenItem, setChosenItem] = useState({});
     const [isUser, setIsUser] = useState(false);

@@ -24,7 +24,7 @@ const DeleteModal = ({
                 onClick={(e) => e.stopPropagation()}
             >
                 <h1 className="newUser__title form__title font-medium">
-                    Delete {itemType}: {deletedItem.name}?
+                    Delete {itemType}{deletedItem.name ? `: ${deletedItem.name}` : ""}?
                 </h1>
                 <div className="flex items-center gap-5">
                     <Button onClick={() => deleteFunction(deletedItem.id)} className="bg-danger text-white px-3 py-2 font-medium text-text text-xl rounded-lg outline-none border-none transition-transform duration-200 cursor-pointer hover:bg-red-600 active:transform-active disabled:bg-gray-500 disabled:cursor-not-allowed disabled:active:transform-none">Delete</Button>

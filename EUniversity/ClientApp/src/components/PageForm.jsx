@@ -26,7 +26,6 @@ const PageForm = ({
     sortingMethod,
     setSortingMethod,
     isEditVisible,
-
 }) => {
     const [timeoutId, setTimeoutId] = useState(null);
     const [isResponsePossible, setIsResponsePossible] = useState(true);

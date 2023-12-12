@@ -437,6 +437,7 @@ const AddClassroomModal = ({
 
         if (responseTitle !== "users") {
             for (let postItem of postItems) {
+                console.log(postItem)
                 try {
                     const response = await fetch(`/api/${responseTitle}`, {
                         method: "POST",
