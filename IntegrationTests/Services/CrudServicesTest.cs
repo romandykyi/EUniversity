@@ -209,7 +209,6 @@ public abstract class CrudServicesTest<TService, TEntity, TId, TPreviewDto, TDet
         DateTimeOffset? lastUpdateDate =
             entity is IHasUpdateDate entityWithUpdateDate ? entityWithUpdateDate.UpdateDate : null;
         TUpdateDto dto = GetValidUpdateDto();
-        var expectedClassroom = dto.Adapt<Classroom>();
 
         // Act
         bool result = await Service.UpdateAsync(entity.Id, dto);
