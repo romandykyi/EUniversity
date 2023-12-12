@@ -1,10 +1,8 @@
 import {React, useEffect, useState} from 'react';
 import { useLocation } from 'react-router-dom';
 import { useAppSelector } from '../../store/store';
-import Button from "../UI/Button";
-import AddItemToGroupModal from '../AddItemToGroupModal';
-import DeleteModal from '../DeleteModal';
 import Loader from "../UI/Loader";
+import BackButton from '../UI/BackButton';
 
 const AdminClass = () => {
 
@@ -88,9 +86,12 @@ const AdminClass = () => {
     return (
         <>
             <div className="students container max-w-[1100px] pt-10">
-                <h1 className="students__title form__title">
-                    Class #{classNumber}
-                </h1>
+                <div className="flex items-center gap-3 mb-14">
+                    <BackButton navigate="classes"/>
+                    <h1 className="students__title form__title mb-0">
+                        Class #{classNumber}
+                    </h1>
+                </div>
                 <div className="flex justify-between gap-4">
                     {
                         classItem !== null 
