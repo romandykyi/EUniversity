@@ -25,11 +25,11 @@ const EditFormModal = ({
     const isThemeDark = useAppSelector(state => state.theme.isThemeDark);
 
     useEffect(() => {
-        if (durationRef.current) durationRef.current.value = editedItem.duration.slice(0,-3);
-        if (startDateRef.current) startDateRef.current.value = convertTimeFormat(editedItem.startDate, "date");
-        if (startTimeRef.current) startTimeRef.current.value = convertTimeFormat(editedItem.startDate, "time");
-        if(semesterDateFromRef.current) semesterDateFromRef.current.value = convertTimeFormat(editedItem.dateFrom, "date");
-        if(semesterDateToRef.current) semesterDateToRef.current.value = convertTimeFormat(editedItem.dateTo, "date");
+        if (durationRef.current) durationRef.current.defaultValue = editedItem.duration.slice(0,-3);
+        if (startDateRef.current) startDateRef.current.defaultValue = convertTimeFormat(editedItem.startDate, "date");
+        if (startTimeRef.current) startTimeRef.current.defaultValue = convertTimeFormat(editedItem.startDate, "time");
+        if(semesterDateFromRef.current) semesterDateFromRef.current.defaultValue = convertTimeFormat(editedItem.dateFrom, "date");
+        if(semesterDateToRef.current) semesterDateToRef.current.defaultValue = convertTimeFormat(editedItem.dateTo, "date");
     });
 
     useEffect(() => {
@@ -209,8 +209,6 @@ const EditFormModal = ({
                                 <th>Start date</th>
                                 <th>Start time</th>
                                 <th>Duration</th>
-                                <th>Repeats</th>
-                                <th>Repeat delay (in days)</th>
                             </tr>
                         ));
                         setTableBody(
@@ -266,22 +264,6 @@ const EditFormModal = ({
                                         pattern="[0-2][0-9]:[0-5][0-9]"
                                         onChange={(e) => handleInputChange(editedItem.id, 'duration', e.target.value)} 
                                         placeholder="example: 01:45"
-                                    />
-                                </td>
-                                <td>
-                                    <input 
-                                        type="number" 
-                                        onChange={(e) => handleInputChange(editedItem.id, 'repeats', e.target.value)}
-                                        placeholder="provide a number"
-                                        
-                                    />
-                                </td>
-                                
-                                <td>
-                                    <input 
-                                        type="number" 
-                                        onChange={(e) => handleInputChange(editedItem.id, 'repeatsDelayDays', e.target.value)}
-                                        placeholder="provide a number"
                                     />
                                 </td>
                             </tr>
