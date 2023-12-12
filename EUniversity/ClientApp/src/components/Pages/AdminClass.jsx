@@ -12,6 +12,7 @@ const AdminClass = () => {
     const [classItem, setClassItem] = useState(null);
     const [targetDate, setTargetDate] = useState(null);
     const [timeString, setTimeString] = useState("");
+    const isThemeDark = useAppSelector(state => state.theme.isThemeDark);
     const location = useLocation();
     const regex = /\/classes\/(\d+)/;
     const classNumber = location.pathname.match(regex)[1];
@@ -93,35 +94,51 @@ const AdminClass = () => {
                 <div className="flex justify-between gap-4">
                     {
                         classItem !== null 
-                        ?   <>
-                                <div className="flex flex-col gap-3">
-                                    <h2 className="text-3xl font-bold">type: 
-                                        <span className="font-medium"> {classItem.classType.name}</span>
-                                    </h2>
-                                    <h2 className="text-3xl font-bold">classroom: 
-                                        <span className="font-medium"> {classItem.classroom.name}</span>
-                                    </h2>
-                                    <h2 className="text-3xl font-bold">group: 
-                                        <span className="font-medium"> {classItem.group.name}</span>
-                                    </h2>
-                                    <h2 className="text-3xl font-bold">teacher: 
-                                        <span className="font-medium"> {classItem.group.teacher.firstName} {classItem.group.teacher.lastName}</span>
-                                    </h2>
-                                </div>
-                                <div className="flex flex-col gap-3">
-                                    <h2 className="text-3xl font-bold">duration: 
-                                        <span className="font-medium"> {classItem.duration.slice(0, -3)} min</span>
-                                    </h2>
-                                    <h2 className="text-3xl font-bold">start at: 
-                                        <span className="font-medium"> {convertTimeFormat(classItem.startDate)}</span>
-                                    </h2>
-                                    <h2 className="text-3xl font-bold">before start: 
-                                        <span className="font-medium"> 
-                                            {timeString}
-                                        </span>
-                                    </h2>
-                                </div>
-                            </>
+                        ?   <table className={`table table-hover ${isThemeDark ? 'table-dark' : ''}`}>
+                                <tbody>
+                                    <tr>
+                                        <td className='text-3xl font-medium'>type: </td>   
+                                        <td className='flex items-start text-3xl font-medium'>{classItem.classType.name}</td>              
+                                    </tr>
+                                    <tr>
+                                        <td className='text-3xl font-medium'>classroom: </td>   
+                                        <td className='flex items-start text-3xl font-medium'>{classItem.classroom.name}</td>              
+                                    </tr>
+                                    <tr>
+                                        <td className='text-3xl font-medium'>group: </td>   
+                                        <td className='flex items-start text-3xl font-medium'>{classItem.group.name}</td>              
+                                    </tr>
+                                    <tr>
+                                        <td className='text-3xl font-medium'>teacher: </td>   
+                                        <td className='flex items-start text-3xl font-medium'>{classItem.group.teacher.firstName} {classItem.group.teacher.lastName}</td>              
+                                    </tr>
+                                    <tr>
+                                        <td className='text-3xl font-medium'>duration: </td>   
+                                        <td className='flex items-start text-3xl font-medium'>{classItem.duration.slice(0, -3)} min</td>              
+                                    </tr>
+                                    <tr>
+                                        <td className='text-3xl font-medium'>start at: </td>   
+                                        <td className='flex items-start text-3xl font-medium'>{convertTimeFormat(classItem.startDate)}</td>              
+                                    </tr>
+                                    <tr>
+                                        <td className='text-3xl font-medium'>before start: </td>   
+                                        <td className='flex items-start text-3xl font-medium'>{timeString ? timeString : "loading..."}</td>              
+                                    </tr>
+                                </tbody>
+                            </table>
+                        // ?   <>
+                        //         <div className="flex flex-col gap-3">
+ 
+                        //             <h2 className="text-3xl font-bold">start at: 
+                        //                 <span className="font-medium"> {convertTimeFormat(classItem.startDate)}</span>
+                        //             </h2>
+                        //             <h2 className="text-3xl font-bold">before start: 
+                        //                 <span className="font-medium"> 
+                        //                     {timeString}
+                        //                 </span>
+                        //             </h2>
+                        //         </div>
+                        //     </>
                         : <Loader/>
                     }
                 </div>
