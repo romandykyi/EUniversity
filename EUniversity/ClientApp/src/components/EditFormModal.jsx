@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react';
 import SearchSelect from './UI/SearchSelect';
 import { useAppSelector } from '../store/store';
 import SearchSelectForClasses from './UI/SearchSelectForClasses';
-import { useImperativeHandle } from 'react';
 
 const EditFormModal = ({ 
     item, 
@@ -154,7 +153,7 @@ const EditFormModal = ({
                     teacher: ''
                 });
                 break;
-            case "semesters": //fix value here in inputs
+            case "semesters":
                 setTableHead((
                         <tr>
                             <th>Name</th>

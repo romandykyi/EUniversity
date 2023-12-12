@@ -5,7 +5,7 @@ import Button from "../UI/Button";
 import AddItemToGroupModal from '../AddItemToGroupModal';
 import DeleteModal from '../DeleteModal';
 
-const AdminGroup = () => {
+const AdminSemester = () => {
 
 
     const [students, setStudents] = useState([]);
@@ -151,4 +151,4 @@ const AdminGroup = () => {
     );
 };
 
-export default AdminGroup;
+export default AdminSemester;
