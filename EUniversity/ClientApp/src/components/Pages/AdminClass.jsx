@@ -126,19 +126,6 @@ const AdminClass = () => {
                                     </tr>
                                 </tbody>
                             </table>
-                        // ?   <>
-                        //         <div className="flex flex-col gap-3">
- 
-                        //             <h2 className="text-3xl font-bold">start at: 
-                        //                 <span className="font-medium"> {convertTimeFormat(classItem.startDate)}</span>
-                        //             </h2>
-                        //             <h2 className="text-3xl font-bold">before start: 
-                        //                 <span className="font-medium"> 
-                        //                     {timeString}
-                        //                 </span>
-                        //             </h2>
-                        //         </div>
-                        //     </>
                         : <Loader/>
                     }
                 </div>
