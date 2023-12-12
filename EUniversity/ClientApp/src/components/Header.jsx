@@ -158,7 +158,7 @@ const Header = () => {
   return (
       <header className="py-3 shadow-md bg-background">
         <div className="container max-w-[1100px] flex items-center gap-4 justify-between">
-          <Link className="text-2xl font-bold" to="/">EUniversity</Link>
+          <Link className="text-2xl font-bold overflow-hidden whitespace-nowrap text-ellipsis" to="/">EUniversity</Link>
             <nav className={`z-20 shadow-lg flex flex-col justify-center px-4 bg-background w-[300px] h-full fixed transition-all top-0 duration-300 ${collapsed ? "right-0" : "right-[-100%]"}`}>
                 {
                     isAuthenticated
