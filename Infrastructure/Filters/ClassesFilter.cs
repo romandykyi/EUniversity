@@ -45,6 +45,11 @@ public class ClassesFilter : IFilter<Class>
         {
             query = query.Where(c => c.StartDate <= Properties.MaxStartDate);
         }
+        if (Properties.StudentId != null)
+        {
+            query = query.Where(c => 
+                c.Group!.Students.Select(s => s.Id).Contains(Properties.StudentId));
+        }
         if (Properties.TeacherId != null)
         {
             query = query.Where(c => c.SubstituteTeacherId != null ?
