@@ -167,14 +167,26 @@ public class UsersControllerTests : ControllersTest
     }
 
     [Test]
-    [TestCaseSource(nameof(GetMethods))]
-    public async Task GetMethods_NoAdministratorRole_Return403Forbidden(string method)
+    public async Task GetUsers_NoAdministratorRole_Return403Forbidden()
     {
         // Arrange
         using var client = CreateStudentClient();
 
         // Act
-        var result = await client.GetAsync(method);
+        var result = await client.GetAsync("api/users");
+
+        // Assert
+        Assert.That(result.StatusCode, Is.EqualTo(HttpStatusCode.Forbidden));
+    }
+
+    [Test]
+    public async Task GetStudents_NoAdministratorOrTeacherRole_Return403Forbidden()
+    {
+        // Arrange
+        using var client = CreateStudentClient();
+
+        // Act
+        var result = await client.GetAsync("api/users/students");
 
         // Assert
         Assert.That(result.StatusCode, Is.EqualTo(HttpStatusCode.Forbidden));
