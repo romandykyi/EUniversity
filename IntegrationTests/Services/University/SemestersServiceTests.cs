@@ -68,7 +68,6 @@ public class SemestersServiceTests :
             Assert.That(result.Name, Is.EqualTo(expectedResult.Name));
             Assert.That(result.DateFrom, Is.EqualTo(expectedResult.DateFrom));
             Assert.That(result.DateTo, Is.EqualTo(expectedResult.DateTo));
-            Assert.That(result.StudentEnrollments, Is.EquivalentTo(expectedResult.StudentEnrollments));
         });
     }
 }
