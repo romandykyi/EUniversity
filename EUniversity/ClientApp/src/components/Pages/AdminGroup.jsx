@@ -4,6 +4,7 @@ import { useAppSelector } from '../../store/store';
 import Button from "../UI/Button";
 import AddItemToGroupModal from '../AddItemToGroupModal';
 import DeleteModal from '../DeleteModal';
+import BackButton from '../UI/BackButton';
 
 const AdminGroup = () => {
 
@@ -82,9 +83,12 @@ const AdminGroup = () => {
                 fetchItems={fetchGroup}
             />
             <div className="students container max-w-[1100px] pt-10">
-                <h1 className="students__title form__title">
+                <div className="flex items-center gap-3 mb-14">
+                    <BackButton navigate="groups"/>
+                    <h1 className="students__title form__title mb-0">
                     Group #{groupNumber}
-                </h1>
+                    </h1>
+                </div>
                 <h2 className="text-3xl font-bold mb-5">
                     Teacher: {teacher.firstName} {teacher.lastName}
                 </h2>

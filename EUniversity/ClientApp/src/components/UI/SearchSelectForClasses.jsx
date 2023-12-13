@@ -1,6 +1,6 @@
 import { React, useEffect, useState } from 'react';
 
-const SearchSelect = ({
+const SearchSelectForClasses = ({
     handleInputChange,
     itemId,
     link,
@@ -10,16 +10,22 @@ const SearchSelect = ({
 
     const [isResponsePossible, setIsResponsePossible] = useState(true);
     const [timeoutId, setTimeoutId] = useState(null);
-    const [inputValue, setInputValue] = useState('');
+    const [inputValue, setInputValue] = useState(givenValue);
     const [foundItems, setFoundItems] = useState([]);
     const [chosenItem, setChosenItem] = useState({});
     const [isUser, setIsUser] = useState(false);
     const [inputChangeCount, setInputChangeCount] = useState(0);
 
+
+
     useEffect(() => {
         setInputChangeCount(0);
     }, [])
     
+    useEffect(() => {
+        if (inputValue === '') handleInputChange(itemId, title, '');
+    }, [inputValue]);
+
     useEffect(() => {
         if (!inputChangeCount) setInputValue(givenValue);
         setFoundItems([]);
@@ -43,7 +49,7 @@ const SearchSelect = ({
             setInputChangeCount(inputChangeCount + 1);
             setInputValue(`${item.name}`);
             setFoundItems([]);
-            handleInputChange(itemId, 'course', id);
+            handleInputChange(itemId, title, id);
         }
     };
 
@@ -90,10 +96,10 @@ const SearchSelect = ({
                 onChange={searchItem}
                 placeholder={`search ${title}. . .`}
             />
-             {
+            {
                 inputValue === (isUser ? `${chosenItem.firstName} ${chosenItem.lastName}` : `${chosenItem.name}`)
                 ?   ""
-                :   <div className="flex flex-col gap-1 z-10 max-h-24 overflow-y-auto scrollbar-hide absolute max-w-[353px] w-full bg-background rounded-lg text-text shadow-lg p-2">
+                :   <div className={`flex-col gap-1 z-10 w-full ${inputValue && !givenValue ? "flex" : "hidden"} max-h-24 ${givenValue ? "max-w-[257px]" : "max-w-[200px]"}  overflow-y-auto scrollbar-hide absolute bg-background rounded-lg text-text shadow-lg p-2`}>
                         {inputValue
                             ?   foundItems.length
                                 ? foundItems.map((item, index) => (
@@ -109,7 +115,7 @@ const SearchSelect = ({
                                         }
                                     </button>
                                 ))
-                                : <p className="text-gray-500 text-xl font-medium">no items found</p>
+                                : ""
                             :   ""
                         }
                     </div>   
@@ -118,4 +124,4 @@ const SearchSelect = ({
     );
 };
 
-export default SearchSelect;
+export default SearchSelectForClasses;
