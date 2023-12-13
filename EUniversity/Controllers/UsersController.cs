@@ -13,7 +13,7 @@ namespace EUniversity.Controllers;
 [ApiController]
 [Route("api/users")]
 [FluentValidationAutoValidation]
-[Authorize(Policies.HasAdministratorPermission)]
+[Authorize]
 public class UsersController : ControllerBase
 {
     private readonly IAuthService _authService;
@@ -50,6 +50,7 @@ public class UsersController : ControllerBase
     [ProducesResponseType(typeof(Page<UserViewDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [Authorize(Policies.HasAdministratorPermission)]
     public async Task<IActionResult> GetAllUsersAsync(
         [FromQuery] PaginationProperties paginationProperties,
         [FromQuery] UsersFilterProperties usersFilter)
@@ -75,12 +76,13 @@ public class UsersController : ControllerBase
     /// </remarks>
     /// <response code="200">Returns a page with students</response>
     /// <response code="401">Unauthorized user call</response>
-    /// <response code="403">User lacks 'Administrator' role</response>
+    /// <response code="403">User lacks 'Administrator' or 'Teacher' role</response>
     [HttpGet]
     [Route("students")]
     [ProducesResponseType(typeof(Page<UserViewDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [Authorize(Policies.IsTeacherOrAdministrator)]
     public async Task<IActionResult> GetAllStudentsAsync(
         [FromQuery] PaginationProperties paginationProperties,
         [FromQuery] UsersFilterProperties usersFilter)
@@ -106,7 +108,6 @@ public class UsersController : ControllerBase
     /// </remarks>
     /// <response code="200">Returns a page with teachers</response>
     /// <response code="401">Unauthorized user call</response>
-    /// <response code="403">User lacks 'Administrator' role</response>
     [HttpGet]
     [Route("teachers")]
     [ProducesResponseType(typeof(Page<UserViewDto>), StatusCodes.Status200OK)]
@@ -158,6 +159,7 @@ public class UsersController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [Authorize(Policies.HasAdministratorPermission)]
     public async Task<IActionResult> RegisterStudentsAsync([FromBody] RegisterUsersDto students)
     {
         return await RegisterAsync(students, Roles.Student, "api/users/students");
@@ -181,6 +183,7 @@ public class UsersController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [Authorize(Policies.HasAdministratorPermission)]
     public async Task<IActionResult> RegisterTeachersAsync([FromBody] RegisterUsersDto teachers)
     {
         return await RegisterAsync(teachers, Roles.Teacher, "api/users/teachers");
