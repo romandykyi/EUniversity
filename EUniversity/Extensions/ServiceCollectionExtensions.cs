@@ -115,6 +115,12 @@ public static class ServiceCollectionExtensions
                 policy.RequireAuthenticatedUser();
                 policy.RequireClaim(JwtClaimTypes.Role, Roles.Teacher);
             });
+            options.AddPolicy(Policies.IsTeacherOrAdministrator, policy =>
+            {
+                policy.AddAuthenticationSchemes(authenticationSchemes);
+                policy.RequireAuthenticatedUser();
+                policy.RequireClaim(JwtClaimTypes.Role, Roles.Teacher, Roles.Administrator);
+            });
             options.AddPolicy(Policies.HasAdministratorPermission, policy =>
             {
                 policy.AddAuthenticationSchemes(authenticationSchemes);
