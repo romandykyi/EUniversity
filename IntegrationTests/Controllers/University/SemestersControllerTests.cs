@@ -42,9 +42,9 @@ public class SemestersControllerTests :
 
     protected override bool AssertThatFilterWasApplied(IFilter<Semester> filter)
     {
-        return filter is DefaultFilter<Semester> defaultFilter &&
-            defaultFilter.Name == "testfilter" &&
-            defaultFilter.SortingMode == DefaultFilterSortingMode.Name;
+        return filter is SemestersFilter semestersFilter &&
+            semestersFilter.Name == "testfilter" &&
+            semestersFilter.SortingMode == DefaultFilterSortingMode.Name;
     }
 
     protected override SemesterCreateDto GetInvalidCreateDto()
