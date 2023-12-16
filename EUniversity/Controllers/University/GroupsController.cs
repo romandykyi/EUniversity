@@ -39,8 +39,10 @@ public class GroupsController : ControllerBase
     /// </summary>
     /// <remarks>
     /// If there is no items in the requested page, then empty page will be returned.
+    /// If the query param 'semesterId' is 0, then groups that are not linked to any semesters will be returned.
     /// </remarks>
     /// <param name="properties">Pagination properties.</param>
+    /// <param name="filterProperties">Filter properties.</param>
     /// <param name="name">An optional name to filter groups by.</param>
     /// <param name="sortingMode">
     /// An optional sorting mode.
@@ -65,10 +67,11 @@ public class GroupsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> GetGroupsPageAsync(
         [FromQuery] PaginationProperties properties,
+        [FromQuery] GroupsFilterProperties filterProperties,
         [FromQuery] string? name,
         [FromQuery] DefaultFilterSortingMode sortingMode = DefaultFilterSortingMode.Name)
     {
-        DefaultFilter<Group> filter = new(name ?? string.Empty, sortingMode);
+        GroupsFilter filter = new(filterProperties, name ?? string.Empty, sortingMode);
         return Ok(await _groupsService.GetPageAsync(properties, filter));
     }
 

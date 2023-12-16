@@ -85,7 +85,7 @@ public class ClassesFilterTests
         return @class;
     }
 
-    private Class[] TestClasses =
+    private readonly Class[] TestClasses =
     {
         GetClass(1, TestClassType1, TestClassroom1, TestGroup1, new(3L, TimeSpan.Zero)),
         GetClass(2, TestClassType1, TestClassroom1, TestGroup1, new(1L, TimeSpan.Zero), TestSubstituteTeacher),
