@@ -69,7 +69,7 @@ public class DefaultFilter<T> : IFilter<T>
     /// <returns>
     /// Filtered and sorted query that contains entities with a matched name.
     /// </returns>
-    public IQueryable<T> Apply(IQueryable<T> query)
+    public virtual IQueryable<T> Apply(IQueryable<T> query)
     {
         // Filter by name
         query = query.Where(x => x.Name.Contains(Name));
