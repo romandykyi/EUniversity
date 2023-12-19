@@ -19,6 +19,8 @@ public class UsersController : ControllerBase
     private readonly IAuthService _authService;
     private readonly IUsersService _usersService;
 
+    public const string StudentIdRouteKey = "studentId";
+
     public UsersController(IAuthService authService, IUsersService usersService)
     {
         _authService = authService;
