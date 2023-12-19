@@ -294,7 +294,7 @@ public class UsersControllerTests : ControllersTest
 
         // Assert
         result.EnsureSuccessStatusCode();
-        var groups = await result.Content.ReadFromJsonAsync<IEnumerable<GroupPreviewDto>>();
+        var groups = await result.Content.ReadFromJsonAsync<Page<GroupPreviewDto>>();
         Assert.That(groups, Is.Not.Null);
         await WebApplicationFactory.UsersServiceMock
             .Received()
@@ -334,7 +334,7 @@ public class UsersControllerTests : ControllersTest
 
         // Assert
         result.EnsureSuccessStatusCode();
-        var semesters = await result.Content.ReadFromJsonAsync<IEnumerable<SemesterPreviewDto>>();
+        var semesters = await result.Content.ReadFromJsonAsync<Page<SemesterPreviewDto>>();
         Assert.That(semesters, Is.Not.Null);
         await WebApplicationFactory.UsersServiceMock
             .Received()
