@@ -1,4 +1,5 @@
-﻿using EUniversity.Core.Dtos.Users;
+﻿using EUniversity.Core.Dtos.University;
+using EUniversity.Core.Dtos.Users;
 using EUniversity.Core.Pagination;
 using EUniversity.Core.Policy;
 using EUniversity.Core.Services.Auth;
@@ -13,11 +14,13 @@ namespace EUniversity.Controllers;
 [ApiController]
 [Route("api/users")]
 [FluentValidationAutoValidation]
-[Authorize(Policies.HasAdministratorPermission)]
+[Authorize]
 public class UsersController : ControllerBase
 {
     private readonly IAuthService _authService;
     private readonly IUsersService _usersService;
+
+    public const string StudentIdRouteKey = "studentId";
 
     public UsersController(IAuthService authService, IUsersService usersService)
     {
@@ -48,6 +51,7 @@ public class UsersController : ControllerBase
     [ProducesResponseType(typeof(Page<UserViewDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [Authorize(Policies.HasAdministratorPermission)]
     public async Task<IActionResult> GetAllUsersAsync(
         [FromQuery] PaginationProperties paginationProperties,
         [FromQuery] UsersFilterProperties usersFilter)
@@ -73,12 +77,13 @@ public class UsersController : ControllerBase
     /// </remarks>
     /// <response code="200">Returns a page with students</response>
     /// <response code="401">Unauthorized user call</response>
-    /// <response code="403">User lacks 'Administrator' role</response>
+    /// <response code="403">User lacks 'Administrator' or 'Teacher' role</response>
     [HttpGet]
     [Route("students")]
     [ProducesResponseType(typeof(Page<UserViewDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [Authorize(Policies.IsTeacherOrAdministrator)]
     public async Task<IActionResult> GetAllStudentsAsync(
         [FromQuery] PaginationProperties paginationProperties,
         [FromQuery] UsersFilterProperties usersFilter)
@@ -104,7 +109,6 @@ public class UsersController : ControllerBase
     /// </remarks>
     /// <response code="200">Returns a page with teachers</response>
     /// <response code="401">Unauthorized user call</response>
-    /// <response code="403">User lacks 'Administrator' role</response>
     [HttpGet]
     [Route("teachers")]
     [ProducesResponseType(typeof(Page<UserViewDto>), StatusCodes.Status200OK)]
@@ -156,6 +160,7 @@ public class UsersController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [Authorize(Policies.HasAdministratorPermission)]
     public async Task<IActionResult> RegisterStudentsAsync([FromBody] RegisterUsersDto students)
     {
         return await RegisterAsync(students, Roles.Student, "api/users/students");
@@ -179,9 +184,122 @@ public class UsersController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [Authorize(Policies.HasAdministratorPermission)]
     public async Task<IActionResult> RegisterTeachersAsync([FromBody] RegisterUsersDto teachers)
     {
         return await RegisterAsync(teachers, Roles.Teacher, "api/users/teachers");
+    }
+    #endregion
+
+    #region Enrollments
+    /// <summary>
+    /// Gets a page with groups of the student.
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// If a user has the 'Administrator' or 'Teacher' role then he/she can use this method
+    /// for every user, otherwise a user can view only his/her own groups.
+    /// </para>
+    /// <para>
+    /// The 'studentId' route value is not checked in this method, if student with
+    /// this ID does not exist, then empty page will be returned.
+    /// </para>
+    /// <para>
+    /// If there is no items in the requested page, then empty page will be returned.
+    /// </para>
+    /// <para>
+    /// If the query param 'semesterId' is 0, then groups that are not linked to any semesters will be returned.</para>
+    /// </remarks>
+    /// <param name="studentId">ID of the student whose groups will be returned.</param>
+    /// <param name="properties">Pagination properties.</param>
+    /// <param name="filterProperties">Filter properties.</param>
+    /// <param name="name">An optional name to filter groups by.</param>
+    /// <param name="sortingMode">
+    /// An optional sorting mode.
+    /// <para>
+    /// Possible values:
+    /// </para>
+    /// <ul>
+    /// <li>default(or 0) - no sorting will be applied;</li>
+    /// <li>name(or 1) - groups will be sorted by their name(from a to z), this mode is applied by default;</li>
+    /// <li>nameDescending(or 2) - groups will be sorted by their name in descending order(from z to a);</li>
+    /// <li>newest(or 3) - groups will be sorted by their creation date in descending order;</li>
+    /// <li>oldest(or 4) - groups will be sorted by their creation date in ascending order.</li>
+    /// </ul>
+    /// </param>
+    /// <response code="200">Returns requested page with groups.</response>
+    /// <response code="400">Bad request.</response>
+    /// <response code="401">Unauthorized user call.</response>
+    /// <response code="403">User don't have a permission to view specified student's enrollments.</response>
+    [HttpGet("students/{studentId}/groups")]
+    [Authorize(Policies.CanViewStudentEnrollments)]
+    [ProducesResponseType(typeof(Page<GroupPreviewDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    public async Task<IActionResult> GetStudentGroupsAsync(
+        [FromRoute] string studentId,
+        [FromQuery] PaginationProperties properties,
+        [FromQuery] GroupsFilterProperties filterProperties,
+        [FromQuery] string? name,
+        [FromQuery] DefaultFilterSortingMode sortingMode = DefaultFilterSortingMode.Name)
+    {
+        GroupsFilter filter = new(filterProperties, name ?? string.Empty, sortingMode);
+        return Ok(await _usersService.GetGroupsOfStudentAsync(studentId, properties, filter));
+    }
+
+    /// <summary>
+    /// Gets a page with semesters of the student.
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// If a user has the 'Administrator' or 'Teacher' role then he/she can use this method
+    /// for every user, otherwise a user can view only his/her own semesters.
+    /// </para>
+    /// <para>
+    /// The 'studentId' route value is not checked in this method, if student with
+    /// this ID does not exist, then empty page will be returned.
+    /// </para>
+    /// <para>
+    /// If there is no items in the requested page, then empty page will be returned.
+    /// </para>
+    /// <para>
+    /// If the query param 'semesterId' is 0, then semesters that are not linked to any semesters will be returned.</para>
+    /// </remarks>
+    /// <param name="studentId">ID of the student whose semesters will be returned.</param>
+    /// <param name="properties">Pagination properties.</param>
+    /// <param name="filterProperties">Filter properties.</param>
+    /// <param name="name">An optional name to filter semesters by.</param>
+    /// <param name="sortingMode">
+    /// An optional sorting mode.
+    /// <para>
+    /// Possible values:
+    /// </para>
+    /// <ul>
+    /// <li>default(or 0) - no sorting will be applied;</li>
+    /// <li>name(or 1) - semesters will be sorted by their name(from a to z), this mode is applied by default;</li>
+    /// <li>nameDescending(or 2) - semesters will be sorted by their name in descending order(from z to a);</li>
+    /// <li>newest(or 3) - semesters will be sorted by their creation date in descending order;</li>
+    /// <li>oldest(or 4) - semesters will be sorted by their creation date in ascending order.</li>
+    /// </ul>
+    /// </param>
+    /// <response code="200">Returns requested page with semesters.</response>
+    /// <response code="400">Bad request.</response>
+    /// <response code="401">Unauthorized user call.</response>
+    /// <response code="403">User don't have a permission to view specified student's enrollments.</response>
+    [HttpGet("students/{studentId}/semesters")]
+    [Authorize(Policies.CanViewStudentEnrollments)]
+    [ProducesResponseType(typeof(Page<SemesterPreviewDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    public async Task<IActionResult> GetStudentSemestersAsync(
+        [FromRoute] string studentId,
+        [FromQuery] PaginationProperties properties,
+        [FromQuery] SemestersFilterProperties filterProperties,
+        [FromQuery] string? name,
+        [FromQuery] DefaultFilterSortingMode sortingMode = DefaultFilterSortingMode.Name)
+    {
+        SemestersFilter filter = new(filterProperties, name ?? string.Empty, sortingMode);
+        return Ok(await _usersService.GetSemestersOfStudentAsync(studentId, properties, filter));
     }
     #endregion
 }
