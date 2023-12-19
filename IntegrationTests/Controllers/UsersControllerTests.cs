@@ -1,7 +1,9 @@
 ﻿using EUniversity.Core.Dtos.Auth;
+using EUniversity.Core.Dtos.University;
 using EUniversity.Core.Dtos.Users;
 using EUniversity.Core.Filters;
 using EUniversity.Core.Models;
+using EUniversity.Core.Models.University;
 using EUniversity.Core.Pagination;
 using EUniversity.Core.Policy;
 using EUniversity.Core.Services.Auth;
@@ -260,5 +262,85 @@ public class UsersControllerTests : ControllersTest
         result.EnsureSuccessStatusCode();
         var users = await result.Content.ReadFromJsonAsync<IEnumerable<CreatedUserDto>>();
         Assert.That(users, Is.Not.Null);
+    }
+
+    [Test]
+    public async Task GetStudentGroups_ValidInput_SucceedsAndAppliesFilter()
+    {
+        // Arrange
+        using var client = CreateAdministratorClient();
+        string studentId = Guid.NewGuid().ToString();
+        WebApplicationFactory.UsersServiceMock
+            .GetGroupsOfStudentAsync(Arg.Any<string>(), Arg.Any<PaginationProperties>(),
+            Arg.Any<IFilter<Group>>())
+            .Returns(Task.FromResult(new Page<GroupPreviewDto>()));
+        PaginationProperties paginationProperties = new(1, 25);
+        GroupsFilterProperties filterProperties = new(TeacherId: "test-teacher-id", SemesterId: 0);
+
+        // Act
+        var result = await client.GetAsync($"api/users/students/{studentId}/groups?page={paginationProperties.Page}&pageSize={paginationProperties.PageSize}&teacherId={filterProperties.TeacherId}&semesterId={filterProperties.SemesterId}");
+
+        // Assert
+        result.EnsureSuccessStatusCode();
+        var groups = await result.Content.ReadFromJsonAsync<IEnumerable<GroupPreviewDto>>();
+        Assert.That(groups, Is.Not.Null);
+        await WebApplicationFactory.UsersServiceMock
+            .Received()
+            .GetGroupsOfStudentAsync(studentId, paginationProperties, 
+            Arg.Is<GroupsFilter>(f => f.Properties == filterProperties));
+    }
+
+    [Test]
+    public async Task GetStudentGroups_StudentAccessesAnotherStudentEnrollments_Returns403Forbidden()
+    {
+        // Arrange
+        using var client = CreateStudentClient("student-id");
+        string studentId = "another-student-id";
+
+        // Act
+        var result = await client.GetAsync($"api/users/students/{studentId}/groups");
+
+        // Assert
+        Assert.That(result.StatusCode, Is.EqualTo(HttpStatusCode.Forbidden));
+    }
+
+    [Test]
+    public async Task GetStudentSemesters_ValidInput_SucceedsAndAppliesFilter()
+    {
+        // Arrange
+        using var client = CreateAdministratorClient();
+        string studentId = Guid.NewGuid().ToString();
+        WebApplicationFactory.UsersServiceMock
+            .GetSemestersOfStudentAsync(Arg.Any<string>(), Arg.Any<PaginationProperties>(),
+            Arg.Any<IFilter<Semester>>())
+            .Returns(Task.FromResult(new Page<SemesterPreviewDto>()));
+        PaginationProperties paginationProperties = new(1, 25);
+        SemestersFilterProperties filterProperties = new();
+
+        // Act
+        var result = await client.GetAsync($"api/users/students/{studentId}/semesters?page={paginationProperties.Page}&pageSize={paginationProperties.PageSize}");
+
+        // Assert
+        result.EnsureSuccessStatusCode();
+        var semesters = await result.Content.ReadFromJsonAsync<IEnumerable<SemesterPreviewDto>>();
+        Assert.That(semesters, Is.Not.Null);
+        await WebApplicationFactory.UsersServiceMock
+            .Received()
+            .GetSemestersOfStudentAsync(studentId, paginationProperties, 
+            Arg.Is<SemestersFilter>(f => f.Properties == filterProperties));
+    }
+
+    [Test]
+    public async Task GetStudentSemesters_StudentAccessesAnotherStudentEnrollments_Returns403Forbidden()
+    {
+        // Arrange
+        using var client = CreateStudentClient("student-id");
+        string studentId = "another-student-id";
+
+        // Act
+        var result = await client.GetAsync($"api/users/students/{studentId}/semesters");
+
+        // Assert
+        Assert.That(result.StatusCode, Is.EqualTo(HttpStatusCode.Forbidden));
     }
 }
