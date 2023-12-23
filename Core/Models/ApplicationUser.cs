@@ -12,6 +12,8 @@ public class ApplicationUser : IdentityUser, IEntity<string>
     public const int MaxUserNameLength = 256;
     public const int MaxEmailLength = 256;
 
+    public const string AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._";
+
     // Attributes here are used for restricting length of names in the database,
     // not for validation:
 

@@ -8,6 +8,7 @@ public static class ValidationErrorCodes
     public const string PropertyTooLarge = "PropertyTooLargeError";
     public const string InvalidProperty = "InvalidPropertyError";
     public const string InvalidEmail = "InvalidEmailError";
+    public const string InvalidUserName = "InvalidUserNameError";
     public const string InvalidRange = "InvalidRangeError";
     public const string Equal = "EqualError";
     public const string EmptyCollection = "EmptyCollectionError";
