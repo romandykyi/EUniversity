@@ -5,6 +5,7 @@ using EUniversity.Core.Policy;
 using EUniversity.Core.Services.Auth;
 using EUniversity.Core.Services.Users;
 using EUniversity.Infrastructure.Filters;
+using IdentityModel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Attributes;
@@ -28,7 +29,6 @@ public class UsersController : ControllerBase
         _usersService = usersService;
     }
 
-    #region Get
     /// <summary>
     /// Gets a page with users.
     /// </summary>
@@ -57,7 +57,38 @@ public class UsersController : ControllerBase
         [FromQuery] UsersFilterProperties usersFilter)
     {
         return Ok(await _usersService.GetAllUsersAsync(paginationProperties,
-            new UsersFilter(usersFilter)));
+            new UsersFilter(usersFilter), false));
+    }
+
+    /// <summary>
+    /// Gets a page with deleted users.
+    /// </summary>
+    /// <remarks>
+    /// If there is no items in the requested page, then empty page will be returned.
+    /// <br />
+    /// 'sortingMode' is an optional query param that accepts one of these values
+    /// <ul>
+    /// <li>default(or 0) - no sorting will be applied;</li>
+    /// <li>fullName(or 1) - users will be sorted by their full name(from a to z), this mode is applied by default;</li>
+    /// <li>fullNameDescending(or 2) - users will be sorted by their full name in descending order(from z to a);</li>
+    /// <li>username(or 3) - users will be sorted by their username(from a to z), this mode is applied by default;</li>
+    /// <li>usernameDescending(or 4) - users will be sorted by their username in descending order(from z to a).</li>
+    /// </ul>
+    /// </remarks>
+    /// <response code="200">Returns a page with deleted users</response>
+    /// <response code="401">Unauthorized user call</response>
+    /// <response code="403">User lacks 'Administrator' role</response>
+    [HttpGet("deleted")]
+    [ProducesResponseType(typeof(Page<UserPreviewDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [Authorize(Policies.HasAdministratorPermission)]
+    public async Task<IActionResult> GetDeletedUsersAsync(
+        [FromQuery] PaginationProperties paginationProperties,
+        [FromQuery] UsersFilterProperties usersFilter)
+    {
+        return Ok(await _usersService.GetAllUsersAsync(paginationProperties,
+            new UsersFilter(usersFilter), true));
     }
 
     /// <summary>
@@ -121,9 +152,7 @@ public class UsersController : ControllerBase
         return Ok(await _usersService.GetUsersInRoleAsync(Roles.Teacher,
             paginationProperties, new UsersFilter(usersFilter)));
     }
-    #endregion
 
-    #region Post
     private async Task<IActionResult> RegisterAsync(RegisterUsersDto students, string role, string location)
     {
         List<CreatedUserDto> createdUsers = new();
@@ -189,9 +218,7 @@ public class UsersController : ControllerBase
     {
         return await RegisterAsync(teachers, Roles.Teacher, "api/users/teachers");
     }
-    #endregion
 
-    #region Enrollments
     /// <summary>
     /// Gets a page with groups of the student.
     /// </summary>
@@ -301,5 +328,117 @@ public class UsersController : ControllerBase
         SemestersFilter filter = new(filterProperties, name ?? string.Empty, sortingMode);
         return Ok(await _usersService.GetSemestersOfStudentAsync(studentId, properties, filter));
     }
-    #endregion
+
+    /// <summary>
+    /// Gets a user by its ID.
+    /// </summary>
+    /// <remarks>
+    /// Teachers and administrators can use this method to obtain any user by its ID,
+    /// other users can only obtain teachers by their IDs.
+    /// </remarks>
+    /// <response code="200">Returns requested user</response>
+    /// <response code="400">Bad request</response>
+    /// <response code="401">Unauthorized user call</response>
+    /// <response code="403">Caller doesn't have an access to this data</response>
+    /// <response code="404">User does not exist</response>
+    [HttpGet("{userId}", Name = nameof(GetUserByIdAsync))]
+    [Authorize(Policies.Default)]
+    [ProducesResponseType(typeof(UserViewDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetUserByIdAsync([FromRoute] string userId)
+    {
+        UserViewDto? result = await _usersService.GetByIdAsync(userId);
+        // User is not found
+        if (result == null)
+        {
+            return NotFound();
+        }
+        // Check if current user can view a user that is not teacher
+        if (!result.Roles.Contains(Roles.Teacher))
+        {
+            // If current user is not teacher or administrator then forbid this action
+            if (!User.HasClaim(JwtClaimTypes.Role, Roles.Teacher) &&
+                !User.HasClaim(JwtClaimTypes.Role, Roles.Administrator))
+            {
+                return Forbid();
+            }
+        }
+        return Ok(result);
+    }
+
+    /// <summary>
+    /// Edits a user by its ID.
+    /// </summary>
+    /// <response code="204">Success</response>
+    /// <response code="400">Malformed/invalid input</response>
+    /// <response code="401">Unauthorized user call</response>
+    /// <response code="403">Caller lacks 'Administrator' role</response>
+    /// <response code="404">User does not exist</response>
+    [HttpPut]
+    [Route("{userId}")]
+    [Authorize(Policies.HasAdministratorPermission)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> EditUserAsync([FromRoute] string userId,
+        [FromBody] EditUserDto dto)
+    {
+        var result = await _usersService.UpdateUserAsync(userId, dto);
+        return result ? NoContent() : NotFound();
+    }
+
+    /// <summary>
+    /// Edits user's roles.
+    /// </summary>
+    /// <remarks>
+    /// All properties in the request body are optional.
+    /// </remarks>
+    /// <response code="204">Success</response>
+    /// <response code="400">Malformed/invalid input</response>
+    /// <response code="401">Unauthorized user call</response>
+    /// <response code="403">Caller lacks 'Administrator' role</response>
+    /// <response code="404">User does not exist</response>
+    [HttpPatch]
+    [Route("{userId}/roles")]
+    [Authorize(Policies.HasAdministratorPermission)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> EditUserRolesAsync([FromRoute] string userId,
+        [FromBody] ChangeRolesDto dto)
+    {
+        var result = await _usersService.UpdateUserRolesAsync(userId, dto);
+        return result ? NoContent() : NotFound();
+    }
+
+    /// <summary>
+    /// Performs a soft delete for a user.
+    /// </summary>
+    /// <remarks>
+    /// Soft delete means, that user will remain in the database but will be unable to sign in
+    /// and some GET methods will ignore him/her.
+    /// </remarks>
+    /// <response code="204">Success</response>
+    /// <response code="401">Unauthorized user call</response>
+    /// <response code="403">Caller lacks 'Administrator' role</response>
+    /// <response code="404">User does not exist</response>
+    [HttpDelete]
+    [Route("{userId}")]
+    [Authorize(Policies.HasAdministratorPermission)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> DeleteSemesterAsync([FromRoute] string userId)
+    {
+        var result = await _usersService.DeleteUserAsync(userId);
+        return result ? NoContent() : NotFound();
+    }
 }

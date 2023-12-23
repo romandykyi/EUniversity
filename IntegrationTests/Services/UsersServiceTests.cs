@@ -1,3 +1,4 @@
+﻿using EUniversity.Core.Dtos.Users;
 ﻿using EUniversity.Core.Dtos.University;
 using EUniversity.Core.Filters;
 using EUniversity.Core.Models;
@@ -6,6 +7,7 @@ using EUniversity.Core.Pagination;
 using EUniversity.Core.Policy;
 using EUniversity.Core.Services.Users;
 using EUniversity.Infrastructure.Filters;
+using Microsoft.EntityFrameworkCore;
 using Mapster;
 using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
@@ -103,6 +105,31 @@ public class UsersServiceTests : ServicesTest
     }
 
     [Test]
+    public async Task GetAllUsers_OnlyDeleted_ReturnsOnlyDeletedUsers()
+    {
+        // Arrange
+        string[] teachers = await RegisterManyRolesAsync(2, Roles.Teacher);
+        string[] students = await RegisterManyRolesAsync(2, Roles.Student);
+        HashSet<string> allUsersIds = new(teachers.Concat(students));
+        foreach (var user in DbContext.Users.Where(u => allUsersIds.Contains(u.Id)))
+        {
+            user.IsDeleted = true;
+        }
+        await DbContext.SaveChangesAsync();
+        var filter = GetTestUsersFilter(allUsersIds);
+
+        // Act
+        var result = await _usersService.GetAllUsersAsync(new(1, 20), filter, true);
+
+        // Assert
+        Assert.Multiple(() =>
+        {
+            Assert.That(result.TotalItemsCount, Is.EqualTo(allUsersIds.Count));
+            Assert.That(result.Items.Select(u => u.Id), Is.EquivalentTo(allUsersIds));
+        });
+    }
+
+    [Test]
     public async Task GetUsersInRole_AppliesUsersFilter()
     {
         // Arrange
@@ -154,6 +181,202 @@ public class UsersServiceTests : ServicesTest
             Assert.That(result.TotalItemsCount, Is.EqualTo(expectedIds.Length));
             Assert.That(result.Items.Select(u => u.Id), Is.EquivalentTo(expectedIds));
         });
+    }
+
+    [Test]
+    public async Task DeleteUser_UserExists_Succeeds()
+    {
+        // Arrange
+        ApplicationUser user = new()
+        {
+            FirstName = "Test",
+            LastName = "User",
+            Email = "test-user@example.com",
+            IsDeleted = false
+        };
+        DbContext.Add(user);
+        await DbContext.SaveChangesAsync();
+
+        // Act
+        bool result = await _usersService.DeleteUserAsync(user.Id);
+
+        // Assert
+        Assert.Multiple(() =>
+        {
+            Assert.That(result);
+            Assert.That(user.IsDeleted);
+        });
+    }
+
+    [Test]
+    public async Task DeleteUser_UserDoesNotExist_ReturnsFalse()
+    {
+        // Arrange
+        string fakeId = "null";
+
+        // Act
+        bool result = await _usersService.DeleteUserAsync(fakeId);
+
+        // Assert
+        Assert.That(result, Is.False);
+    }
+
+    [Test]
+    public async Task DeleteUser_UserIsDeleted_ReturnsFalse()
+    {
+        // Arrange
+        ApplicationUser user = new()
+        {
+            FirstName = "Test",
+            LastName = "User",
+            Email = "test-user@example.com",
+            IsDeleted = true
+        };
+        DbContext.Add(user);
+        await DbContext.SaveChangesAsync();
+
+        // Act
+        bool result = await _usersService.DeleteUserAsync(user.Id);
+
+        // Assert
+        Assert.That(result, Is.False);
+    }
+
+    [Test]
+    public async Task GetUserById_UserExists_ReturnsUserWithRoles()
+    {
+        // Arrange
+        string[] roles = { Roles.Administrator, Roles.Teacher };
+        var user = await RegisterTestUserAsync(roles);
+
+        // Act
+        var result = await _usersService.GetByIdAsync(user.Id);
+
+        // Assert
+        Assert.That(result, Is.Not.Null);
+        Assert.Multiple(() =>
+        {
+            Assert.That(result.Id, Is.EqualTo(user.Id));
+            Assert.That(result.FirstName, Is.EqualTo(user.FirstName));
+            Assert.That(result.Email, Is.EqualTo(user.Email));
+            Assert.That(result.Roles, Is.EquivalentTo(roles));
+        });
+    }
+
+    [Test]
+    public async Task GetUserById_UserDoesNotExist_ReturnsNull()
+    {
+        // Arrange
+        string fakeId = "null";
+
+        // Act
+        var result = await _usersService.GetByIdAsync(fakeId);
+
+        // Assert
+        Assert.That(result, Is.Null);
+    }
+
+    [Test]
+    public virtual async Task UpdateUser_UserExists_Succeeds()
+    {
+        // Arrange
+        var user = await RegisterTestUserAsync();
+        EditUserDto editDto = new("new-user-name", "new@email.com", "NewName", "NewLastName", "NewMiddleName");
+
+        // Act
+        bool result = await _usersService.UpdateUserAsync(user.Id, editDto);
+
+        // Assert
+        Assert.That(result);
+        // Assert that user was updated
+        Assert.Multiple(() =>
+        {
+            Assert.That(user.UserName, Is.EqualTo(editDto.UserName));
+            Assert.That(user.Email, Is.EqualTo(editDto.Email));
+            Assert.That(user.FirstName, Is.EqualTo(editDto.FirstName));
+            Assert.That(user.LastName, Is.EqualTo(editDto.LastName));
+            Assert.That(user.MiddleName, Is.EqualTo(editDto.MiddleName));
+        });
+    }
+
+    [Test]
+    public virtual async Task UpdateUser_UserDoesNotExist_ReturnsFalse()
+    {
+        // Arrange
+        EditUserDto editDto = new("new-user-name", "new@email.com", "NewName", "NewLastName", "NewMiddleName");
+
+        // Act
+        bool result = await _usersService.UpdateUserAsync("null", editDto);
+
+        // Assert
+        Assert.That(result, Is.False);
+    }
+
+    [Test]
+    public virtual async Task UpdateUser_UserIsDeleted_ReturnsFalse()
+    {
+        // Arrange
+        var user = await RegisterTestUserAsync();
+        user.IsDeleted = true;
+        await DbContext.SaveChangesAsync();
+        EditUserDto editDto = new("new-user-name", "new@email.com", "NewName", "NewLastName", "NewMiddleName");
+
+        // Act
+        bool result = await _usersService.UpdateUserAsync(user.Id, editDto);
+
+        // Assert
+        Assert.That(result, Is.False);
+    }
+
+    [Test]
+    public virtual async Task UpdateUserRoles_UserExists_Succeeds()
+    {
+        // Arrange
+        var user = await RegisterTestUserAsync(Roles.Teacher);
+        string[] expectedRoles = { Roles.Administrator };
+        ChangeRolesDto dto = new(IsTeacher: false, IsAdministrator: true);
+
+        // Act
+        bool result = await _usersService.UpdateUserRolesAsync(user.Id, dto);
+
+        // Assert
+        Assert.That(result);
+        List<string> actualRoles = await DbContext.UserRoles
+            .AsNoTracking()
+            .Where(ur => ur.UserId == user.Id)
+            .Join(DbContext.Roles, ur => ur.RoleId, r => r.Id, (ur, r) => r)
+            .Select(r => r.Name!)
+            .ToListAsync();
+        Assert.That(actualRoles, Is.EquivalentTo(expectedRoles));
+    }
+
+    [Test]
+    public virtual async Task UpdateUserRoles_UserDoesNotExist_ReturnsFalse()
+    {
+        // Arrange
+        ChangeRolesDto dto = new();
+
+        // Act
+        bool result = await _usersService.UpdateUserRolesAsync("null", dto);
+
+        // Assert
+        Assert.That(result, Is.False);
+    }
+
+    [Test]
+    public virtual async Task UpdateUserRoles_UserIsDeleted_ReturnsFalse()
+    {
+        // Arrange
+        var user = await RegisterTestUserAsync();
+        user.IsDeleted = true;
+        await DbContext.SaveChangesAsync();
+        ChangeRolesDto dto = new();
+
+        // Act
+        bool result = await _usersService.UpdateUserRolesAsync(user.Id, dto);
+
+        // Assert
+        Assert.That(result, Is.False);
     }
 
     [Test]

@@ -59,7 +59,7 @@ public static class ServiceCollectionExtensions
 
                 options.User.RequireUniqueEmail = true;
                 // Alphanumeric characters with dashes, underscores and periods
-                options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._";
+                options.User.AllowedUserNameCharacters = ApplicationUser.AllowedUserNameCharacters;
             })
             .AddEntityFrameworkStores<ApplicationDbContext>();
 
