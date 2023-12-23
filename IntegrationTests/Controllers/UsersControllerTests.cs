@@ -27,7 +27,7 @@ public class UsersControllerTests : ControllersTest
             RegisterUser2
         });
 
-    public UserViewDto[] TestUsers =
+    public UserPreviewDto[] TestUsers =
     {
         new("1", "mail1@example.com", "user1", "First1", "Last1", null),
         new("2", "mail2@example.com", "user2", "First2", "Last2", "Middle2")
@@ -58,7 +58,7 @@ public class UsersControllerTests : ControllersTest
         (RolesGetMethods[1], Roles.Teacher)
     };
 
-    private Page<UserViewDto> GetTestPage(PaginationProperties paginationProperties)
+    private Page<UserPreviewDto> GetTestPage(PaginationProperties paginationProperties)
     {
         return new(TestUsers, paginationProperties, TestUsers.Length);
     }
@@ -86,7 +86,7 @@ public class UsersControllerTests : ControllersTest
 
         // Assert
         result.EnsureSuccessStatusCode();
-        var users = await result.Content.ReadFromJsonAsync<Page<UserViewDto>>();
+        var users = await result.Content.ReadFromJsonAsync<Page<UserPreviewDto>>();
         Assert.That(users, Is.Not.Null);
     }
 
@@ -103,7 +103,7 @@ public class UsersControllerTests : ControllersTest
 
         // Assert
         result.EnsureSuccessStatusCode();
-        var usersPage = await result.Content.ReadFromJsonAsync<Page<UserViewDto>>();
+        var usersPage = await result.Content.ReadFromJsonAsync<Page<UserPreviewDto>>();
         Assert.That(usersPage, Is.Not.Null);
         Assert.Multiple(() =>
         {
@@ -124,7 +124,7 @@ public class UsersControllerTests : ControllersTest
 
         // Assert
         result.EnsureSuccessStatusCode();
-        var usersPage = await result.Content.ReadFromJsonAsync<Page<UserViewDto>>();
+        var usersPage = await result.Content.ReadFromJsonAsync<Page<UserPreviewDto>>();
         Assert.That(usersPage, Is.Not.Null);
         await WebApplicationFactory.UsersServiceMock
             .Received()
@@ -144,7 +144,7 @@ public class UsersControllerTests : ControllersTest
 
         // Assert
         result.EnsureSuccessStatusCode();
-        var usersPage = await result.Content.ReadFromJsonAsync<Page<UserViewDto>>();
+        var usersPage = await result.Content.ReadFromJsonAsync<Page<UserPreviewDto>>();
         Assert.That(usersPage, Is.Not.Null);
         await WebApplicationFactory.UsersServiceMock
             .Received()

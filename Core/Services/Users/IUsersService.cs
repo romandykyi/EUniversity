@@ -21,7 +21,7 @@ public interface IUsersService
     /// <returns>
     /// Page with all users with the role.
     /// </returns>
-    Task<Page<UserViewDto>> GetUsersInRoleAsync(string role, PaginationProperties? properties = null,
+    Task<Page<UserPreviewDto>> GetUsersInRoleAsync(string role, PaginationProperties? properties = null,
         IFilter<ApplicationUser>? filter = null);
 
     /// <summary>
@@ -32,7 +32,7 @@ public interface IUsersService
     /// <returns>
     /// Page with all users.
     /// </returns>
-    Task<Page<UserViewDto>> GetAllUsersAsync(PaginationProperties? properties = null, IFilter<ApplicationUser>? filter = null);
+    Task<Page<UserPreviewDto>> GetAllUsersAsync(PaginationProperties? properties = null, IFilter<ApplicationUser>? filter = null);
 
     /// <summary>
     /// Gets a page with groups of the student.

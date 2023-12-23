@@ -20,7 +20,7 @@ public class UsersService : IUsersService
         _dbContext = dbContext;
     }
 
-    private static async Task<Page<UserViewDto>> SelectUsersAsync(
+    private static async Task<Page<UserPreviewDto>> SelectUsersAsync(
         IQueryable<ApplicationUser> query,
         PaginationProperties? properties,
         IFilter<ApplicationUser>? filter)
@@ -28,18 +28,18 @@ public class UsersService : IUsersService
         query = filter?.Apply(query) ?? query;
         return await query
             .AsNoTracking()
-            .ToPageAsync<ApplicationUser, UserViewDto>(properties);
+            .ToPageAsync<ApplicationUser, UserPreviewDto>(properties);
     }
 
     /// <inheritdoc />
-    public async Task<Page<UserViewDto>> GetAllUsersAsync(PaginationProperties? properties,
+    public async Task<Page<UserPreviewDto>> GetAllUsersAsync(PaginationProperties? properties,
         IFilter<ApplicationUser>? filter = null)
     {
         return await SelectUsersAsync(_dbContext.Users, properties, filter);
     }
 
     /// <inheritdoc />
-    public async Task<Page<UserViewDto>> GetUsersInRoleAsync(string role, PaginationProperties? properties,
+    public async Task<Page<UserPreviewDto>> GetUsersInRoleAsync(string role, PaginationProperties? properties,
         IFilter<ApplicationUser>? filter = null)
     {
         string? roleId = await _dbContext.Roles

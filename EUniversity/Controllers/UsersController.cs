@@ -48,7 +48,7 @@ public class UsersController : ControllerBase
     /// <response code="401">Unauthorized user call</response>
     /// <response code="403">User lacks 'Administrator' role</response>
     [HttpGet]
-    [ProducesResponseType(typeof(Page<UserViewDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(Page<UserPreviewDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [Authorize(Policies.HasAdministratorPermission)]
@@ -80,7 +80,7 @@ public class UsersController : ControllerBase
     /// <response code="403">User lacks 'Administrator' or 'Teacher' role</response>
     [HttpGet]
     [Route("students")]
-    [ProducesResponseType(typeof(Page<UserViewDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(Page<UserPreviewDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [Authorize(Policies.IsTeacherOrAdministrator)]
@@ -111,7 +111,7 @@ public class UsersController : ControllerBase
     /// <response code="401">Unauthorized user call</response>
     [HttpGet]
     [Route("teachers")]
-    [ProducesResponseType(typeof(Page<UserViewDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(Page<UserPreviewDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> GetAllTeachersAsync(
