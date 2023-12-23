@@ -5,6 +5,7 @@ using EUniversity.Core.Pagination;
 using EUniversity.Core.Services.Users;
 using EUniversity.Infrastructure.Data;
 using EUniversity.Infrastructure.Pagination;
+using IdentityModel;
 
 namespace EUniversity.Infrastructure.Services.Users;
 
@@ -86,6 +87,24 @@ public class UsersService : IUsersService
 
         // Set IsDeleted flag to true
         user.IsDeleted = true;
+        await _dbContext.SaveChangesAsync();
+
+        return true;
+    }
+
+    /// <inheritdoc />
+    public async Task<bool> UpdateUserAsync(string userId, EditUserDto editUserDto)
+    {
+        // Find a user by its ID
+        var user = await _dbContext.Users
+            .Where(u => u.Id == userId && !u.IsDeleted)
+            .FirstOrDefaultAsync();
+        // User does not exist(or deleted) - return false
+        if (user == null) return false;
+
+        // Update the user
+        editUserDto.Adapt(user);
+        _dbContext.Update(user);
         await _dbContext.SaveChangesAsync();
 
         return true;

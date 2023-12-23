@@ -5,6 +5,7 @@ using EUniversity.Core.Pagination;
 using EUniversity.Core.Policy;
 using EUniversity.Core.Services.Users;
 using EUniversity.Infrastructure.Filters;
+using IdentityModel;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
@@ -271,5 +272,57 @@ public class UsersServiceTests : ServicesTest
 
         // Assert
         Assert.That(result, Is.Null);
+    }
+
+    [Test]
+    public virtual async Task UpdateUser_UserExists_Succeeds()
+    {
+        // Arrange
+        var user = await RegisterTestUserAsync();
+        EditUserDto editDto = new("new-user-name", "new@email.com", "NewName", "NewLastName", "NewMiddleName");
+
+        // Act
+        bool result = await _usersService.UpdateUserAsync(user.Id, editDto);
+
+        // Assert
+        Assert.That(result);
+        // Assert that user was updated
+        Assert.Multiple(() =>
+        {
+            Assert.That(user.UserName, Is.EqualTo(editDto.UserName));
+            Assert.That(user.Email, Is.EqualTo(editDto.Email));
+            Assert.That(user.FirstName, Is.EqualTo(editDto.FirstName));
+            Assert.That(user.LastName, Is.EqualTo(editDto.LastName));
+            Assert.That(user.MiddleName, Is.EqualTo(editDto.MiddleName));
+        });
+    }
+
+    [Test]
+    public virtual async Task UpdateUser_UserDoesNotExist_ReturnsFalse()
+    {
+        // Arrange
+        EditUserDto editDto = new("new-user-name", "new@email.com", "NewName", "NewLastName", "NewMiddleName");
+
+        // Act
+        bool result = await _usersService.UpdateUserAsync("null", editDto);
+
+        // Assert
+        Assert.That(result, Is.False);
+    }
+
+    [Test]
+    public virtual async Task UpdateUser_UserIsDeleted_ReturnsFalse()
+    {
+        // Arrange
+        var user = await RegisterTestUserAsync();
+        user.IsDeleted = true;
+        await DbContext.SaveChangesAsync();
+        EditUserDto editDto = new("new-user-name", "new@email.com", "NewName", "NewLastName", "NewMiddleName");
+
+        // Act
+        bool result = await _usersService.UpdateUserAsync(user.Id, editDto);
+
+        // Assert
+        Assert.That(result, Is.False);
     }
 }

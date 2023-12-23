@@ -61,4 +61,17 @@ public interface IUsersService
     /// it returns <see langword="false" />.
     /// </returns>
     Task<bool> DeleteUserAsync(string userId);
+
+    /// <summary>
+    /// Updates an existing user identified by its unique identifier asynchronously.
+    /// </summary>
+    /// <param name="id">The unique identifier of the user to update.</param>
+    /// <param name="dto">The DTO containing data for updating the user.</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation. If the 
+    /// user is updated successfully, it returns <see langword="true" />.
+    /// If the user with the specified identifier is not found(or deleted), 
+    /// it returns <see langword="false" />.
+    /// </returns>
+    Task<bool> UpdateUserAsync(string userId, EditUserDto editUserDto);
 }
