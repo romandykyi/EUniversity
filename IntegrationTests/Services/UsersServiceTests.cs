@@ -4,6 +4,7 @@ using EUniversity.Core.Pagination;
 using EUniversity.Core.Policy;
 using EUniversity.Core.Services.Users;
 using EUniversity.Infrastructure.Filters;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
 
@@ -96,6 +97,31 @@ public class UsersServiceTests : ServicesTest
         {
             Assert.That(result.TotalItemsCount, Is.EqualTo(expectedIds.Count()));
             Assert.That(result.Items.Select(u => u.Id), Is.EquivalentTo(expectedIds));
+        });
+    }
+
+    [Test]
+    public async Task GetAllUsers_OnlyDeleted_ReturnsOnlyDeletedUsers()
+    {
+        // Arrange
+        string[] teachers = await RegisterManyRolesAsync(2, Roles.Teacher);
+        string[] students = await RegisterManyRolesAsync(2, Roles.Student);
+        HashSet<string> allUsersIds = new(teachers.Concat(students));
+        foreach (var user in DbContext.Users .Where(u => allUsersIds.Contains(u.Id)))
+        {
+            user.IsDeleted = true;
+        }
+        await DbContext.SaveChangesAsync();
+        var filter = GetTestUsersFilter(allUsersIds);
+
+        // Act
+        var result = await _usersService.GetAllUsersAsync(new(1, 20), filter, true);
+
+        // Assert
+        Assert.Multiple(() =>
+        {
+            Assert.That(result.TotalItemsCount, Is.EqualTo(allUsersIds.Count));
+            Assert.That(result.Items.Select(u => u.Id), Is.EquivalentTo(allUsersIds));
         });
     }
 

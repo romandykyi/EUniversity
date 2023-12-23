@@ -21,20 +21,20 @@ public class UsersService : IUsersService
     private static async Task<Page<UserViewDto>> SelectUsersAsync(
         IQueryable<ApplicationUser> query,
         PaginationProperties? properties,
-        IFilter<ApplicationUser>? filter)
+        IFilter<ApplicationUser>? filter,
+        bool onlyDeleted = false)
     {
+        query = query.AsNoTracking()
+            .Where(u => u.IsDeleted == onlyDeleted);
         query = filter?.Apply(query) ?? query;
-        return await query
-            .AsNoTracking()
-            .Where(u => !u.IsDeleted)
-            .ToPageAsync<ApplicationUser, UserViewDto>(properties);
+        return await query.ToPageAsync<ApplicationUser, UserViewDto>(properties);
     }
 
     /// <inheritdoc />
     public async Task<Page<UserViewDto>> GetAllUsersAsync(PaginationProperties? properties,
-        IFilter<ApplicationUser>? filter = null)
+        IFilter<ApplicationUser>? filter = null, bool onlyDeleted = false)
     {
-        return await SelectUsersAsync(_dbContext.Users, properties, filter);
+        return await SelectUsersAsync(_dbContext.Users, properties, filter, onlyDeleted);
     }
 
     /// <inheritdoc />
@@ -50,6 +50,6 @@ public class UsersService : IUsersService
         var users = _dbContext.UserRoles
             .Where(r => r.RoleId == roleId)
             .Join(_dbContext.Users, r => r.UserId, u => u.Id, (r, u) => u);
-        return await SelectUsersAsync(users, properties, filter);
+        return await SelectUsersAsync(users, properties, filter, false);
     }
 }

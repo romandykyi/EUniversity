@@ -27,8 +27,12 @@ public interface IUsersService
     /// </summary>
     /// <param name="properties">Optional pagination properties to use.</param>
     /// <param name="filter">Optional filter to be applied.</param>
+    /// <param name="onlyDeleted">
+    /// Optional flag. If <see langword="true"/> then only deleted users 
+    /// will be returned, otherwise only not deleted users will be returned.</param>
     /// <returns>
     /// Page with all users.
     /// </returns>
-    Task<Page<UserViewDto>> GetAllUsersAsync(PaginationProperties? properties = null, IFilter<ApplicationUser>? filter = null);
+    Task<Page<UserViewDto>> GetAllUsersAsync(PaginationProperties? properties = null, 
+        IFilter<ApplicationUser>? filter = null, bool onlyDeleted = false);
 }
