@@ -19,7 +19,7 @@ public interface IUsersService
     /// <returns>
     /// Page with all users with the role.
     /// </returns>
-    Task<Page<UserViewDto>> GetUsersInRoleAsync(string role, PaginationProperties? properties = null,
+    Task<Page<UserPreviewDto>> GetUsersInRoleAsync(string role, PaginationProperties? properties = null,
         IFilter<ApplicationUser>? filter = null);
 
     /// <summary>
@@ -33,8 +33,18 @@ public interface IUsersService
     /// <returns>
     /// Page with all users.
     /// </returns>
-    Task<Page<UserViewDto>> GetAllUsersAsync(PaginationProperties? properties = null, 
+    Task<Page<UserPreviewDto>> GetAllUsersAsync(PaginationProperties? properties = null, 
         IFilter<ApplicationUser>? filter = null, bool onlyDeleted = false);
+
+    /// <summary>
+    /// Gets a user by its ID.
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns>
+    /// A task that represents the asynchronous operation.
+    /// Returns <see langword="null" /> if user is not found.
+    /// </returns>
+    Task<UserViewDto?> GetByIdAsync(string id);
 
     /// <summary>
     /// Deletes a user identified by its unique identifier asynchronously.

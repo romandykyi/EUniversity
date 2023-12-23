@@ -18,7 +18,7 @@ public class UsersService : IUsersService
         _dbContext = dbContext;
     }
 
-    private static async Task<Page<UserViewDto>> SelectUsersAsync(
+    private static async Task<Page<UserPreviewDto>> SelectUsersAsync(
         IQueryable<ApplicationUser> query,
         PaginationProperties? properties,
         IFilter<ApplicationUser>? filter,
@@ -27,18 +27,18 @@ public class UsersService : IUsersService
         query = query.AsNoTracking()
             .Where(u => u.IsDeleted == onlyDeleted);
         query = filter?.Apply(query) ?? query;
-        return await query.ToPageAsync<ApplicationUser, UserViewDto>(properties);
+        return await query.ToPageAsync<ApplicationUser, UserPreviewDto>(properties);
     }
 
     /// <inheritdoc />
-    public async Task<Page<UserViewDto>> GetAllUsersAsync(PaginationProperties? properties,
+    public async Task<Page<UserPreviewDto>> GetAllUsersAsync(PaginationProperties? properties,
         IFilter<ApplicationUser>? filter = null, bool onlyDeleted = false)
     {
         return await SelectUsersAsync(_dbContext.Users, properties, filter, onlyDeleted);
     }
 
     /// <inheritdoc />
-    public async Task<Page<UserViewDto>> GetUsersInRoleAsync(string role, PaginationProperties? properties,
+    public async Task<Page<UserPreviewDto>> GetUsersInRoleAsync(string role, PaginationProperties? properties,
         IFilter<ApplicationUser>? filter = null)
     {
         string? roleId = await _dbContext.Roles
@@ -48,9 +48,30 @@ public class UsersService : IUsersService
             throw new InvalidOperationException($"Role {role} doesn't exists");
 
         var users = _dbContext.UserRoles
-            .Where(r => r.RoleId == roleId)
-            .Join(_dbContext.Users, r => r.UserId, u => u.Id, (r, u) => u);
+            .AsNoTracking()
+            .Where(ur => ur.RoleId == roleId)
+            .Join(_dbContext.Users, r => r.UserId, u => u.Id, (ur, u) => u);
         return await SelectUsersAsync(users, properties, filter, false);
+    }
+
+    /// <inheritdoc />
+    public async Task<UserViewDto?> GetByIdAsync(string id)
+    {
+        var user = await _dbContext.Users
+            .AsNoTracking()
+            .Where(u => u.Id == id)
+            .FirstOrDefaultAsync();
+        if (user == null) return null;
+
+        var dto = user.Adapt<UserViewDto>();
+        // Select user's roles
+        dto.Roles = await _dbContext.UserRoles
+            .AsNoTracking()
+            .Where(ur => ur.UserId == id)
+            .Join(_dbContext.Roles, ur => ur.RoleId, r => r.Id, (ur, r) => r)
+            .Select(r => r.Name!)
+            .ToListAsync();
+        return dto;
     }
 
     /// <inheritdoc />

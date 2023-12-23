@@ -1,4 +1,5 @@
-﻿using EUniversity.Core.Filters;
+﻿using EUniversity.Core.Dtos.Users;
+using EUniversity.Core.Filters;
 using EUniversity.Core.Models;
 using EUniversity.Core.Pagination;
 using EUniversity.Core.Policy;
@@ -180,7 +181,7 @@ public class UsersServiceTests : ServicesTest
     }
 
     [Test]
-    public virtual async Task DeleteUser_UserExists_Succeeds()
+    public async Task DeleteUser_UserExists_Succeeds()
     {
         // Arrange
         ApplicationUser user = new()
@@ -205,7 +206,7 @@ public class UsersServiceTests : ServicesTest
     }
 
     [Test]
-    public virtual async Task DeleteUser_UserDoesNotExist_ReturnsFalse()
+    public async Task DeleteUser_UserDoesNotExist_ReturnsFalse()
     {
         // Arrange
         string fakeId = "null";
@@ -218,7 +219,7 @@ public class UsersServiceTests : ServicesTest
     }
 
     [Test]
-    public virtual async Task DeleteUser_UserIsDeleted_ReturnsFalse()
+    public async Task DeleteUser_UserIsDeleted_ReturnsFalse()
     {
         // Arrange
         ApplicationUser user = new()
@@ -236,5 +237,39 @@ public class UsersServiceTests : ServicesTest
 
         // Assert
         Assert.That(result, Is.False);
+    }
+
+    [Test]
+    public async Task GetUserById_UserExists_ReturnsUserWithRoles()
+    {
+        // Arrange
+        string[] roles = { Roles.Administrator, Roles.Teacher };
+        var user = await RegisterTestUserAsync(roles);
+
+        // Act
+        var result = await _usersService.GetByIdAsync(user.Id);
+
+        // Assert
+        Assert.That(result, Is.Not.Null);
+        Assert.Multiple(() =>
+        {
+            Assert.That(result.Id, Is.EqualTo(user.Id));
+            Assert.That(result.FirstName, Is.EqualTo(user.FirstName));
+            Assert.That(result.Email, Is.EqualTo(user.Email));
+            Assert.That(result.Roles, Is.EquivalentTo(roles));
+        });
+    }
+
+    [Test]
+    public async Task GetUserById_UserDoesNotExist_ReturnsNull()
+    {
+        // Arrange
+        string fakeId = "null";
+
+        // Act
+        var result = await _usersService.GetByIdAsync(fakeId);
+
+        // Assert
+        Assert.That(result, Is.Null);
     }
 }
