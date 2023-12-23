@@ -45,6 +45,7 @@ public class UsersService : IUsersService
             .FirstOrDefaultAsync();
     }
 
+    /// <inheritdoc />
     public async Task<Page<UserPreviewDto>> GetAllUsersAsync(PaginationProperties? properties,
         IFilter<ApplicationUser>? filter = null, bool onlyDeleted = false)
     {
