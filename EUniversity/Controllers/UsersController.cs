@@ -28,7 +28,6 @@ public class UsersController : ControllerBase
         _usersService = usersService;
     }
 
-    #region Get
     /// <summary>
     /// Gets a page with users.
     /// </summary>
@@ -121,9 +120,7 @@ public class UsersController : ControllerBase
         return Ok(await _usersService.GetUsersInRoleAsync(Roles.Teacher,
             paginationProperties, new UsersFilter(usersFilter)));
     }
-    #endregion
 
-    #region Post
     private async Task<IActionResult> RegisterAsync(RegisterUsersDto students, string role, string location)
     {
         List<CreatedUserDto> createdUsers = new();
@@ -189,9 +186,7 @@ public class UsersController : ControllerBase
     {
         return await RegisterAsync(teachers, Roles.Teacher, "api/users/teachers");
     }
-    #endregion
 
-    #region Enrollments
     /// <summary>
     /// Gets a page with groups of the student.
     /// </summary>
@@ -301,5 +296,4 @@ public class UsersController : ControllerBase
         SemestersFilter filter = new(filterProperties, name ?? string.Empty, sortingMode);
         return Ok(await _usersService.GetSemestersOfStudentAsync(studentId, properties, filter));
     }
-    #endregion
 }
