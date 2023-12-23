@@ -26,6 +26,7 @@ public class UsersService : IUsersService
         query = filter?.Apply(query) ?? query;
         return await query
             .AsNoTracking()
+            .Where(u => !u.IsDeleted)
             .ToPageAsync<ApplicationUser, UserViewDto>(properties);
     }
 
