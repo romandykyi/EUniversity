@@ -325,4 +325,55 @@ public class UsersServiceTests : ServicesTest
         // Assert
         Assert.That(result, Is.False);
     }
+
+    [Test]
+    public virtual async Task UpdateUserRoles_UserExists_Succeeds()
+    {
+        // Arrange
+        var user = await RegisterTestUserAsync(Roles.Teacher);
+        string[] expectedRoles = { Roles.Administrator };
+        ChangeRolesDto dto = new(IsTeacher: false, IsAdministrator: true);
+
+        // Act
+        bool result = await _usersService.UpdateUserRolesAsync(user.Id, dto);
+
+        // Assert
+        Assert.That(result);
+        List<string> actualRoles = await DbContext.UserRoles
+            .AsNoTracking()
+            .Where(ur => ur.UserId == user.Id)
+            .Join(DbContext.Roles, ur => ur.RoleId, r => r.Id, (ur, r) => r)
+            .Select(r => r.Name!)
+            .ToListAsync();
+        Assert.That(actualRoles, Is.EquivalentTo(expectedRoles));
+    }
+
+    [Test]
+    public virtual async Task UpdateUserRoles_UserDoesNotExist_ReturnsFalse()
+    {
+        // Arrange
+        ChangeRolesDto dto = new();
+
+        // Act
+        bool result = await _usersService.UpdateUserRolesAsync("null", dto);
+
+        // Assert
+        Assert.That(result, Is.False);
+    }
+
+    [Test]
+    public virtual async Task UpdateUserRoles_UserIsDeleted_ReturnsFalse()
+    {
+        // Arrange
+        var user = await RegisterTestUserAsync();
+        user.IsDeleted = true;
+        await DbContext.SaveChangesAsync();
+        ChangeRolesDto dto = new();
+
+        // Act
+        bool result = await _usersService.UpdateUserRolesAsync(user.Id, dto);
+
+        // Assert
+        Assert.That(result, Is.False);
+    }
 }

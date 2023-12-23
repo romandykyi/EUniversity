@@ -65,8 +65,8 @@ public interface IUsersService
     /// <summary>
     /// Updates an existing user identified by its unique identifier asynchronously.
     /// </summary>
-    /// <param name="id">The unique identifier of the user to update.</param>
-    /// <param name="dto">The DTO containing data for updating the user.</param>
+    /// <param name="userId">The unique identifier of the user to update.</param>
+    /// <param name="editUserDto">The DTO containing data for updating the user.</param>
     /// <returns>
     /// A task that represents the asynchronous operation. If the 
     /// user is updated successfully, it returns <see langword="true" />.
@@ -74,4 +74,17 @@ public interface IUsersService
     /// it returns <see langword="false" />.
     /// </returns>
     Task<bool> UpdateUserAsync(string userId, EditUserDto editUserDto);
+
+    /// <summary>
+    /// Updates an existing user's roles.
+    /// </summary>
+    /// <param name="userId">The unique identifier of the user whose roles will be updated.</param>
+    /// <param name="dto">The DTO containing data for updating the user's roles.</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation. If the 
+    /// user's roles are updated successfully, it returns <see langword="true" />.
+    /// If the user with the specified identifier is not found(or deleted), 
+    /// it returns <see langword="false" />.
+    /// </returns>
+    public Task<bool> UpdateUserRolesAsync(string userId, ChangeRolesDto dto);
 }

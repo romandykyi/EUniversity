@@ -2,10 +2,12 @@
 using EUniversity.Core.Filters;
 using EUniversity.Core.Models;
 using EUniversity.Core.Pagination;
+using EUniversity.Core.Policy;
 using EUniversity.Core.Services.Users;
 using EUniversity.Infrastructure.Data;
 using EUniversity.Infrastructure.Pagination;
 using IdentityModel;
+using Microsoft.AspNetCore.Identity;
 
 namespace EUniversity.Infrastructure.Services.Users;
 
@@ -13,10 +15,12 @@ namespace EUniversity.Infrastructure.Services.Users;
 public class UsersService : IUsersService
 {
     private readonly ApplicationDbContext _dbContext;
+    private readonly UserManager<ApplicationUser> _userManager;
 
-    public UsersService(ApplicationDbContext dbContext)
+    public UsersService(ApplicationDbContext dbContext, UserManager<ApplicationUser> userManager)
     {
         _dbContext = dbContext;
+        _userManager = userManager;
     }
 
     private static async Task<Page<UserPreviewDto>> SelectUsersAsync(
@@ -29,6 +33,13 @@ public class UsersService : IUsersService
             .Where(u => u.IsDeleted == onlyDeleted);
         query = filter?.Apply(query) ?? query;
         return await query.ToPageAsync<ApplicationUser, UserPreviewDto>(properties);
+    }
+
+    private async Task<ApplicationUser?> GetExistingUserById(string id)
+    {
+        return await _dbContext.Users
+            .Where(u => u.Id == id && !u.IsDeleted)
+            .FirstOrDefaultAsync();
     }
 
     /// <inheritdoc />
@@ -79,9 +90,7 @@ public class UsersService : IUsersService
     public async Task<bool> DeleteUserAsync(string userId)
     {
         // Find a user by its ID
-        var user = await _dbContext.Users
-            .Where(u => u.Id == userId && !u.IsDeleted)
-            .FirstOrDefaultAsync();
+        var user = await GetExistingUserById(userId);
         // User does not exist(or deleted) - return false
         if (user == null) return false;
 
@@ -96,9 +105,7 @@ public class UsersService : IUsersService
     public async Task<bool> UpdateUserAsync(string userId, EditUserDto editUserDto)
     {
         // Find a user by its ID
-        var user = await _dbContext.Users
-            .Where(u => u.Id == userId && !u.IsDeleted)
-            .FirstOrDefaultAsync();
+        var user = await GetExistingUserById(userId);
         // User does not exist(or deleted) - return false
         if (user == null) return false;
 
@@ -106,6 +113,43 @@ public class UsersService : IUsersService
         editUserDto.Adapt(user);
         _dbContext.Update(user);
         await _dbContext.SaveChangesAsync();
+
+        return true;
+    }
+
+    /// <inheritdoc />
+    public async Task<bool> UpdateUserRolesAsync(string userId, ChangeRolesDto dto)
+    {
+        // Find a user by its ID
+        var user = await GetExistingUserById(userId);
+        // User does not exist(or deleted) - return false
+        if (user == null) return false;
+
+        // Needs refactor if many roles will be added
+        if (dto.IsTeacher == true)
+        {
+            await _userManager.AddToRoleAsync(user, Roles.Teacher);
+        }
+        else if (dto.IsTeacher == false)
+        {
+            await _userManager.RemoveFromRoleAsync(user, Roles.Teacher);
+        }
+        if (dto.IsAdministrator == true)
+        {
+            await _userManager.AddToRoleAsync(user, Roles.Administrator);
+        }
+        else if (dto.IsAdministrator == false)
+        {
+            await _userManager.RemoveFromRoleAsync(user, Roles.Administrator);
+        }
+        if (dto.IsStudent == true)
+        {
+            await _userManager.AddToRoleAsync(user, Roles.Student);
+        }
+        else if (dto.IsStudent == false)
+        {
+            await _userManager.RemoveFromRoleAsync(user, Roles.Student);
+        }
 
         return true;
     }
