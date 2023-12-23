@@ -52,4 +52,21 @@ public class UsersService : IUsersService
             .Join(_dbContext.Users, r => r.UserId, u => u.Id, (r, u) => u);
         return await SelectUsersAsync(users, properties, filter, false);
     }
+
+    /// <inheritdoc />
+    public async Task<bool> DeleteUserAsync(string userId)
+    {
+        // Find a user by its ID
+        var user = await _dbContext.Users
+            .Where(u => u.Id == userId && !u.IsDeleted)
+            .FirstOrDefaultAsync();
+        // User does not exist(or deleted) - return false
+        if (user == null) return false;
+
+        // Set IsDeleted flag to true
+        user.IsDeleted = true;
+        await _dbContext.SaveChangesAsync();
+
+        return true;
+    }
 }

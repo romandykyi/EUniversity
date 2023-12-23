@@ -107,7 +107,7 @@ public class UsersServiceTests : ServicesTest
         string[] teachers = await RegisterManyRolesAsync(2, Roles.Teacher);
         string[] students = await RegisterManyRolesAsync(2, Roles.Student);
         HashSet<string> allUsersIds = new(teachers.Concat(students));
-        foreach (var user in DbContext.Users .Where(u => allUsersIds.Contains(u.Id)))
+        foreach (var user in DbContext.Users.Where(u => allUsersIds.Contains(u.Id)))
         {
             user.IsDeleted = true;
         }
@@ -177,5 +177,64 @@ public class UsersServiceTests : ServicesTest
             Assert.That(result.TotalItemsCount, Is.EqualTo(expectedIds.Length));
             Assert.That(result.Items.Select(u => u.Id), Is.EquivalentTo(expectedIds));
         });
+    }
+
+    [Test]
+    public virtual async Task DeleteUser_UserExists_Succeeds()
+    {
+        // Arrange
+        ApplicationUser user = new()
+        {
+            FirstName = "Test",
+            LastName = "User",
+            Email = "test-user@example.com",
+            IsDeleted = false
+        };
+        DbContext.Add(user);
+        await DbContext.SaveChangesAsync();
+
+        // Act
+        bool result = await _usersService.DeleteUserAsync(user.Id);
+
+        // Assert
+        Assert.Multiple(() =>
+        {
+            Assert.That(result);
+            Assert.That(user.IsDeleted);
+        });
+    }
+
+    [Test]
+    public virtual async Task DeleteUser_UserDoesNotExist_ReturnsFalse()
+    {
+        // Arrange
+        string fakeId = "null";
+
+        // Act
+        bool result = await _usersService.DeleteUserAsync(fakeId);
+
+        // Assert
+        Assert.That(result, Is.False);
+    }
+
+    [Test]
+    public virtual async Task DeleteUser_UserIsDeleted_ReturnsFalse()
+    {
+        // Arrange
+        ApplicationUser user = new()
+        {
+            FirstName = "Test",
+            LastName = "User",
+            Email = "test-user@example.com",
+            IsDeleted = true
+        };
+        DbContext.Add(user);
+        await DbContext.SaveChangesAsync();
+
+        // Act
+        bool result = await _usersService.DeleteUserAsync(user.Id);
+
+        // Assert
+        Assert.That(result, Is.False);
     }
 }
