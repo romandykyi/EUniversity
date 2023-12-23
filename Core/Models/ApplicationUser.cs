@@ -21,4 +21,11 @@ public class ApplicationUser : IdentityUser, IEntity<string>
     public string LastName { get; set; } = null!;
     [StringLength(MaxNameLength)]
     public string? MiddleName { get; set; }
+
+    /// <summary>
+    /// Determines whether the user is about to be deleted.
+    /// If <see cref="true"/>, then user doesn't exist for client,
+    /// but can be restored.
+    /// </summary>
+    public bool IsDeleted { get; set; } = false;
 }
