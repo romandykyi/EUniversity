@@ -3,9 +3,9 @@
 namespace EUniversity.Core.Models.University.Grades;
 
 /// <summary>
-/// A base class for assigned grades.
+/// A class for assigned grades.
 /// </summary>
-public abstract class AssignedGrade : IEntity<int>, IHasCreationDate, IHasUpdateDate
+public class AssignedGrade : IEntity<int>, IHasCreationDate, IHasUpdateDate
 {
     public const int MaxNotesLength = 500;
 
@@ -48,6 +48,10 @@ public abstract class AssignedGrade : IEntity<int>, IHasCreationDate, IHasUpdate
     /// Optional notes related to the grade.
     /// </summary>
     public string? Notes { get; set; }
+    /// <summary>
+    /// Optional foreign key of activity type of the grade.
+    /// </summary>
+    public int? ActivityTypeId { get; set; }
 
     /// <summary>
     /// Navigation property for the assigned grade.
@@ -69,4 +73,8 @@ public abstract class AssignedGrade : IEntity<int>, IHasCreationDate, IHasUpdate
     /// Navigation property for the student, who was graded.
     /// </summary>
     public ApplicationUser? Student { get; set; }
+    /// <summary>
+    /// Navigation property for the activity type of the grade.
+    /// </summary>
+    public ActivityType? ActivityType { get; set; }
 }

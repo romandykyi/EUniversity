@@ -10,8 +10,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace EUniversity.Core.Validation.University.Grades;
 
-public class AssignedGradeCreateDtoValidator<T> : AbstractValidator<T>
-    where T : AssignedGradeCreateDto
+public class AssignedGradeCreateDtoValidator : AbstractValidator<AssignedGradeCreateDto>
 {
     public AssignedGradeCreateDtoValidator(IEntityExistenceChecker existenceChecker,
         UserManager<ApplicationUser> userManager)
@@ -35,5 +34,12 @@ public class AssignedGradeCreateDtoValidator<T> : AbstractValidator<T>
 
         RuleFor(g => g.StudentId)
             .IsIdOfValidUserInRole(userManager, Roles.Student);
+
+        RuleFor(g => g.ActivityTypeId!.Value)
+            .MustAsync(async (id, _) =>
+                await existenceChecker.ExistsAsync<ActivityType, int>(id))
+            .WithErrorCode(ValidationErrorCodes.InvalidForeignKey)
+            .WithMessage("Activity type does not exist")
+            .When(g => g.ActivityTypeId != null);
     }
 }
