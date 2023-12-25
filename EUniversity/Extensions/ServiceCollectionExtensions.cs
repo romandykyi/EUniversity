@@ -4,6 +4,7 @@ using EUniversity.Core.Policy;
 using EUniversity.Core.Services;
 using EUniversity.Core.Services.Auth;
 using EUniversity.Core.Services.University;
+using EUniversity.Core.Services.University.Grades;
 using EUniversity.Core.Services.Users;
 using EUniversity.Core.Validation.Auth;
 using EUniversity.Infrastructure.Data;
@@ -177,6 +178,7 @@ public static class ServiceCollectionExtensions
             // University services:
             .AddScoped<IClassroomsService, ClassroomsService>()
             .AddScoped<IGradesService, GradesService>()
+            .AddScoped<IAssignedGradesService, AssignedGradesService>()
             .AddScoped<ICoursesService, CoursesService>()
             .AddScoped<IGroupsService, GroupsService>()
             .AddScoped<IStudentGroupsService, StudentGroupsService>()

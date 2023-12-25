@@ -18,24 +18,27 @@ public interface IAssignedGradesService
     /// </remarks>
     /// <param name="properties"><see cref="PaginationProperties"/> object specifying pagination parameters.</param>
     /// <param name="filter">An optional filter to apply.</param>
+    /// <param name="includeGroups">If <see langword="true"/>, then groups of grades will be included.</param>
+    /// <param name="includeStudents">If <see langword="true"/>, then students(assignees) will be included.</param>
     /// <typeparam name="TViewDto">A type of returned DTOs.</typeparam>
     /// <returns>
     /// A task that represents the asynchronous operation, containing 
     /// the page with entities previews.
     /// </returns>
-    Task<Page<TViewDto>> GetPageAsync<TViewDto>(PaginationProperties properties, IFilter<AssignedGrade>? filter = null);
+    Task<Page<TViewDto>> GetPageAsync<TViewDto>(PaginationProperties properties, IFilter<AssignedGrade>? filter = null,
+        bool includeGroups = true, bool includeStudents = true);
 
     /// <summary>
     /// Assignes a grade to a student based on the information provided in the
     /// <see cref="dto" /> asynchronously.
     /// </summary>
     /// <param name="dto">The DTO containing data for assigning the grade.</param>
-    /// <param name="AssignerId">ID of the user who assigns the grade.</param>
+    /// <param name="assignerId">ID of the user who assigns the grade.</param>
     /// <returns>
     /// A task that represents the asynchronous operation, containing
     /// the newly created entity.
     /// </returns>
-    Task<AssignedGrade> AssignAsync(AssignedGradeCreateDto dto, string AssignerId);
+    Task<AssignedGrade> AssignAsync(AssignedGradeCreateDto dto, string assignerId);
 
     /// <summary>
     /// Reassignes a grade to a student based on the information provided in the
