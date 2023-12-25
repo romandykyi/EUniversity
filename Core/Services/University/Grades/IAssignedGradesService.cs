@@ -1,4 +1,5 @@
-﻿using EUniversity.Core.Filters;
+﻿using EUniversity.Core.Dtos.University.Grades;
+using EUniversity.Core.Filters;
 using EUniversity.Core.Models.University.Grades;
 using EUniversity.Core.Pagination;
 
@@ -7,13 +8,7 @@ namespace EUniversity.Core.Services.University.Grades;
 /// <summary>
 /// An interface for retrieving and assigning grades.
 /// </summary>
-/// <remarks>
-/// Requires map from <typeparamref name="TAssignDto"/> to <typeparamref name="TGrade"/>
-/// and from <typeparamref name="TReassignDto"/> to <typeparamref name="TGrade"/>.
-/// </remarks>
-/// <typeparam name="TGrade">A type which implements the <see cref="AssignedGrade"/> class.</typeparam>
-public interface IAssignedGradesService<TGrade, TAssignDto, TReassignDto>
-    where TGrade : AssignedGrade
+public interface IAssignedGradesService
 {
     /// <summary>
     /// Retrieves a page with grades asynchronously.
@@ -28,7 +23,7 @@ public interface IAssignedGradesService<TGrade, TAssignDto, TReassignDto>
     /// A task that represents the asynchronous operation, containing 
     /// the page with entities previews.
     /// </returns>
-    Task<Page<TViewDto>> GetPageAsync<TViewDto>(PaginationProperties properties, IFilter<TGrade>? filter = null);
+    Task<Page<TViewDto>> GetPageAsync<TViewDto>(PaginationProperties properties, IFilter<AssignedGrade>? filter = null);
 
     /// <summary>
     /// Assignes a grade to a student based on the information provided in the
@@ -40,7 +35,7 @@ public interface IAssignedGradesService<TGrade, TAssignDto, TReassignDto>
     /// A task that represents the asynchronous operation, containing
     /// the newly created entity.
     /// </returns>
-    Task<TGrade> AssignAsync(TAssignDto dto, string AssignerId);
+    Task<AssignedGrade> AssignAsync(AssignedGradeCreateDto dto, string AssignerId);
 
     /// <summary>
     /// Reassignes a grade to a student based on the information provided in the
@@ -48,14 +43,14 @@ public interface IAssignedGradesService<TGrade, TAssignDto, TReassignDto>
     /// </summary>
     /// <param name="id">The unique identifier of the grade to reassign.</param>
     /// <param name="dto">The DTO containing data for reassigning the grade.</param>
-    /// <param name="RessignerId">ID of the user who reassigns the grade.</param>
+    /// <param name="reassignerId">ID of the user who reassigns the grade.</param>
     /// <returns>
     /// A task that represents the asynchronous operation. If the 
     /// grade is reassigned successfully, it returns <see langword="true" />.
     /// If the grade to reassign was not not found, 
     /// it returns <see langword="false" />.
     /// </returns>
-    Task<bool> RessignAsync(int id, TReassignDto dto, string ReassignerId);
+    Task<bool> RessignAsync(int id, AssignedGradeUpdateDto dto, string reassignerId);
 
     /// <summary>
     /// Deletes a grade identified by its unique identifier asynchronously.
