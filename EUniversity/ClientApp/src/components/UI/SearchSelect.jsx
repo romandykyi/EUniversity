@@ -84,19 +84,19 @@ const SearchSelect = ({
     return (
         <>
             <input 
-                className="form-control mb-4 w-full text-xl font-medium min-w-[200px] bg-background text-text focus:bg-background focus:text-text placeholder:text-text"
+                className="form-control w-full text-xl font-medium min-w-[200px] bg-background text-text focus:bg-background focus:text-text placeholder:text-text"
                 type="text" 
                 value = {inputValue}
                 onChange={searchItem}
                 placeholder={`search ${title}. . .`}
             />
-            {
+             {
                 inputValue === (isUser ? `${chosenItem.firstName} ${chosenItem.lastName}` : `${chosenItem.name}`)
                 ?   ""
-                :   <div className="flex flex-col gap-1 z-40 max-h-24 bottom-6 overflow-y-auto scrollbar-hide relative bg-background rounded-lg text-text shadow-lg p-2">
+                :   <div className="flex flex-col gap-1 z-10 max-h-24 overflow-y-auto scrollbar-hide absolute max-w-[353px] w-full bg-background rounded-lg text-text shadow-lg p-2">
                         {inputValue
-                            ? (
-                                foundItems.map((item, index) => (
+                            ?   foundItems.length
+                                ? foundItems.map((item, index) => (
                                     <button 
                                         key={item.id} 
                                         className="text-text text-xl font-medium text-left" 
@@ -109,10 +109,8 @@ const SearchSelect = ({
                                         }
                                     </button>
                                 ))
-                            ) 
-                            : (
-                                <p className="text-gray-500 text-xl font-medium">no items found</p>
-                            )
+                                : <p className="text-gray-500 text-xl font-medium">no items found</p>
+                            :   ""
                         }
                     </div>   
             }

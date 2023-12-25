@@ -67,14 +67,16 @@ public class AuthService : IAuthService
     /// <inheritdoc />
     public async Task<bool> LogInAsync(LogInDto login)
     {
+        ApplicationUser? user = await _userManager.FindByNameAsync(login.UserName);
+        // User is not found or deleted - log in failed
+        if (user == null || user.IsDeleted)
+        {
+            return false;
+        }
         // This doesn't count login failures towards account lockout and two factor authorization
         var result = await _signInManager.PasswordSignInAsync(
-            login.UserName, login.Password, login.RememberMe, lockoutOnFailure: false);
-        if (result.Succeeded)
-        {
-            return true;
-        }
-        return false;
+            user, login.Password, login.RememberMe, lockoutOnFailure: false);
+        return result.Succeeded;
     }
 
     /// <inheritdoc />

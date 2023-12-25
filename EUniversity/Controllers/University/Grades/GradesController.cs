@@ -30,23 +30,19 @@ public class GradesController : ControllerBase
     /// Gets a page with grades.
     /// </summary>
     /// <remarks>
-    /// If there is no items in the requested page, then empty page will be returned.
-    /// </remarks>
-    /// <param name="properties">Pagination properties.</param>
-    /// <param name="name">An optional name to filter grades by.</param>
-    /// <param name="sortingMode">
-    /// An optional sorting mode.
-    /// <para>
-    /// Possible values:
+    /// If there is no items in the requested page, then empty page will be returned.<para>
+    /// Possible sortingMode values:
     /// </para>
     /// <ul>
     /// <li>default(or 0) - no sorting will be applied;</li>
-    /// <li>name(or 1) - grades will be sorted by their name(from a to z), this mode is applied by default;</li>
+    /// <li>name(or 1) - grades will be sorted by their name(from a to z)</li>
     /// <li>nameDescending(or 2) - grades will be sorted by their name in descending order(from z to a);</li>
-    /// <li>newest(or 3) - grades will be sorted by their creation date in descending order;</li>
-    /// <li>oldest(or 4) - grades will be sorted by their creation date in ascending order.</li>
+    /// <li>score(or 3) - grades will be sorted by their score in ascending order;</li>
+    /// <li>scoreDescending(or 4) - grades will be sorted by their score in descending order, this mode is applied by default.</li>
     /// </ul>
-    /// </param>
+    /// </remarks>
+    /// <param name="properties">Pagination properties.</param>
+    /// <param name="filterProperties"></param>
     /// <response code="200">Returns requested page with grades.</response>
     /// <response code="400">Bad request</response>
     /// <response code="401">Unauthorized user call</response>
@@ -57,10 +53,9 @@ public class GradesController : ControllerBase
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> GetGradesPageAsync(
         [FromQuery] PaginationProperties properties,
-        [FromQuery] string? name,
-        [FromQuery] DefaultFilterSortingMode sortingMode = DefaultFilterSortingMode.Name)
+        [FromQuery] GradesFilterProperties filterProperties)
     {
-        DefaultFilter<Grade> filter = new(name ?? string.Empty, sortingMode);
+        GradesFilter filter = new(filterProperties);
         return Ok(await _gradesService.GetPageAsync(properties, filter));
     }
 

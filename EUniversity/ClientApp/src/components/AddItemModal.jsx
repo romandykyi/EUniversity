@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import Table from "./UI/Table/Table";
 import Button from "./UI/Button";
 import SearchSelect from "./UI/SearchSelect"
+import SearchSelectForClasses from "./UI/SearchSelectForClasses";
 
 const AddClassroomModal = ({
     isVisible,
@@ -152,7 +153,7 @@ const AddClassroomModal = ({
                         <tr key={row.id}>
                             <td>
                                 <input
-                                className="bg-background text-text"
+                                    className="bg-background text-text"
                                     type="text"
                                     placeholder="name"
                                     value={row.name}
@@ -162,7 +163,7 @@ const AddClassroomModal = ({
                             </td>
                             <td>
                                 <input
-                                className="bg-background text-text"
+                                    className="bg-background text-text"
                                     type="date"
                                     placeholder="from"
                                     value={row.dateFrom}
@@ -171,7 +172,7 @@ const AddClassroomModal = ({
                             </td>
                             <td>
                             <input
-                            className="bg-background text-text"
+                                    className="bg-background text-text"
                                     type="date"
                                     placeholder="to"
                                     value={row.dateTo}
@@ -186,7 +187,90 @@ const AddClassroomModal = ({
                     teacher: ''
                 });
                 break;
-            
+            case "classes":
+                setTableHead((
+                        <tr>
+                            <th>Class type</th>
+                            <th>Classroom</th>
+                            <th>Group</th>
+                            <th>Start date</th>
+                            <th>Start time</th>
+                            <th>Duration</th>
+                            <th>Repeats</th>
+                            <th>Repeat delay (in days)</th>
+                        </tr>
+                    ));
+                    setTableBody(items.map((row) => (
+                        <tr key={row.id}>
+                            <td>
+                                <SearchSelectForClasses
+                                    handleInputChange={handleInputChange}
+                                    itemId={row.id}
+                                    link="/api/classTypes?name="
+                                    title="classType"
+                                />
+                            </td>
+                            <td>
+                                <SearchSelectForClasses
+                                    handleInputChange={handleInputChange}
+                                    itemId={row.id}
+                                    link="/api/classrooms?name="
+                                    title="classroom"
+                                />
+                            </td>
+                            <td>
+                                <SearchSelectForClasses
+                                    handleInputChange={handleInputChange}
+                                    itemId={row.id}
+                                    link="/api/groups?name="
+                                    title="group"
+                                />
+                            </td>
+                            <td>
+                                <input
+                                    className="bg-background text-text"
+                                    type="date"
+                                    placeholder="from"
+                                    value={row.startDate}
+                                    onChange={(e) => handleInputChange(row.id, 'startDate', e.target.value)}
+                                />
+                            </td>
+                            <td>
+                                <input 
+                                    type="time"
+                                    onChange={(e) => handleInputChange(row.id, 'startTime', e.target.value)}
+                                />
+                            </td>
+                            <td>
+                                <input 
+                                    className="bg-background" 
+                                    type="text" 
+                                    pattern="[0-2][0-9]:[0-5][0-9]"
+                                    onChange={(e) => handleInputChange(row.id, 'duration', e.target.value)} 
+                                    placeholder="example: 01:45"
+                                />
+                            </td>
+                            <td>
+                                <input 
+                                    type="number" 
+                                    onChange={(e) => handleInputChange(row.id, 'repeats', e.target.value)}
+                                    placeholder="provide a number"
+                                />
+                            </td>
+                            
+                            <td>
+                                <input 
+                                    type="number" 
+                                    onChange={(e) => handleInputChange(row.id, 'repeatsDelayDays', e.target.value)}
+                                    placeholder="provide a number"
+                                />
+                            </td>
+                        </tr>
+                    )));
+                setItemParams({
+                    name: ''
+                });
+                break;
             default:
                 setTableHead((
                         <tr>
@@ -235,7 +319,27 @@ const AddClassroomModal = ({
         const formattedDate = `${year}-${month}-${day}T${hours}:${minutes}:${seconds}.${milliseconds}${timezoneOffsetSign}${timezoneOffsetHours}:${timezoneOffsetMinutes}`;
       
         return formattedDate;
-      }
+    };
+
+    const convertToISOString = input => {
+        const [time, date] = input.split(' ');
+        const [hours, minutes] = time.split(':');
+        const inputDate = new Date(`${date}T${hours}:${minutes}:00Z`);
+        const year = inputDate.getUTCFullYear();
+        const month = String(inputDate.getUTCMonth() + 1).padStart(2, '0');
+        const day = String(inputDate.getUTCDate()).padStart(2, '0');
+        const hoursUTC = String(inputDate.getUTCHours()).padStart(2, '0');
+        const minutesUTC = String(inputDate.getUTCMinutes()).padStart(2, '0');
+        const secondsUTC = String(inputDate.getUTCSeconds()).padStart(2, '0');
+        const milliseconds = String(inputDate.getUTCMilliseconds()).padStart(3, '0');
+        return `${year}-${month}-${day}T${hoursUTC}:${minutesUTC}:${secondsUTC}.${milliseconds}Z`;
+    };
+
+    const timeToTicks = (timeString) => {
+        const [hours, minutes, seconds] = timeString.split(':');
+        const totalSeconds = parseInt(hours, 10) * 3600 + parseInt(minutes, 10) * 60 + parseInt(seconds, 10);
+        return totalSeconds * 10000000;
+    };
 
     const getResponseForUsers = async(usersType, usersList) => {
         try {
@@ -314,6 +418,17 @@ const AddClassroomModal = ({
                 
             }));
         }
+        else if (responseTitle === "classes") {
+            postItems = items.map(item => ({
+                classTypeId: item.classType,
+                classroomId: item.classroom,
+                groupId: item.group,
+                startDate: convertToISOString(`${item.startTime} ${item.startDate}`),
+                duration: `${item.duration}:00`,
+                repeats: parseInt(item.repeats),
+                repeatsDelayDays: parseInt(item.repeatsDelayDays)
+            }));
+        }
         else {
             postItems = items.map(item => ({
                 name: item.name
@@ -322,6 +437,7 @@ const AddClassroomModal = ({
 
         if (responseTitle !== "users") {
             for (let postItem of postItems) {
+                console.log(postItem)
                 try {
                     const response = await fetch(`/api/${responseTitle}`, {
                         method: "POST",
@@ -358,6 +474,7 @@ const AddClassroomModal = ({
 
     const handleClickOnBg = () => {
         setIsVisible(false);
+        setErrors([]);
         document.body.style.overflow = 'auto';
     };
 
@@ -400,7 +517,7 @@ const AddClassroomModal = ({
                         />
                         <div className="newUser__error form__error">
                             {
-                                errors.map(error => <><p>{error}</p></>)
+                                errors.map(error => <><p className="text-danger">{error}</p></>)
                             }
                         </div>
                     <Button type="submit">Register new {title}</Button>

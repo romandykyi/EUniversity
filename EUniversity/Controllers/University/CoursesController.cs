@@ -31,8 +31,10 @@ public class CoursesController : ControllerBase
     /// </summary>
     /// <remarks>
     /// If there is no items in the requested page, then empty page will be returned.
+    /// If the query param 'semesterId' is 0, then courses that are not linked to any semesters will be returned.
     /// </remarks>
     /// <param name="properties">Pagination properties.</param>
+    /// <param name="filterProperties">Pagination properties.</param>
     /// <param name="name">An optional name to filter courses by.</param>
     /// <param name="sortingMode">
     /// An optional sorting mode.
@@ -57,10 +59,11 @@ public class CoursesController : ControllerBase
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> GetCoursesPageAsync(
         [FromQuery] PaginationProperties properties,
+        [FromQuery] CoursesFilterProperties filterProperties,
         [FromQuery] string? name,
         [FromQuery] DefaultFilterSortingMode sortingMode = DefaultFilterSortingMode.Name)
     {
-        DefaultFilter<Course> filter = new(name ?? string.Empty, sortingMode);
+        CoursesFilter filter = new(filterProperties, name ?? string.Empty, sortingMode);
         return Ok(await _coursesService.GetPageAsync(properties, filter));
     }
 

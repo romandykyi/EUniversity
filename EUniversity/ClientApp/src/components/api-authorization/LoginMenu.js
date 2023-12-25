@@ -1,11 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import authService from './AuthorizeService';
+import logoutImg from "../../assets/logout.svg";
+import profileImg from "../../assets/profile.svg";
+import logoutWhiteImg from "../../assets/logoutWhite.svg";
+import profileWhiteImg from "../../assets/profileWhite.svg";
 import { ApplicationPaths } from './ApiAuthorizationConstants';
+import { useAppSelector } from '../../store/store';
 
 const LoginMenu = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [fullName, setFullName] = useState("");
+  const isThemeDark = useAppSelector(state => state.theme.isThemeDark);
 
   useEffect(() => {
     const subscription = authService.subscribe(() => populateState());
@@ -29,15 +35,15 @@ const LoginMenu = () => {
   };
 
   const authenticatedView = (userName, logoutPath, logoutState) => (
-    <ul className="flex items-center gap-3">
-      <li>
-        <Link className="text-text font-medium relative z-40 lg:z-0" to="/profile">
-          {userName}
+    <ul className="flex items-center gap-4">
+      <li className='w-8'>
+        <Link className="text-text font-medium relative z-40 lg:z-0 w-8" to="/profile">
+          <img className='w-full max-w-8' src={isThemeDark ? profileWhiteImg : profileImg} alt="profile" />
         </Link>
       </li>
-      <li>
-        <Link replace className="text-text font-medium relative z-40 lg:z-0" to={logoutPath} state={logoutState}>
-          Logout
+      <li className='w-8'>
+        <Link replace className="text-text font-medium relative z-40 lg:z-0 w-8" to={logoutPath} state={logoutState}>
+          <img className='w-full max-w-8' src={isThemeDark ? logoutWhiteImg : logoutImg} alt="logout" />
         </Link>
       </li>
     </ul>

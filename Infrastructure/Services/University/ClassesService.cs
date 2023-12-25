@@ -12,6 +12,7 @@ public class ClassesService : BaseCrudService<Class, int, ClassViewDto, ClassVie
     protected override IQueryable<Class> GetByIdQuery =>
         Entities
         .Include(c => c.Classroom)
+        .Include(c => c.ClassType)
         .Include(c => c.Group)
         .ThenInclude(g => g!.Course)
         .ThenInclude(c => c.Semester)
@@ -23,6 +24,7 @@ public class ClassesService : BaseCrudService<Class, int, ClassViewDto, ClassVie
     protected override IQueryable<Class> GetPageQuery =>
         Entities
         .Include(c => c.Classroom)
+        .Include(c => c.ClassType)
         .Include(c => c.Group)
         .ThenInclude(g => g!.Course)
         .ThenInclude(c => c.Semester)

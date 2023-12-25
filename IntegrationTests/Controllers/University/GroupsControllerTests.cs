@@ -25,7 +25,7 @@ public class GroupsControllerTests :
 
     public override int DefaultId => 1;
 
-    public override string GetPageFilter => "name=testfilter&sortingMode=name";
+    public override string GetPageFilter => "sortingMode=name&semesterId=0&courseId=12";
 
     protected override void AssertThatViewDtosAreEqual(GroupViewDto expected, GroupViewDto actual)
     {
@@ -87,8 +87,9 @@ public class GroupsControllerTests :
 
     protected override bool AssertThatFilterWasApplied(IFilter<Group> filter)
     {
-        return filter is DefaultFilter<Group> defaultFilter &&
-            defaultFilter.Name == "testfilter" &&
-            defaultFilter.SortingMode == DefaultFilterSortingMode.Name;
+        return filter is GroupsFilter groupsFilter &&
+            groupsFilter.Properties.SemesterId == 0 &&
+            groupsFilter.Properties.CourseId == 12 &&
+            groupsFilter.SortingMode == DefaultFilterSortingMode.Name;
     }
 }

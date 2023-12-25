@@ -38,19 +38,29 @@ public class ClassesFilterTests
         Id = 2,
         Name = "Some classroom"
     };
+    private static readonly ApplicationUser TestStudent1 = new()
+    {
+        Id = "test-user-id1"
+    };
+    private static readonly ApplicationUser TestStudent2 = new()
+    {
+        Id = "test-user-id2"
+    };
     private static readonly Group TestGroup1 = new()
     {
         Id = 1,
         Name = "TestGroup1",
         Teacher = TestTeacher,
-        TeacherId = TestTeacher.Id
+        TeacherId = TestTeacher.Id,
+        Students = new[] { TestStudent1 }
     };
     private static readonly Group TestGroup2 = new()
     {
         Id = 2,
         Name = "Some group",
         Teacher = TestTeacher,
-        TeacherId = TestTeacher.Id
+        TeacherId = TestTeacher.Id,
+        Students = new[] { TestStudent2 }
     };
 
     private static Class GetClass(int id, ClassType type, Classroom classroom,
@@ -75,7 +85,7 @@ public class ClassesFilterTests
         return @class;
     }
 
-    private Class[] TestClasses =
+    private readonly Class[] TestClasses =
     {
         GetClass(1, TestClassType1, TestClassroom1, TestGroup1, new(3L, TimeSpan.Zero)),
         GetClass(2, TestClassType1, TestClassroom1, TestGroup1, new(1L, TimeSpan.Zero), TestSubstituteTeacher),
@@ -98,6 +108,23 @@ public class ClassesFilterTests
         // Assert
         Assert.That(result, Is.EquivalentTo(TestClasses));
         Assert.That(result, Is.Ordered.By("StartDate"));
+    }
+
+    [Test]
+    public void StudentIdSpecified_ReturnsFilteredQuery()
+    {
+        // Arrange
+        ClassesFilterProperties properties = new(StudentId: TestStudent1.Id);
+        ClassesFilter filter = new(properties);
+        int[] expectedIds = { 1, 2, 4, 5 };
+
+        // Act
+        var actualIds = filter
+            .Apply(TestClasses.AsQueryable())
+            .Select(c => c.Id);
+
+        // Assert
+        Assert.That(actualIds, Is.EquivalentTo(expectedIds));
     }
 
     [Test]

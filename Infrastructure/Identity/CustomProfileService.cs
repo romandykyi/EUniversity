@@ -37,7 +37,7 @@ public class CustomProfileService : IProfileService
 
         if (user != null)
         {
-            context.IsActive = true;
+            context.IsActive = !user.IsDeleted;
         }
         else
         {
