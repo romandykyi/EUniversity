@@ -27,7 +27,7 @@ public class GroupsService :
     }
 
     /// <inheritdoc />
-    public async Task<GetOwnerIdResponse> GetOwnerId(int groupId)
+    public async Task<GetOwnerIdResponse> GetOwnerIdAsync(int groupId)
     {
         Group? group =  await GetByIdQuery
             .Where(g => g.Id == groupId)

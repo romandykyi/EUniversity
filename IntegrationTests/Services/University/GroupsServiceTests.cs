@@ -100,7 +100,7 @@ public class GroupsServiceTests :
         var group = await CreateTestEntityAsync();
 
         // Act
-        var result = await Service.GetOwnerId(group.Id);
+        var result = await Service.GetOwnerIdAsync(group.Id);
 
         // Assert
         Assert.Multiple(() =>
@@ -114,7 +114,7 @@ public class GroupsServiceTests :
     public async Task GetOwnerById_GroupDoesNotExist_ReturnsCorrectResponse()
     {
         // Act
-        var result = await Service.GetOwnerId(GetNonExistentId());
+        var result = await Service.GetOwnerIdAsync(GetNonExistentId());
 
         // Assert
         Assert.Multiple(() =>

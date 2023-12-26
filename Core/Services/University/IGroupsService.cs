@@ -4,7 +4,7 @@ using EUniversity.Core.Models.University;
 namespace EUniversity.Core.Services.University;
 
 /// <summary>
-/// Response of the <see cref="IGroupsService.GetOwnerId(int)" /> method.
+/// Response of the <see cref="IGroupsService.GetOwnerIdAsync(int)" /> method.
 /// </summary>
 /// <param name="GroupExists">Flag that determines whether requested group exists.</param>
 /// <param name="OwnerId">ID of the owner of the group(<see langword="null" /> if group doesn't exist).</param>
@@ -21,5 +21,5 @@ public interface IGroupsService :
     /// A task that represents an asynchronous operation containing
     /// the result of the operation.
     /// </returns>
-    Task<GetOwnerIdResponse> GetOwnerId(int groupId);
+    Task<GetOwnerIdResponse> GetOwnerIdAsync(int groupId);
 }
