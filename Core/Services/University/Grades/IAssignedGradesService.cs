@@ -60,7 +60,7 @@ public interface IAssignedGradesService
     /// If the grade to reassign was not not found, 
     /// it returns <see langword="false" />.
     /// </returns>
-    Task<bool> RessignAsync(int id, AssignedGradeUpdateDto dto, string reassignerId);
+    Task<bool> ReassignAsync(int id, AssignedGradeUpdateDto dto, string reassignerId);
 
     /// <summary>
     /// Deletes a grade identified by its unique identifier asynchronously.

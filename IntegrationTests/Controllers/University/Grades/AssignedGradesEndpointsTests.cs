@@ -1,13 +1,11 @@
-﻿using EUniversity.Core.Dtos.University;
-using EUniversity.Core.Dtos.University.Grades;
+﻿using EUniversity.Core.Dtos.University.Grades;
 using EUniversity.Core.Filters;
-using EUniversity.Core.Models;
-using EUniversity.Core.Models.University;
 using EUniversity.Core.Models.University.Grades;
 using EUniversity.Core.Pagination;
+using EUniversity.Core.Policy;
 using EUniversity.Core.Services.University;
+using EUniversity.Core.Services.University.Grades;
 using EUniversity.Infrastructure.Filters;
-using IdentityModel;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
 using System.Net;
@@ -19,6 +17,7 @@ public class AssignedGradesEndpointsTests : ControllersTest
     private const string TestStudentId = "student-id";
     private const string TestTeacherId = "teacher-id";
     private const int TestGroupId = 500;
+    private const int TestAssignedGradeId = 600;
 
     private static readonly string[] GetEndpoints =
     {
@@ -40,12 +39,20 @@ public class AssignedGradesEndpointsTests : ControllersTest
     [SetUp]
     public void SetUp()
     {
+        SetUpValidationMocks();
         WebApplicationFactory.GroupsServiceMock
             .GetOwnerIdAsync(Arg.Is<int>(x => x != TestGroupId))
-            .Throws(new InvalidOperationException("GetOwnerIDAsync is called with invalid argument"));
+            .Returns(new GetOwnerIdResponse(false, null));
         WebApplicationFactory.GroupsServiceMock
             .GetOwnerIdAsync(TestGroupId)
             .Returns(new GetOwnerIdResponse(true, TestTeacherId));
+
+        WebApplicationFactory.AssignedGradesServiceMock
+            .GetAssignerIdAsync(Arg.Is<int>(x => x != TestAssignedGradeId))
+            .Returns(new GetAssignerIdResponse(false, null));
+        WebApplicationFactory.AssignedGradesServiceMock
+            .GetAssignerIdAsync(Arg.Any<int>())
+            .Returns(new GetAssignerIdResponse(true, TestTeacherId));
 
         WebApplicationFactory.AssignedGradesServiceMock
             .GetPageAsync<AssignedGradeViewDto>(Arg.Any<PaginationProperties>(), Arg.Any<IFilter<AssignedGrade>>(),
@@ -131,7 +138,7 @@ public class AssignedGradesEndpointsTests : ControllersTest
         await WebApplicationFactory.AssignedGradesServiceMock
             .Received(1)
             .GetPageAsync<AssignedGradeViewDto>(
-                Arg.Any<PaginationProperties>(), 
+                Arg.Any<PaginationProperties>(),
                 Arg.Is<AssignedGradesFilter>(x => x.StudentId == TestStudentId),
                 true, false);
     }
@@ -176,7 +183,7 @@ public class AssignedGradesEndpointsTests : ControllersTest
         await WebApplicationFactory.AssignedGradesServiceMock
             .Received()
             .GetPageAsync<AssignedGradeViewDto>(
-                Arg.Any<PaginationProperties>(), 
+                Arg.Any<PaginationProperties>(),
                 Arg.Is<AssignedGradesFilter>(x => x.GroupId == TestGroupId),
                 false, true);
     }
@@ -234,8 +241,261 @@ public class AssignedGradesEndpointsTests : ControllersTest
         await WebApplicationFactory.AssignedGradesServiceMock
             .Received(1)
             .GetPageAsync<AssignedGradeViewDto>(
-                Arg.Any<PaginationProperties>(), 
+                Arg.Any<PaginationProperties>(),
                 Arg.Is<AssignedGradesFilter>(x => x.StudentId == TestStudentId && x.GroupId == TestGroupId),
                 false, false);
+    }
+
+    [Test]
+    public async Task Post_ValidCall_Succeeds()
+    {
+        // Arrange
+        AssignedGradeCreateDto validCreateDto = new(1, TestGroupId, TestStudentId, null, null);
+        string userId = "userId";
+        using var client = CreateAdministratorClient(userId);
+        WebApplicationFactory.AssignedGradesServiceMock
+            .AssignAsync(Arg.Any<AssignedGradeCreateDto>(), Arg.Any<string>())
+            .Returns(new AssignedGrade());
+
+        // Act
+        var result = await client.PostAsJsonAsync("api/assignedGrades", validCreateDto);
+
+        // Assert
+        result.EnsureSuccessStatusCode();
+        await WebApplicationFactory.AssignedGradesServiceMock
+            .Received()
+            .AssignAsync(validCreateDto, userId);
+    }
+
+    [Test]
+    public async Task Post_UnauthenticatedUser_Returns401Unauthorized()
+    {
+        // Arrange
+        AssignedGradeCreateDto validCreateDto = new(1, TestGroupId, TestStudentId, null, null);
+        using var client = CreateUnauthorizedClient();
+        WebApplicationFactory.AssignedGradesServiceMock
+            .AssignAsync(Arg.Any<AssignedGradeCreateDto>(), Arg.Any<string>())
+            .Throws<InvalidOperationException>();
+
+        // Act
+        var result = await client.PostAsJsonAsync("api/assignedGrades", validCreateDto);
+
+        // Assert
+        Assert.That(result.StatusCode, Is.EqualTo(HttpStatusCode.Unauthorized));
+    }
+
+    [Test]
+    [TestCase(Roles.Student)]
+    [TestCase(Roles.Teacher)]
+    public async Task Post_NotOwner_Returns403Forbidden(string role)
+    {
+        // Arrange
+        AssignedGradeCreateDto validCreateDto = new(1, TestGroupId, TestStudentId, null, null);
+        using var client = CreateAuthorizedClient("id", "userName", role);
+        WebApplicationFactory.AssignedGradesServiceMock
+            .AssignAsync(Arg.Any<AssignedGradeCreateDto>(), Arg.Any<string>())
+            .Throws<InvalidOperationException>();
+
+        // Act
+        var result = await client.PostAsJsonAsync("api/assignedGrades", validCreateDto);
+
+        // Assert
+        Assert.That(result.StatusCode, Is.EqualTo(HttpStatusCode.Forbidden));
+    }
+
+    [Test]
+    public async Task Post_Owner_Succeeds()
+    {
+        // Arrange
+        AssignedGradeCreateDto validCreateDto = new(1, TestGroupId, TestStudentId, null, null);
+        using var client = CreateTeacherClient(TestTeacherId);
+        WebApplicationFactory.AssignedGradesServiceMock
+            .AssignAsync(Arg.Any<AssignedGradeCreateDto>(), Arg.Any<string>())
+            .Returns(new AssignedGrade());
+
+        // Act
+        var result = await client.PostAsJsonAsync("api/assignedGrades", validCreateDto);
+
+        // Assert
+        result.EnsureSuccessStatusCode();
+    }
+
+    [Test]
+    public async Task Put_ValidCall_Succeeds()
+    {
+        // Arrange
+        AssignedGradeUpdateDto dto = new(1, null, null);
+        const string userId = "userId";
+        using var client = CreateAdministratorClient(userId);
+        WebApplicationFactory.AssignedGradesServiceMock
+            .ReassignAsync(Arg.Any<int>(), Arg.Any<AssignedGradeUpdateDto>(), Arg.Any<string>())
+            .Returns(true);
+
+        // Act
+        var result = await client.PutAsJsonAsync($"api/assignedGrades/{TestAssignedGradeId}", dto);
+
+        // Assert
+        await WebApplicationFactory.AssignedGradesServiceMock
+            .Received()
+            .ReassignAsync(TestAssignedGradeId, dto, userId);
+        result.EnsureSuccessStatusCode();
+    }
+
+    [Test]
+    public async Task Put_ElementDoesNotExist_Returns404NotFound()
+    {
+        // Arrange
+        AssignedGradeUpdateDto dto = new(1, null, null);
+        using var client = CreateAdministratorClient();
+        WebApplicationFactory.AssignedGradesServiceMock
+            .ReassignAsync(Arg.Any<int>(), Arg.Any<AssignedGradeUpdateDto>(), Arg.Any<string>())
+            .Returns(false);
+
+        // Act
+        var result = await client.PutAsJsonAsync($"api/assignedGrades/{TestAssignedGradeId}", dto);
+
+        // Assert
+        Assert.That(result.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
+    }
+
+    [Test]
+    public async Task Put_UnauthenticatedUser_Returns401Unauthorized()
+    {
+        // Arrange
+        AssignedGradeUpdateDto dto = new(1, null, null);
+        using var client = CreateUnauthorizedClient();
+        WebApplicationFactory.AssignedGradesServiceMock
+            .ReassignAsync(Arg.Any<int>(), Arg.Any<AssignedGradeUpdateDto>(), Arg.Any<string>())
+            .Throws<InvalidOperationException>();
+
+        // Act
+        var result = await client.PutAsJsonAsync($"api/assignedGrades/{TestAssignedGradeId}", dto);
+
+        // Assert
+        Assert.That(result.StatusCode, Is.EqualTo(HttpStatusCode.Unauthorized));
+    }
+
+    [Test]
+    [TestCase(Roles.Teacher)]
+    [TestCase(Roles.Student)]
+    public async Task Put_NotAssigner_Returns403Forbidden(string role)
+    {
+        // Arrange
+        AssignedGradeUpdateDto dto = new(1, null, null);
+        using var client = CreateAuthorizedClient("userId", "userName", role);
+        WebApplicationFactory.AssignedGradesServiceMock
+            .ReassignAsync(Arg.Any<int>(), Arg.Any<AssignedGradeUpdateDto>(), Arg.Any<string>())
+            .Throws<InvalidOperationException>();
+
+        // Act
+        var result = await client.PutAsJsonAsync($"api/assignedGrades/{TestAssignedGradeId}", dto);
+
+        // Assert
+        Assert.That(result.StatusCode, Is.EqualTo(HttpStatusCode.Forbidden));
+    }
+
+    [Test]
+    public async Task Put_AssignerTeacher_Succeeds()
+    {
+        // Arrange
+        AssignedGradeUpdateDto dto = new(1, null, null);
+        using var client = CreateTeacherClient(TestTeacherId);
+        WebApplicationFactory.AssignedGradesServiceMock
+            .ReassignAsync(Arg.Any<int>(), Arg.Any<AssignedGradeUpdateDto>(), Arg.Any<string>())
+            .Returns(true);
+
+        // Act
+        var result = await client.PutAsJsonAsync($"api/assignedGrades/{TestAssignedGradeId}", dto);
+
+        // Assert
+        result.EnsureSuccessStatusCode();
+    }
+
+    [Test]
+    public async Task Delete_ValidCall_Succeeds()
+    {
+        // Arrange
+        using var client = CreateAdministratorClient();
+        WebApplicationFactory.AssignedGradesServiceMock
+            .DeleteAsync(Arg.Any<int>())
+            .Returns(true);
+
+        // Act
+        var result = await client.DeleteAsync($"api/assignedGrades/{TestAssignedGradeId}");
+
+        // Assert
+        await WebApplicationFactory.AssignedGradesServiceMock
+            .Received()
+            .DeleteAsync(TestAssignedGradeId);
+        result.EnsureSuccessStatusCode();
+    }
+
+    [Test]
+    public async Task Delete_ElementDoesNotExist_Return404NotFound()
+    {
+        // Arrange
+        using var client = CreateAdministratorClient();
+        WebApplicationFactory.AssignedGradesServiceMock
+            .DeleteAsync(Arg.Any<int>())
+            .Returns(false);
+
+        // Act
+        var result = await client.DeleteAsync($"api/assignedGrades/{TestAssignedGradeId}");
+
+        // Assert
+        await WebApplicationFactory.AssignedGradesServiceMock
+            .Received()
+            .DeleteAsync(TestAssignedGradeId);
+        Assert.That(result.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
+    }
+
+    [Test]
+    public async Task Delete_UnauthenticatedUser_Returns401Unauthorized()
+    {
+        // Arrange
+        using var client = CreateUnauthorizedClient();
+        WebApplicationFactory.AssignedGradesServiceMock
+            .DeleteAsync(Arg.Any<int>())
+            .Throws<InvalidOperationException>();
+
+        // Act
+        var result = await client.DeleteAsync($"api/assignedGrades/{TestAssignedGradeId}");
+
+        // Assert
+        Assert.That(result.StatusCode, Is.EqualTo(HttpStatusCode.Unauthorized));
+    }
+
+    [Test]
+    [TestCase(Roles.Teacher)]
+    [TestCase(Roles.Student)]
+    public async Task Delete_NotAssigner_Returns403Forbidden(string role)
+    {
+        // Arrange
+        using var client = CreateAuthorizedClient("userId", "userName", role);
+        WebApplicationFactory.AssignedGradesServiceMock
+            .DeleteAsync(Arg.Any<int>())
+            .Throws<InvalidOperationException>();
+
+        // Act
+        var result = await client.DeleteAsync($"api/assignedGrades/{TestAssignedGradeId}");
+
+        // Assert
+        Assert.That(result.StatusCode, Is.EqualTo(HttpStatusCode.Forbidden));
+    }
+
+    [Test]
+    public async Task Delete_AssignerTeacher_Succeeds()
+    {
+        // Arrange
+        using var client = CreateTeacherClient(TestTeacherId);
+        WebApplicationFactory.AssignedGradesServiceMock
+            .DeleteAsync(Arg.Any<int>())
+            .Returns(true);
+
+        // Act
+        var result = await client.DeleteAsync($"api/assignedGrades/{TestAssignedGradeId}");
+
+        // Assert
+        result.EnsureSuccessStatusCode();
     }
 }

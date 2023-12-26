@@ -460,7 +460,6 @@ public class UsersController : ControllerBase
     /// <response code="400">Bad request</response>
     /// <response code="401">Unauthorized user call</response>
     /// <response code="403">User lacks 'Administrator' role or not the grade's assignee</response>
-    /// <response code="404">Group does not exist</response>
     [HttpGet]
     [Route("students/{studentId}/grades")]
     [Authorize(Policies.Default)]

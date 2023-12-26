@@ -187,7 +187,7 @@ public class AssignedGradesServiceTests : ServicesTest
         AssignedGradeUpdateDto dto = new(_testGrade.Id, "New notes!", null);
 
         // Act
-        bool result = await _service.RessignAsync(assignedGrade.Id, dto, _testTeacher.Id);
+        bool result = await _service.ReassignAsync(assignedGrade.Id, dto, _testTeacher.Id);
 
         // Assert
         Assert.That(result);
@@ -213,7 +213,7 @@ public class AssignedGradesServiceTests : ServicesTest
         AssignedGradeUpdateDto dto = new(_testGrade.Id, "New notes!", null);
 
         // Act
-        bool result = await _service.RessignAsync(-1, dto, _testTeacher.Id);
+        bool result = await _service.ReassignAsync(-1, dto, _testTeacher.Id);
 
         // Arrange
         Assert.That(result, Is.False);

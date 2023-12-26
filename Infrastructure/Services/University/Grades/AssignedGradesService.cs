@@ -10,9 +10,10 @@ using IdentityModel;
 using Microsoft.EntityFrameworkCore.Query;
 
 namespace EUniversity.Infrastructure.Services.University.Grades;
+
 public class AssignedGradesService : IAssignedGradesService
 {
-    private ApplicationDbContext _dbContext;
+    private readonly ApplicationDbContext _dbContext;
 
     public AssignedGradesService(ApplicationDbContext dbContext)
     {
@@ -67,7 +68,7 @@ public class AssignedGradesService : IAssignedGradesService
     }
 
     /// <inheritdoc />
-    public async Task<bool> RessignAsync(int id, AssignedGradeUpdateDto dto, string reassignerId)
+    public async Task<bool> ReassignAsync(int id, AssignedGradeUpdateDto dto, string reassignerId)
     {
         // Try to find an existing assigned grade
         var assignedGrade = await _dbContext.AssignedGrades
