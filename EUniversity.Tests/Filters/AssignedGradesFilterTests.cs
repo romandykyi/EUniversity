@@ -142,8 +142,8 @@ public class AssignedGradesFilterTests
     public void StudentIdSpecified_ReturnsFilteredQuery()
     {
         // Arrange
-        AssignedGradesFilterProperties properties = new(StudentId: TestStudent2.Id);
-        AssignedGradesFilter filter = new(properties);
+        AssignedGradesFilterProperties properties = new();
+        AssignedGradesFilter filter = new(properties, studentId: TestStudent2.Id);
         int[] expectedIds = { 504 };
 
         // Act
@@ -158,8 +158,8 @@ public class AssignedGradesFilterTests
     public void GroupIdSpecified_ReturnsFilteredQuery()
     {
         // Arrange
-        AssignedGradesFilterProperties properties = new(GroupId: TestGroup2.Id);
-        AssignedGradesFilter filter = new(properties);
+        AssignedGradesFilterProperties properties = new();
+        AssignedGradesFilter filter = new(properties, groupId: TestGroup2.Id);
         int[] expectedIds = { 500, 503 };
 
         // Act

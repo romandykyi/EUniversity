@@ -8,11 +8,25 @@ namespace EUniversity.Infrastructure.Filters;
 /// </summary>
 public class AssignedGradesFilter : IFilter<AssignedGrade>
 {
+    /// <summary>
+    /// Student ID to filter by.
+    /// </summary>
+    public string? StudentId { get; }
+    /// <summary>
+    /// Group ID to filter by.
+    /// </summary>
+    public int? GroupId { get; }
+    /// <summary>
+    /// Additional filter properties that can be passed as query parameters.
+    /// </summary>
     public AssignedGradesFilterProperties Properties { get; }
 
-    public AssignedGradesFilter(AssignedGradesFilterProperties properties)
+    public AssignedGradesFilter(AssignedGradesFilterProperties properties,
+        string? studentId = null, int? groupId = null)
     {
         Properties = properties;
+        StudentId = studentId;
+        GroupId = groupId;
     }
 
     /// <summary>
@@ -33,13 +47,13 @@ public class AssignedGradesFilter : IFilter<AssignedGrade>
         {
             query = query.Where(g => g.ReassignerId == Properties.ReassignerId);
         }
-        if (Properties.StudentId != null)
+        if (StudentId != null)
         {
-            query = query.Where(g => g.StudentId == Properties.StudentId);
+            query = query.Where(g => g.StudentId == StudentId);
         }
-        if (Properties.GroupId != null)
+        if (GroupId != null)
         {
-            query = query.Where(g => g.GroupId == Properties.GroupId);
+            query = query.Where(g => g.GroupId == GroupId);
         }
         if (Properties.ActivityTypeId != null)
         {
