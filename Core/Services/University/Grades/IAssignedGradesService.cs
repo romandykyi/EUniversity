@@ -6,6 +6,13 @@ using EUniversity.Core.Pagination;
 namespace EUniversity.Core.Services.University.Grades;
 
 /// <summary>
+/// Response of the <see cref="IGroupsService.GetAssignerIdAsync(int)" /> method.
+/// </summary>
+/// <param name="GradeExists">Flag that determines whether requested assigned grade exists.</param>
+/// <param name="AssignerId">ID of the assigner of the grade.</param>
+public record GetAssignerIdResponse(bool GradeExists, string? AssignerId);
+
+/// <summary>
 /// An interface for retrieving and assigning grades.
 /// </summary>
 public interface IAssignedGradesService
@@ -66,4 +73,14 @@ public interface IAssignedGradesService
     /// it returns <see langword="false" />.
     /// </returns>
     Task<bool> DeleteAsync(int id);
+
+    /// <summary>
+    /// Gets an ID of the assigner of the assigned grade.
+    /// </summary>
+    /// <param name="id">ID of the assigned grade.</param>
+    /// <returns>
+    /// A task that represent the asynchronous operation and the result
+    /// of the operation.
+    /// </returns>
+    Task<GetAssignerIdResponse> GetAssignerIdAsync(int id);
 }

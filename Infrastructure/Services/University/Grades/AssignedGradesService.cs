@@ -102,4 +102,18 @@ public class AssignedGradesService : IAssignedGradesService
 
         return true;
     }
+
+    /// <inheritdoc />
+    public async Task<GetAssignerIdResponse> GetAssignerIdAsync(int id)
+    {
+        var grade = await _dbContext.AssignedGrades
+            .AsNoTracking()
+            .Where(g => g.Id == id)
+            .FirstOrDefaultAsync();
+        if (grade == null)
+        {
+            return new(false, null);
+        }
+        return new(true, grade.AssignerId);
+    }
 }

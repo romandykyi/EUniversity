@@ -249,4 +249,35 @@ public class AssignedGradesServiceTests : ServicesTest
         // Assert
         Assert.That(result, Is.False);
     }
+
+    [Test]
+    public async Task GetAssignerId_GradeExists_ReturnsGroupOwner()
+    {
+        // Arrange
+        var grade = await CreateTestAssignedGradeAsync();
+
+        // Act
+        var result = await _service.GetAssignerIdAsync(grade.Id);
+
+        // Assert
+        Assert.Multiple(() =>
+        {
+            Assert.That(result.GradeExists, Is.True);
+            Assert.That(result.AssignerId, Is.EqualTo(grade.AssignerId));
+        });
+    }
+
+    [Test]
+    public async Task GetAssignerId_GradeDoesNotExist_ReturnsCorrectResponse()
+    {
+        // Act
+        var result = await _service.GetAssignerIdAsync(-1);
+
+        // Assert
+        Assert.Multiple(() =>
+        {
+            Assert.That(result.GradeExists, Is.False);
+            Assert.That(result.AssignerId, Is.Null);
+        });
+    }
 }
