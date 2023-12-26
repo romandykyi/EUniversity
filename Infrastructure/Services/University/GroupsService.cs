@@ -25,4 +25,17 @@ public class GroupsService :
     public GroupsService(ApplicationDbContext dbContext) : base(dbContext)
     {
     }
+
+    /// <inheritdoc />
+    public async Task<GetOwnerIdResponse> GetOwnerId(int groupId)
+    {
+        Group? group =  await GetByIdQuery
+            .Where(g => g.Id == groupId)
+            .FirstOrDefaultAsync();
+        if (group == null)
+        {
+            return new(false, null);
+        }
+        return new(true, group.TeacherId);
+    }
 }

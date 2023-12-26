@@ -92,4 +92,35 @@ public class GroupsServiceTests :
             Assert.That(result.Students, Is.EquivalentTo(expectedResult.Students));
         });
     }
+
+    [Test]
+    public async Task GetOwnerById_GroupExists_ReturnsGroupOwner()
+    {
+        // Arrange
+        var group = await CreateTestEntityAsync();
+
+        // Act
+        var result = await Service.GetOwnerId(group.Id);
+
+        // Assert
+        Assert.Multiple(() =>
+        {
+            Assert.That(result.GroupExists, Is.True);
+            Assert.That(result.OwnerId, Is.EqualTo(group.TeacherId));
+        });
+    }
+
+    [Test]
+    public async Task GetOwnerById_GroupDoesNotExist_ReturnsCorrectResponse()
+    {
+        // Act
+        var result = await Service.GetOwnerId(GetNonExistentId());
+
+        // Assert
+        Assert.Multiple(() =>
+        {
+            Assert.That(result.GroupExists, Is.False);
+            Assert.That(result.OwnerId, Is.Null);
+        });
+    }
 }
