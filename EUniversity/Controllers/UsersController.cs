@@ -1,8 +1,11 @@
-﻿using EUniversity.Core.Dtos.University;
+﻿using Duende.IdentityServer.Extensions;
+using EUniversity.Core.Dtos.University;
+using EUniversity.Core.Dtos.University.Grades;
 using EUniversity.Core.Dtos.Users;
 using EUniversity.Core.Pagination;
 using EUniversity.Core.Policy;
 using EUniversity.Core.Services.Auth;
+using EUniversity.Core.Services.University.Grades;
 using EUniversity.Core.Services.Users;
 using EUniversity.Infrastructure.Filters;
 using IdentityModel;
@@ -20,13 +23,16 @@ public class UsersController : ControllerBase
 {
     private readonly IAuthService _authService;
     private readonly IUsersService _usersService;
+    private readonly IAssignedGradesService _assignedGradesService;
 
     public const string StudentIdRouteKey = "studentId";
 
-    public UsersController(IAuthService authService, IUsersService usersService)
+    public UsersController(IAuthService authService, 
+        IUsersService usersService, IAssignedGradesService assignedGradesService)
     {
         _authService = authService;
         _usersService = usersService;
+        _assignedGradesService = assignedGradesService;
     }
 
     /// <summary>
@@ -440,5 +446,42 @@ public class UsersController : ControllerBase
     {
         var result = await _usersService.DeleteUserAsync(userId);
         return result ? NoContent() : NotFound();
+    }
+
+    /// <summary>
+    /// Gets a page with all grades assigned to the student.
+    /// </summary>
+    /// <remarks>
+    /// Only an administrator or grades assignee can access this method.
+    /// <br />
+    /// If there is no items in the requested page, then empty page will be returned.
+    /// </remarks>
+    /// <response code="200">Returns requested page with grades assigned in the group to the student.</response>
+    /// <response code="400">Bad request</response>
+    /// <response code="401">Unauthorized user call</response>
+    /// <response code="403">User lacks 'Administrator' role or not the grade's assignee</response>
+    /// <response code="404">Group does not exist</response>
+    [HttpGet]
+    [Route("students/{studentId}/grades")]
+    [Authorize(Policies.Default)]
+    [ProducesResponseType(typeof(Page<StudentGroupViewDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetGradesOfStudentAsync(
+        [FromRoute] string studentId,
+        [FromQuery] PaginationProperties properties,
+        [FromQuery] AssignedGradesFilterProperties filterProperties)
+    {
+        string callerId = User.Identity.GetSubjectId();
+        // Forbid if user is not an administrator and not the assignee of the grade
+        if (studentId != callerId && !User.HasClaim(JwtClaimTypes.Role, Roles.Administrator))
+        {
+            return Forbid();
+        }
+        AssignedGradesFilter filter = new(filterProperties, studentId: studentId);
+        return Ok(await _assignedGradesService
+            .GetPageAsync<AssignedGradeViewDto>(properties, filter, includeStudents: false));
     }
 }

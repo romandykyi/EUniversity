@@ -1,11 +1,15 @@
-﻿using EUniversity.Core.Dtos.University;
+﻿using Duende.IdentityServer.Extensions;
+using EUniversity.Core.Dtos.University;
+using EUniversity.Core.Dtos.University.Grades;
 using EUniversity.Core.Models;
 using EUniversity.Core.Models.University;
 using EUniversity.Core.Pagination;
 using EUniversity.Core.Policy;
 using EUniversity.Core.Services;
 using EUniversity.Core.Services.University;
+using EUniversity.Core.Services.University.Grades;
 using EUniversity.Infrastructure.Filters;
+using IdentityModel;
 using Mapster;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -24,14 +28,17 @@ public class GroupsController : ControllerBase
     private readonly IGroupsService _groupsService;
     private readonly IStudentGroupsService _studentGroupsService;
     private readonly IEntityExistenceChecker _existenceChecker;
+    private readonly IAssignedGradesService _assignedGradesService;
 
     public GroupsController(IGroupsService groupsService,
         IStudentGroupsService studentGroupsService,
-        IEntityExistenceChecker existenceChecker)
+        IEntityExistenceChecker existenceChecker,
+        IAssignedGradesService assignedGradesService)
     {
         _groupsService = groupsService;
         _studentGroupsService = studentGroupsService;
         _existenceChecker = existenceChecker;
+        _assignedGradesService = assignedGradesService;
     }
 
     /// <summary>
@@ -279,5 +286,98 @@ public class GroupsController : ControllerBase
         return NotFound(
                 CustomResponses.NotFound("The user is not part of the group.",
                 HttpContext));
+    }
+
+    /// <summary>
+    /// Gets a page with all grades assigned in the group.
+    /// </summary>
+    /// <remarks>
+    /// Only the group's owner or an administrator can access this method.
+    /// <br />
+    /// If there is no items in the requested page, then empty page will be returned.
+    /// </remarks>
+    /// <response code="200">Returns requested page with grades assigned in the group.</response>
+    /// <response code="400">Bad request</response>
+    /// <response code="401">Unauthorized user call</response>
+    /// <response code="403">User lacks 'Administrator' role or not an owner of the group</response>
+    /// <response code="404">Group does not exist</response>
+    [HttpGet]
+    [Route("{groupId:int}/grades")]
+    [Authorize(Policies.IsTeacherOrAdministrator)]
+    [ProducesResponseType(typeof(Page<StudentGroupViewDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetGradesInGroupAsync(
+        [FromRoute] int groupId,
+        [FromQuery] PaginationProperties properties,
+        [FromQuery] AssignedGradesFilterProperties filterProperties)
+    {
+        string callerId = User.Identity.GetSubjectId();
+        var response = await _groupsService.GetOwnerIdAsync(groupId);
+        if (!response.GroupExists)
+        {
+            return NotFound(
+                CustomResponses.NotFound("The group with the specified ID does not exist.",
+                HttpContext));
+        }
+        // Forbid if user is not an administrator and doesn't own the group
+        if (response.OwnerId != callerId && 
+            !User.HasClaim(JwtClaimTypes.Role, Roles.Administrator))
+        {
+            return Forbid();
+        }
+        AssignedGradesFilter filter = new(filterProperties, groupId: groupId);
+        return Ok(await _assignedGradesService
+            .GetPageAsync<AssignedGradeViewDto>(properties, filter, includeGroups: false));
+    }
+
+    /// <summary>
+    /// Gets a page with all grades assigned in the group to the student.
+    /// </summary>
+    /// <remarks>
+    /// Only the group's owner, an administrator or grades assignee can access this method.
+    /// <br />
+    /// If there is no items in the requested page, then empty page will be returned.
+    /// </remarks>
+    /// <response code="200">Returns requested page with grades assigned in the group to the student.</response>
+    /// <response code="400">Bad request</response>
+    /// <response code="401">Unauthorized user call</response>
+    /// <response code="403">User lacks 'Administrator' role, not an owner of the group or not the grade's assignee</response>
+    /// <response code="404">Group does not exist</response>
+    [HttpGet]
+    [Route("{groupId:int}/students/{studentId}/grades")]
+    [Authorize(Policies.Default)]
+    [ProducesResponseType(typeof(Page<StudentGroupViewDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetGradesOfStudentInGroupAsync(
+        [FromRoute] int groupId,
+        [FromRoute] string studentId,
+        [FromQuery] PaginationProperties properties,
+        [FromQuery] AssignedGradesFilterProperties filterProperties)
+    {
+        string callerId = User.Identity.GetSubjectId();
+        var response = await _groupsService.GetOwnerIdAsync(groupId);
+        if (!response.GroupExists)
+        {
+            return NotFound(
+                CustomResponses.NotFound("The group with the specified ID does not exist.",
+                HttpContext));
+        }
+        // Forbid if user is not an administrator, and doesn't own the group,
+        // and not the assignee of the grade
+        if (response.OwnerId != callerId &&
+            studentId != callerId &&
+            !User.HasClaim(JwtClaimTypes.Role, Roles.Administrator))
+        {
+            return Forbid();
+        }
+        AssignedGradesFilter filter = new(filterProperties, studentId: studentId, groupId: groupId);
+        return Ok(await _assignedGradesService
+            .GetPageAsync<AssignedGradeViewDto>(properties, filter, includeGroups: false, includeStudents: false));
     }
 }
