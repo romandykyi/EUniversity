@@ -175,9 +175,10 @@ public class SemestersController : ControllerBase
     /// <response code="200">Returns requested page with students related to the semester.</response>
     /// <response code="400">Bad request</response>
     /// <response code="401">Unauthorized user call</response>
+    /// <response code="403">Caller is not a teacher or an administrator</response>
     [HttpGet]
     [Route("{semesterId:int}/students")]
-    [Authorize(Policies.Default)]
+    [Authorize(Policies.IsTeacherOrAdministrator)]
     [ProducesResponseType(typeof(Page<StudentSemesterViewDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]

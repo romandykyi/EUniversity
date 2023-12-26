@@ -176,10 +176,11 @@ public class GroupsController : ControllerBase
     /// <response code="200">Returns requested page with students that are part of the group.</response>
     /// <response code="400">Bad request</response>
     /// <response code="401">Unauthorized user call</response>
+    /// <response code="403">Caller is not a teacher or an administrator</response>
     /// <response code="404">Group does not exist</response>
     [HttpGet]
     [Route("{groupId:int}/students")]
-    [Authorize(Policies.Default)]
+    [Authorize(Policies.IsTeacherOrAdministrator)]
     [ProducesResponseType(typeof(Page<StudentGroupViewDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
