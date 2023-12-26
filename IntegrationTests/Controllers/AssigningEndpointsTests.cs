@@ -101,10 +101,10 @@ public abstract class AssigningEndpointsTests<TService, TAssigningEntity, TEntit
     protected abstract object GetAssignDto();
 
     [Test]
-    public virtual async Task GetPage_Entity1DoesNotExist_Returns404NotFound()
+    public virtual async Task GetPage_EntityDoesNotExist_Returns404NotFound()
     {
         // Arrange
-        using var client = CreateStudentClient();
+        using var client = CreateAdministratorClient();
         ServiceMock
             .GetAssigningEntitiesPageAsync<TViewDto>(Arg.Any<TId1>(), Arg.Any<PaginationProperties>(), Arg.Any<IFilter<TAssigningEntity>>())
             .Throws<InvalidOperationException>();
@@ -123,7 +123,7 @@ public abstract class AssigningEndpointsTests<TService, TAssigningEntity, TEntit
     public virtual async Task GetPage_NoFilter_SucceedsAndReturnsValidDto()
     {
         // Arrange
-        using var client = CreateStudentClient();
+        using var client = CreateAdministratorClient();
         const int page = 2, pageSize = 25;
         ServiceMock
             .GetAssigningEntitiesPageAsync<TViewDto>(Arg.Any<TId1>(), Arg.Any<PaginationProperties>(), Arg.Any<IFilter<TAssigningEntity>>())
@@ -148,7 +148,7 @@ public abstract class AssigningEndpointsTests<TService, TAssigningEntity, TEntit
     public virtual async Task GetPage_InvalidInput_Returns400BadRequest()
     {
         // Arrange
-        using var client = CreateStudentClient();
+        using var client = CreateAdministratorClient();
         ServiceMock
             .GetAssigningEntitiesPageAsync<TViewDto>(Arg.Any<TId1>(), Arg.Any<PaginationProperties>(), Arg.Any<IFilter<TAssigningEntity>>())
             .Throws<InvalidOperationException>();
@@ -193,7 +193,7 @@ public abstract class AssigningEndpointsTests<TService, TAssigningEntity, TEntit
     }
 
     [Test]
-    public async Task Assign_Entity1DoesNotExist_Returns404NotFound()
+    public async Task Assign_EntityDoesNotExist_Returns404NotFound()
     {
         // Arrange
         using var client = CreateAdministratorClient();
