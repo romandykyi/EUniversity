@@ -193,7 +193,7 @@ public abstract class AssigningEndpointsTests<TService, TAssigningEntity, TEntit
     }
 
     [Test]
-    public async Task Assign_EntityDoesNotExist_Returns404NotFound()
+    public async Task Assign_Entity1DoesNotExist_Returns404NotFound()
     {
         // Arrange
         using var client = CreateAdministratorClient();
