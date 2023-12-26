@@ -99,7 +99,7 @@ public static class ServiceCollectionExtensions
 
     public static IServiceCollection AddCustomizedAuthorization(this IServiceCollection services, params string[] authenticationSchemes)
     {
-        services.AddTransient<IAuthorizationHandler, ViewStudentEnrollmentsAuthorizationHandler>();
+        services.AddTransient<IAuthorizationHandler, AccessOnlyOwnDataAuthorizationHandler>();
 
         return services.AddAuthorization(options =>
         {
@@ -138,7 +138,7 @@ public static class ServiceCollectionExtensions
             {
                 policy.AddAuthenticationSchemes(authenticationSchemes);
                 policy.RequireAuthenticatedUser();
-                policy.AddRequirements(new ViewStudentEnrollmentsAuthorizationRequirement());
+                policy.AddRequirements(new AccessOnlyOwnDataAuthorizationRequirement(Roles.Teacher, Roles.Administrator));
             });
             options.DefaultPolicy = options.GetPolicy(Policies.Default)!;
         });

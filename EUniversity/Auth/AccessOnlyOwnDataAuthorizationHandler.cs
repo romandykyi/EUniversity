@@ -7,24 +7,22 @@ using Microsoft.AspNetCore.Authorization;
 namespace EUniversity.Auth;
 
 /// <summary>
-/// Authorization handler that determines whether user can view students enrollments.
-/// Allows teachers and administrators to view all enrollments and other users to view
-/// only their own enrollments.
+/// Authorization handler that allows users only access their own data.
+/// <see cref="AccessOnlyOwnDataAuthorizationRequirement" /> can contain roles
+/// that are allowed to access any data.
 /// </summary>
-public class ViewStudentEnrollmentsAuthorizationHandler :
-    AuthorizationHandler<ViewStudentEnrollmentsAuthorizationRequirement>
+public class AccessOnlyOwnDataAuthorizationHandler :
+    AuthorizationHandler<AccessOnlyOwnDataAuthorizationRequirement>
 {
-    protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, ViewStudentEnrollmentsAuthorizationRequirement requirement)
+    protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, AccessOnlyOwnDataAuthorizationRequirement requirement)
     {
         if (!context.User.IsAuthenticated())
         {
             context.Fail();
             return Task.CompletedTask;
         }
-        // If user is either a teacher or an administrator,
-        // he/she has an access to all enrollments
-        if (context.User.HasClaim(JwtClaimTypes.Role, Roles.Teacher) ||
-            context.User.HasClaim(JwtClaimTypes.Role, Roles.Administrator))
+        // Check if we can skip the check
+        if (requirement.SkipRoles.Any(r => context.User.HasClaim(JwtClaimTypes.Role, r)))
         {
             context.Succeed(requirement);
             return Task.CompletedTask;
