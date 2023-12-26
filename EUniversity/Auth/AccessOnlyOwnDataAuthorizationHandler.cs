@@ -7,10 +7,13 @@ using Microsoft.AspNetCore.Authorization;
 namespace EUniversity.Auth;
 
 /// <summary>
-/// Authorization handler that allows users only access their own data.
+/// Authorization handler that allows students access only their own data.
 /// <see cref="AccessOnlyOwnDataAuthorizationRequirement" /> can contain roles
 /// that are allowed to access any data.
 /// </summary>
+/// <remarks>
+/// This handler checks route parameter 'studentId'.
+/// </remarks>
 public class AccessOnlyOwnDataAuthorizationHandler :
     AuthorizationHandler<AccessOnlyOwnDataAuthorizationRequirement>
 {
