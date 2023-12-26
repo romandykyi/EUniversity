@@ -10,14 +10,14 @@ using System.Security.Claims;
 
 namespace EUniversity.Tests.Auth;
 
-public class ViewStudentEnrollmentsAuthorizationHandlerTests
+public class AccessOnlyOwnDataAuthorizationHandlerTests
 {
     private readonly string TestUserId = Guid.NewGuid().ToString();
     private readonly string TestRouteStudentId = Guid.NewGuid().ToString();
 
     private ClaimsPrincipal GetUser(string id, params string[] roles)
     {
-        List<Claim> claims =new()
+        List<Claim> claims = new()
         {
             new(JwtClaimTypes.Subject, id)
         };
@@ -29,7 +29,7 @@ public class ViewStudentEnrollmentsAuthorizationHandlerTests
         return new ClaimsPrincipal(identity);
     }
 
-    private AuthorizationHandlerContext GetHandlerContext(ClaimsPrincipal user)
+    private AuthorizationHandlerContext GetHandlerContext(ClaimsPrincipal user, params string[] roles)
     {
         RouteValueDictionary routeValues = new()
         {
@@ -43,7 +43,7 @@ public class ViewStudentEnrollmentsAuthorizationHandlerTests
 
         IAuthorizationRequirement[] requirements =
         {
-            new ViewStudentEnrollmentsAuthorizationRequirement()
+            new AccessOnlyOwnDataAuthorizationRequirement(roles)
         };
 
         return new(requirements, user, httpContext);
@@ -52,12 +52,12 @@ public class ViewStudentEnrollmentsAuthorizationHandlerTests
     [Test]
     [TestCase(Roles.Administrator)]
     [TestCase(Roles.Teacher)]
-    public async Task AdministratorOrTeacher_Succeeds(string role)
+    public async Task SkipRoleAccessesNotOwnData_Succeeds(string role)
     {
         // Arrange
         ClaimsPrincipal user = GetUser(TestUserId, role);
-        AuthorizationHandlerContext context = GetHandlerContext(user); 
-        ViewStudentEnrollmentsAuthorizationHandler handler = new();
+        AuthorizationHandlerContext context = GetHandlerContext(user, Roles.Administrator, Roles.Teacher); 
+        AccessOnlyOwnDataAuthorizationHandler handler = new();
 
         // Act
         await handler.HandleAsync(context);
@@ -67,12 +67,12 @@ public class ViewStudentEnrollmentsAuthorizationHandlerTests
     }
 
     [Test]
-    public async Task UserAccessesOwnEnrollments_Succeeds()
+    public async Task UserAccessesOwnData_Succeeds()
     {
         // Arrange
         ClaimsPrincipal user = GetUser(TestRouteStudentId);
         AuthorizationHandlerContext context = GetHandlerContext(user); 
-        ViewStudentEnrollmentsAuthorizationHandler handler = new();
+        AccessOnlyOwnDataAuthorizationHandler handler = new();
 
         // Act
         await handler.HandleAsync(context);
@@ -82,12 +82,12 @@ public class ViewStudentEnrollmentsAuthorizationHandlerTests
     }
 
     [Test]
-    public async Task UserAccessesEnrollmentsOfAnotherUser_Fails()
+    public async Task UserAccessesDataOfAnotherUser_Fails()
     {
         // Arrange
         ClaimsPrincipal user = GetUser(TestUserId);
         AuthorizationHandlerContext context = GetHandlerContext(user); 
-        ViewStudentEnrollmentsAuthorizationHandler handler = new();
+        AccessOnlyOwnDataAuthorizationHandler handler = new();
 
         // Act
         await handler.HandleAsync(context);

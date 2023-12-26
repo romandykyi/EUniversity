@@ -2,6 +2,7 @@
 using EUniversity.Core.Services;
 using EUniversity.Core.Services.Auth;
 using EUniversity.Core.Services.University;
+using EUniversity.Core.Services.University.Grades;
 using EUniversity.Core.Services.Users;
 using EUniversity.Extensions;
 using EUniversity.Infrastructure.Data;
@@ -33,6 +34,7 @@ public class MockedProgramWebApplicationFactory : WebApplicationFactory<Program>
 
     public IClassroomsService ClassroomsServiceMock { get; private set; } = null!;
     public IGradesService GradesServiceMock { get; private set; } = null!;
+    public IAssignedGradesService AssignedGradesServiceMock { get; private set; } = null!;
     public ICoursesService CoursesServiceMock { get; private set; } = null!;
     public IGroupsService GroupsServiceMock { get; private set; } = null!;
     public IClassesService ClassesServiceMock { get; private set; } = null!;
@@ -40,6 +42,7 @@ public class MockedProgramWebApplicationFactory : WebApplicationFactory<Program>
     public IStudentGroupsService StudentGroupsServiceMock { get; private set; } = null!;
     public ISemestersService SemestersServiceMock { get; private set; } = null!;
     public IStudentSemestersService StudentSemestersServiceMock { get; private set; } = null!;
+    public IActivityTypesService ActivityTypesServiceMock { get; private set; } = null!;
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
@@ -56,6 +59,7 @@ public class MockedProgramWebApplicationFactory : WebApplicationFactory<Program>
 
         ClassroomsServiceMock = Substitute.For<IClassroomsService>();
         GradesServiceMock = Substitute.For<IGradesService>();
+        AssignedGradesServiceMock = Substitute.For<IAssignedGradesService>();
         CoursesServiceMock = Substitute.For<ICoursesService>();
         GroupsServiceMock = Substitute.For<IGroupsService>();
         ClassesServiceMock = Substitute.For<IClassesService>();
@@ -63,6 +67,7 @@ public class MockedProgramWebApplicationFactory : WebApplicationFactory<Program>
         StudentGroupsServiceMock = Substitute.For<IStudentGroupsService>();
         SemestersServiceMock = Substitute.For<ISemestersService>();
         StudentSemestersServiceMock = Substitute.For<IStudentSemestersService>();
+        ActivityTypesServiceMock = Substitute.For<IActivityTypesService>();
 
         builder.ConfigureTestServices(services =>
         {
@@ -88,6 +93,7 @@ public class MockedProgramWebApplicationFactory : WebApplicationFactory<Program>
             // University
             services.AddScoped(_ => ClassroomsServiceMock);
             services.AddScoped(_ => GradesServiceMock);
+            services.AddScoped(_ => AssignedGradesServiceMock);
             services.AddScoped(_ => CoursesServiceMock);
             services.AddScoped(_ => GroupsServiceMock);
             services.AddScoped(_ => ClassesServiceMock);
@@ -95,6 +101,7 @@ public class MockedProgramWebApplicationFactory : WebApplicationFactory<Program>
             services.AddScoped(_ => StudentGroupsServiceMock);
             services.AddScoped(_ => SemestersServiceMock);
             services.AddScoped(_ => StudentSemestersServiceMock);
+            services.AddScoped(_ => ActivityTypesServiceMock);
         });
     }
 

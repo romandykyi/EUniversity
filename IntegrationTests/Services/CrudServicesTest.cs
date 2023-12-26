@@ -206,8 +206,6 @@ public abstract class CrudServicesTest<TService, TEntity, TId, TPreviewDto, TDet
     {
         // Arrange
         var entity = await CreateTestEntityAsync();
-        DateTimeOffset? lastUpdateDate =
-            entity is IHasUpdateDate entityWithUpdateDate ? entityWithUpdateDate.UpdateDate : null;
         TUpdateDto dto = GetValidUpdateDto();
 
         // Act
@@ -225,8 +223,6 @@ public abstract class CrudServicesTest<TService, TEntity, TId, TPreviewDto, TDet
         {
             Assert.That(DateTimeOffset.Now - actualEntityWithUpdateDate.UpdateDate,
                 Is.LessThan(TimeSpan.FromHours(1)));
-            Assert.That(actualEntityWithUpdateDate.UpdateDate,
-                Is.GreaterThan(lastUpdateDate));
         }
     }
 

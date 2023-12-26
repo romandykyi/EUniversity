@@ -4,6 +4,7 @@ using EUniversity.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EUniversity.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231210121307_AddActivityTypes")]
+    partial class AddActivityTypes
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -186,9 +189,6 @@ namespace EUniversity.Infrastructure.Migrations
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
 
                     b.Property<string>("LastName")
                         .IsRequired()
@@ -393,58 +393,6 @@ namespace EUniversity.Infrastructure.Migrations
                     b.HasIndex("SemesterId");
 
                     b.ToTable("Courses");
-                });
-
-            modelBuilder.Entity("EUniversity.Core.Models.University.Grades.AssignedGrade", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int?>("ActivityTypeId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("AssignerId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTimeOffset>("CreationDate")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<int>("GradeId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("GroupId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Notes")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ReassignerId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("StudentId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTimeOffset>("UpdateDate")
-                        .HasColumnType("datetimeoffset");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ActivityTypeId");
-
-                    b.HasIndex("AssignerId");
-
-                    b.HasIndex("GradeId");
-
-                    b.HasIndex("GroupId");
-
-                    b.HasIndex("ReassignerId");
-
-                    b.HasIndex("StudentId");
-
-                    b.ToTable("AssignedGrades");
                 });
 
             modelBuilder.Entity("EUniversity.Core.Models.University.Grades.Grade", b =>
@@ -769,49 +717,6 @@ namespace EUniversity.Infrastructure.Migrations
                         .HasForeignKey("SemesterId");
 
                     b.Navigation("Semester");
-                });
-
-            modelBuilder.Entity("EUniversity.Core.Models.University.Grades.AssignedGrade", b =>
-                {
-                    b.HasOne("EUniversity.Core.Models.University.ActivityType", "ActivityType")
-                        .WithMany()
-                        .HasForeignKey("ActivityTypeId");
-
-                    b.HasOne("EUniversity.Core.Models.ApplicationUser", "Assigner")
-                        .WithMany()
-                        .HasForeignKey("AssignerId");
-
-                    b.HasOne("EUniversity.Core.Models.University.Grades.Grade", "Grade")
-                        .WithMany()
-                        .HasForeignKey("GradeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("EUniversity.Core.Models.University.Group", "Group")
-                        .WithMany()
-                        .HasForeignKey("GroupId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("EUniversity.Core.Models.ApplicationUser", "Reassigner")
-                        .WithMany()
-                        .HasForeignKey("ReassignerId");
-
-                    b.HasOne("EUniversity.Core.Models.ApplicationUser", "Student")
-                        .WithMany()
-                        .HasForeignKey("StudentId");
-
-                    b.Navigation("ActivityType");
-
-                    b.Navigation("Assigner");
-
-                    b.Navigation("Grade");
-
-                    b.Navigation("Group");
-
-                    b.Navigation("Reassigner");
-
-                    b.Navigation("Student");
                 });
 
             modelBuilder.Entity("EUniversity.Core.Models.University.Group", b =>
