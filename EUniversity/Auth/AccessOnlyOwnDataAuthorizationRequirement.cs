@@ -17,7 +17,7 @@ public class AccessOnlyOwnDataAuthorizationRequirement : IAuthorizationRequireme
 
     }
 
-    public AccessOnlyOwnDataAuthorizationRequirement(params string[] skipRoles) : 
+    public AccessOnlyOwnDataAuthorizationRequirement(params string[] skipRoles) :
         this(skipRoles.AsEnumerable())
     {
 

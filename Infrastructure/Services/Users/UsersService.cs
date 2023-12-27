@@ -8,7 +8,6 @@ using EUniversity.Core.Policy;
 using EUniversity.Core.Services.Users;
 using EUniversity.Infrastructure.Data;
 using EUniversity.Infrastructure.Pagination;
-using IdentityModel;
 using Microsoft.AspNetCore.Identity;
 
 namespace EUniversity.Infrastructure.Services.Users;

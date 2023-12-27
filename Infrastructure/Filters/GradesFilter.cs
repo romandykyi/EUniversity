@@ -1,6 +1,4 @@
-﻿using Bogus.DataSets;
-using EUniversity.Core.Filters;
-using EUniversity.Core.Models;
+﻿using EUniversity.Core.Filters;
 using EUniversity.Core.Models.University.Grades;
 
 namespace EUniversity.Infrastructure.Filters;

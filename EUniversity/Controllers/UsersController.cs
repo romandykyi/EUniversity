@@ -27,7 +27,7 @@ public class UsersController : ControllerBase
 
     public const string StudentIdRouteKey = "studentId";
 
-    public UsersController(IAuthService authService, 
+    public UsersController(IAuthService authService,
         IUsersService usersService, IAssignedGradesService assignedGradesService)
     {
         _authService = authService;

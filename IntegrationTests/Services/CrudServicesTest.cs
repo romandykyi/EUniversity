@@ -1,6 +1,5 @@
 ﻿using EUniversity.Core.Filters;
 using EUniversity.Core.Models;
-using EUniversity.Core.Models.University;
 using EUniversity.Core.Pagination;
 using EUniversity.Core.Services;
 using Mapster;

@@ -1,5 +1,5 @@
-﻿using EUniversity.Core.Dtos.Users;
 ﻿using EUniversity.Core.Dtos.University;
+using EUniversity.Core.Dtos.Users;
 using EUniversity.Core.Filters;
 using EUniversity.Core.Models;
 using EUniversity.Core.Models.University;
@@ -7,8 +7,8 @@ using EUniversity.Core.Pagination;
 using EUniversity.Core.Policy;
 using EUniversity.Core.Services.Users;
 using EUniversity.Infrastructure.Filters;
-using Microsoft.EntityFrameworkCore;
 using Mapster;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
 

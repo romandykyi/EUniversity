@@ -1,13 +1,10 @@
 ﻿using EUniversity.Core.Dtos.University.Grades;
 using EUniversity.Core.Filters;
-using EUniversity.Core.Models;
 using EUniversity.Core.Models.University.Grades;
 using EUniversity.Core.Pagination;
 using EUniversity.Core.Services.University.Grades;
 using EUniversity.Infrastructure.Data;
 using EUniversity.Infrastructure.Pagination;
-using IdentityModel;
-using Microsoft.EntityFrameworkCore.Query;
 
 namespace EUniversity.Infrastructure.Services.University.Grades;
 

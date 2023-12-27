@@ -35,7 +35,7 @@ public interface IUsersService
     /// <returns>
     /// Page with all users.
     /// </returns>
-    Task<Page<UserPreviewDto>> GetAllUsersAsync(PaginationProperties? properties = null, 
+    Task<Page<UserPreviewDto>> GetAllUsersAsync(PaginationProperties? properties = null,
         IFilter<ApplicationUser>? filter = null, bool onlyDeleted = false);
 
     /// <summary>

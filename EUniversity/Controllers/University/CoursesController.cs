@@ -1,5 +1,4 @@
 ﻿using EUniversity.Core.Dtos.University;
-using EUniversity.Core.Models.University;
 using EUniversity.Core.Pagination;
 using EUniversity.Core.Policy;
 using EUniversity.Core.Services.University;

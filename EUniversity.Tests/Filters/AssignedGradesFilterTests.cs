@@ -2,7 +2,6 @@
 using EUniversity.Core.Models.University;
 using EUniversity.Core.Models.University.Grades;
 using EUniversity.Infrastructure.Filters;
-using System.ComponentModel;
 
 namespace EUniversity.Tests.Filters;
 
@@ -52,56 +51,56 @@ public class AssignedGradesFilterTests
 
     private static readonly AssignedGrade[] TestData =
     {
-        new() 
+        new()
         {
-            Id = 500, 
-            Grade = TestGrade1, GradeId = TestGrade1.Id, 
-            AssignerId = TestTeacher1.Id, ReassignerId = TestTeacher2.Id, 
-            StudentId = TestStudent1.Id, 
+            Id = 500,
+            Grade = TestGrade1, GradeId = TestGrade1.Id,
+            AssignerId = TestTeacher1.Id, ReassignerId = TestTeacher2.Id,
+            StudentId = TestStudent1.Id,
             GroupId = TestGroup2.Id,
             ActivityTypeId = TestActivityType.Id
         },
-        new() 
+        new()
         {
-            Id = 501, 
-            Grade = TestGrade1, GradeId = TestGrade1.Id, 
-            AssignerId = TestTeacher2.Id, 
-            StudentId = TestStudent1.Id, 
+            Id = 501,
+            Grade = TestGrade1, GradeId = TestGrade1.Id,
+            AssignerId = TestTeacher2.Id,
+            StudentId = TestStudent1.Id,
             GroupId = TestGroup1.Id,
             ActivityTypeId = TestActivityType.Id
         },
-        new() 
+        new()
         {
-            Id = 502, 
-            Grade = TestGrade2, GradeId = TestGrade2.Id, 
-            AssignerId = TestTeacher1.Id, ReassignerId = TestTeacher2.Id, 
-            StudentId = TestStudent1.Id, 
+            Id = 502,
+            Grade = TestGrade2, GradeId = TestGrade2.Id,
+            AssignerId = TestTeacher1.Id, ReassignerId = TestTeacher2.Id,
+            StudentId = TestStudent1.Id,
             GroupId = TestGroup1.Id
         },
-        new() 
+        new()
         {
-            Id = 503, 
-            Grade = TestGrade2, GradeId = TestGrade2.Id, 
-            AssignerId = TestTeacher2.Id, 
-            StudentId = TestStudent1.Id, 
+            Id = 503,
+            Grade = TestGrade2, GradeId = TestGrade2.Id,
+            AssignerId = TestTeacher2.Id,
+            StudentId = TestStudent1.Id,
             GroupId = TestGroup2.Id,
             ActivityTypeId = TestActivityType.Id
         },
-        new() 
+        new()
         {
-            Id = 504, 
-            Grade = TestGrade2, GradeId = TestGrade2.Id, 
-            AssignerId = TestTeacher1.Id, ReassignerId = TestTeacher2.Id, 
-            StudentId = TestStudent2.Id, 
+            Id = 504,
+            Grade = TestGrade2, GradeId = TestGrade2.Id,
+            AssignerId = TestTeacher1.Id, ReassignerId = TestTeacher2.Id,
+            StudentId = TestStudent2.Id,
             GroupId = TestGroup1.Id,
             ActivityTypeId = TestActivityType.Id
         },
-        new() 
+        new()
         {
-            Id = 505, 
-            Grade = TestGrade2, GradeId = TestGrade2.Id, 
+            Id = 505,
+            Grade = TestGrade2, GradeId = TestGrade2.Id,
             AssignerId = TestTeacher2.Id, ReassignerId = TestTeacher1.Id,
-            StudentId = TestStudent1.Id, 
+            StudentId = TestStudent1.Id,
             GroupId = TestGroup1.Id
         },
     };

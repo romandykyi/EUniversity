@@ -56,7 +56,7 @@ public class AccessOnlyOwnDataAuthorizationHandlerTests
     {
         // Arrange
         ClaimsPrincipal user = GetUser(TestUserId, role);
-        AuthorizationHandlerContext context = GetHandlerContext(user, Roles.Administrator, Roles.Teacher); 
+        AuthorizationHandlerContext context = GetHandlerContext(user, Roles.Administrator, Roles.Teacher);
         AccessOnlyOwnDataAuthorizationHandler handler = new();
 
         // Act
@@ -71,7 +71,7 @@ public class AccessOnlyOwnDataAuthorizationHandlerTests
     {
         // Arrange
         ClaimsPrincipal user = GetUser(TestRouteStudentId);
-        AuthorizationHandlerContext context = GetHandlerContext(user); 
+        AuthorizationHandlerContext context = GetHandlerContext(user);
         AccessOnlyOwnDataAuthorizationHandler handler = new();
 
         // Act
@@ -86,7 +86,7 @@ public class AccessOnlyOwnDataAuthorizationHandlerTests
     {
         // Arrange
         ClaimsPrincipal user = GetUser(TestUserId);
-        AuthorizationHandlerContext context = GetHandlerContext(user); 
+        AuthorizationHandlerContext context = GetHandlerContext(user);
         AccessOnlyOwnDataAuthorizationHandler handler = new();
 
         // Act

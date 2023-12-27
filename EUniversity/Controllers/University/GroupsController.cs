@@ -323,7 +323,7 @@ public class GroupsController : ControllerBase
                 HttpContext));
         }
         // Forbid if user is not an administrator and doesn't own the group
-        if (response.OwnerId != callerId && 
+        if (response.OwnerId != callerId &&
             !User.HasClaim(JwtClaimTypes.Role, Roles.Administrator))
         {
             return Forbid();

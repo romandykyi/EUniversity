@@ -29,7 +29,7 @@ public class GroupsService :
     /// <inheritdoc />
     public async Task<GetOwnerIdResponse> GetOwnerIdAsync(int groupId)
     {
-        Group? group =  await Entities
+        Group? group = await Entities
             .AsNoTracking()
             .Where(g => g.Id == groupId)
             .FirstOrDefaultAsync();

@@ -12,8 +12,8 @@ public class GroupsFilter : DefaultFilter<Group>
     /// </summary>
     public GroupsFilterProperties Properties { get; }
 
-    public GroupsFilter(GroupsFilterProperties properties, 
-        string name, DefaultFilterSortingMode sortingMode = DefaultFilterSortingMode.Default) : 
+    public GroupsFilter(GroupsFilterProperties properties,
+        string name, DefaultFilterSortingMode sortingMode = DefaultFilterSortingMode.Default) :
         base(name, sortingMode)
     {
         Properties = properties;

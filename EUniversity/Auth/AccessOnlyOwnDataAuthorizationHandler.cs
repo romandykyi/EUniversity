@@ -1,6 +1,5 @@
 ﻿using Duende.IdentityServer.Extensions;
 using EUniversity.Controllers;
-using EUniversity.Core.Policy;
 using IdentityModel;
 using Microsoft.AspNetCore.Authorization;
 

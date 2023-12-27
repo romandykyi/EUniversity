@@ -14,7 +14,6 @@ using NSubstitute.ExceptionExtensions;
 using NSubstitute.ReceivedExtensions;
 using NSubstitute.ReturnsExtensions;
 using System.Net;
-using System.Security.Cryptography;
 
 namespace EUniversity.IntegrationTests.Controllers;
 
@@ -302,7 +301,7 @@ public class UsersControllerTests : ControllersTest
         Assert.That(groups, Is.Not.Null);
         await WebApplicationFactory.UsersServiceMock
             .Received()
-            .GetGroupsOfStudentAsync(studentId, paginationProperties, 
+            .GetGroupsOfStudentAsync(studentId, paginationProperties,
             Arg.Is<GroupsFilter>(f => f.Properties == filterProperties));
     }
 
@@ -407,7 +406,7 @@ public class UsersControllerTests : ControllersTest
         UserViewDto user = new()
         {
             Id = "1",
-            Roles = new string[] {}
+            Roles = new string[] { }
         };
         WebApplicationFactory.UsersServiceMock
             .GetByIdAsync(Arg.Any<string>())
@@ -536,7 +535,7 @@ public class UsersControllerTests : ControllersTest
         Assert.That(semesters, Is.Not.Null);
         await WebApplicationFactory.UsersServiceMock
             .Received()
-            .GetSemestersOfStudentAsync(studentId, paginationProperties, 
+            .GetSemestersOfStudentAsync(studentId, paginationProperties,
             Arg.Is<SemestersFilter>(f => f.Properties == filterProperties));
     }
 
@@ -549,7 +548,7 @@ public class UsersControllerTests : ControllersTest
 
         // Act
         var result = await client.GetAsync($"api/users/students/{studentId}/semesters");
-    
+
         // Arrange
         Assert.That(result.StatusCode, Is.EqualTo(HttpStatusCode.Forbidden));
     }
