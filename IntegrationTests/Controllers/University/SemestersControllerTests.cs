@@ -28,18 +28,6 @@ public class SemestersControllerTests :
         ServiceMock = WebApplicationFactory.SemestersServiceMock;
     }
 
-    protected override void AssertThatViewDtosAreEqual(SemesterViewDto expected, SemesterViewDto actual)
-    {
-        Assert.Multiple(() =>
-        {
-            Assert.That(actual.Id, Is.EqualTo(expected.Id));
-            Assert.That(actual.Name, Is.EqualTo(expected.Name));
-            Assert.That(actual.DateFrom, Is.EqualTo(expected.DateFrom));
-            Assert.That(actual.DateTo, Is.EqualTo(expected.DateTo));
-            Assert.That(actual.StudentEnrollments, Is.EquivalentTo(expected.StudentEnrollments));
-        });
-    }
-
     protected override bool AssertThatFilterWasApplied(IFilter<Semester> filter)
     {
         return filter is SemestersFilter semestersFilter &&
@@ -59,14 +47,9 @@ public class SemestersControllerTests :
 
     protected override SemesterViewDto GetTestDetailsDto()
     {
-        StudentPreviewDto student = new("test-id", "test-user", "Test", "User", null);
-        List<StudentSemesterViewDto> enrollments = new()
-        {
-            new(student, DateTimeOffset.Now)
-        };
         return new(DefaultId, "Test semester",
            DateTimeOffset.Now, DateTimeOffset.Now,
-            DateTimeOffset.MinValue, DateTimeOffset.MaxValue, enrollments);
+            DateTimeOffset.MinValue, DateTimeOffset.MaxValue);
     }
 
     protected override SemesterPreviewDto GetTestPreviewDto()

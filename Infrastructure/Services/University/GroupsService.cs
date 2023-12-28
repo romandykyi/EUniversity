@@ -13,7 +13,6 @@ public class GroupsService :
         Entities
         .Include(e => e.Course)
         .Include(e => e.Teacher)
-        .Include(e => e.Students)
         .AsNoTracking();
 
     protected override IQueryable<Group> GetPageQuery =>
