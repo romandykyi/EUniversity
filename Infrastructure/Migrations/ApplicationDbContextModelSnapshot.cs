@@ -187,6 +187,9 @@ namespace EUniversity.Infrastructure.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
                     b.Property<string>("LastName")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -240,6 +243,30 @@ namespace EUniversity.Infrastructure.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
+                });
+
+            modelBuilder.Entity("EUniversity.Core.Models.University.ActivityType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTimeOffset>("CreationDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTimeOffset>("UpdateDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ActivityTypes");
                 });
 
             modelBuilder.Entity("EUniversity.Core.Models.University.Class", b =>
@@ -368,7 +395,7 @@ namespace EUniversity.Infrastructure.Migrations
                     b.ToTable("Courses");
                 });
 
-            modelBuilder.Entity("EUniversity.Core.Models.University.Grades.CourseGrade", b =>
+            modelBuilder.Entity("EUniversity.Core.Models.University.Grades.AssignedGrade", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -376,35 +403,48 @@ namespace EUniversity.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("CourseId")
+                    b.Property<int?>("ActivityTypeId")
                         .HasColumnType("int");
 
-                    b.Property<DateTimeOffset>("Date")
+                    b.Property<string>("AssignerId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTimeOffset>("CreationDate")
                         .HasColumnType("datetimeoffset");
 
                     b.Property<int>("GradeId")
                         .HasColumnType("int");
 
+                    b.Property<int>("GroupId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Notes")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ReassignerId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("StudentId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("TeacherId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<DateTimeOffset>("UpdateDate")
+                        .HasColumnType("datetimeoffset");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CourseId");
+                    b.HasIndex("ActivityTypeId");
+
+                    b.HasIndex("AssignerId");
 
                     b.HasIndex("GradeId");
 
+                    b.HasIndex("GroupId");
+
+                    b.HasIndex("ReassignerId");
+
                     b.HasIndex("StudentId");
 
-                    b.HasIndex("TeacherId");
-
-                    b.ToTable("CourseGrades");
+                    b.ToTable("AssignedGrades");
                 });
 
             modelBuilder.Entity("EUniversity.Core.Models.University.Grades.Grade", b =>
@@ -731,35 +771,47 @@ namespace EUniversity.Infrastructure.Migrations
                     b.Navigation("Semester");
                 });
 
-            modelBuilder.Entity("EUniversity.Core.Models.University.Grades.CourseGrade", b =>
+            modelBuilder.Entity("EUniversity.Core.Models.University.Grades.AssignedGrade", b =>
                 {
-                    b.HasOne("EUniversity.Core.Models.University.Course", "Course")
+                    b.HasOne("EUniversity.Core.Models.University.ActivityType", "ActivityType")
                         .WithMany()
-                        .HasForeignKey("CourseId")
+                        .HasForeignKey("ActivityTypeId");
+
+                    b.HasOne("EUniversity.Core.Models.ApplicationUser", "Assigner")
+                        .WithMany()
+                        .HasForeignKey("AssignerId");
+
+                    b.HasOne("EUniversity.Core.Models.University.Grades.Grade", "Grade")
+                        .WithMany()
+                        .HasForeignKey("GradeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("EUniversity.Core.Models.University.Grades.Grade", "Grade")
-                        .WithMany("CourseGrades")
-                        .HasForeignKey("GradeId")
-                        .OnDelete(DeleteBehavior.ClientCascade)
+                    b.HasOne("EUniversity.Core.Models.University.Group", "Group")
+                        .WithMany()
+                        .HasForeignKey("GroupId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("EUniversity.Core.Models.ApplicationUser", "Reassigner")
+                        .WithMany()
+                        .HasForeignKey("ReassignerId");
 
                     b.HasOne("EUniversity.Core.Models.ApplicationUser", "Student")
                         .WithMany()
                         .HasForeignKey("StudentId");
 
-                    b.HasOne("EUniversity.Core.Models.ApplicationUser", "Teacher")
-                        .WithMany()
-                        .HasForeignKey("TeacherId");
+                    b.Navigation("ActivityType");
 
-                    b.Navigation("Course");
+                    b.Navigation("Assigner");
 
                     b.Navigation("Grade");
 
-                    b.Navigation("Student");
+                    b.Navigation("Group");
 
-                    b.Navigation("Teacher");
+                    b.Navigation("Reassigner");
+
+                    b.Navigation("Student");
                 });
 
             modelBuilder.Entity("EUniversity.Core.Models.University.Group", b =>
@@ -866,11 +918,6 @@ namespace EUniversity.Infrastructure.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("EUniversity.Core.Models.University.Grades.Grade", b =>
-                {
-                    b.Navigation("CourseGrades");
                 });
 
             modelBuilder.Entity("EUniversity.Core.Models.University.Semester", b =>

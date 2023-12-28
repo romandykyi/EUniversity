@@ -80,6 +80,7 @@ public static class WebApplicationExtensions
         testDataService.CreateFakeGroupsAsync().Wait();
         testDataService.CreateTestClassesTypesAsync().Wait();
         testDataService.CreateFakeClassesAsync().Wait();
+        testDataService.CreateTestActivityTypesAsync().Wait();
 
         return app;
     }

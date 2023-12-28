@@ -1,6 +1,7 @@
 import {React, useEffect, useState} from 'react';
 import { useLocation } from 'react-router-dom';
 import { useAppSelector } from '../../store/store';
+import BackButton from '../UI/BackButton';
 
 const AdminClassroom = () => {
 
@@ -35,9 +36,12 @@ const AdminClassroom = () => {
 
     return (
         <div className="students container max-w-[1100px] pt-10">
-            <h1 className="students__title form__title">
-                Classroom #{classroomNumber} - {name}
-            </h1>
+            <div className="flex items-center gap-3 mb-14">
+                    <BackButton navigate="classrooms"/>
+                    <h1 className="students__title form__title mb-0">
+                        Classroom #{classroomNumber} - {name}
+                    </h1>
+            </div>
             {
                 students.length
                 ?   <>

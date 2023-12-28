@@ -1,14 +1,18 @@
 ﻿using EUniversity.Core.Dtos.Auth;
+using EUniversity.Core.Dtos.University;
 using EUniversity.Core.Dtos.Users;
 using EUniversity.Core.Filters;
 using EUniversity.Core.Models;
+using EUniversity.Core.Models.University;
 using EUniversity.Core.Pagination;
 using EUniversity.Core.Policy;
 using EUniversity.Core.Services.Auth;
 using EUniversity.Infrastructure.Filters;
 using Microsoft.AspNetCore.Identity;
 using NSubstitute;
+using NSubstitute.ExceptionExtensions;
 using NSubstitute.ReceivedExtensions;
+using NSubstitute.ReturnsExtensions;
 using System.Net;
 
 namespace EUniversity.IntegrationTests.Controllers;
@@ -25,7 +29,7 @@ public class UsersControllerTests : ControllersTest
             RegisterUser2
         });
 
-    public UserViewDto[] TestUsers =
+    public UserPreviewDto[] TestUsers =
     {
         new("1", "mail1@example.com", "user1", "First1", "Last1", null),
         new("2", "mail2@example.com", "user2", "First2", "Last2", "Middle2")
@@ -37,6 +41,7 @@ public class UsersControllerTests : ControllersTest
     public static readonly string[] GetMethods =
     {
         "/api/users",
+        "/api/users/deleted",
         "/api/users/students",
         "/api/users/teachers"
     };
@@ -56,7 +61,7 @@ public class UsersControllerTests : ControllersTest
         (RolesGetMethods[1], Roles.Teacher)
     };
 
-    private Page<UserViewDto> GetTestPage(PaginationProperties paginationProperties)
+    private Page<UserPreviewDto> GetTestPage(PaginationProperties paginationProperties)
     {
         return new(TestUsers, paginationProperties, TestUsers.Length);
     }
@@ -68,7 +73,7 @@ public class UsersControllerTests : ControllersTest
             .GetUsersInRoleAsync(Arg.Any<string>(), Arg.Any<PaginationProperties>(), Arg.Any<IFilter<ApplicationUser>>())
             .Returns(x => GetTestPage((PaginationProperties)x[1]));
         WebApplicationFactory.UsersServiceMock
-            .GetAllUsersAsync(Arg.Any<PaginationProperties>(), Arg.Any<IFilter<ApplicationUser>>())
+            .GetAllUsersAsync(Arg.Any<PaginationProperties>(), Arg.Any<IFilter<ApplicationUser>>(), Arg.Any<bool>())
             .Returns(x => GetTestPage((PaginationProperties)x[0]));
     }
 
@@ -84,7 +89,7 @@ public class UsersControllerTests : ControllersTest
 
         // Assert
         result.EnsureSuccessStatusCode();
-        var users = await result.Content.ReadFromJsonAsync<Page<UserViewDto>>();
+        var users = await result.Content.ReadFromJsonAsync<Page<UserPreviewDto>>();
         Assert.That(users, Is.Not.Null);
     }
 
@@ -101,7 +106,7 @@ public class UsersControllerTests : ControllersTest
 
         // Assert
         result.EnsureSuccessStatusCode();
-        var usersPage = await result.Content.ReadFromJsonAsync<Page<UserViewDto>>();
+        var usersPage = await result.Content.ReadFromJsonAsync<Page<UserPreviewDto>>();
         Assert.That(usersPage, Is.Not.Null);
         Assert.Multiple(() =>
         {
@@ -122,7 +127,7 @@ public class UsersControllerTests : ControllersTest
 
         // Assert
         result.EnsureSuccessStatusCode();
-        var usersPage = await result.Content.ReadFromJsonAsync<Page<UserViewDto>>();
+        var usersPage = await result.Content.ReadFromJsonAsync<Page<UserPreviewDto>>();
         Assert.That(usersPage, Is.Not.Null);
         await WebApplicationFactory.UsersServiceMock
             .Received()
@@ -142,7 +147,7 @@ public class UsersControllerTests : ControllersTest
 
         // Assert
         result.EnsureSuccessStatusCode();
-        var usersPage = await result.Content.ReadFromJsonAsync<Page<UserViewDto>>();
+        var usersPage = await result.Content.ReadFromJsonAsync<Page<UserPreviewDto>>();
         Assert.That(usersPage, Is.Not.Null);
         await WebApplicationFactory.UsersServiceMock
             .Received()
@@ -165,14 +170,26 @@ public class UsersControllerTests : ControllersTest
     }
 
     [Test]
-    [TestCaseSource(nameof(GetMethods))]
-    public async Task GetMethods_NoAdministratorRole_Return403Forbidden(string method)
+    public async Task GetUsers_NoAdministratorRole_Return403Forbidden()
     {
         // Arrange
         using var client = CreateStudentClient();
 
         // Act
-        var result = await client.GetAsync(method);
+        var result = await client.GetAsync("api/users");
+
+        // Assert
+        Assert.That(result.StatusCode, Is.EqualTo(HttpStatusCode.Forbidden));
+    }
+
+    [Test]
+    public async Task GetStudents_NoAdministratorOrTeacherRole_Return403Forbidden()
+    {
+        // Arrange
+        using var client = CreateStudentClient();
+
+        // Act
+        var result = await client.GetAsync("api/users/students");
 
         // Assert
         Assert.That(result.StatusCode, Is.EqualTo(HttpStatusCode.Forbidden));
@@ -260,5 +277,428 @@ public class UsersControllerTests : ControllersTest
         result.EnsureSuccessStatusCode();
         var users = await result.Content.ReadFromJsonAsync<IEnumerable<CreatedUserDto>>();
         Assert.That(users, Is.Not.Null);
+    }
+
+    [Test]
+    public async Task GetStudentGroups_ValidInput_SucceedsAndAppliesFilter()
+    {
+        // Arrange
+        using var client = CreateAdministratorClient();
+        string studentId = Guid.NewGuid().ToString();
+        WebApplicationFactory.UsersServiceMock
+            .GetGroupsOfStudentAsync(Arg.Any<string>(), Arg.Any<PaginationProperties>(),
+            Arg.Any<IFilter<Group>>())
+            .Returns(Task.FromResult(new Page<GroupPreviewDto>()));
+        PaginationProperties paginationProperties = new(1, 25);
+        GroupsFilterProperties filterProperties = new(TeacherId: "test-teacher-id", SemesterId: 0);
+
+        // Act
+        var result = await client.GetAsync($"api/users/students/{studentId}/groups?page={paginationProperties.Page}&pageSize={paginationProperties.PageSize}&teacherId={filterProperties.TeacherId}&semesterId={filterProperties.SemesterId}");
+
+        // Assert
+        result.EnsureSuccessStatusCode();
+        var groups = await result.Content.ReadFromJsonAsync<Page<GroupPreviewDto>>();
+        Assert.That(groups, Is.Not.Null);
+        await WebApplicationFactory.UsersServiceMock
+            .Received()
+            .GetGroupsOfStudentAsync(studentId, paginationProperties,
+            Arg.Is<GroupsFilter>(f => f.Properties == filterProperties));
+    }
+
+    [Test]
+    public async Task GetStudentGroups_StudentAccessesAnotherStudentEnrollments_Returns403Forbidden()
+    {
+        // Arrange
+        using var client = CreateStudentClient("student-id");
+        string studentId = "another-student-id";
+
+        // Act
+        var result = await client.GetAsync($"api/users/students/{studentId}/groups");
+
+        // Arrange
+        Assert.That(result.StatusCode, Is.EqualTo(HttpStatusCode.Forbidden));
+    }
+
+    public async Task GetUserById_UserExists_Succeeds()
+    {
+        // Arrange
+        using var client = CreateStudentClient();
+        UserViewDto user = new()
+        {
+            Id = "1",
+            Roles = new string[] { Roles.Teacher }
+        };
+        WebApplicationFactory.UsersServiceMock
+            .GetByIdAsync(Arg.Any<string>())
+            .Returns(user);
+
+        // Act
+        var result = await client.GetAsync($"api/users/{user.Id}");
+
+        // Arrange
+        Assert.That(result.IsSuccessStatusCode);
+        await WebApplicationFactory.UsersServiceMock
+            .Received()
+            .GetByIdAsync(user.Id);
+    }
+
+    [Test]
+    [TestCase(Roles.Administrator)]
+    [TestCase(Roles.Teacher)]
+    public async Task GetUserById_AdministratorOrTeacherRequestsStudent_Succeeds(string role)
+    {
+        // Arrange
+        using var client = CreateAuthorizedClient(Guid.NewGuid().ToString(), "test-user", role);
+        UserViewDto user = new()
+        {
+            Id = "1",
+            Roles = new string[] { Roles.Student }
+        };
+        WebApplicationFactory.UsersServiceMock
+            .GetByIdAsync(Arg.Any<string>())
+            .Returns(user);
+
+        // Act
+        var result = await client.GetAsync($"api/users/{user.Id}");
+
+        // Arrange
+        Assert.That(result.IsSuccessStatusCode);
+    }
+
+    [Test]
+    public async Task GetUserById_UnauthenticatedUser_Returns401Unauthorized()
+    {
+        // Arrange
+        using var client = CreateUnauthorizedClient();
+
+        // Act
+        var result = await client.GetAsync($"api/users/test-id");
+
+        // Arrange
+        Assert.That(result.StatusCode, Is.EqualTo(HttpStatusCode.Unauthorized));
+    }
+
+    [Test]
+    public async Task GetUserById_UserDoesNotExist_Returns404NotFound()
+    {
+        // Arrange
+        using var client = CreateAdministratorClient();
+        UserViewDto user = new()
+        {
+            Id = "1"
+        };
+        WebApplicationFactory.UsersServiceMock
+            .GetByIdAsync(Arg.Any<string>())
+            .ReturnsNull();
+
+        // Act
+        var result = await client.GetAsync($"api/users/{user.Id}");
+
+        // Arrange
+        Assert.That(result.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
+    }
+
+    [Test]
+    public async Task GetUserById_StudentRequestsDefaultUser_Returns403Forbidden()
+    {
+        // Arrange
+        using var client = CreateStudentClient();
+        UserViewDto user = new()
+        {
+            Id = "1",
+            Roles = new string[] { }
+        };
+        WebApplicationFactory.UsersServiceMock
+            .GetByIdAsync(Arg.Any<string>())
+            .Returns(user);
+
+        // Act
+        var result = await client.GetAsync($"api/users/{user.Id}");
+
+        // Arrange
+        Assert.That(result.StatusCode, Is.EqualTo(HttpStatusCode.Forbidden));
+    }
+
+    [Test]
+    public async Task EditUser_ValidCall_Succeeds()
+    {
+        // Arrange
+        EditUserDto dto = new("new-user-name", "email@email.com", "First", "Last");
+        using var client = CreateAdministratorClient();
+        WebApplicationFactory.UsersServiceMock
+            .UpdateUserAsync(Arg.Any<string>(), Arg.Any<EditUserDto>())
+            .Returns(true);
+        string id = "test-id";
+
+        // Act
+        var result = await client.PutAsJsonAsync($"api/users/{id}", dto);
+
+        // Assert
+        await WebApplicationFactory.UsersServiceMock
+            .Received(1)
+            .UpdateUserAsync(id, dto);
+        result.EnsureSuccessStatusCode();
+    }
+
+    [Test]
+    public async Task EditUser_UserDoesNotExist_Returns404NotFound()
+    {
+        // Arrange
+        EditUserDto dto = new("new-user-name", "email@email.com", "First", "Last");
+        using var client = CreateAdministratorClient();
+        WebApplicationFactory.UsersServiceMock
+            .UpdateUserAsync(Arg.Any<string>(), Arg.Any<EditUserDto>())
+            .Returns(false);
+        string id = "test-id";
+
+        // Act
+        var result = await client.PutAsJsonAsync($"api/users/{id}", dto);
+
+        // Assert
+        await WebApplicationFactory.UsersServiceMock
+            .Received(1)
+            .UpdateUserAsync(id, dto);
+        Assert.That(result.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
+    }
+
+    [Test]
+    public async Task EditUser_InvalidInput_Returns400BadRequest()
+    {
+        // Arrange
+        EditUserDto invalidDto = new("!", "invalid!", "", "");
+        using var client = CreateAdministratorClient();
+        WebApplicationFactory.UsersServiceMock
+            .UpdateUserAsync(Arg.Any<string>(), Arg.Any<EditUserDto>())
+            .Returns(true);
+        string id = "test-id";
+
+        // Act
+        var result = await client.PutAsJsonAsync($"api/users/{id}", invalidDto);
+
+        // Assert
+        Assert.That(result.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
+    }
+
+    [Test]
+    public async Task EditUser_UnauthenticatedUser_Returns401Unauthorized()
+    {
+        // Arrange
+        EditUserDto dto = new("new-user-name", "email@email.com", "First", "Last");
+        using var client = CreateUnauthorizedClient();
+        WebApplicationFactory.UsersServiceMock
+            .UpdateUserAsync(Arg.Any<string>(), Arg.Any<EditUserDto>())
+            .Throws(new InvalidOperationException());
+
+        // Act
+        var result = await client.PutAsJsonAsync("api/users/test-id", dto);
+
+        // Assert
+        Assert.That(result.StatusCode, Is.EqualTo(HttpStatusCode.Unauthorized));
+    }
+
+    [Test]
+    public async Task EditUser_NoAdministratorRole_Returns403Forbidden()
+    {
+        // Arrange
+        EditUserDto dto = new("new-user-name", "email@email.com", "First", "Last");
+        using var client = CreateStudentClient();
+        WebApplicationFactory.UsersServiceMock
+            .UpdateUserAsync(Arg.Any<string>(), Arg.Any<EditUserDto>())
+            .Throws(new InvalidOperationException());
+
+        // Act
+        var result = await client.PutAsJsonAsync("api/users/test-id", dto);
+
+        // Assert
+        Assert.That(result.StatusCode, Is.EqualTo(HttpStatusCode.Forbidden));
+    }
+
+    [Test]
+    public async Task GetStudentSemesters_ValidInput_SucceedsAndAppliesFilter()
+    {
+        // Arrange
+        using var client = CreateAdministratorClient();
+        string studentId = Guid.NewGuid().ToString();
+        WebApplicationFactory.UsersServiceMock
+            .GetSemestersOfStudentAsync(Arg.Any<string>(), Arg.Any<PaginationProperties>(),
+            Arg.Any<IFilter<Semester>>())
+            .Returns(Task.FromResult(new Page<SemesterPreviewDto>()));
+        PaginationProperties paginationProperties = new(1, 25);
+        SemestersFilterProperties filterProperties = new();
+
+        // Act
+        var result = await client.GetAsync($"api/users/students/{studentId}/semesters?page={paginationProperties.Page}&pageSize={paginationProperties.PageSize}");
+
+        // Assert
+        result.EnsureSuccessStatusCode();
+        var semesters = await result.Content.ReadFromJsonAsync<Page<SemesterPreviewDto>>();
+        Assert.That(semesters, Is.Not.Null);
+        await WebApplicationFactory.UsersServiceMock
+            .Received()
+            .GetSemestersOfStudentAsync(studentId, paginationProperties,
+            Arg.Is<SemestersFilter>(f => f.Properties == filterProperties));
+    }
+
+    [Test]
+    public async Task GetStudentSemesters_StudentAccessesAnotherStudentEnrollments_Returns403Forbidden()
+    {
+        // Arrange
+        using var client = CreateStudentClient("student-id");
+        string studentId = "another-student-id";
+
+        // Act
+        var result = await client.GetAsync($"api/users/students/{studentId}/semesters");
+
+        // Arrange
+        Assert.That(result.StatusCode, Is.EqualTo(HttpStatusCode.Forbidden));
+    }
+
+    public async Task EditUserRoles_ValidCall_Succeeds()
+    {
+        // Arrange
+        ChangeRolesDto dto = new(true);
+        using var client = CreateAdministratorClient();
+        WebApplicationFactory.UsersServiceMock
+            .UpdateUserRolesAsync(Arg.Any<string>(), Arg.Any<ChangeRolesDto>())
+            .Returns(true);
+        string id = "test-id";
+
+        // Act
+        var result = await client.PatchAsJsonAsync($"api/users/{id}/roles", dto);
+
+        // Assert
+        await WebApplicationFactory.UsersServiceMock
+            .Received(1)
+            .UpdateUserRolesAsync(id, dto);
+        result.EnsureSuccessStatusCode();
+    }
+
+    [Test]
+    public async Task EditUserRoles_UserDoesNotExist_Returns404NotFound()
+    {
+        // Arrange
+        ChangeRolesDto dto = new(true);
+        using var client = CreateAdministratorClient();
+        WebApplicationFactory.UsersServiceMock
+            .UpdateUserRolesAsync(Arg.Any<string>(), Arg.Any<ChangeRolesDto>())
+            .Returns(false);
+        string id = "test-id";
+
+        // Act
+        var result = await client.PatchAsJsonAsync($"api/users/{id}/roles", dto);
+
+        // Assert
+        await WebApplicationFactory.UsersServiceMock
+            .Received(1)
+            .UpdateUserRolesAsync(id, dto);
+        Assert.That(result.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
+    }
+
+    [Test]
+    public async Task EditUserRoles_UnauthenticatedUser_Returns401Unauthorized()
+    {
+        // Arrange
+        ChangeRolesDto dto = new(true);
+        using var client = CreateUnauthorizedClient();
+        WebApplicationFactory.UsersServiceMock
+            .UpdateUserRolesAsync(Arg.Any<string>(), Arg.Any<ChangeRolesDto>())
+            .Throws(new InvalidOperationException());
+
+        // Act
+        var result = await client.PatchAsJsonAsync("api/users/test-id/roles", dto);
+
+        // Assert
+        Assert.That(result.StatusCode, Is.EqualTo(HttpStatusCode.Unauthorized));
+    }
+
+    [Test]
+    public async Task EditUserRoles_NoAdministratorRole_Returns403Forbidden()
+    {
+        // Arrange
+        ChangeRolesDto dto = new(true);
+        using var client = CreateStudentClient();
+        WebApplicationFactory.UsersServiceMock
+            .UpdateUserRolesAsync(Arg.Any<string>(), Arg.Any<ChangeRolesDto>())
+            .Throws(new InvalidOperationException());
+
+        // Act
+        var result = await client.PatchAsJsonAsync("api/users/test-id/roles", dto);
+
+        // Assert
+        Assert.That(result.StatusCode, Is.EqualTo(HttpStatusCode.Forbidden));
+    }
+
+    [Test]
+    public async Task DeleteUser_ValidCall_Succeeds()
+    {
+        // Arrange
+        string id = "test-id";
+        using var client = CreateAdministratorClient();
+        WebApplicationFactory.UsersServiceMock
+            .DeleteUserAsync(Arg.Any<string>())
+            .Returns(true);
+
+        // Act
+        var result = await client.DeleteAsync($"api/users/{id}");
+
+        // Assert
+        await WebApplicationFactory.UsersServiceMock
+            .Received(1)
+            .DeleteUserAsync(id);
+        result.EnsureSuccessStatusCode();
+    }
+
+    [Test]
+    public async Task DeleteUser_UserDoesNotExist_Returns404NotFound()
+    {
+        // Arrange
+        string id = "test-id";
+        using var client = CreateAdministratorClient();
+        WebApplicationFactory.UsersServiceMock
+            .DeleteUserAsync(Arg.Any<string>())
+            .Returns(false);
+
+        // Act
+        var result = await client.DeleteAsync($"api/users/{id}");
+
+        // Assert
+        await WebApplicationFactory.UsersServiceMock
+            .Received(1)
+            .DeleteUserAsync(id);
+        Assert.That(result.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
+    }
+
+    [Test]
+    public async Task DeleteUser_UnauthenticatedUser_Returns401Unauthorized()
+    {
+        // Arrange
+        string id = "test-id";
+        using var client = CreateUnauthorizedClient();
+        WebApplicationFactory.UsersServiceMock
+            .DeleteUserAsync(Arg.Any<string>())
+            .Throws(new InvalidOperationException());
+
+        // Act
+        var result = await client.DeleteAsync($"api/users/{id}");
+
+        // Assert
+        Assert.That(result.StatusCode, Is.EqualTo(HttpStatusCode.Unauthorized));
+    }
+
+    [Test]
+    public async Task DeleteUser_NoAdministratorRole_Returns403Forbidden()
+    {
+        // Arrange
+        string id = "test-id";
+        using var client = CreateStudentClient();
+        WebApplicationFactory.UsersServiceMock
+            .DeleteUserAsync(Arg.Any<string>())
+            .Throws(new InvalidOperationException());
+
+        // Act
+        var result = await client.DeleteAsync($"api/users/{id}");
+
+        // Assert
+        Assert.That(result.StatusCode, Is.EqualTo(HttpStatusCode.Forbidden));
     }
 }

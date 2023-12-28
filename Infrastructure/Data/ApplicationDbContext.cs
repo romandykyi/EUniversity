@@ -16,9 +16,10 @@ public class ApplicationDbContext : ApiAuthorizationDbContext<ApplicationUser>
     public DbSet<Group> Groups { get; set; }
     public DbSet<StudentGroup> StudentGroups { get; set; }
     public DbSet<Grade> Grades { get; set; }
-    public DbSet<CourseGrade> CourseGrades { get; set; }
+    public DbSet<AssignedGrade> AssignedGrades { get; set; }
     public DbSet<Semester> Semesters { get; set; }
     public DbSet<StudentSemester> StudentSemesters { get; set; }
+    public DbSet<ActivityType> ActivityTypes { get; set; }
 
     public ApplicationDbContext(DbContextOptions options, IOptions<OperationalStoreOptions> operationalStoreOptions)
         : base(options, operationalStoreOptions)
@@ -29,13 +30,6 @@ public class ApplicationDbContext : ApiAuthorizationDbContext<ApplicationUser>
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
-
-        // CourseGrade->Grade
-        builder.Entity<CourseGrade>()
-            .HasOne(c => c.Grade)
-            .WithMany(g => g.CourseGrades)
-            .HasForeignKey(c => c.GradeId)
-            .OnDelete(DeleteBehavior.ClientCascade);
 
         // ApplicationUser(Student)->Groups
         builder.Entity<ApplicationUser>()

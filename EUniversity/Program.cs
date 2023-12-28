@@ -52,6 +52,9 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller}/{action=Index}/{id?}");
 app.MapControllerRoute(
+    name: nameof(GroupsController.GetGradesOfStudentInGroupAsync),
+    pattern: "api/groups/{groupId:int}/students/{studentId}/grades");
+app.MapControllerRoute(
     name: nameof(GroupsController.DeleteStudentFromGroupAsync),
     pattern: "api/groups/{groupId:int}/students/{studentId}");
 app.MapControllerRoute(

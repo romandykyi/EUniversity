@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import Button from './UI/Button';
 import { useState, useEffect } from 'react';
 import SearchSelect from './UI/SearchSelect';
 import { useAppSelector } from '../store/store';
+import SearchSelectForClasses from './UI/SearchSelectForClasses';
 
 const EditFormModal = ({ 
     item, 
@@ -15,7 +16,20 @@ const EditFormModal = ({
     const [tableHead, setTableHead] = useState();
     const [tableBody, setTableBody] = useState();
     const [errors, setErrors] = useState([]);
+    const durationRef = useRef(null);
+    const startDateRef = useRef(null);
+    const startTimeRef = useRef(null);
+    const semesterDateFromRef = useRef(null);
+    const semesterDateToRef = useRef(null);
     const isThemeDark = useAppSelector(state => state.theme.isThemeDark);
+
+    useEffect(() => {
+        if (durationRef.current) durationRef.current.defaultValue = editedItem.duration.slice(0,-3);
+        if (startDateRef.current) startDateRef.current.defaultValue = convertTimeFormat(editedItem.startDate, "date");
+        if (startTimeRef.current) startTimeRef.current.defaultValue = convertTimeFormat(editedItem.startDate, "time");
+        if(semesterDateFromRef.current) semesterDateFromRef.current.defaultValue = convertTimeFormat(editedItem.dateFrom, "date");
+        if(semesterDateToRef.current) semesterDateToRef.current.defaultValue = convertTimeFormat(editedItem.dateTo, "date");
+    });
 
     useEffect(() => {
         setEditedItem(item);
@@ -151,7 +165,7 @@ const EditFormModal = ({
                         <tr>
                             <td>
                                 <input
-                                className="text-text bg-background form-control focus:text-text focus:bg-background"
+                                    className="text-text bg-background form-control focus:text-text focus:bg-background"
                                     type="text"
                                     placeholder="search"
                                     value={editedItem.name}
@@ -161,19 +175,19 @@ const EditFormModal = ({
                             </td>
                             <td>
                                 <input
-                                className="text-text bg-background form-control focus:text-text focus:bg-background"
+                                    className="text-text bg-background form-control focus:text-text focus:bg-background"
                                     type="date"
                                     placeholder="from"
-                                    value={convertTimeFormat(editedItem.dateFrom)}
+                                    ref={semesterDateFromRef}
                                     onChange={(e) => handleInputChange(editedItem.id,'dateFrom', e.target.value)}
                                 />
                             </td>
                             <td>
                             <input
-                            className="text-text bg-background form-control focus:text-text focus:bg-background"
+                                    className="text-text bg-background form-control focus:text-text focus:bg-background"
                                     type="date"
                                     placeholder="to"
-                                    value={convertTimeFormat(editedItem.dateTo)}
+                                    ref={semesterDateToRef}
                                     onChange={(e) => handleInputChange(editedItem.id,'dateTo', e.target.value)}
                                 />
                             </td>
@@ -185,7 +199,78 @@ const EditFormModal = ({
                     dateTo: ''
                 });
                 break;
-            
+            case "classes":
+                    setTableHead((
+                            <tr>
+                                <th>Class type</th>
+                                <th>Classroom</th>
+                                <th>Group</th>
+                                <th>Start date</th>
+                                <th>Start time</th>
+                                <th>Duration</th>
+                            </tr>
+                        ));
+                        setTableBody(
+                            <tr>
+                                <td>
+                                    <SearchSelectForClasses
+                                        handleInputChange={handleInputChange}
+                                        itemId={editedItem.id}
+                                        link="/api/classTypes?name="
+                                        title="classType"
+                                        givenValue={editedItem.classType.name}
+                                    />
+                                </td>
+                                <td>
+                                    <SearchSelectForClasses
+                                        handleInputChange={handleInputChange}
+                                        itemId={editedItem.id}
+                                        link="/api/classrooms?name="
+                                        title="classroom"
+                                        givenValue={editedItem.classroom.name}
+                                    />
+                                </td>
+                                <td>
+                                    <SearchSelectForClasses
+                                        handleInputChange={handleInputChange}
+                                        itemId={editedItem.id}
+                                        link="/api/groups?name="
+                                        title="group"
+                                        givenValue={editedItem.group.name}
+                                    />
+                                </td>
+                                <td>
+                                    <input
+                                        className="bg-background text-text"
+                                        type="date"
+                                        placeholder="from"
+                                        ref = {startDateRef}
+                                        onChange={(e) => handleInputChange(editedItem.id, 'startDate', e.target.value)}
+                                    />
+                                </td>
+                                <td>
+                                    <input 
+                                        type="time"
+                                        onChange={(e) => handleInputChange(editedItem.id, 'startTime', e.target.value)}
+                                        ref={startTimeRef}
+                                    />
+                                </td>
+                                <td>
+                                    <input 
+                                        ref={durationRef}
+                                        className="bg-background" 
+                                        type="text" 
+                                        pattern="[0-2][0-9]:[0-5][0-9]"
+                                        onChange={(e) => handleInputChange(editedItem.id, 'duration', e.target.value)} 
+                                        placeholder="example: 01:45"
+                                    />
+                                </td>
+                            </tr>
+                        );
+                    setItemParams({
+                        name: ''
+                    });
+                    break;
             default:
                 setTableHead((
                         <tr>
@@ -230,6 +315,16 @@ const EditFormModal = ({
                 dateTo: editedItem.dateTo,
             };
         }
+        else if (responseTitle === "classes") {
+            postItem = {
+                classTypeId: typeof editedItem.classType !== 'object' ? editedItem.classType : editedItem.classType.id,
+                classroomId: typeof editedItem.classroom !== 'object' ? editedItem.classroom : editedItem.classroom.id,
+                groupId: typeof editedItem.group !== 'object' ? editedItem.group : editedItem.group.id,
+                startDate: convertDateFormat(`${editedItem.startTime ? ` ${editedItem.startTime} ${editedItem.startDate}` : editedItem.startDate}`),
+                duration: editedItem.duration.length < 8 ? `${editedItem.duration}:00` : editedItem.duration
+            };  
+            console.log(postItem)
+        }
         else {
             postItem = {
                 name: editedItem.name
@@ -267,7 +362,6 @@ const EditFormModal = ({
     
     const handleClickOnBg = () => {
         setIsEditable(false);
-        
         setErrors([]);
         document.body.style.overflow = 'auto';
     };
@@ -277,14 +371,35 @@ const EditFormModal = ({
         setEditedItem(changedItem);
     };
 
-    const convertTimeFormat = inputTime => {
+    const convertTimeFormat = (inputTime, type) => {
         const date = new Date(inputTime);
         const day = date.getDate().toString().padStart(2, '0');
         const month = (date.getMonth() + 1).toString().padStart(2, '0');
         const year = date.getFullYear();
+        const hours = date.getHours().toString().padStart(2, '0');
+        const minutes = date.getMinutes().toString().padStart(2, '0');
 
-        return `${year}-${month}-${day}`;
+
+        if (type === "date") return `${year}-${month}-${day}`;
+        return `${hours}:${minutes}`;
     };
+
+    const convertDateFormat = (inputDateString) => {
+        const inputDate = new Date(inputDateString);
+    
+        const year = inputDate.getUTCFullYear();
+        const month = inputDate.getUTCMonth() + 1;
+        const day = inputDate.getUTCDate();
+        const hours = inputDate.getUTCHours();
+        const minutes = inputDate.getUTCMinutes();
+        const seconds = inputDate.getUTCSeconds();
+        const milliseconds = inputDate.getUTCMilliseconds();
+    
+        const outputDateString = `${year}-${month < 10 ? '0' : ''}${month}-${day < 10 ? '0' : ''}${day}T${hours < 10 ? '0' : ''}${hours}:${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}.${milliseconds}Z`;
+    
+        return outputDateString;
+    }
+
     return (
         <div 
             onClick={handleClickOnBg}

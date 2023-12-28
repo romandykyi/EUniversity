@@ -4,7 +4,10 @@ using FluentValidation;
 
 namespace EUniversity.Core.Validation.Users;
 
-public class RegisterDtoValidator : AbstractValidator<RegisterDto>
+public class RegisterDtoValidator : RegisterDtoValidator<RegisterDto> { }
+
+public class RegisterDtoValidator<T> : AbstractValidator<T>
+    where T : RegisterDto
 {
     public RegisterDtoValidator()
     {

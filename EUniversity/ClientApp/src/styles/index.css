@@ -2,19 +2,18 @@
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
 
-
- @layer base {
-    :root {
-      --text: #000000;
-      --background: #ffffff;
-      --theme: #0055ff;
-    }
-    .dark {
-      --text: #ffffff;
-      --background: #212529;
-      --theme: #0ea5e9;
-    }
+@layer base {
+  :root {
+    --text: #000000;
+    --background: #ffffff;
+    --theme: #0055ff;
   }
+  .dark {
+    --text: #ffffff;
+    --background: #212529;
+    --theme: #0ea5e9;
+  }
+}
 
 * {
   margin: 0;
@@ -23,7 +22,9 @@
   color: var(--text);
 }
 
-
+input {
+  background: var(--background);
+}
 
 body {
   font-family: inherit;

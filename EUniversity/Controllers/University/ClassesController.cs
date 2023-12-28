@@ -69,7 +69,7 @@ public class ClassesController : ControllerBase
     }
 
     /// <summary>
-    /// Creates a new @class.
+    /// Creates a new class.
     /// </summary>
     /// <response code="201">Successfully created</response>
     /// <response code="400">Malformed/invalid input</response>

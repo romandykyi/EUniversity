@@ -41,6 +41,7 @@ public class SemestersController : ControllerBase
     /// If there is no items in the requested page, then empty page will be returned.
     /// </remarks>
     /// <param name="properties">Pagination properties.</param>
+    /// <param name="filterProperties">Semesters filter properties.</param>
     /// <param name="name">An optional name to filter semesters by.</param>
     /// <param name="sortingMode">
     /// An optional sorting mode.
@@ -65,10 +66,11 @@ public class SemestersController : ControllerBase
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> GetSemestersPageAsync(
         [FromQuery] PaginationProperties properties,
+        [FromQuery] SemestersFilterProperties filterProperties,
         [FromQuery] string? name,
         [FromQuery] DefaultFilterSortingMode sortingMode = DefaultFilterSortingMode.Name)
     {
-        DefaultFilter<Semester> filter = new(name ?? string.Empty, sortingMode);
+        SemestersFilter filter = new(filterProperties, name ?? string.Empty, sortingMode);
         return Ok(await _semestersService.GetPageAsync(properties, filter));
     }
 
@@ -173,9 +175,10 @@ public class SemestersController : ControllerBase
     /// <response code="200">Returns requested page with students related to the semester.</response>
     /// <response code="400">Bad request</response>
     /// <response code="401">Unauthorized user call</response>
+    /// <response code="403">Caller is not a teacher or an administrator</response>
     [HttpGet]
     [Route("{semesterId:int}/students")]
-    [Authorize(Policies.Default)]
+    [Authorize(Policies.IsTeacherOrAdministrator)]
     [ProducesResponseType(typeof(Page<StudentSemesterViewDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]

@@ -1,8 +1,10 @@
-﻿using EUniversity.Core.Models;
+﻿using EUniversity.Auth;
+using EUniversity.Core.Models;
 using EUniversity.Core.Policy;
 using EUniversity.Core.Services;
 using EUniversity.Core.Services.Auth;
 using EUniversity.Core.Services.University;
+using EUniversity.Core.Services.University.Grades;
 using EUniversity.Core.Services.Users;
 using EUniversity.Core.Validation.Auth;
 using EUniversity.Infrastructure.Data;
@@ -16,6 +18,7 @@ using EUniversity.Infrastructure.Services.Users;
 using FluentValidation;
 using IdentityModel;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Enums;
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Extensions;
@@ -57,7 +60,7 @@ public static class ServiceCollectionExtensions
 
                 options.User.RequireUniqueEmail = true;
                 // Alphanumeric characters with dashes, underscores and periods
-                options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._";
+                options.User.AllowedUserNameCharacters = ApplicationUser.AllowedUserNameCharacters;
             })
             .AddEntityFrameworkStores<ApplicationDbContext>();
 
@@ -96,6 +99,8 @@ public static class ServiceCollectionExtensions
 
     public static IServiceCollection AddCustomizedAuthorization(this IServiceCollection services, params string[] authenticationSchemes)
     {
+        services.AddTransient<IAuthorizationHandler, AccessOnlyOwnDataAuthorizationHandler>();
+
         return services.AddAuthorization(options =>
         {
             options.AddPolicy(Policies.Default, policy =>
@@ -103,6 +108,7 @@ public static class ServiceCollectionExtensions
                 policy.AddAuthenticationSchemes(authenticationSchemes);
                 policy.RequireAuthenticatedUser();
             });
+            // Simple role-based policies
             options.AddPolicy(Policies.IsStudent, policy =>
             {
                 policy.AddAuthenticationSchemes(authenticationSchemes);
@@ -115,11 +121,24 @@ public static class ServiceCollectionExtensions
                 policy.RequireAuthenticatedUser();
                 policy.RequireClaim(JwtClaimTypes.Role, Roles.Teacher);
             });
+            options.AddPolicy(Policies.IsTeacherOrAdministrator, policy =>
+            {
+                policy.AddAuthenticationSchemes(authenticationSchemes);
+                policy.RequireAuthenticatedUser();
+                policy.RequireClaim(JwtClaimTypes.Role, Roles.Teacher, Roles.Administrator);
+            });
             options.AddPolicy(Policies.HasAdministratorPermission, policy =>
             {
                 policy.AddAuthenticationSchemes(authenticationSchemes);
                 policy.RequireAuthenticatedUser();
                 policy.RequireClaim(JwtClaimTypes.Role, Roles.Administrator);
+            });
+            // Policies that use authorization requirements
+            options.AddPolicy(Policies.CanViewStudentEnrollments, policy =>
+            {
+                policy.AddAuthenticationSchemes(authenticationSchemes);
+                policy.RequireAuthenticatedUser();
+                policy.AddRequirements(new AccessOnlyOwnDataAuthorizationRequirement(Roles.Teacher, Roles.Administrator));
             });
             options.DefaultPolicy = options.GetPolicy(Policies.Default)!;
         });
@@ -159,13 +178,15 @@ public static class ServiceCollectionExtensions
             // University services:
             .AddScoped<IClassroomsService, ClassroomsService>()
             .AddScoped<IGradesService, GradesService>()
+            .AddScoped<IAssignedGradesService, AssignedGradesService>()
             .AddScoped<ICoursesService, CoursesService>()
             .AddScoped<IGroupsService, GroupsService>()
             .AddScoped<IStudentGroupsService, StudentGroupsService>()
             .AddScoped<ISemestersService, SemestersService>()
             .AddScoped<IStudentSemestersService, StudentSemestersService>()
             .AddScoped<IClassesService, ClassesService>()
-            .AddScoped<IClassTypesService, ClassTypesService>();
+            .AddScoped<IClassTypesService, ClassTypesService>()
+            .AddScoped<IActivityTypesService, ActivityTypesService>();
     }
 
     public static IMvcBuilder ConfigureControllers(this IServiceCollection builder)

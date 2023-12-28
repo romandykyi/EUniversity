@@ -21,7 +21,7 @@ public class CoursesControllerTests :
 
     public override int DefaultId => 1;
 
-    public override string GetPageFilter => "name=testfilter&sortingMode=name";
+    public override string GetPageFilter => "name=testfilter&semesterId=77";
 
     public override void SetUpService()
     {
@@ -32,9 +32,9 @@ public class CoursesControllerTests :
 
     protected override bool AssertThatFilterWasApplied(IFilter<Course> filter)
     {
-        return filter is DefaultFilter<Course> defaultFilter &&
-            defaultFilter.Name == "testfilter" &&
-            defaultFilter.SortingMode == DefaultFilterSortingMode.Name;
+        return filter is CoursesFilter coursesFilter &&
+            coursesFilter.Name == "testfilter" &&
+            coursesFilter.Properties.SemesterId == 77;
     }
 
     protected override CourseCreateDto GetInvalidCreateDto()

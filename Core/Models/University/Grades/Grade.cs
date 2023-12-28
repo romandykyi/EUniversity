@@ -27,10 +27,4 @@ public class Grade : IEntity<int>, IHasName, IHasCreationDate, IHasUpdateDate
     /// Date when the grade was last updated.
     /// </summary>
     public DateTimeOffset UpdateDate { get; set; }
-
-    /// <summary>
-    /// Navigation property: 
-    /// Collection of <see cref="CourseGrades" />s related to this grade.
-    /// </summary>
-    public IEnumerable<CourseGrade> CourseGrades { get; set; } = null!;
 }
