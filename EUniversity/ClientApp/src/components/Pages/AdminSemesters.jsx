@@ -8,7 +8,6 @@ import PageForm from '../PageForm';
 import EditFormModal from '../EditFormModal';
 
 const AdminSemesters = () => {
-
     const [semesters, setSemesters] = useState([]);
     const [pageSize, setPageSize] = useState(10);
     const [page, setPage] = useState(1);
@@ -124,10 +123,10 @@ const AdminSemesters = () => {
                         <th>To</th>
                         {
                             isAdmin
-                                ? <>
-                                    {/* <th>Edit</th> */}
+                                ?   <>
                                     <th>Delete</th>
-                                </>
+                                    <th>Edit</th>
+                                    </>
                                 : ""
                         }
                     </tr>

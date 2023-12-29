@@ -43,7 +43,7 @@ const AdminGroup = () => {
     };
 
     return (
-         <PageForm
+        <PageForm
                 setItems={setGroups}
                 additionalComponents={
                     <>
@@ -81,25 +81,25 @@ const AdminGroup = () => {
                             <td>{item.teacher.userName}</td>
                             {
                             isAdmin
-                                ? <>
-                                    <td><Button onClick = {e => 
-                                        {
-                                            e.stopPropagation();
-                                            setIsDeleteVisible(true);
-                                            setDeletedGroup({id: item.id, name: item.name});
-                                        }}
-                                        >Delete Group</Button></td>
-                                    <td>
-                                        <Button onClick = {e => 
+                                ?   <>
+                                        <td><Button onClick = {e => 
                                             {
                                                 e.stopPropagation();
-                                                setIsEditable(true);
-                                                setEditedItem(item);
+                                                setIsDeleteVisible(true);
+                                                setDeletedGroup({id: item.id, name: item.name});
                                             }}
-                                        >Edit Group</Button>
-                                    </td>
-                                  </>
-                                : ""
+                                            >Delete Group</Button></td>
+                                        <td>
+                                            <Button onClick = {e => 
+                                                {
+                                                    e.stopPropagation();
+                                                    setIsEditable(true);
+                                                    setEditedItem(item);
+                                                }}
+                                            >Edit Group</Button>
+                                        </td>
+                                    </>
+                                :   ""
                         }
                         </tr>
                     ))
@@ -132,7 +132,7 @@ const AdminGroup = () => {
                 setSortingMethod={setSortingMethod}
                 sortingMethod={sortingMethod}
                 isEditVisible={isEditable}
-            />      
+        />      
     );
 };
 

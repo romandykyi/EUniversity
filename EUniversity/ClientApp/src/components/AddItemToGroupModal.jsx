@@ -7,8 +7,7 @@ const AddItemToGroupModal = ({
     setIsVisible,
     title,
     groupId,
-    fetchItems,
-    fetchTitle
+    fetchTitle,
 }) => {
 
     const [inputValue, setInputValue] = useState("");
@@ -67,8 +66,7 @@ const AddItemToGroupModal = ({
                     console.log("ok");
                     setFoundUsers([]);
                     setChosenUsers([]);
-                    setIsVisible(false);
-                    await fetchItems();    
+                    setIsVisible(false);   
                 } 
                 else {
                     console.error("Error:", response.status, response.statusText);

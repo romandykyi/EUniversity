@@ -109,7 +109,7 @@ const SearchSelect = ({
                                         }
                                     </button>
                                 ))
-                                : <p className="text-gray-500 text-xl font-medium">no items found</p>
+                                :   ""
                             :   ""
                         }
                     </div>   

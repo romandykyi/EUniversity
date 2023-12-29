@@ -130,7 +130,7 @@ const PageForm = ({
                       search={fetchItems}
                     />
                     {isAdmin && (
-                      <Button onClick={() => {
+                      <Button addStyles={`${registerTitle === "students" ? "hidden" : ""}`} onClick={() => {
                         setIsModalVisible(true);
                         document.body.style.overflow = 'hidden';
                       }}>Register new {registerTitle === "users" ? registerTitle : registerTitle === "classes" ? registerTitle.slice(0, -2) : registerTitle.slice(0, -1)}</Button>
