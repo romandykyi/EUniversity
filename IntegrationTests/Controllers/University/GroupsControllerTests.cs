@@ -35,7 +35,6 @@ public class GroupsControllerTests :
             Assert.That(actual.Name, Is.EqualTo(expected.Name));
             Assert.That(actual.Course, Is.EqualTo(expected.Course));
             Assert.That(actual.Teacher, Is.EqualTo(expected.Teacher));
-            Assert.That(actual.Students, Is.EquivalentTo(expected.Students));
         });
     }
 
@@ -58,14 +57,10 @@ public class GroupsControllerTests :
 
     protected override GroupViewDto GetTestDetailsDto()
     {
-        List<StudentPreviewDto> students = new()
-        {
-            new(Guid.NewGuid().ToString(), "test-user", "Student1", "Student2", null)
-        };
         return new(DefaultId, "Group",
             DateTimeOffset.Now, DateTimeOffset.Now,
             TeacherPreviewDto,
-            CoursePreviewDto, students);
+            CoursePreviewDto);
     }
 
     protected override GroupPreviewDto GetTestPreviewDto()
