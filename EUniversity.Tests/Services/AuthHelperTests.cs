@@ -37,6 +37,7 @@ public class AuthHelperTests
     public void TearDown()
     {
         _rngMock.Dispose();
+        _userManagerMock.Dispose();
     }
 
     [Test]
