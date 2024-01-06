@@ -7,7 +7,7 @@ An e-university Web Application built with ASP.NET and React.
 ## Tech Stack
 
 ### Back end
-* .NET 7.0
+* .NET 8.0
 * Entity Framework Core
 * SQL Server
 * Duende Identity Server
