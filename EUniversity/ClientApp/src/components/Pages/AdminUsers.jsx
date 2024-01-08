@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import PageForm from '../PageForm';
+import Button from '../UI/Button';
+import DeleteModal from '../DeleteModal';
 
 const AdminUsers = () => {
   const [users, setUsers] = useState([]);
@@ -7,28 +9,31 @@ const AdminUsers = () => {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [inputValue, setInputValue] = useState("");
+  const [isDeleteVisible, setIsDeleteVisible] = useState(false);
   const [sortingMethod, setSortingMethod] = useState(0);
+  const [deletedUser, setDeletedUser] = useState({
+    id: '',
+    name: ''
+});
 
-  // const deleteUser = async (userId) => {
-  //   try {
-  //     setUsers((prevUsers) => prevUsers.filter((user) => user.id !== userId));           //add when DELETE method will be ready
-  //     const response = await fetch(`/api/users/${usersType}`, {
-  //       method: "POST",
-  //       headers: {
-  //           "Content-Type": "application/json",
-  //       },
-  //       body: `{"users": ${JSON.stringify(users)}}`,
-  //   });
+  const deleteUser = async (userId) => {
+    try {        
+      const response = await fetch(`/api/users/${userId}`, {
+        method: "DELETE",
+        headers: {
+            "Content-Type": "application/json",
+        }
+    });
 
-  //     if (response.ok) {
-  //       console.log('ok')
-  //     } else {
-  //       console.log('error');
-  //     }
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
+      if (response.ok) {
+        console.log('ok')
+      } else {
+        console.log('error');
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const changeUsersType = (e) => {
     const newUserType = e.target.value;
@@ -54,7 +59,7 @@ const AdminUsers = () => {
               <th>First name</th>
               <th>Last name</th>
               <th>Middle Name</th>
-              {/* <th>Delete user</th> add when DELETE method will be ready */}
+              <th>Delete user</th> 
         </tr>
       }
       tableBody={users.map((item) => (
@@ -63,11 +68,20 @@ const AdminUsers = () => {
           <td>{item.firstName}</td>
           <td>{item.lastName}</td>
           <td>{item.middleName}</td>
-          {/* <td>
-            <Button onClick={() => deleteUser(item.id)}>Delete</Button> //add when DELETE method will be ready
-          </td> */}
+          <td>
+            <Button onClick={() => setIsDeleteVisible}>Delete</Button>
+          </td>
         </tr>
       ))}
+      additionalComponents={
+        <DeleteModal
+            isVisible={isDeleteVisible}
+            setIsVisible={setIsDeleteVisible}
+            itemType = "user"
+            deleteFunction = {deleteUser}
+            deletedItem = {deletedUser}    
+        />
+      }
       additionalItems = {
         <>
           <select className="form-select students__select mb-0 text-text bg-background" onChange={changeUsersType}>
