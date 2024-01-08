@@ -1,8 +1,12 @@
-import React from 'react'
+import React from 'react';
 import { Component } from 'react';
 import authService from './AuthorizeService';
 import { AuthenticationResultStatus } from './AuthorizeService';
-import { QueryParameterNames, LogoutActions, ApplicationPaths } from './ApiAuthorizationConstants';
+import {
+  QueryParameterNames,
+  LogoutActions,
+  ApplicationPaths,
+} from './ApiAuthorizationConstants';
 
 // The main responsibility of this component is to handle the user's logout process.
 // This is the starting point for the logout process, which is usually initiated when a
@@ -14,7 +18,7 @@ export class Logout extends Component {
     this.state = {
       message: undefined,
       isReady: false,
-      authenticated: false
+      authenticated: false,
     };
   }
 
@@ -26,14 +30,20 @@ export class Logout extends Component {
           this.logout(this.getReturnUrl());
         } else {
           // This prevents regular links to <app>/authentication/logout from triggering a logout
-          this.setState({ isReady: true, message: "The logout was not initiated from within the page." });
+          this.setState({
+            isReady: true,
+            message: 'The logout was not initiated from within the page.',
+          });
         }
         break;
       case LogoutActions.LogoutCallback:
         this.processLogoutCallback();
         break;
       case LogoutActions.LoggedOut:
-        this.setState({ isReady: true, message: "You successfully logged out!" });
+        this.setState({
+          isReady: true,
+          message: 'You successfully logged out!',
+        });
         break;
       default:
         throw new Error(`Invalid action '${action}'`);
@@ -45,19 +55,19 @@ export class Logout extends Component {
   render() {
     const { isReady, message } = this.state;
     if (!isReady) {
-      return <div></div>
+      return <div></div>;
     }
     if (!!message) {
-      return (<div>{message}</div>);
+      return <div>{message}</div>;
     } else {
       const action = this.props.action;
       switch (action) {
         case LogoutActions.Logout:
-          return (<div>Processing logout</div>);
+          return <div>Processing logout</div>;
         case LogoutActions.LogoutCallback:
-          return (<div>Processing logout callback</div>);
+          return <div>Processing logout callback</div>;
         case LogoutActions.LoggedOut:
-          return (<div>{message}</div>);
+          return <div>{message}</div>;
         default:
           throw new Error(`Invalid action '${action}'`);
       }
@@ -79,10 +89,10 @@ export class Logout extends Component {
           this.setState({ message: result.message });
           break;
         default:
-          throw new Error("Invalid authentication result status.");
+          throw new Error('Invalid authentication result status.');
       }
     } else {
-      this.setState({ message: "You successfully logged out!" });
+      this.setState({ message: 'You successfully logged out!' });
     }
   }
 
@@ -101,7 +111,7 @@ export class Logout extends Component {
         this.setState({ message: result.message });
         break;
       default:
-        throw new Error("Invalid authentication result status.");
+        throw new Error('Invalid authentication result status.');
     }
   }
 
@@ -115,11 +125,15 @@ export class Logout extends Component {
     const fromQuery = params.get(QueryParameterNames.ReturnUrl);
     if (fromQuery && !fromQuery.startsWith(`${window.location.origin}/`)) {
       // This is an extra check to prevent open redirects.
-      throw new Error("Invalid return url. The return url needs to have the same origin as the current page.")
+      throw new Error(
+        'Invalid return url. The return url needs to have the same origin as the current page.',
+      );
     }
-    return (state && state.returnUrl) ||
+    return (
+      (state && state.returnUrl) ||
       fromQuery ||
-      `${window.location.origin}${ApplicationPaths.LoggedOut}`;
+      `${window.location.origin}${ApplicationPaths.LoggedOut}`
+    );
   }
 
   navigateToReturnUrl(returnUrl) {

@@ -8,25 +8,25 @@ const AdminUsers = () => {
   const [usersType, setUsersType] = useState('students');
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
-  const [inputValue, setInputValue] = useState("");
+  const [inputValue, setInputValue] = useState('');
   const [isDeleteVisible, setIsDeleteVisible] = useState(false);
   const [sortingMethod, setSortingMethod] = useState(0);
   const [deletedUser, setDeletedUser] = useState({
     id: '',
-    name: ''
-});
+    name: '',
+  });
 
   const deleteUser = async (userId) => {
-    try {        
+    try {
       const response = await fetch(`/api/users/${userId}`, {
-        method: "DELETE",
+        method: 'DELETE',
         headers: {
-            "Content-Type": "application/json",
-        }
-    });
+          'Content-Type': 'application/json',
+        },
+      });
 
       if (response.ok) {
-        console.log('ok')
+        console.log('ok');
       } else {
         console.log('error');
       }
@@ -50,16 +50,16 @@ const AdminUsers = () => {
       setCurrentPage={setPage}
       setInputValue={setInputValue}
       setItemsPerPage={setPageSize}
-      registerTitle="users"
+      registerTitle='users'
       searchLink={`/api/users?Page=${page}&PageSize=${pageSize}&FullName=${inputValue}&sortingMode=${sortingMethod}`}
       fetchLink={`/api/users/${usersType}?Page=${page}&PageSize=${pageSize}&sortingMode=${sortingMethod}`}
       tableHead={
         <tr>
-              <th>Email</th>
-              <th>First name</th>
-              <th>Last name</th>
-              <th>Middle Name</th>
-              <th>Delete user</th> 
+          <th>Email</th>
+          <th>First name</th>
+          <th>Last name</th>
+          <th>Middle Name</th>
+          <th>Delete user</th>
         </tr>
       }
       tableBody={users.map((item) => (
@@ -75,20 +75,25 @@ const AdminUsers = () => {
       ))}
       additionalComponents={
         <DeleteModal
-            isVisible={isDeleteVisible}
-            setIsVisible={setIsDeleteVisible}
-            itemType = "user"
-            deleteFunction = {deleteUser}
-            deletedItem = {deletedUser}    
+          isVisible={isDeleteVisible}
+          setIsVisible={setIsDeleteVisible}
+          itemType='user'
+          deleteFunction={deleteUser}
+          deletedItem={deletedUser}
         />
       }
-      additionalItems = {
+      additionalItems={
         <>
-          <select className="form-select students__select mb-0 text-text bg-background" onChange={changeUsersType}>
-                <option defaultValue disabled>Users type:</option>
-                <option value="students">Students</option>
-                <option value="teachers">Teachers</option>
-            </select>
+          <select
+            className='form-select students__select mb-0 text-text bg-background'
+            onChange={changeUsersType}
+          >
+            <option defaultValue disabled>
+              Users type:
+            </option>
+            <option value='students'>Students</option>
+            <option value='teachers'>Teachers</option>
+          </select>
         </>
       }
       setSortingMethod={setSortingMethod}

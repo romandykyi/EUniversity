@@ -2,29 +2,35 @@ import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 import AppRoutes from './AppRoutes';
 import AuthorizeRoute from './components/api-authorization/AuthorizeRoute';
-import Layout from "./components/Layout";
+import Layout from './components/Layout';
 import './styles/style.css';
 import './styles/index.css';
-import Login from "./components/Pages/Login";
+import Login from './components/Pages/Login';
 
 const App = () => {
-    return (
-        <Layout>
-            <Routes>
-                <Route path="/login" element={<Login/>} />
-                {AppRoutes.map((route, index) => {
-                    const { element, requireAuth, ...rest } = route;
-                    return (
-                        <Route
-                            key={index}
-                            {...rest}
-                            element={requireAuth ? <AuthorizeRoute {...rest} element={element} /> : element}
-                        />
-                    );
-                })}
-            </Routes>
-        </Layout>
-    );
+  return (
+    <Layout>
+      <Routes>
+        <Route path='/login' element={<Login />} />
+        {AppRoutes.map((route, index) => {
+          const { element, requireAuth, ...rest } = route;
+          return (
+            <Route
+              key={index}
+              {...rest}
+              element={
+                requireAuth ? (
+                  <AuthorizeRoute {...rest} element={element} />
+                ) : (
+                  element
+                )
+              }
+            />
+          );
+        })}
+      </Routes>
+    </Layout>
+  );
 };
 App.displayName = 'App';
 

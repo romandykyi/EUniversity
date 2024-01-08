@@ -1,9 +1,9 @@
 .table {
   background: var(--background);
   & input {
-    border:none;
+    border: none;
     padding: 5px 10px;
-  } 
+  }
   & input::placeholder {
     font-style: italic;
   }

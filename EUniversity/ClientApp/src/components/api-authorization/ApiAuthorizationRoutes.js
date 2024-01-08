@@ -1,44 +1,48 @@
 import React from 'react';
-import { Login } from './Login'
-import { Logout } from './Logout'
-import { ApplicationPaths, LoginActions, LogoutActions } from './ApiAuthorizationConstants';
+import { Login } from './Login';
+import { Logout } from './Logout';
+import {
+  ApplicationPaths,
+  LoginActions,
+  LogoutActions,
+} from './ApiAuthorizationConstants';
 
 const ApiAuthorizationRoutes = [
   {
     path: ApplicationPaths.Login,
-    element: loginAction(LoginActions.Login)
+    element: loginAction(LoginActions.Login),
   },
   {
     path: ApplicationPaths.LoginFailed,
-    element: loginAction(LoginActions.LoginFailed)
+    element: loginAction(LoginActions.LoginFailed),
   },
   {
     path: ApplicationPaths.LoginCallback,
-    element: loginAction(LoginActions.LoginCallback)
+    element: loginAction(LoginActions.LoginCallback),
   },
   {
     path: ApplicationPaths.Profile,
-    element: loginAction(LoginActions.Profile)
+    element: loginAction(LoginActions.Profile),
   },
   {
     path: ApplicationPaths.Register,
-    element: loginAction(LoginActions.Register)
+    element: loginAction(LoginActions.Register),
   },
   {
     path: ApplicationPaths.LogOut,
-    element: logoutAction(LogoutActions.Logout)
+    element: logoutAction(LogoutActions.Logout),
   },
   {
     path: ApplicationPaths.LogOutCallback,
-    element: logoutAction(LogoutActions.LogoutCallback)
+    element: logoutAction(LogoutActions.LogoutCallback),
   },
   {
     path: ApplicationPaths.LoggedOut,
-    element: logoutAction(LogoutActions.LoggedOut)
-  }
+    element: logoutAction(LogoutActions.LoggedOut),
+  },
 ];
 
-function loginAction(name){
+function loginAction(name) {
   return <Login action={name}></Login>;
 }
 

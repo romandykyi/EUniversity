@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Navigate } from 'react-router-dom';
-import { ApplicationPaths, QueryParameterNames } from './ApiAuthorizationConstants';
+import {
+  ApplicationPaths,
+  QueryParameterNames,
+} from './ApiAuthorizationConstants';
 import authService from './AuthorizeService';
 
 export default function AuthorizeRoute({ path, element }) {
@@ -32,8 +35,8 @@ export default function AuthorizeRoute({ path, element }) {
     return <div></div>;
   }
 
-  const link = document.createElement("a");
+  const link = document.createElement('a');
   link.href = path;
 
-  return authenticated ? element : <Navigate replace to="/login" />;
+  return authenticated ? element : <Navigate replace to='/login' />;
 }
