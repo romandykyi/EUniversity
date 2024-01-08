@@ -61,4 +61,10 @@ public abstract class UsersValidatorTests
             .IsInRoleAsync(Arg.Is<ApplicationUser>(u => u.Id == TestStudentId), Roles.Student)
             .Returns(true);
     }
+
+    [OneTimeTearDown]
+    public void TearDownUserManagerMock()
+    {
+        UserManagerMock.Dispose();
+    }
 }

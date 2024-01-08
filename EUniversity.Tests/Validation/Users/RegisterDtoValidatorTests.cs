@@ -203,7 +203,7 @@ public class RegisterDtoValidatorTests
     [TestCase(null)]
     [TestCase("")]
     [TestCase("   ")]
-    public void MiddleName_Empty_Succeeds(string middleName)
+    public void MiddleName_Empty_Succeeds(string? middleName)
     {
         // Arrange
         RegisterDto register = new(DefaultEmail, DefaultFirstName, DefaultLastName, middleName);

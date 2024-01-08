@@ -16,7 +16,7 @@ public class QueryablePaginationExtensionsTests
         var page = data.ApplyPagination(properties);
 
         // Assert
-        CollectionAssert.AreEqual(Enumerable.Range(11, 10), page);
+        Assert.That(page, Is.EquivalentTo(Enumerable.Range(11, 10)));
     }
 
     [Test]
@@ -30,6 +30,6 @@ public class QueryablePaginationExtensionsTests
         var page = data.ApplyPagination(properties);
 
         // Assert
-        CollectionAssert.IsEmpty(page);
+        Assert.That(page, Is.Empty);
     }
 }
