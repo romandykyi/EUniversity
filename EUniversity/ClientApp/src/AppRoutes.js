@@ -13,6 +13,7 @@ import AdminSemesters from './components/Pages/AdminSemesters';
 import AdminSemester from "./components/Pages/AdminSemester";
 import AdminClasses from './components/Pages/AdminClasses';
 import AdminClass from './components/Pages/AdminClass';
+import ActivityTypes from './components/Pages/ActivityTypes';
 
 const AppRoutes = [
   {
@@ -82,6 +83,11 @@ const AppRoutes = [
     path: '/classes/:id',
     requireAuth: true,
     element: <AdminClass/>,
+  },
+  {
+    path: '/activityTypes',
+    requireAuth: true,
+    element: <ActivityTypes/>,
   },
   ...ApiAuthorzationRoutes
 ];

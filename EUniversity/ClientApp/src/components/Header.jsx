@@ -48,6 +48,10 @@ const Header = () => {
             to: "/classes",
             title: "Classes"
         },
+        {
+            to: "/activityTypes",
+            title: "Activity types"
+        },
     ];
 
     const adminNavList = [
@@ -78,6 +82,10 @@ const Header = () => {
         {
             to: "/classes",
             title: "Classes"
+        },
+        {
+            to: "/activityTypes",
+            title: "Activity types"
         },
     ];
 

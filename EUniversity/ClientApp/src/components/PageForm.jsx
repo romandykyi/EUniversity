@@ -62,6 +62,7 @@ const PageForm = ({
                   
                   if (response.ok) {
                       const data = await response.json();
+                      console.log(data.items);
                       setItems(data.items);
                       setItemsPerPage(data.pageSize);
                       setTotalItems(data.totalItemsCount);
